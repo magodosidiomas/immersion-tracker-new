@@ -1,4 +1,5 @@
 import Button from '../components/Button'
+import { Bolt } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Temporary: a visual checklist of every implemented component, so we
 // can compare against Figma before building real screens. This file
@@ -15,14 +16,6 @@ const variants = [
 ]
 const sizes = ['lg', 'sm']
 
-function BoltIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M13 2 4 14h6l-1 8 9-12h-6z" />
-    </svg>
-  )
-}
-
 function ButtonRow({ size, disabled }) {
   return (
     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 12 }}>
@@ -32,8 +25,8 @@ function ButtonRow({ size, disabled }) {
           variant={variant}
           size={size}
           disabled={disabled}
-          leadingIcon={<BoltIcon />}
-          trailingIcon={<BoltIcon />}
+          leadingIcon={<Bolt />}
+          trailingIcon={<Bolt />}
         >
           Button label
         </Button>
