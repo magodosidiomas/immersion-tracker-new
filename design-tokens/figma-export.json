@@ -1,0 +1,2771 @@
+[
+  {
+    "primitives": {
+      "modes": {
+        "Mode 1": {
+          "color": {
+            "purple-dark": {
+              "purple-900": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#0f0d18",
+                  "rgb": {
+                    "r": 15,
+                    "g": 13,
+                    "b": 24
+                  },
+                  "css": "rgb(15, 13, 24)",
+                  "hsl": {
+                    "h": 251,
+                    "s": 30,
+                    "l": 7
+                  },
+                  "hsb": {
+                    "h": 251,
+                    "s": 46,
+                    "b": 9
+                  }
+                }
+              },
+              "purple-800": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#151222",
+                  "rgb": {
+                    "r": 21,
+                    "g": 18,
+                    "b": 34
+                  },
+                  "css": "rgb(21, 18, 34)",
+                  "hsl": {
+                    "h": 251,
+                    "s": 31,
+                    "l": 10
+                  },
+                  "hsb": {
+                    "h": 251,
+                    "s": 47,
+                    "b": 13
+                  }
+                }
+              },
+              "purple-700": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#1c1830",
+                  "rgb": {
+                    "r": 28,
+                    "g": 24,
+                    "b": 48
+                  },
+                  "css": "rgb(28, 24, 48)",
+                  "hsl": {
+                    "h": 250,
+                    "s": 33,
+                    "l": 14
+                  },
+                  "hsb": {
+                    "h": 250,
+                    "s": 50,
+                    "b": 19
+                  }
+                }
+              },
+              "purple-600": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#252038",
+                  "rgb": {
+                    "r": 37,
+                    "g": 32,
+                    "b": 56
+                  },
+                  "css": "rgb(37, 32, 56)",
+                  "hsl": {
+                    "h": 252,
+                    "s": 27,
+                    "l": 17
+                  },
+                  "hsb": {
+                    "h": 252,
+                    "s": 43,
+                    "b": 22
+                  }
+                }
+              },
+              "purple-500": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#2e2848",
+                  "rgb": {
+                    "r": 46,
+                    "g": 40,
+                    "b": 72
+                  },
+                  "css": "rgb(46, 40, 72)",
+                  "hsl": {
+                    "h": 251,
+                    "s": 29,
+                    "l": 22
+                  },
+                  "hsb": {
+                    "h": 251,
+                    "s": 44,
+                    "b": 28
+                  }
+                }
+              },
+              "purple-400": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#3d3560",
+                  "rgb": {
+                    "r": 61,
+                    "g": 53,
+                    "b": 96
+                  },
+                  "css": "rgb(61, 53, 96)",
+                  "hsl": {
+                    "h": 251,
+                    "s": 29,
+                    "l": 29
+                  },
+                  "hsb": {
+                    "h": 251,
+                    "s": 45,
+                    "b": 38
+                  }
+                }
+              }
+            },
+            "purple-brand": {
+              "brand-900": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#3b0f99",
+                  "rgb": {
+                    "r": 59,
+                    "g": 15,
+                    "b": 153
+                  },
+                  "css": "rgb(59, 15, 153)",
+                  "hsl": {
+                    "h": 259,
+                    "s": 82,
+                    "l": 33
+                  },
+                  "hsb": {
+                    "h": 259,
+                    "s": 90,
+                    "b": 60
+                  }
+                }
+              },
+              "brand-700": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6d28d9",
+                  "rgb": {
+                    "r": 109,
+                    "g": 40,
+                    "b": 217
+                  },
+                  "css": "rgb(109, 40, 217)",
+                  "hsl": {
+                    "h": 263,
+                    "s": 70,
+                    "l": 50
+                  },
+                  "hsb": {
+                    "h": 263,
+                    "s": 82,
+                    "b": 85
+                  }
+                }
+              },
+              "brand-700-4%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6d28d90a",
+                  "rgb": {
+                    "r": 109,
+                    "g": 40,
+                    "b": 217,
+                    "a": 0.04
+                  },
+                  "css": "rgba(109, 40, 217, 0.04)",
+                  "hsl": {
+                    "h": 263,
+                    "s": 70,
+                    "l": 50,
+                    "a": 0.04
+                  },
+                  "hsb": {
+                    "h": 263,
+                    "s": 82,
+                    "b": 85,
+                    "a": 0.04
+                  }
+                }
+              },
+              "brand-700-8%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6d28d914",
+                  "rgb": {
+                    "r": 109,
+                    "g": 40,
+                    "b": 217,
+                    "a": 0.08
+                  },
+                  "css": "rgba(109, 40, 217, 0.08)",
+                  "hsl": {
+                    "h": 263,
+                    "s": 70,
+                    "l": 50,
+                    "a": 0.08
+                  },
+                  "hsb": {
+                    "h": 263,
+                    "s": 82,
+                    "b": 85,
+                    "a": 0.08
+                  }
+                }
+              },
+              "brand-700-15%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6d28d926",
+                  "rgb": {
+                    "r": 109,
+                    "g": 40,
+                    "b": 217,
+                    "a": 0.15
+                  },
+                  "css": "rgba(109, 40, 217, 0.15)",
+                  "hsl": {
+                    "h": 263,
+                    "s": 70,
+                    "l": 50,
+                    "a": 0.15
+                  },
+                  "hsb": {
+                    "h": 263,
+                    "s": 82,
+                    "b": 85,
+                    "a": 0.15
+                  }
+                }
+              },
+              "brand-700-25%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6d28d940",
+                  "rgb": {
+                    "r": 109,
+                    "g": 40,
+                    "b": 217,
+                    "a": 0.25
+                  },
+                  "css": "rgba(109, 40, 217, 0.25)",
+                  "hsl": {
+                    "h": 263,
+                    "s": 70,
+                    "l": 50,
+                    "a": 0.25
+                  },
+                  "hsb": {
+                    "h": 263,
+                    "s": 82,
+                    "b": 85,
+                    "a": 0.25
+                  }
+                }
+              },
+              "brand-600": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#682af3",
+                  "rgb": {
+                    "r": 104,
+                    "g": 42,
+                    "b": 243
+                  },
+                  "css": "rgb(104, 42, 243)",
+                  "hsl": {
+                    "h": 258,
+                    "s": 90,
+                    "l": 56
+                  },
+                  "hsb": {
+                    "h": 258,
+                    "s": 83,
+                    "b": 95
+                  }
+                }
+              },
+              "brand-500": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#8b5cf6",
+                  "rgb": {
+                    "r": 139,
+                    "g": 92,
+                    "b": 246
+                  },
+                  "css": "rgb(139, 92, 246)",
+                  "hsl": {
+                    "h": 258,
+                    "s": 90,
+                    "l": 66
+                  },
+                  "hsb": {
+                    "h": 258,
+                    "s": 63,
+                    "b": 96
+                  }
+                }
+              },
+              "brand-300": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#a78bfa",
+                  "rgb": {
+                    "r": 167,
+                    "g": 139,
+                    "b": 250
+                  },
+                  "css": "rgb(167, 139, 250)",
+                  "hsl": {
+                    "h": 255,
+                    "s": 92,
+                    "l": 76
+                  },
+                  "hsb": {
+                    "h": 255,
+                    "s": 44,
+                    "b": 98
+                  }
+                }
+              },
+              "brand-200": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#c4b5fd",
+                  "rgb": {
+                    "r": 196,
+                    "g": 181,
+                    "b": 253
+                  },
+                  "css": "rgb(196, 181, 253)",
+                  "hsl": {
+                    "h": 252,
+                    "s": 95,
+                    "l": 85
+                  },
+                  "hsb": {
+                    "h": 252,
+                    "s": 28,
+                    "b": 99
+                  }
+                }
+              },
+              "brand-50": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ede9fe",
+                  "rgb": {
+                    "r": 237,
+                    "g": 233,
+                    "b": 254
+                  },
+                  "css": "rgb(237, 233, 254)",
+                  "hsl": {
+                    "h": 251,
+                    "s": 91,
+                    "l": 95
+                  },
+                  "hsb": {
+                    "h": 251,
+                    "s": 8,
+                    "b": 100
+                  }
+                }
+              }
+            },
+            "gray-scale": {
+              "white": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ffffff",
+                  "rgb": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                  },
+                  "css": "rgb(255, 255, 255)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 0,
+                    "l": 100
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 0,
+                    "b": 100
+                  }
+                }
+              },
+              "gray-10": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#eaeaea",
+                  "rgb": {
+                    "r": 234,
+                    "g": 234,
+                    "b": 234
+                  },
+                  "css": "rgb(234, 234, 234)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 0,
+                    "l": 92
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 0,
+                    "b": 92
+                  }
+                }
+              },
+              "gray-200": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#a09cb8",
+                  "rgb": {
+                    "r": 160,
+                    "g": 156,
+                    "b": 184
+                  },
+                  "css": "rgb(160, 156, 184)",
+                  "hsl": {
+                    "h": 249,
+                    "s": 16,
+                    "l": 67
+                  },
+                  "hsb": {
+                    "h": 249,
+                    "s": 15,
+                    "b": 72
+                  }
+                }
+              },
+              "gray-400": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#6b6882",
+                  "rgb": {
+                    "r": 107,
+                    "g": 104,
+                    "b": 130
+                  },
+                  "css": "rgb(107, 104, 130)",
+                  "hsl": {
+                    "h": 247,
+                    "s": 11,
+                    "l": 46
+                  },
+                  "hsb": {
+                    "h": 247,
+                    "s": 20,
+                    "b": 51
+                  }
+                }
+              },
+              "black": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#000000",
+                  "rgb": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "css": "rgb(0, 0, 0)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 0,
+                    "l": 0
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 0,
+                    "b": 0
+                  }
+                }
+              }
+            },
+            "amber": {
+              "amber-100": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#fef0c6",
+                  "rgb": {
+                    "r": 254,
+                    "g": 240,
+                    "b": 198
+                  },
+                  "css": "rgb(254, 240, 198)",
+                  "hsl": {
+                    "h": 46,
+                    "s": 95,
+                    "l": 88
+                  },
+                  "hsb": {
+                    "h": 46,
+                    "s": 22,
+                    "b": 99
+                  }
+                }
+              },
+              "amber-200": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#fcd34d",
+                  "rgb": {
+                    "r": 252,
+                    "g": 211,
+                    "b": 77
+                  },
+                  "css": "rgb(252, 211, 77)",
+                  "hsl": {
+                    "h": 46,
+                    "s": 97,
+                    "l": 65
+                  },
+                  "hsb": {
+                    "h": 46,
+                    "s": 69,
+                    "b": 99
+                  }
+                }
+              },
+              "amber-400": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff9f0a",
+                  "rgb": {
+                    "r": 255,
+                    "g": 159,
+                    "b": 10
+                  },
+                  "css": "rgb(255, 159, 10)",
+                  "hsl": {
+                    "h": 36,
+                    "s": 100,
+                    "l": 52
+                  },
+                  "hsb": {
+                    "h": 36,
+                    "s": 96,
+                    "b": 100
+                  }
+                }
+              },
+              "amber-400-4%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff9f0a0a",
+                  "rgb": {
+                    "r": 255,
+                    "g": 159,
+                    "b": 10,
+                    "a": 0.04
+                  },
+                  "css": "rgba(255, 159, 10, 0.04)",
+                  "hsl": {
+                    "h": 36,
+                    "s": 100,
+                    "l": 52,
+                    "a": 0.04
+                  },
+                  "hsb": {
+                    "h": 36,
+                    "s": 96,
+                    "b": 100,
+                    "a": 0.04
+                  }
+                }
+              },
+              "amber-400-8%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff9f0a14",
+                  "rgb": {
+                    "r": 255,
+                    "g": 159,
+                    "b": 10,
+                    "a": 0.08
+                  },
+                  "css": "rgba(255, 159, 10, 0.08)",
+                  "hsl": {
+                    "h": 36,
+                    "s": 100,
+                    "l": 52,
+                    "a": 0.08
+                  },
+                  "hsb": {
+                    "h": 36,
+                    "s": 96,
+                    "b": 100,
+                    "a": 0.08
+                  }
+                }
+              },
+              "amber-400-22%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff9f0a38",
+                  "rgb": {
+                    "r": 255,
+                    "g": 159,
+                    "b": 10,
+                    "a": 0.22
+                  },
+                  "css": "rgba(255, 159, 10, 0.22)",
+                  "hsl": {
+                    "h": 36,
+                    "s": 100,
+                    "l": 52,
+                    "a": 0.22
+                  },
+                  "hsb": {
+                    "h": 36,
+                    "s": 96,
+                    "b": 100,
+                    "a": 0.22
+                  }
+                }
+              },
+              "amber-800": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#854f0b",
+                  "rgb": {
+                    "r": 133,
+                    "g": 79,
+                    "b": 11
+                  },
+                  "css": "rgb(133, 79, 11)",
+                  "hsl": {
+                    "h": 33,
+                    "s": 85,
+                    "l": 28
+                  },
+                  "hsb": {
+                    "h": 33,
+                    "s": 92,
+                    "b": 52
+                  }
+                }
+              },
+              "amber-900": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#3d2200",
+                  "rgb": {
+                    "r": 61,
+                    "g": 34,
+                    "b": 0
+                  },
+                  "css": "rgb(61, 34, 0)",
+                  "hsl": {
+                    "h": 33,
+                    "s": 100,
+                    "l": 12
+                  },
+                  "hsb": {
+                    "h": 33,
+                    "s": 100,
+                    "b": 24
+                  }
+                }
+              },
+              "amber-950": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#1f1200",
+                  "rgb": {
+                    "r": 31,
+                    "g": 18,
+                    "b": 0
+                  },
+                  "css": "rgb(31, 18, 0)",
+                  "hsl": {
+                    "h": 35,
+                    "s": 100,
+                    "l": 6
+                  },
+                  "hsb": {
+                    "h": 35,
+                    "s": 100,
+                    "b": 12
+                  }
+                }
+              }
+            },
+            "green": {
+              "green-100": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#defbe9",
+                  "rgb": {
+                    "r": 222,
+                    "g": 251,
+                    "b": 233
+                  },
+                  "css": "rgb(222, 251, 233)",
+                  "hsl": {
+                    "h": 142,
+                    "s": 80,
+                    "l": 93
+                  },
+                  "hsb": {
+                    "h": 142,
+                    "s": 12,
+                    "b": 99
+                  }
+                }
+              },
+              "green-200": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#86efac",
+                  "rgb": {
+                    "r": 134,
+                    "g": 239,
+                    "b": 172
+                  },
+                  "css": "rgb(134, 239, 172)",
+                  "hsl": {
+                    "h": 142,
+                    "s": 77,
+                    "l": 73
+                  },
+                  "hsb": {
+                    "h": 142,
+                    "s": 44,
+                    "b": 94
+                  }
+                }
+              },
+              "green-400": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#34c759",
+                  "rgb": {
+                    "r": 52,
+                    "g": 199,
+                    "b": 89
+                  },
+                  "css": "rgb(52, 199, 89)",
+                  "hsl": {
+                    "h": 135,
+                    "s": 59,
+                    "l": 49
+                  },
+                  "hsb": {
+                    "h": 135,
+                    "s": 74,
+                    "b": 78
+                  }
+                }
+              },
+              "green-400-8%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#34c75914",
+                  "rgb": {
+                    "r": 52,
+                    "g": 199,
+                    "b": 89,
+                    "a": 0.08
+                  },
+                  "css": "rgba(52, 199, 89, 0.08)",
+                  "hsl": {
+                    "h": 135,
+                    "s": 59,
+                    "l": 49,
+                    "a": 0.08
+                  },
+                  "hsb": {
+                    "h": 135,
+                    "s": 74,
+                    "b": 78,
+                    "a": 0.08
+                  }
+                }
+              },
+              "green-400-22%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#34c75938",
+                  "rgb": {
+                    "r": 52,
+                    "g": 199,
+                    "b": 89,
+                    "a": 0.22
+                  },
+                  "css": "rgba(52, 199, 89, 0.22)",
+                  "hsl": {
+                    "h": 135,
+                    "s": 59,
+                    "l": 49,
+                    "a": 0.22
+                  },
+                  "hsb": {
+                    "h": 135,
+                    "s": 74,
+                    "b": 78,
+                    "a": 0.22
+                  }
+                }
+              },
+              "green-800": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#166534",
+                  "rgb": {
+                    "r": 22,
+                    "g": 101,
+                    "b": 52
+                  },
+                  "css": "rgb(22, 101, 52)",
+                  "hsl": {
+                    "h": 143,
+                    "s": 64,
+                    "l": 24
+                  },
+                  "hsb": {
+                    "h": 143,
+                    "s": 78,
+                    "b": 40
+                  }
+                }
+              },
+              "green-900": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#0f3d28",
+                  "rgb": {
+                    "r": 15,
+                    "g": 61,
+                    "b": 40
+                  },
+                  "css": "rgb(15, 61, 40)",
+                  "hsl": {
+                    "h": 153,
+                    "s": 61,
+                    "l": 15
+                  },
+                  "hsb": {
+                    "h": 153,
+                    "s": 75,
+                    "b": 24
+                  }
+                }
+              },
+              "green-950": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#0a2318",
+                  "rgb": {
+                    "r": 10,
+                    "g": 35,
+                    "b": 24
+                  },
+                  "css": "rgb(10, 35, 24)",
+                  "hsl": {
+                    "h": 154,
+                    "s": 56,
+                    "l": 9
+                  },
+                  "hsb": {
+                    "h": 154,
+                    "s": 71,
+                    "b": 14
+                  }
+                }
+              },
+              "New group": {
+                "Number": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "float",
+                  "$value": 0
+                }
+              }
+            },
+            "red": {
+              "red-100": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#fadcdc",
+                  "rgb": {
+                    "r": 250,
+                    "g": 220,
+                    "b": 220
+                  },
+                  "css": "rgb(250, 220, 220)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 76,
+                    "l": 92
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 12,
+                    "b": 98
+                  }
+                }
+              },
+              "red-200": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#fca5a5",
+                  "rgb": {
+                    "r": 252,
+                    "g": 165,
+                    "b": 165
+                  },
+                  "css": "rgb(252, 165, 165)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 94,
+                    "l": 82
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 35,
+                    "b": 99
+                  }
+                }
+              },
+              "red-400": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ec5d55",
+                  "rgb": {
+                    "r": 236,
+                    "g": 93,
+                    "b": 85
+                  },
+                  "css": "rgb(236, 93, 85)",
+                  "hsl": {
+                    "h": 3,
+                    "s": 80,
+                    "l": 63
+                  },
+                  "hsb": {
+                    "h": 3,
+                    "s": 64,
+                    "b": 93
+                  }
+                }
+              },
+              "red-400-8%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff453a14",
+                  "rgb": {
+                    "r": 255,
+                    "g": 69,
+                    "b": 58,
+                    "a": 0.08
+                  },
+                  "css": "rgba(255, 69, 58, 0.08)",
+                  "hsl": {
+                    "h": 3,
+                    "s": 100,
+                    "l": 61,
+                    "a": 0.08
+                  },
+                  "hsb": {
+                    "h": 3,
+                    "s": 77,
+                    "b": 100,
+                    "a": 0.08
+                  }
+                }
+              },
+              "red-400-22%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#ff453a38",
+                  "rgb": {
+                    "r": 255,
+                    "g": 69,
+                    "b": 58,
+                    "a": 0.22
+                  },
+                  "css": "rgba(255, 69, 58, 0.22)",
+                  "hsl": {
+                    "h": 3,
+                    "s": 100,
+                    "l": 61,
+                    "a": 0.22
+                  },
+                  "hsb": {
+                    "h": 3,
+                    "s": 77,
+                    "b": 100,
+                    "a": 0.22
+                  }
+                }
+              },
+              "red-800": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#7f1d1d",
+                  "rgb": {
+                    "r": 127,
+                    "g": 29,
+                    "b": 29
+                  },
+                  "css": "rgb(127, 29, 29)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 63,
+                    "l": 31
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 77,
+                    "b": 50
+                  }
+                }
+              },
+              "red-900": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#3d0f0f",
+                  "rgb": {
+                    "r": 61,
+                    "g": 15,
+                    "b": 15
+                  },
+                  "css": "rgb(61, 15, 15)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 61,
+                    "l": 15
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 75,
+                    "b": 24
+                  }
+                }
+              },
+              "red-900 2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": {
+                  "hex": "#1f0808",
+                  "rgb": {
+                    "r": 31,
+                    "g": 8,
+                    "b": 8
+                  },
+                  "css": "rgb(31, 8, 8)",
+                  "hsl": {
+                    "h": 0,
+                    "s": 59,
+                    "l": 8
+                  },
+                  "hsb": {
+                    "h": 0,
+                    "s": 74,
+                    "b": 12
+                  }
+                }
+              }
+            }
+          },
+          "spacing": {
+            "size-00": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 0
+            },
+            "size-04": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 4
+            },
+            "size-08": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 8
+            },
+            "size-12": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 12
+            },
+            "size-14": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 14
+            },
+            "size-16": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 16
+            },
+            "size-20": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 20
+            },
+            "size-24": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 24
+            },
+            "size-28": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 28
+            },
+            "size-32": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 32
+            },
+            "size-36": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 36
+            },
+            "size-40": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 40
+            },
+            "size-48": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 48
+            },
+            "size-56": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 56
+            },
+            "size-64": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 64
+            },
+            "size-999": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "float",
+              "$value": 999
+            }
+          },
+          "font-family": {
+            "font-family-satoshi": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Satoshi"
+            },
+            "font-family-montserrat": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Montserrat"
+            },
+            "font-family-geist": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Geist"
+            },
+            "font-family-figtree": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Figtree"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "tokens": {
+      "modes": {
+        "Mode 1": {
+          "bg": {
+            "surface": {
+              "base": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-900}",
+                "$collectionName": "primitives"
+              },
+              "default": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-800}",
+                "$collectionName": "primitives"
+              },
+              "elevated": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-700}",
+                "$collectionName": "primitives"
+              },
+              "card": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-600}",
+                "$collectionName": "primitives"
+              },
+              "input": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-500}",
+                "$collectionName": "primitives"
+              },
+              "selected": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-400}",
+                "$collectionName": "primitives"
+              },
+              "primary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700}",
+                "$collectionName": "primitives"
+              },
+              "primary-15%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700-15%}",
+                "$collectionName": "primitives"
+              },
+              "primary-8%": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700-8%}",
+                "$collectionName": "primitives"
+              },
+              "primary-4": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700-4%}",
+                "$collectionName": "primitives"
+              },
+              "primary-hover": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-600}",
+                "$collectionName": "primitives"
+              },
+              "light-hover": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700-15%}",
+                "$collectionName": "primitives"
+              },
+              "primary-elevated": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700}",
+                "$collectionName": "primitives"
+              },
+              "inverse": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-10}",
+                "$collectionName": "primitives"
+              }
+            },
+            "semantic": {
+              "destructive": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-800}",
+                "$collectionName": "primitives"
+              },
+              "destructive-hover": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-900}",
+                "$collectionName": "primitives"
+              },
+              "destructive-hover-ghost": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-400-8%}",
+                "$collectionName": "primitives"
+              },
+              "success-bg": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.green.green-400-8%}",
+                "$collectionName": "primitives"
+              },
+              "warning": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.amber.amber-400-8%}",
+                "$collectionName": "primitives"
+              }
+            }
+          },
+          "spacing": {
+            "border-radius": {
+              "radius-none": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-00}",
+                "$collectionName": "primitives"
+              },
+              "radius-small": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-04}",
+                "$collectionName": "primitives"
+              },
+              "radius-medium": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-08}",
+                "$collectionName": "primitives"
+              },
+              "radius-large": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-12}",
+                "$collectionName": "primitives"
+              },
+              "radius-xlarge": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-16}",
+                "$collectionName": "primitives"
+              },
+              "radius-full": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-999}",
+                "$collectionName": "primitives"
+              }
+            },
+            "button": {
+              "large": {
+                "padding-horizontal": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "float",
+                  "$value": "{spacing.size-16}",
+                  "$collectionName": "primitives"
+                },
+                "padding-vertical": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "float",
+                  "$value": "{spacing.size-08}",
+                  "$collectionName": "primitives"
+                }
+              },
+              "small": {
+                "padding-horizontal": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "float",
+                  "$value": "{spacing.size-12}",
+                  "$collectionName": "primitives"
+                },
+                "padding-vertical": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "float",
+                  "$value": "{spacing.size-08}",
+                  "$collectionName": "primitives"
+                }
+              }
+            }
+          },
+          "color": {
+            "text": {
+              "primary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-10}",
+                "$collectionName": "primitives"
+              },
+              "secondary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-200}",
+                "$collectionName": "primitives"
+              },
+              "tertiary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-400}",
+                "$collectionName": "primitives"
+              },
+              "accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-300}",
+                "$collectionName": "primitives"
+              },
+              "muted-accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-200}",
+                "$collectionName": "primitives"
+              },
+              "on-filled": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-10}",
+                "$collectionName": "primitives"
+              },
+              "on-destructive-muted": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-100}",
+                "$collectionName": "primitives"
+              },
+              "on-success": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.green.green-400}",
+                "$collectionName": "primitives"
+              },
+              "on-alert": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.amber.amber-400}",
+                "$collectionName": "primitives"
+              },
+              "on-destructive": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-400}",
+                "$collectionName": "primitives"
+              },
+              "on-inverse": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-900}",
+                "$collectionName": "primitives"
+              },
+              "on-inverse-accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{bg.surface.primary}",
+                "$collectionName": "tokens"
+              }
+            },
+            "border": {
+              "subtle": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-500}",
+                "$collectionName": "primitives"
+              },
+              "default": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-dark.purple-400}",
+                "$collectionName": "primitives"
+              },
+              "accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-500}",
+                "$collectionName": "primitives"
+              },
+              "muted-accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700-25%}",
+                "$collectionName": "primitives"
+              },
+              "strong": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-700}",
+                "$collectionName": "primitives"
+              },
+              "destructive": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-800}",
+                "$collectionName": "primitives"
+              },
+              "destructive-subtle": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-400-22%}",
+                "$collectionName": "primitives"
+              },
+              "success-subtle": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.green.green-400-22%}",
+                "$collectionName": "primitives"
+              },
+              "warning-subtle": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.amber.amber-400-22%}",
+                "$collectionName": "primitives"
+              }
+            },
+            "icon": {
+              "muted": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-200}",
+                "$collectionName": "primitives"
+              },
+              "accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.purple-brand.brand-500}",
+                "$collectionName": "primitives"
+              },
+              "disabled": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-400}",
+                "$collectionName": "primitives"
+              },
+              "muted-gray": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-200}",
+                "$collectionName": "primitives"
+              },
+              "on-primary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.gray-scale.gray-10}",
+                "$collectionName": "primitives"
+              },
+              "on-success": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.green.green-400}",
+                "$collectionName": "primitives"
+              },
+              "on-destructive-accent": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-400}",
+                "$collectionName": "primitives"
+              },
+              "on-destructive": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.red.red-100}",
+                "$collectionName": "primitives"
+              },
+              "on-warning": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "{color.amber.amber-400}",
+                "$collectionName": "primitives"
+              }
+            }
+          },
+          "font-size": {
+            "scale": {
+              "size-xxsmall-12": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-12}",
+                "$collectionName": "primitives"
+              },
+              "size-xsmall-14": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-14}",
+                "$collectionName": "primitives"
+              },
+              "size-small-16": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-16}",
+                "$collectionName": "primitives"
+              },
+              "size-medium-20": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-20}",
+                "$collectionName": "primitives"
+              },
+              "size-xmedium-24": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-24}",
+                "$collectionName": "primitives"
+              },
+              "size-large-28": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-28}",
+                "$collectionName": "primitives"
+              },
+              "size-xlarge-32": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-32}",
+                "$collectionName": "primitives"
+              },
+              "size-xxlarge-36": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-36}",
+                "$collectionName": "primitives"
+              },
+              "size-huge-40": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-40}",
+                "$collectionName": "primitives"
+              },
+              "size-xhuge-48": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-48}",
+                "$collectionName": "primitives"
+              },
+              "size-xxhuge-56": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-56}",
+                "$collectionName": "primitives"
+              },
+              "size-display-64": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{spacing.size-64}",
+                "$collectionName": "primitives"
+              }
+            },
+            "heading": {
+              "heading-1": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xxhuge-56}",
+                "$collectionName": "tokens"
+              },
+              "heading-2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xhuge-48}",
+                "$collectionName": "tokens"
+              },
+              "heading-3": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-huge-40}",
+                "$collectionName": "tokens"
+              },
+              "heading-4": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xlarge-32}",
+                "$collectionName": "tokens"
+              },
+              "heading-5": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xmedium-24}",
+                "$collectionName": "tokens"
+              },
+              "heading-6": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-medium-20}",
+                "$collectionName": "tokens"
+              }
+            },
+            "title": {
+              "title-medium": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-medium-20}",
+                "$collectionName": "tokens"
+              },
+              "title-small": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-small-16}",
+                "$collectionName": "tokens"
+              }
+            },
+            "body": {
+              "body-xlarge": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xmedium-24}",
+                "$collectionName": "tokens"
+              },
+              "body-large": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-medium-20}",
+                "$collectionName": "tokens"
+              },
+              "body-medium": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-small-16}",
+                "$collectionName": "tokens"
+              },
+              "body-small": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xsmall-14}",
+                "$collectionName": "tokens"
+              },
+              "body-tiny": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xxsmall-12}",
+                "$collectionName": "tokens"
+              }
+            },
+            "label": {
+              "label-medium": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-small-16}",
+                "$collectionName": "tokens"
+              },
+              "label-small": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xsmall-14}",
+                "$collectionName": "tokens"
+              },
+              "label-xsmall": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "float",
+                "$value": "{font-size.scale.size-xxsmall-12}",
+                "$collectionName": "tokens"
+              }
+            }
+          },
+          "font-family": {
+            "main": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "{font-family.font-family-figtree}",
+              "$collectionName": "primitives"
+            },
+            "secondary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "{font-family.font-family-montserrat}",
+              "$collectionName": "primitives"
+            },
+            "tertiary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "{font-family.font-family-geist}",
+              "$collectionName": "primitives"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "_styles": {
+      "textStyles": [
+        {
+          "name": "font-scale/heading/heading-1",
+          "fontFamily": "Figtree",
+          "fontStyle": "Black",
+          "fontSize": 56,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:486",
+              "name": "font-size/heading/heading-1",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/heading/heading-2",
+          "fontFamily": "Figtree",
+          "fontStyle": "Black",
+          "fontSize": 48,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:15:473",
+              "name": "font-size/scale/size-xhuge-48",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/heading/heading-3",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 40,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:488",
+              "name": "font-size/heading/heading-3",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/heading/heading-4",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 32,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:490",
+              "name": "font-size/heading/heading-4",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/heading/heading-5",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 24,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:491",
+              "name": "font-size/heading/heading-5",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/heading/heading-6",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 20,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:492",
+              "name": "font-size/heading/heading-6",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/title/title-small",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 120.00000476837158
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:18:281",
+              "name": "font-size/title/title-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/big-number/number-1",
+          "fontFamily": "Figtree",
+          "fontStyle": "Black",
+          "fontSize": 64,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE"
+        },
+        {
+          "name": "font-scale/big-number/number-2",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 32,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -1.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:490",
+              "name": "font-size/heading/heading-4",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/big-number/number-3",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 24,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:491",
+              "name": "font-size/heading/heading-5",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/body/body-1",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 24,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 150
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:493",
+              "name": "font-size/body/body-xlarge",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/body/body-2",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 20,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 150
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:15:476",
+              "name": "font-size/scale/size-medium-20",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/body/body-3",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 150
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:495",
+              "name": "font-size/body/body-medium",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/body/body-4",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 14,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 139.9999976158142
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:496",
+              "name": "font-size/body/body-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/body/body-5",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 12,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 139.9999976158142
+          },
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:497",
+              "name": "font-size/body/body-tiny",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/regular/medium",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:501",
+              "name": "font-size/label/label-medium",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/regular/small",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 14,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 110.00000238418579
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:134",
+              "name": "font-size/label/label-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/regular/xsmall",
+          "fontFamily": "Figtree",
+          "fontStyle": "Regular",
+          "fontSize": 12,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:8034",
+              "name": "font-size/label/label-xsmall",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/medium/medium",
+          "fontFamily": "Figtree",
+          "fontStyle": "Medium",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:501",
+              "name": "font-size/label/label-medium",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/medium/small",
+          "fontFamily": "Figtree",
+          "fontStyle": "Medium",
+          "fontSize": 14,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:134",
+              "name": "font-size/label/label-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/medium/xsmall",
+          "fontFamily": "Figtree",
+          "fontStyle": "Medium",
+          "fontSize": 12,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:8034",
+              "name": "font-size/label/label-xsmall",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/bold/medium",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:501",
+              "name": "font-size/label/label-medium",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/bold/small",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 14,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:134",
+              "name": "font-size/label/label-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/bold/xsmall",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 12,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:8034",
+              "name": "font-size/label/label-xsmall",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/link/bold-medium",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "UNDERLINE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:16:501",
+              "name": "font-size/label/label-medium",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/link/bold-small",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 14,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "UNDERLINE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:134",
+              "name": "font-size/label/label-small",
+              "collection": "tokens"
+            }
+          }
+        },
+        {
+          "name": "font-scale/label/link/bold-xsmall",
+          "fontFamily": "Figtree",
+          "fontStyle": "Bold",
+          "fontSize": 12,
+          "lineHeight": {
+            "unit": "PERCENT",
+            "value": 100
+          },
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0.5
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "UNDERLINE",
+          "boundVariables": {
+            "fontSize": {
+              "id": "VariableID:22:8034",
+              "name": "font-size/label/label-xsmall",
+              "collection": "tokens"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

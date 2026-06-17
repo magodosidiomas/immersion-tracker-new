@@ -12,6 +12,7 @@
 @import '@fontsource/figtree/latin-ext-700.css';
 @import './styles/tokens.css';
 @import './styles/semantic.css';
+@import './styles/typescale.css';
 
 * {
   box-sizing: border-box;

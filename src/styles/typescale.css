@@ -1,0 +1,22 @@
+/* HAND-MAINTAINED — unlike tokens.css and semantic.css, this isn't
+   auto-generated. Font-weight, line-height, and letter-spacing live in
+   Figma as Text Styles (e.g. "label/medium/medium"), not Variables, and
+   there's no clean export path for Text Styles the way there is for
+   Variables. So these get added by hand, one at a time, as components
+   actually need them — same as how semantic.css used to work before it
+   was automated.
+
+   Source values come from design-tokens/figma-export.json's "_styles"
+   collection. If font-weight/line-height/letter-spacing ever become
+   real Figma Variables, this file goes away and build-tokens.js picks
+   them up instead. */
+
+:root {
+  /* font-weight — from textStyles[].fontStyle (Regular/Medium/Bold/Black) */
+  --font-weight-medium: 500; /* used by: label/medium/* */
+  --font-weight-bold: 700; /* used by: label/bold/*, Button */
+
+  /* line-height — from textStyles[].lineHeight (always PERCENT in Figma,
+     divide by 100 for the CSS unitless equivalent) */
+  --line-height-tight: 1; /* used by: all label/* styles (100%) */
+}
