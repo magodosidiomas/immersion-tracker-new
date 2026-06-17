@@ -13,10 +13,15 @@
 
 :root {
   /* font-weight — from textStyles[].fontStyle (Regular/Medium/Bold/Black) */
+  --font-weight-regular: 400; /* used by: label/regular/* */
   --font-weight-medium: 500; /* used by: label/medium/* */
   --font-weight-bold: 700; /* used by: label/bold/*, Button */
 
   /* line-height — from textStyles[].lineHeight (always PERCENT in Figma,
      divide by 100 for the CSS unitless equivalent) */
   --line-height-tight: 1; /* used by: all label/* styles (100%) */
+  --line-height-snug: 1.1; /* used by: heading/*, label/regular/* (110%) */
+
+  /* letter-spacing — from textStyles[].letterSpacing */
+  --letter-spacing-wide: 0.005em; /* used by: label/regular/small */
 }
