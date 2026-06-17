@@ -1,5 +1,5 @@
 import './TopNav.css'
-import { KeyboardArrowDown } from '@nine-thirty-five/material-symbols-react/outlined'
+import Dropdown from './Dropdown'
 
 // Mirrors the Figma "topNav" component set, with the same simplification
 // Button and SelectableListItem already use: the has* booleans
@@ -12,9 +12,11 @@ import { KeyboardArrowDown } from '@nine-thirty-five/material-symbols-react/outl
 // slots: an emoji isn't an icon component, and the two need different
 // sizing rules to look balanced in the same 24px box.
 //
-// The dropdown chevron isn't an exposed slot — the Figma properties only
-// list `hasDropdown` as a boolean, not a swappable instance — so it's
-// built into the component rather than passed in like the other icons.
+// hasDropdown used to build its own title+chevron markup inline, back
+// before the real Dropdown component existed. Now it just renders one,
+// passing flag/title through as flag/label — selected is always true
+// here since the title is standing in for "the current selection" (e.g.
+// the active language), not a row in a list someone could toggle.
 function TopNav({
   title = 'Page title',
   leadingIcon = null,
@@ -32,15 +34,14 @@ function TopNav({
     <header className="top-nav" data-divider={hasDivider} {...props}>
       <div className="top-nav-leading">
         {leadingIcon && <span className="top-nav-icon">{leadingIcon}</span>}
-        {flag && <span className="top-nav-flag">{flag}</span>}
-        <div className="top-nav-title-group" data-dropdown={hasDropdown}>
-          <span className="top-nav-title">{title}</span>
-          {hasDropdown && (
-            <span className="top-nav-icon top-nav-chevron">
-              <KeyboardArrowDown />
-            </span>
-          )}
-        </div>
+        {hasDropdown ? (
+          <Dropdown label={title} flag={flag} selected />
+        ) : (
+          <>
+            {flag && <span className="top-nav-flag">{flag}</span>}
+            <span className="top-nav-title">{title}</span>
+          </>
+        )}
       </div>
       {hasTrailing && (
         <div className="top-nav-trailing">

@@ -1,5 +1,6 @@
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
+import Dropdown from '../components/Dropdown'
 import TopNav from '../components/TopNav'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 
@@ -74,6 +75,17 @@ function ComponentShowcase() {
         <SelectableListItem label="Default, with divider" divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Selected, with divider" selected divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Disabled, with divider" disabled divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Dropdown</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        hasSelection is the only designed variant — flag/label/secondaryLabel
+        are plain slots, same idea as the components above.
+      </p>
+      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
+        <Dropdown flag="🇺🇸" label="Label" secondaryLabel="Label 2nd" />
+        <Dropdown flag="🇺🇸" label="Label" secondaryLabel="Label 2nd" selected />
+        <Dropdown flag="🇺🇸" label="Inglês" selected />
       </div>
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>TopNav</h1>

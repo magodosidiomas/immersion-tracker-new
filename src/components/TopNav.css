@@ -20,14 +20,6 @@
   min-width: 0;
 }
 
-.top-nav-title-group {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* matches Button's icon-to-label gap: not a token, just a one-off value in the Figma file */
-  flex: 1;
-  min-width: 0;
-}
-
 .top-nav-title {
   flex: 1;
   min-width: 0;
@@ -37,17 +29,6 @@
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
   overflow-wrap: break-word;
-}
-
-/* --- dropdown variant: title reads as the current selection (e.g. the
-   active language), so it borrows the same accent tint SelectableListItem
-   uses for a selected row, rather than a new one-off color --- */
-.top-nav-title-group[data-dropdown='true'] {
-  --icon-color: var(--color-text-accent);
-}
-
-.top-nav-title-group[data-dropdown='true'] .top-nav-title {
-  color: var(--color-text-accent);
 }
 
 .top-nav-trailing {

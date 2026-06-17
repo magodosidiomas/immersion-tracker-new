@@ -1,0 +1,69 @@
+.dropdown {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  --icon-color: var(--color-icon-muted-gray);
+}
+
+.dropdown-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 20px; /* same reasoning as SelectableListItem/TopNav's
+    flag: emoji have no intrinsic size to stretch like an SVG icon */
+  line-height: var(--line-height-tight);
+}
+
+.dropdown-categories {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.dropdown-label,
+.dropdown-dot,
+.dropdown-label-secondary {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+}
+
+.dropdown-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--icon-color);
+}
+
+.dropdown-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- selected (hasSelection=true) --- */
+.dropdown[data-selected='true'] .dropdown-label,
+.dropdown[data-selected='true'] .dropdown-dot,
+.dropdown[data-selected='true'] .dropdown-label-secondary {
+  color: var(--color-text-muted-accent);
+}
+
+/* not in the Figma variant notes (those only call out the three text
+   layers), but --color-icon-muted is the same hex as
+   --color-text-muted-accent, so this keeps the chevron visually
+   consistent with the retinted labels instead of going stale next to
+   them */
+.dropdown[data-selected='true'] {
+  --icon-color: var(--color-icon-muted);
+}
