@@ -1,5 +1,6 @@
 import Button from '../components/Button'
-import { Bolt } from '@nine-thirty-five/material-symbols-react/outlined'
+import SelectableListItem from '../components/SelectableListItem'
+import { Bolt, Check } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Temporary: a visual checklist of every implemented component, so we
 // can compare against Figma before building real screens. This file
@@ -58,6 +59,21 @@ function ComponentShowcase() {
           <ButtonRow size={size} disabled={true} />
         </div>
       ))}
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>SelectableListItem</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Same idea as Button: hover for real instead of a separate row.
+        leadingIcon/trailingIcon/flag are plain slots — these examples pass
+        Check and a flag emoji, but neither is hardcoded into the component.
+      </p>
+      <div style={{ width: 324, display: 'flex', flexDirection: 'column' }}>
+        <SelectableListItem label="Selected" selected flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Default" flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Disabled" disabled flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Default, with divider" divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Selected, with divider" selected divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Disabled, with divider" disabled divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+      </div>
     </main>
   )
 }

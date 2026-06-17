@@ -23,11 +23,13 @@
   /* text */
   --color-text-primary: var(--color-gray-10);
   --color-text-tertiary: var(--color-gray-400);
+  --color-text-accent: var(--color-brand-300);
   --color-text-on-destructive: var(--color-red-400);
   --color-text-on-destructive-muted: var(--color-red-100);
 
   /* icons */
   --color-icon-muted: var(--color-brand-200);
+  --color-icon-muted-gray: var(--color-gray-200);
   --color-icon-disabled: var(--color-gray-400);
   --color-icon-on-destructive: var(--color-red-100);
   --color-icon-on-destructive-accent: var(--color-red-400);
