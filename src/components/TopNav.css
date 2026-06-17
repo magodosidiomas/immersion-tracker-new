@@ -51,6 +51,31 @@
   height: 100%;
 }
 
+.top-nav-icon-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.top-nav-icon-reset svg {
+  width: 100%;
+  height: 100%;
+}
+
+.top-nav-icon-reset:focus-visible {
+  outline: 2px solid var(--color-border-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
 .top-nav-flag {
   display: inline-flex;
   align-items: center;

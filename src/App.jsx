@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
 import SelectLanguage from './screens/SelectLanguage'
+import Home from './screens/Home'
+import Settings from './screens/Settings'
 import { getAppSettings } from './db'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -18,6 +20,11 @@ function App() {
   // checking IndexedDB" so we don't flash the wrong screen on load.
   const [hasLanguage, setHasLanguage] = useState(null)
 
+  // Home vs Settings is plain state, not a route either — just two
+  // screens for now, so a router would be more machinery than this
+  // needs. Revisit once there's a third screen or a reason to deep-link.
+  const [screen, setScreen] = useState('home')
+
   useEffect(() => {
     if (isDesignSystem) return
     getAppSettings().then((settings) => {
@@ -28,28 +35,8 @@ function App() {
   if (isDesignSystem) return <ComponentShowcase />
   if (hasLanguage === null) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
-  return <Home />
-}
-
-// Placeholder until real screens get built from Figma. Intentionally
-// minimal — this isn't a designed screen, just a stand-in so the root
-// isn't a blank page.
-function Home() {
-  return (
-    <main
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: 'var(--color-purple-900)',
-        color: 'var(--color-text-tertiary)',
-        fontFamily: 'var(--font-family-main)',
-      }}
-    >
-      Imerso — em construção
-    </main>
-  )
+  if (screen === 'settings') return <Settings onBack={() => setScreen('home')} />
+  return <Home onOpenSettings={() => setScreen('settings')} />
 }
 
 export default App

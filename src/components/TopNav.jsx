@@ -26,6 +26,7 @@ function TopNav({
   trailingRight = null,
   hasDropdown = false,
   hasDivider = false,
+  onDropdownClick = null,
   ...props
 }) {
   const hasTrailing = trailingLeft || trailingMid || trailingRight
@@ -35,7 +36,7 @@ function TopNav({
       <div className="top-nav-leading">
         {leadingIcon && <span className="top-nav-icon">{leadingIcon}</span>}
         {hasDropdown ? (
-          <Dropdown label={title} flag={flag} selected />
+          <Dropdown label={title} flag={flag} selected onClick={onDropdownClick} />
         ) : (
           <>
             {flag && <span className="top-nav-flag">{flag}</span>}
