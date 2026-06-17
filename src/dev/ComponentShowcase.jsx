@@ -1,6 +1,7 @@
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
-import { Bolt, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import TopNav from '../components/TopNav'
+import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Temporary: a visual checklist of every implemented component, so we
 // can compare against Figma before building real screens. This file
@@ -73,6 +74,39 @@ function ComponentShowcase() {
         <SelectableListItem label="Default, with divider" divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Selected, with divider" selected divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Disabled, with divider" disabled divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>TopNav</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        leadingIcon/flag and trailingLeft/Mid/Right are plain slots, same
+        idea as the components above — passing null hides them instead of
+        a separate has* boolean.
+      </p>
+      <div style={{ width: 375, display: 'flex', flexDirection: 'column' }}>
+        <TopNav
+          title="Page title"
+          leadingIcon={<ArrowBack />}
+          trailingLeft={<ViewInAr />}
+          trailingMid={<ViewInAr />}
+          trailingRight={<ViewInAr />}
+        />
+        <TopNav
+          title="Page title"
+          leadingIcon={<ArrowBack />}
+          trailingLeft={<ViewInAr />}
+          trailingMid={<ViewInAr />}
+          trailingRight={<ViewInAr />}
+          hasDivider
+        />
+        <TopNav
+          title="Inglês"
+          flag="🇺🇸"
+          hasDropdown
+          hasDivider
+          trailingLeft={<ViewInAr />}
+          trailingMid={<ViewInAr />}
+          trailingRight={<ViewInAr />}
+        />
       </div>
     </main>
   )
