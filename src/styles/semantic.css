@@ -43,4 +43,7 @@
   --radius-medium: 8px; /* matches --space-8 numerically, kept separate since it's a radius, not a spacing value */
   --font-family-main: var(--font-figtree);
   --font-size-label-medium: 16px;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-tight: 1;
 }

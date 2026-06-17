@@ -1,3 +1,15 @@
+/* Self-hosted via @fontsource — no Google Fonts request at runtime, same
+   "bundle it, don't fetch it" approach as the Material Symbols icons.
+   latin-ext is required, not optional: plain `latin` doesn't cover
+   accented characters (ã, ç, õ...) that Portuguese content needs.
+   Weights: 400/500/700 cover what's used so far; add more here as new
+   components need them. */
+@import '@fontsource/figtree/latin-400.css';
+@import '@fontsource/figtree/latin-ext-400.css';
+@import '@fontsource/figtree/latin-500.css';
+@import '@fontsource/figtree/latin-ext-500.css';
+@import '@fontsource/figtree/latin-700.css';
+@import '@fontsource/figtree/latin-ext-700.css';
 @import './styles/tokens.css';
 @import './styles/semantic.css';
 
@@ -7,5 +19,5 @@
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-family-main);
 }

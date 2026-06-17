@@ -27,9 +27,9 @@
   flex: 1;
   min-width: 0;
   font-family: var(--font-family-main);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   font-size: var(--font-size-label-medium);
-  line-height: 1;
+  line-height: var(--line-height-tight);
   color: var(--color-text-primary);
   overflow-wrap: break-word;
 }

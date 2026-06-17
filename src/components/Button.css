@@ -6,9 +6,9 @@
   border: none;
   border-radius: var(--radius-medium);
   font-family: var(--font-family-main);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-label-medium);
-  line-height: 1;
+  line-height: var(--line-height-tight);
   white-space: nowrap;
   cursor: pointer;
   --icon-color: var(--color-icon-muted);
