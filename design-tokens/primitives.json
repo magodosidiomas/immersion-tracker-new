@@ -749,18 +749,6 @@
             "ALL_SCOPES"
           ]
         }
-      },
-      "New group": {
-        "Number": {
-          "$type": "number",
-          "$value": 0,
-          "$extensions": {
-            "com.figma.variableId": "VariableID:15:359",
-            "com.figma.scopes": [
-              "ALL_SCOPES"
-            ]
-          }
-        }
       }
     },
     "red": {
@@ -859,7 +847,7 @@
           ]
         }
       },
-      "red-800": {
+      "red-700": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
@@ -878,7 +866,7 @@
           ]
         }
       },
-      "red-900": {
+      "red-800": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
@@ -897,7 +885,7 @@
           ]
         }
       },
-      "red-900 2": {
+      "red-900": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",

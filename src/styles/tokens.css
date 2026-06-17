@@ -48,9 +48,9 @@
   --color-red-400: #EC5D55;
   --color-red-400-8: rgba(255, 69, 58, 0.08);
   --color-red-400-22: rgba(255, 69, 58, 0.22);
-  --color-red-800: #7F1D1D;
-  --color-red-900: #3D0F0F;
-  --color-red-900-2: #1F0808;
+  --color-red-700: #7F1D1D;
+  --color-red-800: #3D0F0F;
+  --color-red-900: #1F0808;
 
   /* spacing */
   --space-0: 0px;
