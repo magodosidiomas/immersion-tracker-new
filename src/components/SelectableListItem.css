@@ -34,8 +34,7 @@
   overflow-wrap: break-word;
 }
 
-.selectable-list-item-icon,
-.selectable-list-item-flag {
+.selectable-list-item-icon {
   display: inline-flex;
   flex-shrink: 0;
   width: 24px;
@@ -46,6 +45,19 @@
 .selectable-list-item-icon svg {
   width: 100%;
   height: 100%;
+}
+
+.selectable-list-item-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 20px; /* emoji have no intrinsic size to stretch like an
+    SVG icon does — 20px in a 24px box centers it at roughly the same
+    visual weight as the Check icons next to it */
+  line-height: var(--line-height-tight);
 }
 
 .selectable-list-item-divider {
