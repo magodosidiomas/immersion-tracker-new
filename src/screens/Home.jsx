@@ -3,6 +3,7 @@ import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
+import Button from '../components/Button'
 import { Settings, Check } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Home.css'
 
@@ -13,10 +14,11 @@ import './Home.css'
 //
 // The switcher picks from already-added languages (getLanguages), not
 // AVAILABLE_LANGUAGES — that catalog is only for adding a new language,
-// a flow that lives in Settings, not here. Tapping a row switches and
-// closes immediately, no Save/Cancel: this is a quick swap of what's
-// already active, not a form.
-function Home({ onOpenSettings }) {
+// a flow that lives in Settings > Gerenciar idiomas. Tapping a row
+// switches and closes immediately, no Save/Cancel: this is a quick
+// swap of what's already active, not a form. The sheet's primaryButton
+// is a shortcut straight into that same management screen.
+function Home({ onOpenSettings, onOpenManageLanguages }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -35,6 +37,11 @@ function Home({ onOpenSettings }) {
     if (language.id === activeId) return
     setActiveId(language.id)
     await setActiveLanguageId(language.id)
+  }
+
+  function handleManageLanguages() {
+    setSwitcherOpen(false)
+    onOpenManageLanguages()
   }
 
   return (
@@ -61,6 +68,11 @@ function Home({ onOpenSettings }) {
         onClose={() => setSwitcherOpen(false)}
         title="Idioma"
         description="Escolha o idioma ativo."
+        primaryButton={
+          <Button variant="outline" leadingIcon={<Settings />} onClick={handleManageLanguages}>
+            Gerenciar idiomas
+          </Button>
+        }
       >
         {languages.map((language, index) => (
           <SelectableListItem

@@ -4,3 +4,16 @@
   min-height: 100vh;
   background: var(--bg-surface-base);
 }
+
+.settings-content {
+  padding: 16px;
+}
+
+.settings-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-default);
+}

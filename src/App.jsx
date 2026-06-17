@@ -3,6 +3,7 @@ import ComponentShowcase from './dev/ComponentShowcase'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
+import ManageLanguages from './screens/ManageLanguages'
 import { getAppSettings } from './db'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -20,9 +21,9 @@ function App() {
   // checking IndexedDB" so we don't flash the wrong screen on load.
   const [hasLanguage, setHasLanguage] = useState(null)
 
-  // Home vs Settings is plain state, not a route either — just two
-  // screens for now, so a router would be more machinery than this
-  // needs. Revisit once there's a third screen or a reason to deep-link.
+  // Home vs Settings vs ManageLanguages is plain state, not a route —
+  // a third screen, like the comment above predicted. Still simpler
+  // than a router for this size of nav (no deep-linking need yet).
   const [screen, setScreen] = useState('home')
 
   useEffect(() => {
@@ -35,8 +36,18 @@ function App() {
   if (isDesignSystem) return <ComponentShowcase />
   if (hasLanguage === null) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
-  if (screen === 'settings') return <Settings onBack={() => setScreen('home')} />
-  return <Home onOpenSettings={() => setScreen('settings')} />
+  // ManageLanguages sits inside Settings in the nav hierarchy, so its
+  // back button always returns to 'settings' — even when this screen
+  // was reached via Home's dropdown shortcut below.
+  if (screen === 'manage-languages') {
+    return <ManageLanguages onBack={() => setScreen('settings')} />
+  }
+  if (screen === 'settings') {
+    return (
+      <Settings onBack={() => setScreen('home')} onOpenManageLanguages={() => setScreen('manage-languages')} />
+    )
+  }
+  return <Home onOpenSettings={() => setScreen('settings')} onOpenManageLanguages={() => setScreen('manage-languages')} />
 }
 
 export default App
