@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
 import Dropdown from '../components/Dropdown'
 import TopNav from '../components/TopNav'
+import BottomSheet from '../components/BottomSheet'
+import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Temporary: a visual checklist of every implemented component, so we
@@ -120,7 +123,49 @@ function ComponentShowcase() {
           trailingRight={<ViewInAr />}
         />
       </div>
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>BottomSheet</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Mobile vs desktop is CSS-driven (resize the window to see it switch
+        from a sheet to a centered modal) — no device prop. Demoed here with
+        its real first use case: picking the active language.
+      </p>
+      <BottomSheetDemo />
     </main>
+  )
+}
+
+// Demoes BottomSheet with its real first use case (the language
+// switcher) instead of placeholder content, since customContent's
+// actual shape — a scrollable list of SelectableListItems — is part
+// of what needs checking against Figma.
+function BottomSheetDemo() {
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState(AVAILABLE_LANGUAGES[0].name)
+
+  return (
+    <>
+      <Dropdown flag="🇺🇸" label="Inglês" selected onClick={() => setOpen(true)} />
+      <BottomSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Idioma"
+        description="Escolha o idioma que você quer praticar."
+        divider
+        primaryButton={<Button variant="primary">Salvar</Button>}
+        secondaryButton={<Button variant="ghost">Cancelar</Button>}
+      >
+        {AVAILABLE_LANGUAGES.map((language) => (
+          <SelectableListItem
+            key={language.name}
+            label={language.name}
+            flag={language.flagEmoji}
+            selected={language.name === selected}
+            trailingIcon={language.name === selected ? <Check /> : null}
+            onClick={() => setSelected(language.name)}
+          />
+        ))}
+      </BottomSheet>
+    </>
   )
 }
 
