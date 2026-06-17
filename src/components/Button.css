@@ -1,0 +1,127 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: var(--radius-medium);
+  font-family: var(--font-family-main);
+  font-weight: 700;
+  font-size: var(--font-size-label-medium);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  --icon-color: var(--color-icon-muted);
+}
+
+.button[data-size='lg'] {
+  height: 40px;
+  padding: 8px 16px;
+}
+
+.button[data-size='sm'] {
+  height: 32px;
+  padding: 8px 12px;
+}
+
+/* --- primary --- */
+.button[data-variant='primary'] {
+  background: var(--bg-surface-primary);
+  color: var(--color-text-primary);
+}
+.button[data-variant='primary']:hover:not(:disabled) {
+  background: var(--bg-surface-primary-hover);
+}
+
+/* --- outline --- */
+.button[data-variant='outline'] {
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+}
+.button[data-variant='outline']:hover:not(:disabled) {
+  background: var(--bg-surface-primary-15);
+}
+
+/* --- ghost --- */
+.button[data-variant='ghost'] {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+.button[data-variant='ghost']:hover:not(:disabled) {
+  background: var(--bg-surface-primary-15);
+}
+
+/* --- destructive --- */
+.button[data-variant='destructive'] {
+  background: var(--bg-semantic-destructive);
+  color: var(--color-text-on-destructive-muted);
+  --icon-color: var(--color-icon-on-destructive);
+}
+.button[data-variant='destructive']:hover:not(:disabled) {
+  background: var(--bg-semantic-destructive-hover-ghost);
+}
+
+/* --- destructive-outline --- */
+.button[data-variant='destructive-outline'] {
+  background: transparent;
+  border: 1px solid var(--color-border-destructive-subtle);
+  color: var(--color-text-on-destructive-muted);
+  --icon-color: var(--color-icon-on-destructive);
+}
+.button[data-variant='destructive-outline']:hover:not(:disabled) {
+  background: var(--bg-semantic-destructive-hover-ghost);
+}
+
+/* --- destructive-ghost --- */
+.button[data-variant='destructive-ghost'] {
+  background: transparent;
+  color: var(--color-text-on-destructive);
+  --icon-color: var(--color-icon-on-destructive-accent);
+}
+.button[data-variant='destructive-ghost']:hover:not(:disabled) {
+  background: var(--bg-semantic-destructive-hover-ghost);
+}
+
+/* --- disabled, grouped by shape rather than by variant: the chrome
+   (filled / outlined / no chrome) follows the same three families
+   regardless of which hue the variant was --- */
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button[data-variant='primary']:disabled,
+.button[data-variant='destructive']:disabled {
+  background: var(--bg-surface-input);
+  border: none;
+  color: var(--color-text-tertiary);
+  --icon-color: var(--color-icon-disabled);
+}
+
+.button[data-variant='outline']:disabled,
+.button[data-variant='destructive-outline']:disabled {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-tertiary);
+  --icon-color: var(--color-icon-disabled);
+}
+
+.button[data-variant='ghost']:disabled,
+.button[data-variant='destructive-ghost']:disabled {
+  background: transparent;
+  border: none;
+  color: var(--color-text-tertiary);
+  --icon-color: var(--color-icon-disabled);
+}
+
+.button-icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  color: var(--icon-color);
+}
+
+.button-icon svg {
+  width: 100%;
+  height: 100%;
+}

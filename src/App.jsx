@@ -1,10 +1,10 @@
+import ComponentShowcase from './dev/ComponentShowcase'
+
+// Temporary: showing the component showcase here so implemented
+// components can be checked against Figma on the live site. Swapped
+// for the real app once we start building actual screens.
 function App() {
-  return (
-    <main>
-      <h1>Imerso</h1>
-      <p>Scaffold running. UI coming once design tokens are wired up.</p>
-    </main>
-  )
+  return <ComponentShowcase />
 }
 
 export default App

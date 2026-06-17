@@ -1,0 +1,44 @@
+/* Semantic tokens — named by what they're used FOR, not what color they
+   are (e.g. --bg-surface-primary, not --color-brand-700-but-as-a-bg).
+
+   Hand-maintained, unlike tokens.css: there's no exportable JSON for
+   Figma *variables* the way there is for the primitives export, so
+   each new component we pull in may add a few more entries here,
+   copied from Figma's variable inspector for that component.
+
+   Rule: every value below should reference a primitive from
+   tokens.css, never a raw hex. If a new semantic token doesn't map to
+   an existing primitive, that's a sign the primitive scale is missing
+   something — add it there first, then reference it here. */
+
+:root {
+  /* surfaces */
+  --bg-surface-primary: var(--color-brand-700);
+  --bg-surface-primary-hover: var(--color-brand-600);
+  --bg-surface-primary-15: var(--color-brand-700-15);
+  --bg-surface-input: var(--color-purple-500);
+  --bg-semantic-destructive: var(--color-red-700);
+  --bg-semantic-destructive-hover-ghost: var(--color-red-400-8);
+
+  /* text */
+  --color-text-primary: var(--color-gray-10);
+  --color-text-tertiary: var(--color-gray-400);
+  --color-text-on-destructive: var(--color-red-400);
+  --color-text-on-destructive-muted: var(--color-red-100);
+
+  /* icons */
+  --color-icon-muted: var(--color-brand-200);
+  --color-icon-disabled: var(--color-gray-400);
+  --color-icon-on-destructive: var(--color-red-100);
+  --color-icon-on-destructive-accent: var(--color-red-400);
+
+  /* borders */
+  --color-border-default: var(--color-purple-400);
+  --color-border-subtle: var(--color-purple-500);
+  --color-border-destructive-subtle: var(--color-red-400-22);
+
+  /* shape & type */
+  --radius-medium: 8px; /* matches --space-8 numerically, kept separate since it's a radius, not a spacing value */
+  --font-family-main: var(--font-figtree);
+  --font-size-label-medium: 16px;
+}
