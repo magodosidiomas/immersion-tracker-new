@@ -53,6 +53,14 @@ function buildLine(key, token, topCategory, path) {
     return `  --space-${token.$value}: ${token.$value}px;`
   }
 
+  if (token.$type === 'number' && (topCategory === 'font-weight' || topCategory === 'line-height')) {
+    return `  --${topCategory}-${sanitize(key)}: ${token.$value};`
+  }
+
+  if (token.$type === 'number' && topCategory === 'font-size') {
+    return `  --font-size-${sanitize(key)}: ${token.$value}px;`
+  }
+
   if (token.$type === 'string' && topCategory === 'font-family') {
     const name = sanitize(key.replace(/^font-family-/, ''))
     return `  --font-${name}: '${token.$value}', sans-serif;`
