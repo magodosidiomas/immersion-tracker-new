@@ -144,7 +144,12 @@ function BottomSheetDemo() {
 
   return (
     <>
-      <Dropdown flag="🇺🇸" label="Inglês" selected onClick={() => setOpen(true)} />
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16 }}>
+        <Button variant="primary" onClick={() => setOpen(true)}>
+          Abrir bottom sheet
+        </Button>
+        <Dropdown flag="🇺🇸" label="Inglês" selected onClick={() => setOpen(true)} />
+      </div>
       <BottomSheet
         open={open}
         onClose={() => setOpen(false)}
