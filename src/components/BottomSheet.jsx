@@ -18,6 +18,11 @@ import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
 // slots that take already-built <Button> elements, so this component
 // stays decoupled from Button's own API.
 //
+// contentCard defaults to true (a grouped list, e.g. Home's language
+// switcher, sits on its own card surface). Custom content that should
+// sit flush on the sheet itself instead — a form field, say — passes
+// contentCard={false} to drop the card background/padding.
+//
 // open/onClose make this fully controlled. It still tracks `present`
 // separately from `open` so the exit animation gets to finish playing
 // instead of the sheet just vanishing — driven by CSS animations (see
@@ -29,6 +34,7 @@ function BottomSheet({
   title = null,
   description = null,
   children = null,
+  contentCard = true,
   divider = false,
   primaryButton = null,
   secondaryButton = null,
@@ -99,7 +105,11 @@ function BottomSheet({
               )}
             </div>
           )}
-          {children && <div className="bottom-sheet-content">{children}</div>}
+          {children && (
+            <div className="bottom-sheet-content" data-card={contentCard}>
+              {children}
+            </div>
+          )}
           {divider && <span className="bottom-sheet-divider" />}
           {hasButtons && (
             <div className="bottom-sheet-buttons">
