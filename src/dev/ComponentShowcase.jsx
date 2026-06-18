@@ -6,6 +6,7 @@ import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
+import SelectionChip from '../components/SelectionChip'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -167,7 +168,25 @@ function ComponentShowcase() {
           trailingIcon={<Bolt />}
         />
       </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>SelectionChip</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        selected is toggled here for real instead of a static row.
+        hasLeadingIcon/hasTrailingIcon are booleans, not slots — both
+        Figma instances show a check on each side, so both default true.
+      </p>
+      <SelectionChipDemo />
     </main>
+  )
+}
+
+function SelectionChipDemo() {
+  const [selected, setSelected] = useState(false)
+  return (
+    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+      <SelectionChip selected={selected} onClick={() => setSelected((s) => !s)} />
+      <SelectionChip label="No icons" hasLeadingIcon={false} hasTrailingIcon={false} />
+    </div>
   )
 }
 
