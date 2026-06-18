@@ -46,7 +46,16 @@ const FLAGS = { us, es, it, fr, de, nl, ru, jp, cn, kr, pt, sa, in: inFlag, tr, 
 function Flag({ code, ...props }) {
   const src = FLAGS[code]
   if (!src) return null
-  return <span className="flag" style={{ backgroundImage: `url(${src})` }} {...props} />
+  // Most flag SVGs are small enough to get inlined by Vite as a
+  // data: URI (assetsInlineLimit), and that URI's own SVG markup uses
+  // unescaped single quotes for attributes (xmlns='...', fill='...').
+  // An unquoted url(...) value can't contain raw quote characters per
+  // the CSS spec, so the browser silently drops the whole property.
+  // Wrapping the value in double quotes — which never appear in these
+  // SVGs — keeps it valid CSS for both inlined data URIs and the few
+  // flags large enough to stay separate files (where quoting is a
+  // no-op either way).
+  return <span className="flag" style={{ backgroundImage: `url("${src}")` }} {...props} />
 }
 
 export default Flag
