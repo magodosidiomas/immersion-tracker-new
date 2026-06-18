@@ -1,12 +1,18 @@
 .home {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: var(--bg-surface-base);
 }
 
+/* `fixed` pins to the actual browser viewport, which on an ultrawide
+   monitor is far wider than #root's 480px column (see index.css) — the
+   FAB ended up stranded near the real right edge of the window instead
+   of the edge of the app's content. `absolute` against `.home` (now
+   `position: relative`) keeps it anchored to that column instead. */
 .home-fab {
-  position: fixed;
+  position: absolute;
   right: var(--space-16);
   bottom: var(--space-16);
 }

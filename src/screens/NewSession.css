@@ -10,8 +10,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-64);
-  padding: var(--space-32) var(--space-16) var(--space-16);
+  justify-content: center;
+  gap: var(--space-16);
+  padding: 0 var(--space-16);
 }
 
 .new-session-timer {
