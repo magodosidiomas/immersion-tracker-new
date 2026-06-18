@@ -137,7 +137,10 @@ function NewSession({ onClose }) {
     setCategorySheetOpen(false)
   }
 
-  const liveMs = status === 'running' ? accumulatedMs + (now - runStartedAt) : accumulatedMs
+  // Math.max(0, ...) prevents a negative display on the very first
+  // render after Start is pressed, when state updates are batched but
+  // `now` might still reflect the pre-start value.
+  const liveMs = Math.max(0, status === 'running' ? accumulatedMs + (now - runStartedAt) : accumulatedMs)
   const totalSeconds = Math.floor(liveMs / 1000)
   const display = [Math.floor(totalSeconds / 3600), Math.floor((totalSeconds % 3600) / 60), totalSeconds % 60]
     .map((unit) => String(unit).padStart(2, '0'))
