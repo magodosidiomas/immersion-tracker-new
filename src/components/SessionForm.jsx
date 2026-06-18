@@ -155,7 +155,7 @@ function SessionForm({
               step="1"
               className="finish-session-duration-input"
               defaultValue={formatHMS(durationSeconds)}
-              onChange={handleDurationChange}
+              onBlur={handleDurationChange}
               aria-label="Editar duração"
             />
             <Edit className="finish-session-duration-icon" aria-hidden="true" />
@@ -167,14 +167,14 @@ function SessionForm({
             label="Início"
             type="time"
             defaultValue={formatHM(startAt)}
-            onChange={handleStartChange}
+            onBlur={handleStartChange}
           />
           <InputField
             key={endKey}
             label="Fim"
             type="time"
             defaultValue={formatHM(endAt)}
-            onChange={handleEndChange}
+            onBlur={handleEndChange}
           />
         </div>
         <InputField

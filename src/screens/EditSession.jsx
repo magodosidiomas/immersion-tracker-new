@@ -49,7 +49,7 @@ function EditSession({ session, onBack, onSaved }) {
         onSave={handleSave}
         saving={saving}
         secondaryButton={
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={() => setConfirmOpen(true)}>
+          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
             Excluir sessão
           </Button>
         }
