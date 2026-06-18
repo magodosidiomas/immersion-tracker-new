@@ -7,3 +7,16 @@
   background-position: center;
   flex-shrink: 0;
 }
+
+.flag-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-input);
+  color: var(--color-icon-muted-gray);
+}
+
+.flag-fallback svg {
+  width: 12px;
+  height: 12px;
+}

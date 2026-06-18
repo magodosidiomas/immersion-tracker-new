@@ -39,6 +39,7 @@
 .manage-languages-row {
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
   padding: 0 8px;
 }
@@ -51,17 +52,21 @@
   padding: 16px;
 }
 
+.manage-languages-row[data-dragging='true'] {
+  z-index: 1;
+  opacity: 0.6;
+}
+
 .manage-languages-drag-handle {
-  display: inline-flex;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
   color: var(--color-icon-muted-gray);
-}
-
-.manage-languages-drag-handle svg {
-  width: 100%;
-  height: 100%;
+  cursor: grab;
+  /* Without this, touch browsers try to scroll the page on the same
+     gesture PointerSensor reads as a drag, fighting it instead of
+     letting it work. */
+  touch-action: none;
 }
 
 .manage-languages-flag {

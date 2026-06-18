@@ -141,6 +141,18 @@ export async function removeLanguage(languageId) {
   }
 }
 
+// Persists a new manual order after a drag-and-drop reorder. Takes the
+// full list of language IDs in their new order and rewrites each one's
+// `order` field to match its index — same field getLanguages() already
+// sorts by, so this is the only function that needs to know reordering
+// exists.
+export async function reorderLanguages(orderedIds) {
+  for (let index = 0; index < orderedIds.length; index += 1) {
+    const language = await getOne('languages', orderedIds[index])
+    if (language) await put('languages', { ...language, order: index })
+  }
+}
+
 // ---------- App settings ----------
 
 export async function getAppSettings() {
