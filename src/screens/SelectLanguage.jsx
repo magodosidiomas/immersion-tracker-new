@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { addLanguage } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import SelectableListItem from '../components/SelectableListItem'
+import Flag from '../components/Flag'
 import './SelectLanguage.css'
 
 // First screen: pick a language to start tracking. Tapping a row both
@@ -34,7 +35,7 @@ function SelectLanguage({ onSelect }) {
             <SelectableListItem
               key={language.name}
               label={language.name}
-              flag={language.flagEmoji}
+              flag={<Flag code={language.flagCode} />}
               divider={index < AVAILABLE_LANGUAGES.length - 1}
               disabled={pending}
               onClick={() => handleSelect(language)}

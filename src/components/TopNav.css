@@ -83,7 +83,4 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  font-size: 20px; /* same reasoning as SelectableListItem's flag: emoji
-    have no intrinsic size to stretch like an SVG icon does */
-  line-height: var(--line-height-tight);
 }

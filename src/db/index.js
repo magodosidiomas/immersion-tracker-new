@@ -84,17 +84,32 @@ function generateId() {
 
 // ---------- Languages ----------
 
-export async function getLanguages() {
-  const languages = await getAll('languages')
-  return languages.sort((a, b) => a.order - b.order)
+// A flag emoji is two regional-indicator letters offset from the
+// alphabet (e.g. 🇺🇸 = U+1F1FA U+1F1F8 = "u" "s"), so a record saved
+// before the flagCode migration can be converted back to its 2-letter
+// code without a lookup table.
+function emojiToFlagCode(emoji) {
+  return Array.from(emoji)
+    .map((char) => String.fromCharCode(char.codePointAt(0) - 0x1f1e6 + 97))
+    .join('')
 }
 
-export async function addLanguage({ name, flagEmoji }) {
+export async function getLanguages() {
+  const languages = await getAll('languages')
+  return languages
+    .map((language) => ({
+      ...language,
+      flagCode: language.flagCode ?? emojiToFlagCode(language.flagEmoji),
+    }))
+    .sort((a, b) => a.order - b.order)
+}
+
+export async function addLanguage({ name, flagCode }) {
   const languages = await getLanguages()
   const language = {
     id: generateId(),
     name,
-    flagEmoji,
+    flagCode,
     order: languages.length,
   }
   await put('languages', language)

@@ -17,9 +17,6 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  font-size: 20px; /* same reasoning as SelectableListItem/TopNav's
-    flag: emoji have no intrinsic size to stretch like an SVG icon */
-  line-height: var(--line-height-tight);
 }
 
 .dropdown-categories {

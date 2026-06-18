@@ -4,10 +4,10 @@ import './SelectableListItem.css'
 // language switcher today, category/subcategory pickers later. It only
 // owns the row chrome (selected tint, disabled state, optional divider);
 // flag/leading/trailing are plain slots so it stays decoration-agnostic
-// instead of hardcoding flag rendering or a specific icon set. `flag` is
-// expected to be a plain emoji character (Language.flagEmoji from the
-// data model), not an icon component — it's styled differently (see CSS)
-// since it has no intrinsic size to stretch the way an SVG icon does.
+// instead of hardcoding flag rendering or a specific icon set. `flag`
+// is expected to be a <Flag> element (see components/Flag.jsx), not a
+// Material icon — it's styled differently (see CSS) since it has a
+// fixed aspect ratio rather than filling a square box.
 //
 // The Figma export for this component generates a much more elaborate
 // variant matrix, but most of those combinations (e.g. disabled + divider

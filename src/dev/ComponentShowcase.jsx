@@ -8,6 +8,7 @@ import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
+import Flag from '../components/Flag'
 
 // Temporary: a visual checklist of every implemented component, so we
 // can compare against Figma before building real screens. This file
@@ -71,15 +72,15 @@ function ComponentShowcase() {
       <p style={{ color: 'var(--color-text-tertiary)' }}>
         Same idea as Button: hover for real instead of a separate row.
         leadingIcon/trailingIcon/flag are plain slots — these examples pass
-        Check and a flag emoji, but neither is hardcoded into the component.
+        Check and a flag, but neither is hardcoded into the component.
       </p>
       <div style={{ width: 324, display: 'flex', flexDirection: 'column' }}>
-        <SelectableListItem label="Selected" selected flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
-        <SelectableListItem label="Default" flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
-        <SelectableListItem label="Disabled" disabled flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
-        <SelectableListItem label="Default, with divider" divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
-        <SelectableListItem label="Selected, with divider" selected divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
-        <SelectableListItem label="Disabled, with divider" disabled divider flag="🇺🇸" leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Selected" selected flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Default" flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Disabled" disabled flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Default, with divider" divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Selected, with divider" selected divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+        <SelectableListItem label="Disabled, with divider" disabled divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
       </div>
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Dropdown</h1>
@@ -88,9 +89,9 @@ function ComponentShowcase() {
         are plain slots, same idea as the components above.
       </p>
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
-        <Dropdown flag="🇺🇸" label="Label" secondaryLabel="Label 2nd" />
-        <Dropdown flag="🇺🇸" label="Label" secondaryLabel="Label 2nd" selected />
-        <Dropdown flag="🇺🇸" label="Inglês" selected />
+        <Dropdown flag={<Flag code="us" />} label="Label" secondaryLabel="Label 2nd" />
+        <Dropdown flag={<Flag code="us" />} label="Label" secondaryLabel="Label 2nd" selected />
+        <Dropdown flag={<Flag code="us" />} label="Inglês" selected />
       </div>
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>TopNav</h1>
@@ -117,7 +118,7 @@ function ComponentShowcase() {
         />
         <TopNav
           title="Inglês"
-          flag="🇺🇸"
+          flag={<Flag code="us" />}
           hasDropdown
           hasDivider
           trailingLeft={<ViewInAr />}
@@ -196,7 +197,7 @@ function BottomSheetDemo() {
         <Button variant="primary" onClick={() => setOpen(true)}>
           Abrir bottom sheet
         </Button>
-        <Dropdown flag="🇺🇸" label="Inglês" selected onClick={() => setOpen(true)} />
+        <Dropdown flag={<Flag code="us" />} label="Inglês" selected onClick={() => setOpen(true)} />
       </div>
       <BottomSheet
         open={open}
@@ -211,7 +212,7 @@ function BottomSheetDemo() {
           <SelectableListItem
             key={language.name}
             label={language.name}
-            flag={language.flagEmoji}
+            flag={<Flag code={language.flagCode} />}
             selected={language.name === selected}
             trailingIcon={language.name === selected ? <Check /> : null}
             onClick={() => setSelected(language.name)}

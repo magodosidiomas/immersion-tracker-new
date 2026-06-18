@@ -9,7 +9,7 @@ import Dropdown from './Dropdown'
 //
 // `flag` is its own prop rather than overloading `leadingIcon`, for the
 // same reason SelectableListItem keeps `flag` separate from its icon
-// slots: an emoji isn't an icon component, and the two need different
+// slots: a <Flag> isn't a Material icon, and the two need different
 // sizing rules to look balanced in the same 24px box.
 //
 // hasDropdown used to build its own title+chevron markup inline, back

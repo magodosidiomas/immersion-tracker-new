@@ -5,6 +5,7 @@ import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
 import Button from '../components/Button'
 import { Settings, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import Flag from '../components/Flag'
 import './Home.css'
 
 // First real screen after onboarding. For now it's just the app shell —
@@ -48,7 +49,7 @@ function Home({ onOpenSettings, onOpenManageLanguages }) {
     <main className="home">
       <TopNav
         title={activeLanguage?.name}
-        flag={activeLanguage?.flagEmoji}
+        flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
         hasDropdown
         hasDivider
         onDropdownClick={() => setSwitcherOpen(true)}
@@ -78,7 +79,7 @@ function Home({ onOpenSettings, onOpenManageLanguages }) {
           <SelectableListItem
             key={language.id}
             label={language.name}
-            flag={language.flagEmoji}
+            flag={<Flag code={language.flagCode} />}
             selected={language.id === activeId}
             trailingIcon={language.id === activeId ? <Check /> : null}
             divider={index < languages.length - 1}

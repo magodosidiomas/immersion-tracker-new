@@ -4,6 +4,7 @@ import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
 import { ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import Flag from '../components/Flag'
 import './ManageLanguages.css'
 
 // Lives inside Settings in the nav hierarchy — back always returns to
@@ -37,7 +38,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages }) {
             <SelectableListItem
               key={language.id}
               label={language.name}
-              flag={language.flagEmoji}
+              flag={<Flag code={language.flagCode} />}
               divider={index < languages.length - 1}
             />
           ))}

@@ -60,10 +60,6 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  font-size: 20px; /* emoji have no intrinsic size to stretch like an
-    SVG icon does — 20px in a 24px box centers it at roughly the same
-    visual weight as the Check icons next to it */
-  line-height: var(--line-height-tight);
 }
 
 .selectable-list-item-divider {
