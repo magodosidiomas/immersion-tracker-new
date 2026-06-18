@@ -4,14 +4,15 @@ import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
 import Button from '../components/Button'
-import { Settings, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Settings, Check, PlayArrow } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './Home.css'
 
-// First real screen after onboarding. For now it's just the app shell —
-// the top nav (active language + switcher + settings entry point) with
-// an empty body. Real homepage content (timer, streak, etc.) gets built
-// next, screen by screen from Figma.
+// First real screen after onboarding: the top nav (active language +
+// switcher + settings entry point) and a FAB that opens the timer
+// (NewSession). The empty-state illustration/message for "no sessions
+// yet" isn't built — that's its own component, not designed in Figma
+// yet — so the body sits blank behind the FAB until that exists.
 //
 // The switcher picks from already-added languages (getLanguages), not
 // AVAILABLE_LANGUAGES — that catalog is only for adding a new language,
@@ -19,7 +20,7 @@ import './Home.css'
 // switches and closes immediately, no Save/Cancel: this is a quick
 // swap of what's already active, not a form. The sheet's primaryButton
 // is a shortcut straight into that same management screen.
-function Home({ onOpenSettings, onOpenManageLanguages }) {
+function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -87,6 +88,11 @@ function Home({ onOpenSettings, onOpenManageLanguages }) {
           />
         ))}
       </BottomSheet>
+      <div className="home-fab">
+        <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
+          Iniciar timer
+        </Button>
+      </div>
     </main>
   )
 }

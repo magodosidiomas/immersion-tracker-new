@@ -4,3 +4,9 @@
   min-height: 100vh;
   background: var(--bg-surface-base);
 }
+
+.home-fab {
+  position: fixed;
+  right: var(--space-16);
+  bottom: var(--space-16);
+}

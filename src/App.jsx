@@ -5,6 +5,7 @@ import Home from './screens/Home'
 import Settings from './screens/Settings'
 import ManageLanguages from './screens/ManageLanguages'
 import AddLanguages from './screens/AddLanguages'
+import NewSession from './screens/NewSession'
 import { getAppSettings } from './db'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -59,7 +60,16 @@ function App() {
       <Settings onBack={() => setScreen('home')} onOpenManageLanguages={() => setScreen('manage-languages')} />
     )
   }
-  return <Home onOpenSettings={() => setScreen('settings')} onOpenManageLanguages={() => setScreen('manage-languages')} />
+  if (screen === 'new-session') {
+    return <NewSession onClose={() => setScreen('home')} />
+  }
+  return (
+    <Home
+      onOpenSettings={() => setScreen('settings')}
+      onOpenManageLanguages={() => setScreen('manage-languages')}
+      onOpenNewSession={() => setScreen('new-session')}
+    />
+  )
 }
 
 export default App
