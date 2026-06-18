@@ -70,21 +70,6 @@
   background: var(--bg-surface-primary-8);
 }
 
-.selectable-list-item:not(:disabled):hover .selectable-list-item-divider {
-  visibility: hidden;
-}
-
-/* A divider belongs to the item below it (rendered as that item's
-   leading element), so hovering item N only hides the divider above
-   N by default — the one below N (= above N+1) lives in a different
-   button and is untouched. That leaves one side of the highlighted
-   pill blending into the background while the other still has a
-   line running into it. This rule hides that next item's divider too,
-   so both sides behave the same way. */
-.selectable-list-item:not(:disabled):hover + .selectable-list-item .selectable-list-item-divider {
-  visibility: hidden;
-}
-
 /* --- selected --- */
 .selectable-list-item[data-selected='true']:not(:disabled) .selectable-list-item-row {
   background: var(--bg-surface-primary-8);

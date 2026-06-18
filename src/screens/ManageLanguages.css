@@ -131,14 +131,6 @@
   background: var(--bg-surface-primary-8);
 }
 
-.manage-languages-row:hover .manage-languages-row-divider {
-  visibility: hidden;
-}
-
-.manage-languages-row:hover + .manage-languages-row .manage-languages-row-divider {
-  visibility: hidden;
-}
-
 .manage-languages-confirm-phrase {
   font-weight: var(--font-weight-bold);
   color: var(--color-text-on-destructive);

@@ -48,7 +48,6 @@ function LanguageRow({ language, divider, onDelete }) {
 
   return (
     <div ref={setNodeRef} style={style} className="manage-languages-row" data-dragging={isDragging}>
-      {divider && <span className="manage-languages-row-divider" />}
       <span className="manage-languages-row-content">
         <button
           type="button"
@@ -73,6 +72,7 @@ function LanguageRow({ language, divider, onDelete }) {
           <Delete />
         </button>
       </span>
+      {divider && <span className="manage-languages-row-divider" />}
     </div>
   )
 }
@@ -151,7 +151,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages }) {
                 <LanguageRow
                   key={language.id}
                   language={language}
-                  divider={index > 0}
+                  divider={index < languages.length - 1}
                   onDelete={handleDeleteClick}
                 />
               ))}
