@@ -41,7 +41,6 @@ function EditSession({ session, onBack, onSaved }) {
       />
       <SessionForm
         initialStartAt={new Date(session.startTime)}
-        initialEndAt={new Date(session.endTime)}
         initialDurationSeconds={session.durationSeconds}
         initialDate={session.date}
         initialCategory={session.category}

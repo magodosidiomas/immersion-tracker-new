@@ -300,7 +300,6 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
       />
       <SessionForm
         initialStartAt={draft.startAt}
-        initialEndAt={draft.endAt}
         initialDurationSeconds={draft.durationSeconds}
         initialDate={formatDateInput(new Date())}
         initialCategory={category}

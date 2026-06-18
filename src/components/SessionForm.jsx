@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import Button from './Button'
@@ -7,7 +7,7 @@ import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
 
-// HH:MM:SS — value for the duration <input type="time" step="1">
+// HH:MM:SS — duração's view-mode display.
 function formatHMS(totalSeconds) {
   const seconds = Math.max(0, Math.round(totalSeconds))
   const h = Math.floor(seconds / 3600)
@@ -16,22 +16,14 @@ function formatHMS(totalSeconds) {
   return `${pad2(h)}:${pad2(m)}:${pad2(s)}`
 }
 
-function parseHMS(value) {
-  const [h, m, s] = value.split(':').map(Number)
-  return h * 3600 + m * 60 + (s || 0)
-}
-
-// HH:MM — value for the início/fim <input type="time">
+// HH:MM — início/fim's read-only display (see scope note below).
 function formatHM(date) {
   return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`
 }
 
-// Returns a new Date: same day as base, time-of-day from "HH:MM".
-function withTime(base, hm) {
-  const [h, m] = hm.split(':').map(Number)
-  const next = new Date(base)
-  next.setHours(h, m, 0, 0)
-  return next
+function clamp(value, min, max) {
+  if (Number.isNaN(value)) return min
+  return Math.min(max, Math.max(min, value))
 }
 
 // The session-details form — same fields and edit rules whether you're
@@ -43,23 +35,24 @@ function withTime(base, hm) {
 // whether that's a create or an update is the caller's concern, not
 // this form's.
 //
-// Edit rules (locked in imerso-data-model.md):
-// - editing duração recalculates fim, início stays put
-// - editing início or fim recalculates duração, the other stays put
-// - impossible combinations (fim before início) are blocked and the
-//   edited field snaps back to its last valid value. Each time+field
-//   is rendered as an uncontrolled input keyed by a counter — the key
-//   only bumps when an external edit changes that field's value (or
-//   when a blocked edit needs to snap it back), never on its own edit,
-//   which is what kept typing broken in fully-controlled inputs (the
-//   browser resets the focused segment whenever JS reassigns .value,
-//   even to the identical string).
-// "Data" is independent of those three — it's which calendar day the
-// session counts toward (for future dashboards/streaks), not part of
-// the duration math, so it's edited on its own.
+// Scope (current step, deliberately narrowed): only duração is
+// editable. início is fixed at its initial value for the form's whole
+// lifetime, and fim is never its own state — it's always derived as
+// início + duração, so it can't drift out of sync with whatever
+// duração says. Editing início/fim directly is designed (see
+// imerso-data-model.md) but intentionally not wired up yet; that's a
+// later step once this one's settled.
+//
+// Duração itself is tap-to-edit: a big static display (with a pencil
+// affordance) swaps for three digit boxes (h/m/s) on tap or Enter/Space.
+// Each box is uncontrolled (defaultValue, not a value prop) — typing a
+// digit shouldn't fight a React re-render for the cursor position.
+// Commit happens when focus leaves all three boxes (checked via a
+// same-tick timeout, since the next box's focus event hasn't fired yet
+// at blur time) or on Enter, which just blurs the box and lets that
+// same path run.
 function SessionForm({
   initialStartAt,
-  initialEndAt,
   initialDurationSeconds,
   initialDate,
   initialCategory,
@@ -69,58 +62,57 @@ function SessionForm({
   primaryLabel = 'Salvar',
   secondaryButton = null,
 }) {
-  const [startAt, setStartAt] = useState(initialStartAt)
-  const [endAt, setEndAt] = useState(initialEndAt)
   const [durationSeconds, setDurationSeconds] = useState(initialDurationSeconds)
   const [sessionDate, setSessionDate] = useState(initialDate)
   const [selectedCategory, setSelectedCategory] = useState(initialCategory ?? CATEGORIES[0].key)
   const [selectedSubcategory, setSelectedSubcategory] = useState(
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
   )
+  const [editingDuration, setEditingDuration] = useState(false)
 
-  // Each time field is uncontrolled (defaultValue, not value), keyed
-  // by these counters. The key only bumps when a *different* field's
-  // edit changes this field's value, or when a blocked edit needs to
-  // snap this field back to its last valid value. It never bumps on
-  // the field's own edit, preserving cursor/segment focus while typing.
-  const [startKey, setStartKey] = useState(0)
-  const [durationKey, setDurationKey] = useState(0)
-  const [endKey, setEndKey] = useState(0)
+  // início is fixed for this form's lifetime; fim is always derived,
+  // never independent state — see the scope note above.
+  const startAt = initialStartAt
+  const endAt = new Date(startAt.getTime() + durationSeconds * 1000)
 
-  function handleDurationChange(e) {
-    if (!e.target.value) return
-    const seconds = parseHMS(e.target.value)
-    setDurationSeconds(seconds)
-    setEndAt(new Date(startAt.getTime() + seconds * 1000))
-    setEndKey((k) => k + 1) // fim changed out from under it — force refresh
+  const hourRef = useRef(null)
+  const minuteRef = useRef(null)
+  const secondRef = useRef(null)
+  const commitTimeoutRef = useRef(null)
+
+  function openDurationEdit() {
+    setEditingDuration(true)
+    // The edit-mode boxes aren't mounted yet on the click that flips
+    // editingDuration — wait a tick, then focus + select the first
+    // one (mirrors clicking into a native input and selecting it all).
+    setTimeout(() => {
+      hourRef.current?.focus()
+      hourRef.current?.select()
+    }, 0)
   }
 
-  function handleStartChange(e) {
-    if (!e.target.value) return
-    const nextStart = withTime(startAt, e.target.value)
-    const nextDuration = Math.round((endAt - nextStart) / 1000)
-    if (nextDuration < 0) {
-      // início can't land after fim — snap back to last valid value
-      setStartKey((k) => k + 1)
-      return
-    }
-    setStartAt(nextStart)
-    setDurationSeconds(nextDuration)
-    setDurationKey((k) => k + 1) // duração changed out from under it
+  function handleSegmentBlur(ref, max) {
+    const value = clamp(parseInt(ref.current.value || '0', 10), 0, max)
+    ref.current.value = pad2(value)
+    clearTimeout(commitTimeoutRef.current)
+    commitTimeoutRef.current = setTimeout(() => {
+      const boxes = [hourRef.current, minuteRef.current, secondRef.current]
+      if (boxes.includes(document.activeElement)) return // focus just moved to another box
+      const h = parseInt(hourRef.current.value, 10)
+      const m = parseInt(minuteRef.current.value, 10)
+      const s = parseInt(secondRef.current.value, 10)
+      setDurationSeconds(h * 3600 + m * 60 + s)
+      setEditingDuration(false)
+    }, 0)
   }
 
-  function handleEndChange(e) {
-    if (!e.target.value) return
-    const nextEnd = withTime(endAt, e.target.value)
-    const nextDuration = Math.round((nextEnd - startAt) / 1000)
-    if (nextDuration < 0) {
-      // fim can't land before início — snap back to last valid value
-      setEndKey((k) => k + 1)
-      return
-    }
-    setEndAt(nextEnd)
-    setDurationSeconds(nextDuration)
-    setDurationKey((k) => k + 1) // duração changed out from under it
+  function handleSegmentInput(event, nextRef) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '').slice(0, 2)
+    if (event.target.value.length === 2 && nextRef) nextRef.current?.focus()
+  }
+
+  function handleSegmentKeyDown(event) {
+    if (event.key === 'Enter') event.target.blur() // blur runs the same commit path
   }
 
   function handlePickCategory(key) {
@@ -148,34 +140,72 @@ function SessionForm({
       <div className="finish-session-body">
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Duração</span>
-          <div className="finish-session-duration-row">
-            <input
-              key={durationKey}
-              type="time"
-              step="1"
-              className="finish-session-duration-input"
-              defaultValue={formatHMS(durationSeconds)}
-              onBlur={handleDurationChange}
+          {editingDuration ? (
+            <div className="finish-session-duration-edit">
+              <input
+                ref={hourRef}
+                defaultValue={pad2(Math.floor(durationSeconds / 3600))}
+                maxLength={2}
+                inputMode="numeric"
+                aria-label="Horas"
+                className="finish-session-duration-segment"
+                onBlur={() => handleSegmentBlur(hourRef, 23)}
+                onInput={(e) => handleSegmentInput(e, minuteRef)}
+                onKeyDown={handleSegmentKeyDown}
+              />
+              <span className="finish-session-duration-colon">:</span>
+              <input
+                ref={minuteRef}
+                defaultValue={pad2(Math.floor((durationSeconds % 3600) / 60))}
+                maxLength={2}
+                inputMode="numeric"
+                aria-label="Minutos"
+                className="finish-session-duration-segment"
+                onBlur={() => handleSegmentBlur(minuteRef, 59)}
+                onInput={(e) => handleSegmentInput(e, secondRef)}
+                onKeyDown={handleSegmentKeyDown}
+              />
+              <span className="finish-session-duration-colon">:</span>
+              <input
+                ref={secondRef}
+                defaultValue={pad2(durationSeconds % 60)}
+                maxLength={2}
+                inputMode="numeric"
+                aria-label="Segundos"
+                className="finish-session-duration-segment"
+                onBlur={() => handleSegmentBlur(secondRef, 59)}
+                onInput={(e) => handleSegmentInput(e, null)}
+                onKeyDown={handleSegmentKeyDown}
+              />
+            </div>
+          ) : (
+            <div
+              className="finish-session-duration-row"
+              role="button"
+              tabIndex={0}
               aria-label="Editar duração"
-            />
-            <Edit className="finish-session-duration-icon" aria-hidden="true" />
-          </div>
+              onClick={openDurationEdit}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  openDurationEdit()
+                }
+              }}
+            >
+              <span className="finish-session-duration-display">{formatHMS(durationSeconds)}</span>
+              <Edit className="finish-session-duration-icon" aria-hidden="true" />
+            </div>
+          )}
         </div>
         <div className="finish-session-time-row">
-          <InputField
-            key={startKey}
-            label="Início"
-            type="time"
-            defaultValue={formatHM(startAt)}
-            onBlur={handleStartChange}
-          />
-          <InputField
-            key={endKey}
-            label="Fim"
-            type="time"
-            defaultValue={formatHM(endAt)}
-            onBlur={handleEndChange}
-          />
+          <div className="finish-session-time-display">
+            <span className="category-sheet-label">Início</span>
+            <span className="finish-session-time-value">{formatHM(startAt)}</span>
+          </div>
+          <div className="finish-session-time-display">
+            <span className="category-sheet-label">Fim</span>
+            <span className="finish-session-time-value">{formatHM(endAt)}</span>
+          </div>
         </div>
         <InputField
           label="Data"
