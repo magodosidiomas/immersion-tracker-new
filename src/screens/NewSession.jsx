@@ -4,14 +4,54 @@ import Dropdown from '../components/Dropdown'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import SelectionChip from '../components/SelectionChip'
-import { Close, PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined'
+import InputField from '../components/InputField'
+import { Close, PlayArrow, Pause, Stop, ArrowBack, Edit, CalendarToday, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
+import { getAppSettings, createSession } from '../db'
 import './NewSession.css'
 
-// Three states only: idle (not started) / running / paused. No IndexedDB
-// writes happen here yet — per the locked MVP decision, the timer lives
-// purely in memory, and closing/reloading loses it. So there's nothing
-// to resume on mount either; this screen always starts idle.
+// ---------- time helpers (local to this screen) ----------
+
+function pad2(n) {
+  return String(n).padStart(2, '0')
+}
+
+// HH:MM:SS — value for the duration <input type="time" step="1">
+function formatHMS(totalSeconds) {
+  const seconds = Math.max(0, Math.round(totalSeconds))
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = seconds % 60
+  return `${pad2(h)}:${pad2(m)}:${pad2(s)}`
+}
+
+function parseHMS(value) {
+  const [h, m, s] = value.split(':').map(Number)
+  return h * 3600 + m * 60 + (s || 0)
+}
+
+// HH:MM — value for the início/fim <input type="time">
+function formatHM(date) {
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`
+}
+
+// Returns a new Date: same day as base, time-of-day from "HH:MM".
+function withTime(base, hm) {
+  const [h, m] = hm.split(':').map(Number)
+  const next = new Date(base)
+  next.setHours(h, m, 0, 0)
+  return next
+}
+
+function formatDateInput(date) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+}
+
+// Three timer states (idle / running / paused), plus a "finish" phase
+// once "Encerrar" is pressed. No IndexedDB writes happen for the
+// running timer itself — per the locked MVP decision, it lives purely
+// in memory, and closing/reloading loses it. There's nothing to resume
+// on mount either; this screen always starts idle.
 //
 // Elapsed time is accumulatedMs (frozen total from past running
 // segments) plus the live segment in progress, recomputed from
@@ -22,23 +62,33 @@ import './NewSession.css'
 // instead of a rewrite of how time itself is measured.
 //
 // The category Dropdown opens a bottom sheet to pick category +
-// subcategory (SelectionChip, now that it exists). The sheet has its
-// own pending* draft state so "Cancelar" can discard edits instead of
-// applying each tap live — only "Salvar" commits to category/
-// subcategory, which is what the Dropdown actually displays. Picking a
-// category isn't required to start the timer (the data model allows
-// picking it during or after the session), so the timer flow itself
-// isn't blocked by leaving it unset.
+// subcategory (SelectionChip) while the timer is running/paused. The
+// sheet has its own pending* draft state so "Cancelar" can discard
+// edits instead of applying each tap live — only "Salvar" commits to
+// category/subcategory, which is what the Dropdown displays. Picking a
+// category isn't required to start the timer, so the timer flow isn't
+// blocked by leaving it unset.
 //
-// "Encerrar" doesn't lead to a real session-details screen yet (that
-// screen needs more than Chip — duration editing, date picker, etc.,
-// none of which exist). For now it just discards and closes — swap
-// handleEnd's body for real navigation once that screen exists.
+// "Encerrar" freezes the clock (same math as a pause) and switches to
+// the "finish" phase, which renders the session-details form below
+// (duration/início/fim/data + category/subcategory, editable, then
+// Salvar writes the session to IndexedDB, or Descartar discards it).
+// The top nav's back arrow on that phase returns to "timer" with the
+// frozen paused state intact — so changing your mind about ending just
+// resumes from exactly where Encerrar left it.
 function NewSession({ onClose }) {
+  const [phase, setPhase] = useState('timer') // timer | finish
   const [status, setStatus] = useState('idle') // idle | running | paused
   const [accumulatedMs, setAccumulatedMs] = useState(0)
   const [runStartedAt, setRunStartedAt] = useState(null)
+  const [firstStartedAt, setFirstStartedAt] = useState(null)
   const [now, setNow] = useState(() => Date.now())
+  const [activeLanguageId, setActiveLanguageId] = useState(null)
+
+  // Snapshot handed to the finish-phase form the moment Encerrar is
+  // pressed — its own state from there on, edited independently of the
+  // timer above.
+  const [finishDraft, setFinishDraft] = useState(null)
 
   // Committed selection — what the Dropdown trigger displays. null
   // until the sheet's been saved at least once.
@@ -53,13 +103,19 @@ function NewSession({ onClose }) {
   const [pendingSubcategory, setPendingSubcategory] = useState(CATEGORIES[0].subcategories[0].key)
 
   useEffect(() => {
+    getAppSettings().then((settings) => setActiveLanguageId(settings.activeLanguageId))
+  }, [])
+
+  useEffect(() => {
     if (status !== 'running') return
     const id = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(id)
   }, [status])
 
   function handleStart() {
-    setRunStartedAt(Date.now())
+    const startedAt = Date.now()
+    setFirstStartedAt(startedAt)
+    setRunStartedAt(startedAt)
     setStatus('running')
   }
 
@@ -75,10 +131,20 @@ function NewSession({ onClose }) {
   }
 
   function handleEnd() {
-    // TODO: open the session-details screen once it exists, passing
-    // along the elapsed duration. Blocked on Chip + the rest of that
-    // screen's missing fields.
-    onClose()
+    const endedAt = Date.now()
+    const finalMs = status === 'running' ? accumulatedMs + (endedAt - runStartedAt) : accumulatedMs
+    // Freeze the clock — same effect as a pause — so going back from
+    // the finish phase resumes from exactly this point instead of
+    // having kept counting in the background.
+    setAccumulatedMs(finalMs)
+    setRunStartedAt(null)
+    setStatus('paused')
+    setFinishDraft({
+      durationSeconds: Math.round(finalMs / 1000),
+      startAt: new Date(firstStartedAt),
+      endAt: new Date(endedAt),
+    })
+    setPhase('finish')
   }
 
   function openCategorySheet() {
@@ -110,6 +176,20 @@ function NewSession({ onClose }) {
   const categoryData = CATEGORIES.find((item) => item.key === category)
   const subcategoryLabel = categoryData?.subcategories.find((item) => item.key === subcategory)?.label
   const pendingCategoryData = CATEGORIES.find((item) => item.key === pendingCategory)
+
+  if (phase === 'finish') {
+    return (
+      <FinishSession
+        draft={finishDraft}
+        category={category}
+        subcategory={subcategory}
+        languageId={activeLanguageId}
+        onBack={() => setPhase('timer')}
+        onDiscard={onClose}
+        onSaved={onClose}
+      />
+    )
+  }
 
   return (
     <main className="new-session">
@@ -205,6 +285,157 @@ function NewSession({ onClose }) {
           </div>
         </div>
       </BottomSheet>
+    </main>
+  )
+}
+
+// The session-details form shown after "Encerrar". Owns its own
+// editable state (duration/início/fim/data/category/subcategory),
+// seeded once from `draft` (the frozen timer snapshot) — it doesn't
+// keep syncing with the timer above, since by this point the clock is
+// frozen and only this form's own edits should move the numbers.
+//
+// Edit rules (locked in imerso-data-model.md):
+// - editing duração recalculates fim, início stays put
+// - editing início or fim recalculates duração, the other stays put
+// - impossible combinations (fim before início) are blocked by simply
+//   not applying the edit — the controlled input snaps back to its
+//   last valid value.
+// "Data" is independent of those three — it's which calendar day the
+// session counts toward (for future dashboards/streaks), not part of
+// the duration math, so it defaults to today and is edited on its own.
+function FinishSession({ draft, category, subcategory, languageId, onBack, onDiscard, onSaved }) {
+  const [startAt, setStartAt] = useState(draft.startAt)
+  const [endAt, setEndAt] = useState(draft.endAt)
+  const [durationSeconds, setDurationSeconds] = useState(draft.durationSeconds)
+  const [sessionDate, setSessionDate] = useState(() => formatDateInput(new Date()))
+  const [selectedCategory, setSelectedCategory] = useState(category ?? CATEGORIES[0].key)
+  const [selectedSubcategory, setSelectedSubcategory] = useState(subcategory ?? CATEGORIES[0].subcategories[0].key)
+  const [saving, setSaving] = useState(false)
+
+  function handleDurationChange(e) {
+    if (!e.target.value) return
+    const seconds = parseHMS(e.target.value)
+    setDurationSeconds(seconds)
+    setEndAt(new Date(startAt.getTime() + seconds * 1000))
+  }
+
+  function handleStartChange(e) {
+    if (!e.target.value) return
+    const nextStart = withTime(startAt, e.target.value)
+    const nextDuration = Math.round((endAt - nextStart) / 1000)
+    if (nextDuration < 0) return // blocked: início can't land after fim
+    setStartAt(nextStart)
+    setDurationSeconds(nextDuration)
+  }
+
+  function handleEndChange(e) {
+    if (!e.target.value) return
+    const nextEnd = withTime(endAt, e.target.value)
+    const nextDuration = Math.round((nextEnd - startAt) / 1000)
+    if (nextDuration < 0) return // blocked: fim can't land before início
+    setEndAt(nextEnd)
+    setDurationSeconds(nextDuration)
+  }
+
+  function handlePickCategory(key) {
+    setSelectedCategory(key)
+    setSelectedSubcategory(CATEGORIES.find((item) => item.key === key).subcategories[0].key)
+  }
+
+  async function handleSave() {
+    if (!languageId || saving) return
+    setSaving(true)
+    await createSession({
+      languageId,
+      category: selectedCategory,
+      subcategory: selectedSubcategory,
+      date: sessionDate,
+      startTime: startAt.toISOString(),
+      endTime: endAt.toISOString(),
+      durationSeconds,
+    })
+    onSaved()
+  }
+
+  const selectedCategoryData = CATEGORIES.find((item) => item.key === selectedCategory)
+
+  return (
+    <main className="new-session">
+      <TopNav
+        title="Nova sessão"
+        hasDivider
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+      />
+      <div className="finish-session-body">
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Duração</span>
+          <div className="finish-session-duration-row">
+            <input
+              type="time"
+              step="1"
+              className="finish-session-duration-input"
+              value={formatHMS(durationSeconds)}
+              onChange={handleDurationChange}
+              aria-label="Editar duração"
+            />
+            <Edit className="finish-session-duration-icon" aria-hidden="true" />
+          </div>
+        </div>
+        <div className="finish-session-time-row">
+          <InputField label="Início" type="time" value={formatHM(startAt)} onChange={handleStartChange} />
+          <InputField label="Fim" type="time" value={formatHM(endAt)} onChange={handleEndChange} />
+        </div>
+        <InputField
+          label="Data"
+          type="date"
+          value={sessionDate}
+          onChange={(e) => setSessionDate(e.target.value)}
+          trailingIcon={<CalendarToday />}
+        />
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Categoria</span>
+          <div className="category-sheet-chips">
+            {CATEGORIES.map((item) => (
+              <SelectionChip
+                key={item.key}
+                label={item.label}
+                hasLeadingIcon={false}
+                hasTrailingIcon={false}
+                selected={selectedCategory === item.key}
+                onClick={() => handlePickCategory(item.key)}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Subcategoria</span>
+          <div className="category-sheet-chips">
+            {selectedCategoryData.subcategories.map((item) => (
+              <SelectionChip
+                key={item.key}
+                label={item.label}
+                hasLeadingIcon={false}
+                hasTrailingIcon={false}
+                selected={selectedSubcategory === item.key}
+                onClick={() => setSelectedSubcategory(item.key)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="finish-session-footer">
+        <Button fullWidth onClick={handleSave} disabled={saving}>
+          Salvar
+        </Button>
+        <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={onDiscard}>
+          Descartar sessão
+        </Button>
+      </div>
     </main>
   )
 }
