@@ -1,26 +1,32 @@
 .selectable-list-item {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   width: 100%;
-  padding: 16px;
+  padding: 0;
   border: none;
-  border-radius: var(--radius-medium);
   background: transparent;
   cursor: pointer;
   text-align: left;
   --icon-color: var(--color-icon-muted-gray);
 }
 
-.selectable-list-item:not(:disabled):hover {
-  background: var(--bg-surface-primary-15);
-}
-
+/* The pill (background + radius) lives on the row, not the button —
+   that's what keeps it from ever reaching the divider below. The
+   divider's own vertical margin (see .selectable-list-item-divider)
+   is what creates the breathing room on both sides of the line; the
+   button itself carries no spacing of its own, so that margin is the
+   only source of gap and stays symmetric between consecutive items. */
 .selectable-list-item-row {
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-medium);
+}
+
+.selectable-list-item:not(:disabled):hover .selectable-list-item-row {
+  background: var(--bg-surface-primary-15);
 }
 
 .selectable-list-item-label {
@@ -63,6 +69,7 @@
 .selectable-list-item-divider {
   width: 100%;
   height: 1px;
+  margin: 8px 0;
   background: var(--color-border-subtle);
 }
 
@@ -71,7 +78,7 @@
   color: var(--color-text-accent);
 }
 
-.selectable-list-item[data-selected='true']:not(:disabled)[data-divider='false'] {
+.selectable-list-item[data-selected='true']:not(:disabled) .selectable-list-item-row {
   background: var(--bg-surface-primary-15);
 }
 
