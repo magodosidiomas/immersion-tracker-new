@@ -9,11 +9,10 @@ import './ManageLanguages.css'
 // Lives inside Settings in the nav hierarchy — back always returns to
 // Settings, even when this screen was opened via Home's dropdown
 // shortcut (see Home.jsx's BottomSheet primaryButton). Tapping a
-// language row and the "Adicionar idiomas" destination aren't designed
-// yet (cascade-delete confirmation is still pending, see
-// imerso-data-model.md), so this screen is read-only list + entry
-// point for now.
-function ManageLanguages({ onBack }) {
+// language row isn't designed yet (cascade-delete confirmation is
+// still pending, see imerso-data-model.md), so rows stay read-only for
+// now; "Adicionar idiomas" opens AddLanguages.
+function ManageLanguages({ onBack, onOpenAddLanguages }) {
   const [languages, setLanguages] = useState([])
 
   useEffect(() => {
@@ -44,7 +43,7 @@ function ManageLanguages({ onBack }) {
           ))}
         </div>
         <div className="manage-languages-footer">
-          <Button variant="outline" leadingIcon={<Add />} fullWidth>
+          <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenAddLanguages}>
             Adicionar idiomas
           </Button>
         </div>
