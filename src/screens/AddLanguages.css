@@ -1,15 +1,14 @@
 .add-languages {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--bg-surface-base);
 }
 
-.add-languages-content {
-  display: flex;
-  flex-direction: column;
+.add-languages-scroll {
   flex: 1;
-  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
   padding: 16px;
 }
 
@@ -23,7 +22,9 @@
 }
 
 .add-languages-footer {
-  margin-top: auto;
+  flex-shrink: 0;
+  padding: 16px;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 /* Visual-only checkbox indicator dropped into SelectableListItem's

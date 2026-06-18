@@ -53,7 +53,7 @@ function AddLanguages({ onClose }) {
           </button>
         }
       />
-      <div className="add-languages-content">
+      <div className="add-languages-scroll">
         <div className="add-languages-card">
           {options.map((language, index) => {
             const isSelected = selected.includes(language.name)
@@ -75,11 +75,11 @@ function AddLanguages({ onClose }) {
             )
           })}
         </div>
-        <div className="add-languages-footer">
-          <Button leadingIcon={<Check />} disabled={selected.length === 0} fullWidth onClick={handleAdd}>
-            Adicionar ({selected.length})
-          </Button>
-        </div>
+      </div>
+      <div className="add-languages-footer">
+        <Button leadingIcon={<Check />} disabled={selected.length === 0} fullWidth onClick={handleAdd}>
+          Adicionar ({selected.length})
+        </Button>
       </div>
     </main>
   )
