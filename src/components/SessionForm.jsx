@@ -73,11 +73,25 @@ function SessionForm({
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
   )
 
+  // Duração/início/fim are rendered as uncontrolled inputs (defaultValue,
+  // not value) keyed by these counters, instead of feeding a freshly
+  // formatted string back into `value` on every keystroke. Native
+  // time inputs reset their focused segment back to the first one
+  // whenever JS reassigns .value — even to an identical string — so a
+  // normal controlled input here made it nearly impossible to type a
+  // second digit. Each field only needs to be force-refreshed (via a
+  // bumped key, remounting it with the new defaultValue) when a
+  // *different* field's edit changes its value out from under it —
+  // never on its own edit, which is what kept breaking typing.
+  const [durationKey, setDurationKey] = useState(0)
+  const [endKey, setEndKey] = useState(0)
+
   function handleDurationChange(e) {
     if (!e.target.value) return
     const seconds = parseHMS(e.target.value)
     setDurationSeconds(seconds)
     setEndAt(new Date(startAt.getTime() + seconds * 1000))
+    setEndKey((k) => k + 1) // fim changed out from under it — force refresh
   }
 
   function handleStartChange(e) {
@@ -87,6 +101,7 @@ function SessionForm({
     if (nextDuration < 0) return // blocked: início can't land after fim
     setStartAt(nextStart)
     setDurationSeconds(nextDuration)
+    setDurationKey((k) => k + 1) // duração changed out from under it
   }
 
   function handleEndChange(e) {
@@ -96,6 +111,7 @@ function SessionForm({
     if (nextDuration < 0) return // blocked: fim can't land before início
     setEndAt(nextEnd)
     setDurationSeconds(nextDuration)
+    setDurationKey((k) => k + 1) // duração changed out from under it
   }
 
   function handlePickCategory(key) {
@@ -125,10 +141,11 @@ function SessionForm({
           <span className="category-sheet-label">Duração</span>
           <div className="finish-session-duration-row">
             <input
+              key={durationKey}
               type="time"
               step="1"
               className="finish-session-duration-input"
-              value={formatHMS(durationSeconds)}
+              defaultValue={formatHMS(durationSeconds)}
               onChange={handleDurationChange}
               aria-label="Editar duração"
             />
@@ -136,8 +153,14 @@ function SessionForm({
           </div>
         </div>
         <div className="finish-session-time-row">
-          <InputField label="Início" type="time" value={formatHM(startAt)} onChange={handleStartChange} />
-          <InputField label="Fim" type="time" value={formatHM(endAt)} onChange={handleEndChange} />
+          <InputField label="Início" type="time" defaultValue={formatHM(startAt)} onChange={handleStartChange} />
+          <InputField
+            key={endKey}
+            label="Fim"
+            type="time"
+            defaultValue={formatHM(endAt)}
+            onChange={handleEndChange}
+          />
         </div>
         <InputField
           label="Data"

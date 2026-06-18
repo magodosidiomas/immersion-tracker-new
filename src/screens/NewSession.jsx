@@ -83,6 +83,7 @@ function NewSession({ onClose }) {
     const startedAt = Date.now()
     setFirstStartedAt(startedAt)
     setRunStartedAt(startedAt)
+    setNow(startedAt) // avoid a stale `now` making the first render's elapsed time negative
     setStatus('running')
   }
 
@@ -93,7 +94,9 @@ function NewSession({ onClose }) {
   }
 
   function handleResume() {
-    setRunStartedAt(Date.now())
+    const resumedAt = Date.now()
+    setRunStartedAt(resumedAt)
+    setNow(resumedAt) // same reason as handleStart
     setStatus('running')
   }
 
