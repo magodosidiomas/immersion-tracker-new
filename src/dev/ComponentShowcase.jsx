@@ -4,6 +4,7 @@ import SelectableListItem from '../components/SelectableListItem'
 import Dropdown from '../components/Dropdown'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
+import Checkbox from '../components/Checkbox'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 
@@ -130,7 +131,30 @@ function ComponentShowcase() {
         its real first use case: picking the active language.
       </p>
       <BottomSheetDemo />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Checkbox</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        description is the only optional slot (null hides it) — checked is
+        toggled here for real instead of a static "isActive" row.
+      </p>
+      <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <CheckboxDemo />
+        <Checkbox label="Label" description="Description" checked />
+        <Checkbox label="Label only" />
+      </div>
     </main>
+  )
+}
+
+function CheckboxDemo() {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Checkbox
+      label="Label"
+      description="Description"
+      checked={checked}
+      onClick={() => setChecked((c) => !c)}
+    />
   )
 }
 
