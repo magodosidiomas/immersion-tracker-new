@@ -46,9 +46,14 @@ function withTime(base, hm) {
 // Edit rules (locked in imerso-data-model.md):
 // - editing duração recalculates fim, início stays put
 // - editing início or fim recalculates duração, the other stays put
-// - impossible combinations (fim before início) are blocked by simply
-//   not applying the edit — the controlled input snaps back to its
-//   last valid value.
+// - impossible combinations (fim before início) are blocked and the
+//   edited field snaps back to its last valid value. Each time+field
+//   is rendered as an uncontrolled input keyed by a counter — the key
+//   only bumps when an external edit changes that field's value (or
+//   when a blocked edit needs to snap it back), never on its own edit,
+//   which is what kept typing broken in fully-controlled inputs (the
+//   browser resets the focused segment whenever JS reassigns .value,
+//   even to the identical string).
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it's edited on its own.
@@ -73,16 +78,12 @@ function SessionForm({
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
   )
 
-  // Duração/início/fim are rendered as uncontrolled inputs (defaultValue,
-  // not value) keyed by these counters, instead of feeding a freshly
-  // formatted string back into `value` on every keystroke. Native
-  // time inputs reset their focused segment back to the first one
-  // whenever JS reassigns .value — even to an identical string — so a
-  // normal controlled input here made it nearly impossible to type a
-  // second digit. Each field only needs to be force-refreshed (via a
-  // bumped key, remounting it with the new defaultValue) when a
-  // *different* field's edit changes its value out from under it —
-  // never on its own edit, which is what kept breaking typing.
+  // Each time field is uncontrolled (defaultValue, not value), keyed
+  // by these counters. The key only bumps when a *different* field's
+  // edit changes this field's value, or when a blocked edit needs to
+  // snap this field back to its last valid value. It never bumps on
+  // the field's own edit, preserving cursor/segment focus while typing.
+  const [startKey, setStartKey] = useState(0)
   const [durationKey, setDurationKey] = useState(0)
   const [endKey, setEndKey] = useState(0)
 
@@ -98,7 +99,11 @@ function SessionForm({
     if (!e.target.value) return
     const nextStart = withTime(startAt, e.target.value)
     const nextDuration = Math.round((endAt - nextStart) / 1000)
-    if (nextDuration < 0) return // blocked: início can't land after fim
+    if (nextDuration < 0) {
+      // início can't land after fim — snap back to last valid value
+      setStartKey((k) => k + 1)
+      return
+    }
     setStartAt(nextStart)
     setDurationSeconds(nextDuration)
     setDurationKey((k) => k + 1) // duração changed out from under it
@@ -108,7 +113,11 @@ function SessionForm({
     if (!e.target.value) return
     const nextEnd = withTime(endAt, e.target.value)
     const nextDuration = Math.round((nextEnd - startAt) / 1000)
-    if (nextDuration < 0) return // blocked: fim can't land before início
+    if (nextDuration < 0) {
+      // fim can't land before início — snap back to last valid value
+      setEndKey((k) => k + 1)
+      return
+    }
     setEndAt(nextEnd)
     setDurationSeconds(nextDuration)
     setDurationKey((k) => k + 1) // duração changed out from under it
@@ -153,7 +162,13 @@ function SessionForm({
           </div>
         </div>
         <div className="finish-session-time-row">
-          <InputField label="Início" type="time" defaultValue={formatHM(startAt)} onChange={handleStartChange} />
+          <InputField
+            key={startKey}
+            label="Início"
+            type="time"
+            defaultValue={formatHM(startAt)}
+            onChange={handleStartChange}
+          />
           <InputField
             key={endKey}
             label="Fim"
