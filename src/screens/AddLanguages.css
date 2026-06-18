@@ -1,0 +1,62 @@
+.add-languages {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-surface-base);
+}
+
+.add-languages-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+  padding: 16px;
+}
+
+.add-languages-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-default);
+}
+
+.add-languages-footer {
+  margin-top: auto;
+}
+
+/* Visual-only checkbox indicator dropped into SelectableListItem's
+   trailingIcon slot. Sized/styled to match Checkbox's own box (see
+   Checkbox.css) so the same "selected" affordance looks identical in
+   both places, even though this row uses SelectableListItem rather
+   than the Checkbox component (its label-left layout doesn't match
+   this screen's flag+name-left, indicator-right row). */
+.add-languages-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.add-languages-checkbox-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-small);
+  border: 1px solid var(--color-border-default);
+}
+
+.add-languages-checkbox-box[data-checked='true'] {
+  background: var(--bg-surface-primary);
+}
+
+.add-languages-checkbox-box svg {
+  width: 12px;
+  height: 12px;
+  color: var(--color-text-primary);
+}
