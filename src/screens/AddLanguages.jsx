@@ -5,6 +5,7 @@ import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
 import { Close, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import Flag from '../components/Flag'
 import './AddLanguages.css'
 
 // Reached from ManageLanguages' "Adicionar idiomas" button. Fetches the
@@ -60,7 +61,7 @@ function AddLanguages({ onClose }) {
               <SelectableListItem
                 key={language.name}
                 label={language.name}
-                flag={language.flagEmoji}
+                flag={<Flag code={language.flagCode} />}
                 divider={index < options.length - 1}
                 trailingIcon={
                   <span className="add-languages-checkbox">
