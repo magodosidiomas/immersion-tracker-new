@@ -25,18 +25,6 @@
   border-radius: var(--radius-medium);
 }
 
-.selectable-list-item:not(:disabled):hover .selectable-list-item-row {
-  background: var(--bg-surface-primary-8);
-}
-
-.selectable-list-item[data-selected='true']:not(:disabled):hover .selectable-list-item-row {
-  background: var(--bg-surface-primary-hover);
-}
-
-.selectable-list-item[data-divider='true']:not(:disabled):hover .selectable-list-item-divider {
-  visibility: hidden;
-}
-
 .selectable-list-item-label {
   flex: 1;
   min-width: 0;
@@ -77,12 +65,26 @@
   background: var(--color-border-subtle);
 }
 
+/* --- hover --- */
+.selectable-list-item:not(:disabled):hover .selectable-list-item-row {
+  background: var(--bg-surface-primary-8);
+}
+
+.selectable-list-item:not(:disabled):hover .selectable-list-item-divider {
+  visibility: hidden;
+}
+
 /* --- selected --- */
+.selectable-list-item[data-selected='true']:not(:disabled) .selectable-list-item-row {
+  background: var(--bg-surface-primary-8);
+}
+
 .selectable-list-item[data-selected='true']:not(:disabled) .selectable-list-item-label {
   color: var(--color-text-accent);
 }
 
-.selectable-list-item[data-selected='true']:not(:disabled) .selectable-list-item-row {
+/* --- hover + selected --- */
+.selectable-list-item[data-selected='true']:not(:disabled):hover .selectable-list-item-row {
   background: var(--bg-surface-primary-15);
 }
 
