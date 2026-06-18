@@ -26,7 +26,15 @@
 }
 
 .selectable-list-item:not(:disabled):hover .selectable-list-item-row {
-  background: var(--bg-surface-primary-15);
+  background: var(--bg-surface-primary-8);
+}
+
+.selectable-list-item[data-selected='true']:not(:disabled):hover .selectable-list-item-row {
+  background: var(--bg-surface-primary-hover);
+}
+
+.selectable-list-item[data-divider='true']:not(:disabled):hover .selectable-list-item-divider {
+  visibility: hidden;
 }
 
 .selectable-list-item-label {
