@@ -13,6 +13,7 @@ function Button({
   variant = 'primary',
   size = 'lg',
   disabled = false,
+  fullWidth = false,
   leadingIcon = null,
   trailingIcon = null,
   children,
@@ -24,6 +25,7 @@ function Button({
       className="button"
       data-variant={variant}
       data-size={size}
+      data-full-width={fullWidth}
       disabled={disabled}
       {...props}
     >

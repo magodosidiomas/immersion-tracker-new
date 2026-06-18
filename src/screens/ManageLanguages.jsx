@@ -44,7 +44,7 @@ function ManageLanguages({ onBack }) {
           ))}
         </div>
         <div className="manage-languages-footer">
-          <Button variant="outline" leadingIcon={<Add />}>
+          <Button variant="outline" leadingIcon={<Add />} fullWidth>
             Adicionar idiomas
           </Button>
         </div>

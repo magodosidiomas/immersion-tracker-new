@@ -21,4 +21,14 @@
 body {
   margin: 0;
   font-family: var(--font-family-main);
+  background: var(--bg-surface-base);
+}
+
+/* App is designed mobile-first (see BottomSheet.css's breakpoint
+   comment). On wider viewports, constrain to a phone-like column
+   instead of letting every screen's flex layout stretch edge to edge. */
+#root {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
 }

@@ -24,6 +24,11 @@
   padding: 8px 12px;
 }
 
+.button[data-full-width='true'] {
+  display: flex;
+  width: 100%;
+}
+
 /* --- primary --- */
 .button[data-variant='primary'] {
   background: var(--bg-surface-primary);
