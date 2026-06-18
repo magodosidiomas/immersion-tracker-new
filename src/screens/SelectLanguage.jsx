@@ -36,7 +36,7 @@ function SelectLanguage({ onSelect }) {
               key={language.name}
               label={language.name}
               flag={<Flag code={language.flagCode} />}
-              divider={index < AVAILABLE_LANGUAGES.length - 1}
+              divider={index > 0}
               disabled={pending}
               onClick={() => handleSelect(language)}
             />

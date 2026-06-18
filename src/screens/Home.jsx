@@ -152,7 +152,7 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
             flag={<Flag code={language.flagCode} />}
             selected={language.id === activeId}
             trailingIcon={language.id === activeId ? <Check /> : null}
-            divider={index < languages.length - 1}
+            divider={index > 0}
             onClick={() => handlePick(language)}
           />
         ))}

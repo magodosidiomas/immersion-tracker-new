@@ -39,13 +39,13 @@ function SelectableListItem({
       disabled={disabled}
       {...props}
     >
+      {divider && <span className="selectable-list-item-divider" />}
       <span className="selectable-list-item-row">
         {leadingIcon && <span className="selectable-list-item-icon">{leadingIcon}</span>}
         {flag && <span className="selectable-list-item-flag">{flag}</span>}
         {label && <span className="selectable-list-item-label">{label}</span>}
         {trailingIcon && <span className="selectable-list-item-icon">{trailingIcon}</span>}
       </span>
-      {divider && <span className="selectable-list-item-divider" />}
     </button>
   )
 }
