@@ -4,6 +4,7 @@ import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
 import ManageLanguages from './screens/ManageLanguages'
+import AddLanguages from './screens/AddLanguages'
 import { getAppSettings } from './db'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -21,9 +22,9 @@ function App() {
   // checking IndexedDB" so we don't flash the wrong screen on load.
   const [hasLanguage, setHasLanguage] = useState(null)
 
-  // Home vs Settings vs ManageLanguages is plain state, not a route —
-  // a third screen, like the comment above predicted. Still simpler
-  // than a router for this size of nav (no deep-linking need yet).
+  // Home vs Settings vs ManageLanguages vs AddLanguages is plain state,
+  // not a route — still simpler than a router for this size of nav (no
+  // deep-linking need yet).
   const [screen, setScreen] = useState('home')
 
   useEffect(() => {
@@ -36,11 +37,22 @@ function App() {
   if (isDesignSystem) return <ComponentShowcase />
   if (hasLanguage === null) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
+  // AddLanguages sits one level below ManageLanguages — both closing
+  // (X) and finishing (Adicionar) return there, since either way the
+  // list it shows may need refetching.
+  if (screen === 'add-languages') {
+    return <AddLanguages onClose={() => setScreen('manage-languages')} />
+  }
   // ManageLanguages sits inside Settings in the nav hierarchy, so its
   // back button always returns to 'settings' — even when this screen
   // was reached via Home's dropdown shortcut below.
   if (screen === 'manage-languages') {
-    return <ManageLanguages onBack={() => setScreen('settings')} />
+    return (
+      <ManageLanguages
+        onBack={() => setScreen('settings')}
+        onOpenAddLanguages={() => setScreen('add-languages')}
+      />
+    )
   }
   if (screen === 'settings') {
     return (
