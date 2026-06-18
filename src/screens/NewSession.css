@@ -29,3 +29,22 @@
   gap: var(--space-12);
   padding: var(--space-16);
 }
+
+.category-sheet-group + .category-sheet-group {
+  margin-top: var(--space-24);
+}
+
+.category-sheet-label {
+  display: block;
+  margin-bottom: var(--space-12);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  color: var(--color-text-secondary);
+}
+
+.category-sheet-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
