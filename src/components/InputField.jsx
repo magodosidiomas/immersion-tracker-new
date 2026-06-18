@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import './InputField.css'
 
 // Mirrors the Figma "inputField" component set. isFilled isn't a prop —
@@ -9,6 +10,12 @@ import './InputField.css'
 // normal React way via ...props. hasLabel/hasHintText/hasLeadingIcon/
 // hasTrailingIcon aren't separate props — passing null already hides
 // each one, same simplification as Button/Dropdown.
+//
+// The label text is tied to the input via explicit htmlFor/id, not by
+// wrapping the input in a <label> — Chrome fires a synthetic extra
+// click on a label-wrapped input to forward focus, and on segmented
+// inputs (type="time"/"date") that double click reads as a click-drag,
+// highlighting the segment like a text selection.
 function InputField({
   label = null,
   placeholder = '',
@@ -17,18 +24,23 @@ function InputField({
   trailingIcon = null,
   ...props
 }) {
+  const id = useId()
   return (
-    <label className="input-field">
-      {label && <span className="input-field-label">{label}</span>}
+    <div className="input-field">
+      {label && (
+        <label className="input-field-label" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <span className="input-field-body">
         <span className="input-field-control">
           {leadingIcon && <span className="input-field-icon">{leadingIcon}</span>}
-          <input className="input-field-input" type="text" placeholder={placeholder} {...props} />
+          <input id={id} className="input-field-input" type="text" placeholder={placeholder} {...props} />
           {trailingIcon && <span className="input-field-icon">{trailingIcon}</span>}
         </span>
         {hint && <span className="input-field-hint">{hint}</span>}
       </span>
-    </label>
+    </div>
   )
 }
 
