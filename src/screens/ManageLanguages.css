@@ -89,11 +89,33 @@
   overflow-wrap: break-word;
 }
 
+/* Standalone button reset — not using top-nav-icon-reset here because
+   that class sets width/height to 100% (designed to fill a fixed-size
+   wrapper), which doesn't apply in this flex-row context where the
+   button needs an explicit 24 × 24 size. */
 .manage-languages-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   color: var(--color-icon-on-destructive-accent);
+}
+
+.manage-languages-delete:focus-visible {
+  outline: 2px solid var(--color-border-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
+.manage-languages-delete svg {
+  width: 100%;
+  height: 100%;
 }
 
 .manage-languages-row-divider {
