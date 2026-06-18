@@ -5,6 +5,7 @@ import Dropdown from '../components/Dropdown'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import Checkbox from '../components/Checkbox'
+import InputField from '../components/InputField'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
 
@@ -141,6 +142,29 @@ function ComponentShowcase() {
         <CheckboxDemo />
         <Checkbox label="Label" description="Description" checked />
         <Checkbox label="Label only" />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>InputField</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        isFilled isn't a prop — type into the first field to see the
+        placeholder style swap to the bold value style for real.
+      </p>
+      <div style={{ width: 320, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <InputField
+          label="Label"
+          placeholder="Placeholder"
+          hint="Hint text"
+          leadingIcon={<Bolt />}
+          trailingIcon={<Bolt />}
+        />
+        <InputField
+          label="Label"
+          placeholder="Placeholder"
+          hint="Hint text"
+          defaultValue="User input"
+          leadingIcon={<Bolt />}
+          trailingIcon={<Bolt />}
+        />
       </div>
     </main>
   )

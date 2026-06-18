@@ -22,6 +22,7 @@
   --line-height-tight: 1; /* used by: all label/* styles (100%) */
   --line-height-snug: 1.1; /* used by: heading/*, label/regular/* (110%) */
   --line-height-relaxed: 1.5; /* used by: body/* (150%), BottomSheet description */
+  --line-height-loose: 1.4; /* used by: body/body-4, body/body-5 (140%), InputField hint */
 
   /* letter-spacing — from textStyles[].letterSpacing */
   --letter-spacing-wide: 0.005em; /* used by: label/regular/small */

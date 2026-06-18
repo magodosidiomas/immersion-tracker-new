@@ -1,0 +1,90 @@
+.input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  cursor: text;
+}
+
+.input-field-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+.input-field-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.input-field-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  padding: 12px 8px;
+  border-radius: var(--radius-medium);
+  border: 1px solid var(--bg-surface-input);
+  --icon-color: var(--color-icon-muted-gray);
+}
+
+/* Not a Figma variant — the field needs some visible focus affordance
+   since it's a real, typeable input, so it gets one the same way
+   Button gets a hover state: handled for free, not as an extra prop. */
+.input-field-control:focus-within {
+  border-color: var(--color-border-accent);
+}
+
+.input-field-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--icon-color);
+}
+
+.input-field-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.input-field-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+/* The Figma "isFilled" variant, without an isFilled prop: the
+   placeholder gets the lighter, unbolded text style straight from
+   ::placeholder, and the typed value falls back to the bold style
+   set on .input-field-input above. */
+.input-field-input::placeholder {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+}
+
+.input-field-hint {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-secondary);
+}
