@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import Button from './Button'
@@ -80,15 +80,17 @@ function SessionForm({
   const secondRef = useRef(null)
   const commitTimeoutRef = useRef(null)
 
+  // Focusing the hour box has to wait for editingDuration's re-render
+  // to actually mount it — an effect tied to that flag, not a
+  // setTimeout, so it runs right after React commits the new DOM.
+  useEffect(() => {
+    if (!editingDuration) return
+    hourRef.current?.focus()
+    hourRef.current?.select()
+  }, [editingDuration])
+
   function openDurationEdit() {
     setEditingDuration(true)
-    // The edit-mode boxes aren't mounted yet on the click that flips
-    // editingDuration — wait a tick, then focus + select the first
-    // one (mirrors clicking into a native input and selecting it all).
-    setTimeout(() => {
-      hourRef.current?.focus()
-      hourRef.current?.select()
-    }, 0)
   }
 
   function handleSegmentBlur(ref, max) {
@@ -179,22 +181,15 @@ function SessionForm({
               />
             </div>
           ) : (
-            <div
+            <button
+              type="button"
               className="finish-session-duration-row"
-              role="button"
-              tabIndex={0}
               aria-label="Editar duração"
               onClick={openDurationEdit}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  openDurationEdit()
-                }
-              }}
             >
               <span className="finish-session-duration-display">{formatHMS(durationSeconds)}</span>
               <Edit className="finish-session-duration-icon" aria-hidden="true" />
-            </div>
+            </button>
           )}
         </div>
         <div className="finish-session-time-row">
