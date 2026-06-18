@@ -180,3 +180,14 @@ export async function createSession(sessionData) {
   await put('sessions', session)
   return session
 }
+
+// Overwrites an existing session in place (id and languageId unchanged
+// — editing a session never moves it to a different language).
+export async function updateSession(session) {
+  await put('sessions', session)
+  return session
+}
+
+export async function deleteSession(sessionId) {
+  await remove('sessions', sessionId)
+}

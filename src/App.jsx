@@ -6,6 +6,7 @@ import Settings from './screens/Settings'
 import ManageLanguages from './screens/ManageLanguages'
 import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
+import EditSession from './screens/EditSession'
 import { getAppSettings } from './db'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -27,6 +28,10 @@ function App() {
   // not a route — still simpler than a router for this size of nav (no
   // deep-linking need yet).
   const [screen, setScreen] = useState('home')
+
+  // Which session EditSession is open for — set right before switching
+  // to that screen, from the row tapped in Home's history list.
+  const [editingSession, setEditingSession] = useState(null)
 
   useEffect(() => {
     if (isDesignSystem) return
@@ -63,11 +68,18 @@ function App() {
   if (screen === 'new-session') {
     return <NewSession onClose={() => setScreen('home')} />
   }
+  if (screen === 'edit-session') {
+    return <EditSession session={editingSession} onBack={() => setScreen('home')} onSaved={() => setScreen('home')} />
+  }
   return (
     <Home
       onOpenSettings={() => setScreen('settings')}
       onOpenManageLanguages={() => setScreen('manage-languages')}
       onOpenNewSession={() => setScreen('new-session')}
+      onOpenEditSession={(session) => {
+        setEditingSession(session)
+        setScreen('edit-session')
+      }}
     />
   )
 }

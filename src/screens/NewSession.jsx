@@ -4,48 +4,15 @@ import Dropdown from '../components/Dropdown'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import SelectionChip from '../components/SelectionChip'
-import InputField from '../components/InputField'
-import { Close, PlayArrow, Pause, Stop, ArrowBack, Edit, CalendarToday, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import SessionForm from '../components/SessionForm'
+import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
+import { formatDateInput } from '../utils/date'
+// Pulls in .category-sheet-* (used by the picker sheet below) and
+// .finish-session-* (used by SessionForm) — shared with EditSession.
+import '../components/SessionForm.css'
 import './NewSession.css'
-
-// ---------- time helpers (local to this screen) ----------
-
-function pad2(n) {
-  return String(n).padStart(2, '0')
-}
-
-// HH:MM:SS — value for the duration <input type="time" step="1">
-function formatHMS(totalSeconds) {
-  const seconds = Math.max(0, Math.round(totalSeconds))
-  const h = Math.floor(seconds / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  const s = seconds % 60
-  return `${pad2(h)}:${pad2(m)}:${pad2(s)}`
-}
-
-function parseHMS(value) {
-  const [h, m, s] = value.split(':').map(Number)
-  return h * 3600 + m * 60 + (s || 0)
-}
-
-// HH:MM — value for the início/fim <input type="time">
-function formatHM(date) {
-  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`
-}
-
-// Returns a new Date: same day as base, time-of-day from "HH:MM".
-function withTime(base, hm) {
-  const [h, m] = hm.split(':').map(Number)
-  const next = new Date(base)
-  next.setHours(h, m, 0, 0)
-  return next
-}
-
-function formatDateInput(date) {
-  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
-}
 
 // Three timer states (idle / running / paused), plus a "finish" phase
 // once "Encerrar" is pressed. No IndexedDB writes happen for the
@@ -305,60 +272,14 @@ function NewSession({ onClose }) {
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
 function FinishSession({ draft, category, subcategory, languageId, onBack, onDiscard, onSaved }) {
-  const [startAt, setStartAt] = useState(draft.startAt)
-  const [endAt, setEndAt] = useState(draft.endAt)
-  const [durationSeconds, setDurationSeconds] = useState(draft.durationSeconds)
-  const [sessionDate, setSessionDate] = useState(() => formatDateInput(new Date()))
-  const [selectedCategory, setSelectedCategory] = useState(category ?? CATEGORIES[0].key)
-  const [selectedSubcategory, setSelectedSubcategory] = useState(subcategory ?? CATEGORIES[0].subcategories[0].key)
   const [saving, setSaving] = useState(false)
 
-  function handleDurationChange(e) {
-    if (!e.target.value) return
-    const seconds = parseHMS(e.target.value)
-    setDurationSeconds(seconds)
-    setEndAt(new Date(startAt.getTime() + seconds * 1000))
-  }
-
-  function handleStartChange(e) {
-    if (!e.target.value) return
-    const nextStart = withTime(startAt, e.target.value)
-    const nextDuration = Math.round((endAt - nextStart) / 1000)
-    if (nextDuration < 0) return // blocked: início can't land after fim
-    setStartAt(nextStart)
-    setDurationSeconds(nextDuration)
-  }
-
-  function handleEndChange(e) {
-    if (!e.target.value) return
-    const nextEnd = withTime(endAt, e.target.value)
-    const nextDuration = Math.round((nextEnd - startAt) / 1000)
-    if (nextDuration < 0) return // blocked: fim can't land before início
-    setEndAt(nextEnd)
-    setDurationSeconds(nextDuration)
-  }
-
-  function handlePickCategory(key) {
-    setSelectedCategory(key)
-    setSelectedSubcategory(CATEGORIES.find((item) => item.key === key).subcategories[0].key)
-  }
-
-  async function handleSave() {
+  async function handleSave(fields) {
     if (!languageId || saving) return
     setSaving(true)
-    await createSession({
-      languageId,
-      category: selectedCategory,
-      subcategory: selectedSubcategory,
-      date: sessionDate,
-      startTime: startAt.toISOString(),
-      endTime: endAt.toISOString(),
-      durationSeconds,
-    })
+    await createSession({ languageId, ...fields })
     onSaved()
   }
-
-  const selectedCategoryData = CATEGORIES.find((item) => item.key === selectedCategory)
 
   return (
     <main className="new-session">
@@ -371,71 +292,21 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
           </button>
         }
       />
-      <div className="finish-session-body">
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Duração</span>
-          <div className="finish-session-duration-row">
-            <input
-              type="time"
-              step="1"
-              className="finish-session-duration-input"
-              value={formatHMS(durationSeconds)}
-              onChange={handleDurationChange}
-              aria-label="Editar duração"
-            />
-            <Edit className="finish-session-duration-icon" aria-hidden="true" />
-          </div>
-        </div>
-        <div className="finish-session-time-row">
-          <InputField label="Início" type="time" value={formatHM(startAt)} onChange={handleStartChange} />
-          <InputField label="Fim" type="time" value={formatHM(endAt)} onChange={handleEndChange} />
-        </div>
-        <InputField
-          label="Data"
-          type="date"
-          value={sessionDate}
-          onChange={(e) => setSessionDate(e.target.value)}
-          trailingIcon={<CalendarToday />}
-        />
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Categoria</span>
-          <div className="category-sheet-chips">
-            {CATEGORIES.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={selectedCategory === item.key}
-                onClick={() => handlePickCategory(item.key)}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Subcategoria</span>
-          <div className="category-sheet-chips">
-            {selectedCategoryData.subcategories.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={selectedSubcategory === item.key}
-                onClick={() => setSelectedSubcategory(item.key)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="finish-session-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving}>
-          Salvar
-        </Button>
-        <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={onDiscard}>
-          Descartar sessão
-        </Button>
-      </div>
+      <SessionForm
+        initialStartAt={draft.startAt}
+        initialEndAt={draft.endAt}
+        initialDurationSeconds={draft.durationSeconds}
+        initialDate={formatDateInput(new Date())}
+        initialCategory={category}
+        initialSubcategory={subcategory}
+        onSave={handleSave}
+        saving={saving}
+        secondaryButton={
+          <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={onDiscard}>
+            Descartar sessão
+          </Button>
+        }
+      />
     </main>
   )
 }
