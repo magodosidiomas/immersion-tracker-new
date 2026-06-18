@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
+import ListItem from '../components/ListItem'
 import Dropdown from '../components/Dropdown'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
@@ -82,6 +83,40 @@ function ComponentShowcase() {
         <SelectableListItem label="Default, with divider" divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Selected, with divider" selected divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
         <SelectableListItem label="Disabled, with divider" disabled divider flag={<Flag code="us" />} leadingIcon={<Check />} trailingIcon={<Check />} />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ListItem</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Same row chrome as SelectableListItem, but no selected state —
+        adds description/extraText slots instead.
+      </p>
+      <div style={{ width: 324, display: 'flex', flexDirection: 'column' }}>
+        <ListItem
+          label="Label"
+          description="Imersão · Escuta e leitura"
+          extraText="1h 20"
+          flag={<Flag code="us" />}
+          leadingIcon={<Check />}
+          trailingIcon={<Check />}
+        />
+        <ListItem
+          label="Label"
+          description="Imersão · Escuta e leitura"
+          extraText="1h 20"
+          divider
+          flag={<Flag code="us" />}
+          leadingIcon={<Check />}
+          trailingIcon={<Check />}
+        />
+        <ListItem
+          label="Label"
+          description="Imersão · Escuta e leitura"
+          extraText="1h 20"
+          disabled
+          flag={<Flag code="us" />}
+          leadingIcon={<Check />}
+          trailingIcon={<Check />}
+        />
       </div>
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Dropdown</h1>

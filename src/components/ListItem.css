@@ -1,0 +1,106 @@
+.list-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  --icon-color: var(--color-icon-muted-gray);
+}
+
+/* Same split as SelectableListItem: the pill (background + radius)
+   lives on the row, not the button, so it can never reach the divider
+   below — the divider's own margin is the only source of gap. */
+.list-item-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-medium);
+}
+
+.list-item:not(:disabled):hover .list-item-row {
+  background: var(--bg-surface-primary-15);
+}
+
+.list-item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  overflow-wrap: break-word;
+}
+
+.list-item-description {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+  overflow-wrap: break-word;
+}
+
+.list-item-extra {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  text-align: right;
+  color: var(--color-text-primary);
+}
+
+.list-item-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--icon-color);
+}
+
+.list-item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.list-item-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.list-item-divider {
+  width: 100%;
+  height: 1px;
+  margin: 8px 0;
+  background: var(--color-border-subtle);
+}
+
+/* --- disabled --- */
+.list-item:disabled {
+  cursor: not-allowed;
+  --icon-color: var(--color-icon-disabled);
+}
+
+.list-item:disabled .list-item-label,
+.list-item:disabled .list-item-description,
+.list-item:disabled .list-item-extra {
+  color: var(--color-text-tertiary);
+}
