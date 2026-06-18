@@ -65,7 +65,7 @@ function LanguageRow({ language, divider, onDelete }) {
         <span className="manage-languages-row-label">{language.name}</span>
         <button
           type="button"
-          className="top-nav-icon-reset manage-languages-delete"
+          className="manage-languages-delete"
           onClick={() => onDelete(language)}
           aria-label={`Remover ${language.name}`}
         >
