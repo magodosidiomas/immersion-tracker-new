@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import Button from './Button'
+import BottomSheet from './BottomSheet'
 import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
@@ -43,14 +44,14 @@ function clamp(value, min, max) {
 // imerso-data-model.md) but intentionally not wired up yet; that's a
 // later step once this one's settled.
 //
-// Duração itself is tap-to-edit: a big static display (with a pencil
-// affordance) swaps for three digit boxes (h/m/s) on tap or Enter/Space.
-// Each box is uncontrolled (defaultValue, not a value prop) — typing a
-// digit shouldn't fight a React re-render for the cursor position.
-// Commit happens when focus leaves all three boxes (checked via a
-// same-tick timeout, since the next box's focus event hasn't fired yet
-// at blur time) or on Enter, which just blurs the box and lets that
-// same path run.
+// Duração itself opens a BottomSheet (same component used elsewhere,
+// e.g. ManageLanguages' delete confirmation) with three digit boxes
+// (h/m/s). Each box is uncontrolled (defaultValue, not a value prop) —
+// typing a digit shouldn't fight a React re-render for the cursor
+// position. Nothing commits until "Confirmar" is tapped; "Cancelar" or
+// dismissing the sheet discards the edit instead. durationEditKey
+// remounts the three boxes fresh every time the sheet opens, so a
+// discarded edit never leaks into the next time it's opened.
 function SessionForm({
   initialStartAt,
   initialDurationSeconds,
@@ -69,6 +70,11 @@ function SessionForm({
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
   )
   const [editingDuration, setEditingDuration] = useState(false)
+  // Bumped on every openDurationEdit() call; used as the segment
+  // boxes' key so they remount fresh from durationSeconds each time —
+  // otherwise a cancelled edit's uncommitted DOM values (defaultValue
+  // only applies at mount) would still be sitting there next open.
+  const [durationEditKey, setDurationEditKey] = useState(0)
 
   // início is fixed for this form's lifetime; fim is always derived,
   // never independent state — see the scope note above.
@@ -78,7 +84,6 @@ function SessionForm({
   const hourRef = useRef(null)
   const minuteRef = useRef(null)
   const secondRef = useRef(null)
-  const commitTimeoutRef = useRef(null)
 
   // Focusing the hour box has to wait for editingDuration's re-render
   // to actually mount it — an effect tied to that flag, not a
@@ -90,22 +95,25 @@ function SessionForm({
   }, [editingDuration])
 
   function openDurationEdit() {
+    setDurationEditKey((key) => key + 1)
     setEditingDuration(true)
   }
 
   function handleSegmentBlur(ref, max) {
     const value = clamp(parseInt(ref.current.value || '0', 10), 0, max)
     ref.current.value = pad2(value)
-    clearTimeout(commitTimeoutRef.current)
-    commitTimeoutRef.current = setTimeout(() => {
-      const boxes = [hourRef.current, minuteRef.current, secondRef.current]
-      if (boxes.includes(document.activeElement)) return // focus just moved to another box
-      const h = parseInt(hourRef.current.value, 10)
-      const m = parseInt(minuteRef.current.value, 10)
-      const s = parseInt(secondRef.current.value, 10)
-      setDurationSeconds(h * 3600 + m * 60 + s)
-      setEditingDuration(false)
-    }, 0)
+  }
+
+  function handleConfirmDuration() {
+    const h = parseInt(hourRef.current.value, 10)
+    const m = parseInt(minuteRef.current.value, 10)
+    const s = parseInt(secondRef.current.value, 10)
+    setDurationSeconds(h * 3600 + m * 60 + s)
+    setEditingDuration(false)
+  }
+
+  function handleCancelDuration() {
+    setEditingDuration(false)
   }
 
   function handleSegmentInput(event, nextRef) {
@@ -114,7 +122,7 @@ function SessionForm({
   }
 
   function handleSegmentKeyDown(event) {
-    if (event.key === 'Enter') event.target.blur() // blur runs the same commit path
+    if (event.key === 'Enter') event.target.blur() // blur clamps/pads the value
   }
 
   function handlePickCategory(key) {
@@ -142,70 +150,15 @@ function SessionForm({
       <div className="finish-session-body">
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Duração</span>
-          {editingDuration ? (
-            <div className="finish-session-duration-edit">
-              <div className="finish-session-duration-segment-group">
-                <input
-                  ref={hourRef}
-                  id="duration-hour"
-                  defaultValue={pad2(Math.floor(durationSeconds / 3600))}
-                  maxLength={2}
-                  inputMode="numeric"
-                  className="finish-session-duration-segment"
-                  onBlur={() => handleSegmentBlur(hourRef, 23)}
-                  onInput={(e) => handleSegmentInput(e, minuteRef)}
-                  onKeyDown={handleSegmentKeyDown}
-                />
-                <label htmlFor="duration-hour" className="finish-session-duration-segment-label">
-                  Horas
-                </label>
-              </div>
-              <span className="finish-session-duration-colon">:</span>
-              <div className="finish-session-duration-segment-group">
-                <input
-                  ref={minuteRef}
-                  id="duration-minute"
-                  defaultValue={pad2(Math.floor((durationSeconds % 3600) / 60))}
-                  maxLength={2}
-                  inputMode="numeric"
-                  className="finish-session-duration-segment"
-                  onBlur={() => handleSegmentBlur(minuteRef, 59)}
-                  onInput={(e) => handleSegmentInput(e, secondRef)}
-                  onKeyDown={handleSegmentKeyDown}
-                />
-                <label htmlFor="duration-minute" className="finish-session-duration-segment-label">
-                  Minutos
-                </label>
-              </div>
-              <span className="finish-session-duration-colon">:</span>
-              <div className="finish-session-duration-segment-group">
-                <input
-                  ref={secondRef}
-                  id="duration-second"
-                  defaultValue={pad2(durationSeconds % 60)}
-                  maxLength={2}
-                  inputMode="numeric"
-                  className="finish-session-duration-segment"
-                  onBlur={() => handleSegmentBlur(secondRef, 59)}
-                  onInput={(e) => handleSegmentInput(e, null)}
-                  onKeyDown={handleSegmentKeyDown}
-                />
-                <label htmlFor="duration-second" className="finish-session-duration-segment-label">
-                  Segundos
-                </label>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="finish-session-duration-row"
-              aria-label="Editar duração"
-              onClick={openDurationEdit}
-            >
-              <span className="finish-session-duration-display">{formatHMS(durationSeconds)}</span>
-              <Edit className="finish-session-duration-icon" aria-hidden="true" />
-            </button>
-          )}
+          <button
+            type="button"
+            className="finish-session-duration-row"
+            aria-label="Editar duração"
+            onClick={openDurationEdit}
+          >
+            <span className="finish-session-duration-display">{formatHMS(durationSeconds)}</span>
+            <Edit className="finish-session-duration-icon" aria-hidden="true" />
+          </button>
         </div>
         <div className="finish-session-time-row">
           <div className="finish-session-time-display">
@@ -255,6 +208,75 @@ function SessionForm({
         </Button>
         {secondaryButton}
       </div>
+      <BottomSheet
+        open={editingDuration}
+        onClose={handleCancelDuration}
+        title="Duração"
+        contentCard={false}
+        primaryButton={
+          <Button fullWidth onClick={handleConfirmDuration}>
+            Confirmar
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="outline" fullWidth onClick={handleCancelDuration}>
+            Cancelar
+          </Button>
+        }
+      >
+        <div className="finish-session-duration-edit" key={durationEditKey}>
+          <div className="finish-session-duration-segment-group">
+            <input
+              ref={hourRef}
+              id="duration-hour"
+              defaultValue={pad2(Math.floor(durationSeconds / 3600))}
+              maxLength={2}
+              inputMode="numeric"
+              className="finish-session-duration-segment"
+              onBlur={() => handleSegmentBlur(hourRef, 23)}
+              onInput={(e) => handleSegmentInput(e, minuteRef)}
+              onKeyDown={handleSegmentKeyDown}
+            />
+            <label htmlFor="duration-hour" className="finish-session-duration-segment-label">
+              Horas
+            </label>
+          </div>
+          <span className="finish-session-duration-colon">:</span>
+          <div className="finish-session-duration-segment-group">
+            <input
+              ref={minuteRef}
+              id="duration-minute"
+              defaultValue={pad2(Math.floor((durationSeconds % 3600) / 60))}
+              maxLength={2}
+              inputMode="numeric"
+              className="finish-session-duration-segment"
+              onBlur={() => handleSegmentBlur(minuteRef, 59)}
+              onInput={(e) => handleSegmentInput(e, secondRef)}
+              onKeyDown={handleSegmentKeyDown}
+            />
+            <label htmlFor="duration-minute" className="finish-session-duration-segment-label">
+              Minutos
+            </label>
+          </div>
+          <span className="finish-session-duration-colon">:</span>
+          <div className="finish-session-duration-segment-group">
+            <input
+              ref={secondRef}
+              id="duration-second"
+              defaultValue={pad2(durationSeconds % 60)}
+              maxLength={2}
+              inputMode="numeric"
+              className="finish-session-duration-segment"
+              onBlur={() => handleSegmentBlur(secondRef, 59)}
+              onInput={(e) => handleSegmentInput(e, null)}
+              onKeyDown={handleSegmentKeyDown}
+            />
+            <label htmlFor="duration-second" className="finish-session-duration-segment-label">
+              Segundos
+            </label>
+          </div>
+        </div>
+      </BottomSheet>
     </>
   )
 }
