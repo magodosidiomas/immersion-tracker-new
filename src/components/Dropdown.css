@@ -3,11 +3,21 @@
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  border: none;
-  background: transparent;
-  padding: 0;
+  border-radius: var(--radius-medium);
+  padding: 10px 14px;
   cursor: pointer;
   --icon-color: var(--color-icon-muted-gray);
+}
+
+/* --- enabled (resting) --- */
+.dropdown {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.dropdown:hover {
+  background: var(--bg-surface-primary-8);
+  border-color: var(--color-border-default);
 }
 
 .dropdown-flag {
@@ -63,4 +73,12 @@
    them */
 .dropdown[data-selected='true'] {
   --icon-color: var(--color-icon-muted);
+  background: var(--bg-surface-primary-4);
+  border-color: var(--color-border-muted-accent);
+}
+
+/* --- hover + selected --- */
+.dropdown[data-selected='true']:hover {
+  background: var(--bg-surface-primary-15);
+  border-color: var(--color-border-accent);
 }
