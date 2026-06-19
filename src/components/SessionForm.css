@@ -29,7 +29,26 @@
 .finish-session-field-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+}
+
+.finish-session-duration-group .category-sheet-label {
+  margin-bottom: var(--space-4);
+}
+
+.finish-session-divider {
+  position: relative;
+  height: 1px;
+}
+
+.finish-session-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 100vw;
+  height: 1px;
+  background: var(--color-border-subtle);
+  transform: translateX(-50%);
 }
 
 .finish-session-time-row {

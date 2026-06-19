@@ -166,7 +166,7 @@ function SessionForm({
   return (
     <>
       <div className="finish-session-body">
-        <div className="finish-session-field-group">
+        <div className="finish-session-field-group finish-session-duration-group">
           <span className="category-sheet-label">Duração</span>
           <button
             type="button"
@@ -189,6 +189,7 @@ function SessionForm({
           </div>
         </div>
         <InputField label="Data" type="date" value={sessionDate} onChange={(e) => setSessionDate(e.target.value)} />
+        <div className="finish-session-divider" />
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Categoria</span>
           <div className="category-sheet-chips">
