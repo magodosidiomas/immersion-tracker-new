@@ -36,6 +36,15 @@
   letter-spacing: 0.01em;
 }
 
+/* --- hover --- */
+/* Only applies when unselected: the selected look (accent border +
+   tinted bg) is the chip's "active" state and Figma doesn't define a
+   separate hover treatment on top of it. */
+.selection-chip:hover:not([data-selected='true']) {
+  border: 1px solid var(--color-border-default);
+  background: var(--bg-surface-input);
+}
+
 /* --- selected --- */
 .selection-chip[data-selected='true'] {
   border: 1px solid var(--color-border-accent);
