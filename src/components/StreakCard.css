@@ -1,0 +1,68 @@
+.streak-card {
+  width: 343px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
+}
+
+.streak-card-header {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.streak-card-emoji {
+  width: fit-content;
+  height: fit-content;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-heading-3);
+  line-height: var(--line-height-snug);
+  letter-spacing: -1.5px;
+  color: var(--color-text-primary);
+}
+
+.streak-card-text {
+  flex: 1;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.streak-card-title {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-secondary);
+}
+
+.streak-card-value {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
+/* Instance-level override: inside streakCard the row spreads full width
+   and space-between, unlike StreakItemGroup's own standalone default
+   (fit-content + flex-start). */
+.streak-card .streak-item-group {
+  width: 100%;
+  justify-content: space-between;
+}

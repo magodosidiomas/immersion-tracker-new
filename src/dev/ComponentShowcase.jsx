@@ -13,6 +13,7 @@ import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
+import StreakCard from '../components/StreakCard'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -280,6 +281,13 @@ function ComponentShowcase() {
         date/streak logic yet — visual component only for now.
       </p>
       <StreakItemGroup />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>StreakCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Header (🔥 + title/value) over a StreakItemGroup. Visual
+        component only for now — same scope as StreakItemGroup.
+      </p>
+      <StreakCard />
     </main>
   )
 }
