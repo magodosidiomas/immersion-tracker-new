@@ -11,6 +11,8 @@ import SelectionChip from '../components/SelectionChip'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
+import StreakItem from '../components/StreakItem'
+import StreakItemGroup from '../components/StreakItemGroup'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -260,6 +262,24 @@ function ComponentShowcase() {
         <NumericCard title="Total de horas" number="148" />
         <NumericCard />
       </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>StreakItem</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        isActive × isToday, 3 documented Figma variants below. Plain div,
+        not a button — purely presentational.
+      </p>
+      <div style={{ display: 'flex', gap: 16 }}>
+        <StreakItem weekday="S" />
+        <StreakItem weekday="S" isActive />
+        <StreakItem weekday="S" isToday />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>StreakItemGroup</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Row of StreakItem. days prop not finalized against real
+        date/streak logic yet — visual component only for now.
+      </p>
+      <StreakItemGroup />
     </main>
   )
 }

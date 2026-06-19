@@ -1,0 +1,6 @@
+.streak-item-group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+}
