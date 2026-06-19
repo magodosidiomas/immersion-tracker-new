@@ -7,7 +7,8 @@ import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
-import { Settings, Check, PlayArrow } from '@nine-thirty-five/material-symbols-react/outlined'
+import EmptyState from '../components/EmptyState'
+import { Settings, Check, PlayArrow, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './Home.css'
 
@@ -65,10 +66,9 @@ function groupSessionsByDate(sessions) {
 }
 
 // First real screen after onboarding: the top nav (active language +
-// switcher + settings entry point) and a FAB that opens the timer
-// (NewSession). The empty-state illustration/message for "no sessions
-// yet" isn't built — that's its own component, not designed in Figma
-// yet — so the body sits blank behind the FAB until that exists.
+// switcher + settings entry point), a history list (or EmptyState when
+// the active language has no sessions yet), and a FAB that opens the
+// timer (NewSession).
 //
 // The switcher picks from already-added languages (getLanguages), not
 // AVAILABLE_LANGUAGES — that catalog is only for adding a new language,
@@ -158,22 +158,33 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
         ))}
       </BottomSheet>
       <div className="home-history">
-        {groups.map((group) => (
-          <section key={group.date} className="home-history-group">
-            <p className="home-history-label">{formatGroupLabel(group.date, todayStr)}</p>
-            <div className="home-history-card">
-              {group.sessions.map((session, index) => (
-                <ListItem
-                  key={session.id}
-                  label={sessionLabel(session)}
-                  description={formatDuration(session.durationSeconds)}
-                  divider={index < group.sessions.length - 1}
-                  onClick={() => onOpenEditSession(session)}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+        {groups.length === 0 ? (
+          <EmptyState
+            icon={<Schedule />}
+            title="Nenhuma sessão ainda"
+            description="Toque em iniciar timer pra registrar sua primeira sessão"
+            buttonLabel="Iniciar timer"
+            buttonIcon={<PlayArrow />}
+            onButtonClick={onOpenNewSession}
+          />
+        ) : (
+          groups.map((group) => (
+            <section key={group.date} className="home-history-group">
+              <p className="home-history-label">{formatGroupLabel(group.date, todayStr)}</p>
+              <div className="home-history-card">
+                {group.sessions.map((session, index) => (
+                  <ListItem
+                    key={session.id}
+                    label={sessionLabel(session)}
+                    description={formatDuration(session.durationSeconds)}
+                    divider={index < group.sessions.length - 1}
+                    onClick={() => onOpenEditSession(session)}
+                  />
+                ))}
+              </div>
+            </section>
+          ))
+        )}
       </div>
       <div className="home-fab-layer">
         <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
