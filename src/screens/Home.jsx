@@ -175,7 +175,7 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
           </section>
         ))}
       </div>
-      <div className="home-fab">
+      <div className="home-fab-layer">
         <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
           Iniciar timer
         </Button>
