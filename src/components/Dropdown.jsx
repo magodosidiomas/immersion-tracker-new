@@ -17,6 +17,10 @@ import { KeyboardArrowDown } from '@nine-thirty-five/material-symbols-react/outl
 // TopNav's old inline chevron. It uses KeyboardArrowDown rather than
 // an "ExpandMore" import since the icon package doesn't expose that
 // name; it's the same glyph TopNav already used for this chevron.
+//
+// dropdown-content is Figma's "content" frame, separate from the root.
+// It's what carries the hover background — see Dropdown.css for why
+// it needs its own wrapper instead of living directly on the button.
 function Dropdown({
   label = 'Label',
   secondaryLabel = null,
@@ -26,18 +30,20 @@ function Dropdown({
 }) {
   return (
     <button type="button" className="dropdown" data-selected={selected} {...props}>
-      {flag && <span className="dropdown-flag">{flag}</span>}
-      <span className="dropdown-categories">
-        {label && <span className="dropdown-label">{label}</span>}
-        {secondaryLabel && (
-          <>
-            <span className="dropdown-dot">•</span>
-            <span className="dropdown-label-secondary">{secondaryLabel}</span>
-          </>
-        )}
-      </span>
-      <span className="dropdown-icon">
-        <KeyboardArrowDown />
+      <span className="dropdown-content">
+        {flag && <span className="dropdown-flag">{flag}</span>}
+        <span className="dropdown-categories">
+          {label && <span className="dropdown-label">{label}</span>}
+          {secondaryLabel && (
+            <>
+              <span className="dropdown-dot">•</span>
+              <span className="dropdown-label-secondary">{secondaryLabel}</span>
+            </>
+          )}
+        </span>
+        <span className="dropdown-icon">
+          <KeyboardArrowDown />
+        </span>
       </span>
     </button>
   )

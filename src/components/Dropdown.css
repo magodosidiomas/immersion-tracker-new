@@ -1,13 +1,37 @@
 .dropdown {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
+  border-radius: var(--radius-medium);
   --icon-color: var(--color-icon-muted-gray);
+}
+
+.dropdown:hover {
+  border-radius: var(--radius-small);
+}
+
+/* Figma's hover background needs padding to read as a pill, but that
+   padding can't shift the flag/label/chevron away from wherever the
+   navbar already aligns them at rest. Padding plus an equal negative
+   margin cancels out in layout terms — the button's own box stays
+   the size of the unpadded content — while the background still
+   paints across the padding, so the pill visibly extends past the
+   resting edges on hover without moving anything when it's not. */
+.dropdown-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px;
+  margin: -8px;
+  border-radius: var(--radius-medium);
+}
+
+.dropdown:hover .dropdown-content {
+  background: var(--bg-surface-primary-4);
 }
 
 .dropdown-flag {
