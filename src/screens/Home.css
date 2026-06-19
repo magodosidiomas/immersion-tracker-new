@@ -1,7 +1,7 @@
 .home {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-surface-base);
 }
 
@@ -39,12 +39,13 @@
   background: var(--bg-surface-default);
 }
 
-/* `absolute` anchored the FAB to `.home`'s own box, sized via
-   `min-height: 100vh` — mobile browsers compute that against the
-   *largest* possible viewport (address bar collapsed), taller than
-   what's actually visible while it's showing, so the FAB sat below
-   the fold until you scrolled. `fixed` tracks the real visual
-   viewport directly, sidestepping that.
+/* `absolute` anchored the FAB to `.home`'s own box, sized (at the
+   time) via `min-height: 100vh` — mobile browsers compute that
+   against the *largest* possible viewport (address bar collapsed),
+   taller than what's actually visible while it's showing, so the FAB
+   sat below the fold until you scrolled. `fixed` tracks the real
+   visual viewport directly, sidestepping that regardless of which
+   vh-flavored unit `.home` itself ends up using.
    But plain `fixed` pins to the actual window, which on a wide
    desktop viewport is far past #root's centered 480px column — the
    FAB would end up stranded at the real browser edge instead of the

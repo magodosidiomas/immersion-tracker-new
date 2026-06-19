@@ -1,7 +1,7 @@
 .select-language {
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 24px 16px 0;
   background: var(--bg-surface-base);
 }
