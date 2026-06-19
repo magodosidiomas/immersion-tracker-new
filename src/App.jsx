@@ -16,8 +16,15 @@ import { getAppSettings } from './db'
 // direct load unless the host has SPA fallback configured).
 //
 // Visit it at: <site-url>/#design-system
+// Same idea as #design-system: lets the real onboarding screen be
+// viewed/tested any time, without touching the actual hasLanguage
+// check or IndexedDB. SelectLanguage's `preview` prop skips its
+// addLanguage() write, so tapping a row is safe to try repeatedly.
+//
+// Visit it at: <site-url>/#onboarding
 function App() {
   const isDesignSystem = window.location.hash === '#design-system'
+  const isOnboardingPreview = window.location.hash === '#onboarding'
 
   // Whether to show onboarding or Home isn't a route, it's a question
   // about data: is there an active language yet? null means "still
@@ -34,13 +41,14 @@ function App() {
   const [editingSession, setEditingSession] = useState(null)
 
   useEffect(() => {
-    if (isDesignSystem) return
+    if (isDesignSystem || isOnboardingPreview) return
     getAppSettings().then((settings) => {
       setHasLanguage(Boolean(settings.activeLanguageId))
     })
-  }, [isDesignSystem])
+  }, [isDesignSystem, isOnboardingPreview])
 
   if (isDesignSystem) return <ComponentShowcase />
+  if (isOnboardingPreview) return <SelectLanguage preview onSelect={() => {}} />
   if (hasLanguage === null) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
   // AddLanguages sits one level below ManageLanguages — both closing

@@ -13,12 +13,21 @@ import './SelectLanguage.css'
 // future Settings list where the active language stays visible after
 // picking. The subtitle already tells people more languages can be
 // added later, so this screen stays a single tap.
-function SelectLanguage({ onSelect }) {
+//
+// `preview` (used by App.jsx's #onboarding route) skips the real
+// addLanguage() write so the screen can be visited and tapped
+// repeatedly without creating languages in IndexedDB.
+function SelectLanguage({ onSelect, preview = false }) {
   const [pending, setPending] = useState(false)
 
   async function handleSelect(language) {
     if (pending) return
     setPending(true)
+    if (preview) {
+      onSelect(language)
+      setPending(false)
+      return
+    }
     const created = await addLanguage(language)
     onSelect(created)
   }
