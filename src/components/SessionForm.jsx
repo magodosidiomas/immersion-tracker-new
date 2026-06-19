@@ -144,41 +144,56 @@ function SessionForm({
           <span className="category-sheet-label">Duração</span>
           {editingDuration ? (
             <div className="finish-session-duration-edit">
-              <input
-                ref={hourRef}
-                defaultValue={pad2(Math.floor(durationSeconds / 3600))}
-                maxLength={2}
-                inputMode="numeric"
-                aria-label="Horas"
-                className="finish-session-duration-segment"
-                onBlur={() => handleSegmentBlur(hourRef, 23)}
-                onInput={(e) => handleSegmentInput(e, minuteRef)}
-                onKeyDown={handleSegmentKeyDown}
-              />
+              <div className="finish-session-duration-segment-group">
+                <input
+                  ref={hourRef}
+                  id="duration-hour"
+                  defaultValue={pad2(Math.floor(durationSeconds / 3600))}
+                  maxLength={2}
+                  inputMode="numeric"
+                  className="finish-session-duration-segment"
+                  onBlur={() => handleSegmentBlur(hourRef, 23)}
+                  onInput={(e) => handleSegmentInput(e, minuteRef)}
+                  onKeyDown={handleSegmentKeyDown}
+                />
+                <label htmlFor="duration-hour" className="finish-session-duration-segment-label">
+                  Horas
+                </label>
+              </div>
               <span className="finish-session-duration-colon">:</span>
-              <input
-                ref={minuteRef}
-                defaultValue={pad2(Math.floor((durationSeconds % 3600) / 60))}
-                maxLength={2}
-                inputMode="numeric"
-                aria-label="Minutos"
-                className="finish-session-duration-segment"
-                onBlur={() => handleSegmentBlur(minuteRef, 59)}
-                onInput={(e) => handleSegmentInput(e, secondRef)}
-                onKeyDown={handleSegmentKeyDown}
-              />
+              <div className="finish-session-duration-segment-group">
+                <input
+                  ref={minuteRef}
+                  id="duration-minute"
+                  defaultValue={pad2(Math.floor((durationSeconds % 3600) / 60))}
+                  maxLength={2}
+                  inputMode="numeric"
+                  className="finish-session-duration-segment"
+                  onBlur={() => handleSegmentBlur(minuteRef, 59)}
+                  onInput={(e) => handleSegmentInput(e, secondRef)}
+                  onKeyDown={handleSegmentKeyDown}
+                />
+                <label htmlFor="duration-minute" className="finish-session-duration-segment-label">
+                  Minutos
+                </label>
+              </div>
               <span className="finish-session-duration-colon">:</span>
-              <input
-                ref={secondRef}
-                defaultValue={pad2(durationSeconds % 60)}
-                maxLength={2}
-                inputMode="numeric"
-                aria-label="Segundos"
-                className="finish-session-duration-segment"
-                onBlur={() => handleSegmentBlur(secondRef, 59)}
-                onInput={(e) => handleSegmentInput(e, null)}
-                onKeyDown={handleSegmentKeyDown}
-              />
+              <div className="finish-session-duration-segment-group">
+                <input
+                  ref={secondRef}
+                  id="duration-second"
+                  defaultValue={pad2(durationSeconds % 60)}
+                  maxLength={2}
+                  inputMode="numeric"
+                  className="finish-session-duration-segment"
+                  onBlur={() => handleSegmentBlur(secondRef, 59)}
+                  onInput={(e) => handleSegmentInput(e, null)}
+                  onKeyDown={handleSegmentKeyDown}
+                />
+                <label htmlFor="duration-second" className="finish-session-duration-segment-label">
+                  Segundos
+                </label>
+              </div>
             </div>
           ) : (
             <button

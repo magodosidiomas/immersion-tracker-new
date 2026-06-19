@@ -23,10 +23,9 @@ function Settings({ onBack, onOpenManageLanguages }) {
             label="Idiomas"
             leadingIcon={<Public />}
             trailingIcon={<ChevronRight />}
-            divider
             onClick={onOpenManageLanguages}
           />
-          <SelectableListItem label="Backup" leadingIcon={<Backup />} trailingIcon={<ChevronRight />} />
+          <SelectableListItem label="Backup" leadingIcon={<Backup />} trailingIcon={<ChevronRight />} divider />
         </div>
       </div>
     </main>
