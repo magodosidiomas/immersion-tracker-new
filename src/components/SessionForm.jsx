@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import Button from './Button'
-import { Edit, CalendarToday } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -217,13 +217,7 @@ function SessionForm({
             <span className="finish-session-time-value">{formatHM(endAt)}</span>
           </div>
         </div>
-        <InputField
-          label="Data"
-          type="date"
-          value={sessionDate}
-          onChange={(e) => setSessionDate(e.target.value)}
-          trailingIcon={<CalendarToday />}
-        />
+        <InputField label="Data" type="date" value={sessionDate} onChange={(e) => setSessionDate(e.target.value)} />
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Categoria</span>
           <div className="category-sheet-chips">
