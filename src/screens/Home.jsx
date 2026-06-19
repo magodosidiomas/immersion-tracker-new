@@ -190,16 +190,6 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
             <NumericCard title="Essa semana" number={formatTotalDuration(weekTotalSeconds)} />
           </div>
         </div>
-        {timer.status !== 'idle' && (
-          <TimerWidget
-            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-            category={timerCategoryData?.label ?? null}
-            subcategory={timerSubcategoryLabel}
-            running={timer.status === 'running'}
-            onClick={onOpenNewSession}
-            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
-          />
-        )}
         {groups.length === 0 ? (
           <EmptyState
             icon={<Schedule />}
@@ -228,13 +218,22 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
           ))
         )}
       </div>
-      {timer.status === 'idle' && (
-        <div className="home-fab-layer">
+      <div className="home-fab-layer">
+        {timer.status === 'idle' ? (
           <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
             Iniciar timer
           </Button>
-        </div>
-      )}
+        ) : (
+          <TimerWidget
+            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+            category={timerCategoryData?.label ?? null}
+            subcategory={timerSubcategoryLabel}
+            running={timer.status === 'running'}
+            onClick={onOpenNewSession}
+            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+          />
+        )}
+      </div>
     </main>
   )
 }

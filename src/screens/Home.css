@@ -97,3 +97,7 @@
 .home-fab-layer > * {
   pointer-events: auto;
 }
+
+.home-fab-layer .timer-widget {
+  width: 100%;
+}
