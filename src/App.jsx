@@ -8,6 +8,7 @@ import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
 import EditSession from './screens/EditSession'
 import { getAppSettings } from './db'
+import { useTimerDraft } from './hooks/useTimerDraft'
 
 // Design system viewer lives at the #design-system hash instead of a
 // real route. No router needed for one hidden page, and a hash never
@@ -40,6 +41,11 @@ function App() {
   // to that screen, from the row tapped in Home's history list.
   const [editingSession, setEditingSession] = useState(null)
 
+  // Lifted here (not inside NewSession) so Home's TimerWidget can show
+  // and tick the same live timer without that screen being open — see
+  // useTimerDraft for the IndexedDB recovery rules.
+  const timer = useTimerDraft()
+
   useEffect(() => {
     if (isDesignSystem || isOnboardingPreview) return
     getAppSettings().then((settings) => {
@@ -49,7 +55,9 @@ function App() {
 
   if (isDesignSystem) return <ComponentShowcase />
   if (isOnboardingPreview) return <SelectLanguage preview onSelect={() => {}} />
-  if (hasLanguage === null) return null
+  // Also waits on timer.loaded — otherwise Home could flash the "Iniciar
+  // timer" FAB for a frame before a recovered draft swaps in TimerWidget.
+  if (hasLanguage === null || !timer.loaded) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
   // AddLanguages sits one level below ManageLanguages — both closing
   // (X) and finishing (Adicionar) return there, since either way the
@@ -83,13 +91,14 @@ function App() {
     )
   }
   if (screen === 'new-session') {
-    return <NewSession onClose={() => setScreen('home')} />
+    return <NewSession timer={timer} onClose={() => setScreen('home')} />
   }
   if (screen === 'edit-session') {
     return <EditSession session={editingSession} onBack={() => setScreen('home')} onSaved={() => setScreen('home')} />
   }
   return (
     <Home
+      timer={timer}
       onOpenSettings={() => setScreen('settings')}
       onOpenManageLanguages={() => setScreen('manage-languages')}
       onOpenNewSession={() => setScreen('new-session')}

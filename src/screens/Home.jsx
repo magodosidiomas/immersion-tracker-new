@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { getLanguages, getAppSettings, setActiveLanguageId, getSessionsByLanguage } from '../db'
 import { CATEGORIES } from '../data/categories'
-import { formatDateInput } from '../utils/date'
+import { formatDateInput, formatElapsed } from '../utils/date'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
+import TimerWidget from '../components/TimerWidget'
 import { Settings, Check, PlayArrow, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './Home.css'
@@ -76,7 +77,7 @@ function groupSessionsByDate(sessions) {
 // switches and closes immediately, no Save/Cancel: this is a quick
 // swap of what's already active, not a form. The sheet's primaryButton
 // is a shortcut straight into that same management screen.
-function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -102,6 +103,11 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
   const activeLanguage = languages.find((language) => language.id === activeId)
   const groups = groupSessionsByDate(sessions)
   const todayStr = formatDateInput(new Date())
+
+  // Same category/subcategory key→label lookup sessionLabel() does for
+  // history rows, applied to the live timer instead of a saved session.
+  const timerCategoryData = CATEGORIES.find((item) => item.key === timer.category)
+  const timerSubcategoryLabel = timerCategoryData?.subcategories.find((item) => item.key === timer.subcategory)?.label
 
   async function handlePick(language) {
     setSwitcherOpen(false)
@@ -158,6 +164,16 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
         ))}
       </BottomSheet>
       <div className="home-history">
+        {timer.status !== 'idle' && (
+          <TimerWidget
+            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+            category={timerCategoryData?.label ?? null}
+            subcategory={timerSubcategoryLabel}
+            running={timer.status === 'running'}
+            onClick={onOpenNewSession}
+            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+          />
+        )}
         {groups.length === 0 ? (
           <EmptyState
             icon={<Schedule />}
@@ -186,11 +202,13 @@ function Home({ onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenE
           ))
         )}
       </div>
-      <div className="home-fab-layer">
-        <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
-          Iniciar timer
-        </Button>
-      </div>
+      {timer.status === 'idle' && (
+        <div className="home-fab-layer">
+          <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
+            Iniciar timer
+          </Button>
+        </div>
+      )}
     </main>
   )
 }

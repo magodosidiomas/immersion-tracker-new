@@ -9,3 +9,13 @@ export function pad2(n) {
 export function formatDateInput(date) {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
 }
+
+// "1:32:14" past an hour, "32:14" under it — shared by the timer
+// screen's big readout and TimerWidget's compact one, so both always
+// agree on formatting.
+export function formatElapsed(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  return h > 0 ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`
+}

@@ -8,48 +8,30 @@ import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
-import { formatDateInput, pad2 } from '../utils/date'
+import { formatDateInput, formatElapsed } from '../utils/date'
 // Pulls in .category-sheet-* (used by the picker sheet below) and
 // .finish-session-* (used by SessionForm) — shared with EditSession.
 import '../components/SessionForm.css'
 import './NewSession.css'
 
-// Three timer states (idle / running / paused), plus a "finish" phase
-// once "Encerrar" is pressed. No IndexedDB writes happen for the
-// running timer itself — per the locked MVP decision, it lives purely
-// in memory, and closing/reloading loses it. There's nothing to resume
-// on mount either; this screen always starts idle.
+// Timer state (status/elapsed/category/etc.) and its actions
+// (start/pause/resume/end/...) come from useTimerDraft, lifted to
+// App.jsx and shared with Home — both screens read the same live
+// timer, which is what lets Home's TimerWidget keep ticking even when
+// this screen isn't open. This screen only owns its own UI state: which
+// phase it's showing, and the category picker sheet's pending edits.
 //
-// Elapsed time is accumulatedMs (frozen total from past running
-// segments) plus the live segment in progress, recomputed from
-// Date.now() every tick rather than just incrementing a counter — the
-// same drift-resistant shape the future IndexedDB draft-session
-// persistence is planned to use (status + startTime timestamp, see the
-// data model doc), so wiring real persistence in later is additive
-// instead of a rewrite of how time itself is measured.
-//
-// The category Dropdown opens a bottom sheet to pick category +
-// subcategory (SelectionChip) while the timer is running/paused. The
-// sheet has its own pending* draft state so "Cancelar" can discard
-// edits instead of applying each tap live — only "Salvar" commits to
-// category/subcategory, which is what the Dropdown displays. Picking a
-// category isn't required to start the timer, so the timer flow isn't
-// blocked by leaving it unset.
-//
-// "Encerrar" freezes the clock (same math as a pause) and switches to
-// the "finish" phase, which renders the session-details form below
-// (duration/início/fim/data + category/subcategory, editable, then
-// Salvar writes the session to IndexedDB, or Descartar discards it).
-// The top nav's back arrow on that phase returns to "timer" with the
-// frozen paused state intact — so changing your mind about ending just
-// resumes from exactly where Encerrar left it.
-function NewSession({ onClose }) {
+// "Encerrar" freezes the clock (timer.end(), same math as a pause) and
+// switches to the "finish" phase, which renders the session-details
+// form below (duration/início/fim/data + category/subcategory,
+// editable, then Salvar writes the real session and clears the draft,
+// or Descartar clears the draft without saving). The top nav's back
+// arrow on that phase returns to "timer" with the frozen paused state
+// intact — so changing your mind about ending just resumes from
+// exactly where Encerrar left it. The draft itself isn't touched by
+// going back — only Salvar/Descartar resolve it.
+function NewSession({ timer, onClose }) {
   const [phase, setPhase] = useState('timer') // timer | finish
-  const [status, setStatus] = useState('idle') // idle | running | paused
-  const [accumulatedMs, setAccumulatedMs] = useState(0)
-  const [runStartedAt, setRunStartedAt] = useState(null)
-  const [firstStartedAt, setFirstStartedAt] = useState(null)
-  const [now, setNow] = useState(() => Date.now())
   const [activeLanguageId, setActiveLanguageId] = useState(null)
 
   // Snapshot handed to the finish-phase form the moment Encerrar is
@@ -57,69 +39,29 @@ function NewSession({ onClose }) {
   // timer above.
   const [finishDraft, setFinishDraft] = useState(null)
 
-  // Committed selection — what the Dropdown trigger displays. null
-  // until the sheet's been saved at least once.
-  const [category, setCategory] = useState(null)
-  const [subcategory, setSubcategory] = useState(null)
-
-  // Draft selection while the sheet is open, seeded from the committed
-  // values (or the first category/subcategory if nothing's committed
-  // yet) each time it opens.
+  // Draft selection while the sheet is open, seeded from the timer's
+  // committed values (or the first category/subcategory if nothing's
+  // committed yet) each time it opens.
   const [categorySheetOpen, setCategorySheetOpen] = useState(false)
   const [pendingCategory, setPendingCategory] = useState(CATEGORIES[0].key)
   const [pendingSubcategory, setPendingSubcategory] = useState(CATEGORIES[0].subcategories[0].key)
 
+  // Only needed for starting a brand new timer (timer.start needs a
+  // languageId) — once a draft exists, timer.languageId already holds
+  // whichever language was active when it started.
   useEffect(() => {
     getAppSettings().then((settings) => setActiveLanguageId(settings.activeLanguageId))
   }, [])
 
-  useEffect(() => {
-    if (status !== 'running') return
-    const id = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(id)
-  }, [status])
-
-  function handleStart() {
-    const startedAt = Date.now()
-    setFirstStartedAt(startedAt)
-    setRunStartedAt(startedAt)
-    setNow(startedAt) // avoid a stale `now` making the first render's elapsed time negative
-    setStatus('running')
-  }
-
-  function handlePause() {
-    setAccumulatedMs((ms) => ms + (Date.now() - runStartedAt))
-    setRunStartedAt(null)
-    setStatus('paused')
-  }
-
-  function handleResume() {
-    const resumedAt = Date.now()
-    setRunStartedAt(resumedAt)
-    setNow(resumedAt) // same reason as handleStart
-    setStatus('running')
-  }
-
   function handleEnd() {
-    const endedAt = Date.now()
-    const finalMs = status === 'running' ? accumulatedMs + (endedAt - runStartedAt) : accumulatedMs
-    // Freeze the clock — same effect as a pause — so going back from
-    // the finish phase resumes from exactly this point instead of
-    // having kept counting in the background.
-    setAccumulatedMs(finalMs)
-    setRunStartedAt(null)
-    setStatus('paused')
-    setFinishDraft({
-      durationSeconds: Math.round(finalMs / 1000),
-      startAt: new Date(firstStartedAt),
-      endAt: new Date(endedAt),
-    })
+    const snapshot = timer.end()
+    setFinishDraft(snapshot)
     setPhase('finish')
   }
 
   function openCategorySheet() {
-    setPendingCategory(category ?? CATEGORIES[0].key)
-    setPendingSubcategory(subcategory ?? CATEGORIES[0].subcategories[0].key)
+    setPendingCategory(timer.category ?? CATEGORIES[0].key)
+    setPendingSubcategory(timer.subcategory ?? CATEGORIES[0].subcategories[0].key)
     setCategorySheetOpen(true)
   }
 
@@ -132,42 +74,33 @@ function NewSession({ onClose }) {
   }
 
   function handleSaveCategory() {
-    setCategory(pendingCategory)
-    setSubcategory(pendingSubcategory)
+    timer.setCategorySelection(pendingCategory, pendingSubcategory)
     setCategorySheetOpen(false)
   }
 
-  // Math.max(0, ...) prevents a negative display on the very first
-  // render after Start is pressed, when state updates are batched but
-  // `now` might still reflect the pre-start value.
-  const liveMs = Math.max(0, status === 'running' && runStartedAt !== null ? accumulatedMs + (now - runStartedAt) : accumulatedMs)
-  const totalSeconds = Math.floor(liveMs / 1000)
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  // MM:SS while under an hour, expands to H:MM:SS past it — leaner for
-  // the common case (most sessions land under 1h) instead of always
-  // paying for a zeroed-out hours segment. The history list and the
-  // duração edit sheet stay fixed HH:MM:SS on purpose (list alignment /
-  // an always-editable field), so this expansion is local to the live
-  // running timer only.
-  const display =
-    hours > 0 ? `${hours}:${pad2(minutes)}:${pad2(seconds)}` : `${pad2(minutes)}:${pad2(seconds)}`
+  const totalSeconds = Math.floor(timer.liveMs / 1000)
+  const display = formatElapsed(totalSeconds)
 
-  const categoryData = CATEGORIES.find((item) => item.key === category)
-  const subcategoryLabel = categoryData?.subcategories.find((item) => item.key === subcategory)?.label
+  const categoryData = CATEGORIES.find((item) => item.key === timer.category)
+  const subcategoryLabel = categoryData?.subcategories.find((item) => item.key === timer.subcategory)?.label
   const pendingCategoryData = CATEGORIES.find((item) => item.key === pendingCategory)
 
   if (phase === 'finish') {
     return (
       <FinishSession
         draft={finishDraft}
-        category={category}
-        subcategory={subcategory}
-        languageId={activeLanguageId}
+        category={timer.category}
+        subcategory={timer.subcategory}
+        languageId={timer.languageId}
         onBack={() => setPhase('timer')}
-        onDiscard={onClose}
-        onSaved={onClose}
+        onDiscard={() => {
+          timer.clearDraft()
+          onClose()
+        }}
+        onSaved={() => {
+          timer.clearDraft()
+          onClose()
+        }}
       />
     )
   }
@@ -193,14 +126,14 @@ function NewSession({ onClose }) {
         <span className="new-session-timer">{display}</span>
       </div>
       <div className="new-session-footer">
-        {status === 'idle' && (
-          <Button leadingIcon={<PlayArrow />} fullWidth onClick={handleStart}>
+        {timer.status === 'idle' && (
+          <Button leadingIcon={<PlayArrow />} fullWidth onClick={() => timer.start(activeLanguageId)}>
             Iniciar
           </Button>
         )}
-        {status === 'running' && (
+        {timer.status === 'running' && (
           <>
-            <Button leadingIcon={<Pause />} fullWidth onClick={handlePause}>
+            <Button leadingIcon={<Pause />} fullWidth onClick={timer.pause}>
               Pausar
             </Button>
             <Button variant="outline" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>
@@ -208,9 +141,9 @@ function NewSession({ onClose }) {
             </Button>
           </>
         )}
-        {status === 'paused' && (
+        {timer.status === 'paused' && (
           <>
-            <Button leadingIcon={<PlayArrow />} fullWidth onClick={handleResume}>
+            <Button leadingIcon={<PlayArrow />} fullWidth onClick={timer.resume}>
               Retomar
             </Button>
             <Button variant="outline" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>

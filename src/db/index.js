@@ -5,8 +5,9 @@
 // every function below keeps the same name and shape.
 
 const DB_NAME = 'imerso'
-const DB_VERSION = 1
+const DB_VERSION = 2
 const SETTINGS_ID = 'app-settings'
+const DRAFT_ID = 'timer-draft'
 
 let dbPromise = null
 
@@ -30,6 +31,10 @@ function openDB() {
 
       if (!db.objectStoreNames.contains('appSettings')) {
         db.createObjectStore('appSettings', { keyPath: 'id' })
+      }
+
+      if (!db.objectStoreNames.contains('timerDraft')) {
+        db.createObjectStore('timerDraft', { keyPath: 'id' })
       }
     }
 
@@ -134,6 +139,11 @@ export async function removeLanguage(languageId) {
   }
   await remove('languages', languageId)
 
+  const draft = await getOne('timerDraft', DRAFT_ID)
+  if (draft?.languageId === languageId) {
+    await remove('timerDraft', DRAFT_ID)
+  }
+
   const settings = await getAppSettings()
   if (settings.activeLanguageId === languageId) {
     const remaining = await getLanguages()
@@ -190,4 +200,39 @@ export async function updateSession(session) {
 
 export async function deleteSession(sessionId) {
   await remove('sessions', sessionId)
+}
+
+// ---------- Timer draft ----------
+
+// Singleton draft for the one timer that can exist at a time (see
+// imerso-data-model.md). Lives in its own store, not `sessions` — it
+// isn't a real session until Salvar is pressed in the finish phase.
+//
+// A draft recovered with status 'running' is always normalized to
+// 'paused' here, freezing accumulatedMs at the full wall-clock gap —
+// nobody comes back to a silently-still-counting timer; resuming is an
+// explicit tap. The normalization is persisted immediately so repeat
+// reads stay consistent.
+export async function getDraftSession() {
+  const draft = await getOne('timerDraft', DRAFT_ID)
+  if (!draft) return null
+  if (draft.status === 'running') {
+    const normalized = {
+      ...draft,
+      status: 'paused',
+      accumulatedMs: draft.accumulatedMs + (Date.now() - draft.runStartedAt),
+      runStartedAt: null,
+    }
+    await put('timerDraft', normalized)
+    return normalized
+  }
+  return draft
+}
+
+export async function saveDraftSession(draft) {
+  await put('timerDraft', { ...draft, id: DRAFT_ID })
+}
+
+export async function deleteDraftSession() {
+  await remove('timerDraft', DRAFT_ID)
 }
