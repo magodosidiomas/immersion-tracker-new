@@ -1,0 +1,30 @@
+.numeric-card {
+  width: 164px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
+}
+
+.numeric-card-title {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-secondary);
+}
+
+.numeric-card-number {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}

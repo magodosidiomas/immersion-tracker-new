@@ -10,6 +10,7 @@ import InputField from '../components/InputField'
 import SelectionChip from '../components/SelectionChip'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
 import TimerWidget from '../components/TimerWidget'
+import NumericCard from '../components/NumericCard'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -251,6 +252,13 @@ function ComponentShowcase() {
         <TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running />
         <TimerWidget elapsedLabel="00:01" running={false} />
         <TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running={false} />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>NumericCard</h1>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <NumericCard title="Sequência" number="12" />
+        <NumericCard title="Total de horas" number="148" />
+        <NumericCard />
       </div>
     </main>
   )
