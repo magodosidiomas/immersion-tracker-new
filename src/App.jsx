@@ -65,6 +65,15 @@ function App() {
       <ManageLanguages
         onBack={() => setScreen('settings')}
         onOpenAddLanguages={() => setScreen('add-languages')}
+        // Removing the last language drops activeLanguageId to null.
+        // Resetting `screen` here too (not just hasLanguage) matters:
+        // without it, picking a language in onboarding would render
+        // this same screen again, since `screen` would still be stuck
+        // on 'manage-languages' from before the delete.
+        onAllLanguagesRemoved={() => {
+          setHasLanguage(false)
+          setScreen('home')
+        }}
       />
     )
   }

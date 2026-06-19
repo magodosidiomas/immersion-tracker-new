@@ -29,6 +29,22 @@ import './ManageLanguages.css'
 // hasSessions below). Matches the Figma copy verbatim.
 const CONFIRM_PHRASE = 'QUERO REMOVER'
 
+// Builds the delete-sheet description. The hasSessions sentence and the
+// isLastLanguage sentence are independent axes — hasSessions controls
+// whether history is lost (and gates the typed-phrase confirmation),
+// isLastLanguage controls whether the warning about returning to
+// onboarding gets appended. Stacking them as separate sentences keeps
+// each concern self-contained instead of a 4-way string switch.
+function getDeleteDescription({ hasSessions, isLastLanguage }) {
+  const consequence = hasSessions
+    ? 'Todo o histórico desse idioma será apagado. Essa ação não pode ser desfeita.'
+    : 'Esse idioma será removido da sua lista.'
+  const lastLanguageWarning = isLastLanguage
+    ? ' Como este é o seu último idioma, você voltará para o início para escolher um novo idioma e recomeçar.'
+    : ''
+  return consequence + lastLanguageWarning
+}
+
 // One row, draggable by its handle only — onDelete/the row body stay
 // independently clickable, which is exactly why this couldn't stay a
 // SelectableListItem (a single whole-row button can't also contain a
@@ -81,7 +97,7 @@ function LanguageRow({ language, divider, onDelete }) {
 // Settings, even when this screen was opened via Home's dropdown
 // shortcut (see Home.jsx's BottomSheet primaryButton). "Adicionar
 // idiomas" opens AddLanguages.
-function ManageLanguages({ onBack, onOpenAddLanguages }) {
+function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) {
   const [languages, setLanguages] = useState([])
   // The language pending deletion, plus whether it has sessions —
   // decided once, when the trash icon is tapped, rather than re-derived
@@ -105,7 +121,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages }) {
 
   async function handleDeleteClick(language) {
     const sessions = await getSessionsByLanguage(language.id)
-    setDeleteTarget({ language, hasSessions: sessions.length > 0 })
+    setDeleteTarget({ language, hasSessions: sessions.length > 0, isLastLanguage: languages.length === 1 })
   }
 
   function closeDeleteSheet() {
@@ -115,7 +131,14 @@ function ManageLanguages({ onBack, onOpenAddLanguages }) {
 
   async function handleConfirmDelete() {
     await removeLanguage(deleteTarget.language.id)
-    setLanguages(await getLanguages())
+    const remaining = await getLanguages()
+    if (remaining.length === 0) {
+      // No local state left to update — App swaps this whole screen
+      // out for onboarding right after this call.
+      onAllLanguagesRemoved()
+      return
+    }
+    setLanguages(remaining)
     closeDeleteSheet()
   }
 
@@ -168,13 +191,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages }) {
         open={Boolean(deleteTarget)}
         onClose={closeDeleteSheet}
         title={deleteTarget ? `Remover ${deleteTarget.language.name}?` : null}
-        description={
-          !deleteTarget
-            ? null
-            : deleteTarget.hasSessions
-              ? 'Todo o histórico desse idioma será apagado. Essa ação não pode ser desfeita.'
-              : 'Esse idioma será removido da sua lista.'
-        }
+        description={!deleteTarget ? null : getDeleteDescription(deleteTarget)}
         contentCard={false}
         primaryButton={
           <Button variant="destructive" fullWidth disabled={!canDelete} onClick={handleConfirmDelete}>
