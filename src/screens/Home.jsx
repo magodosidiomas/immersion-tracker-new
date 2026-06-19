@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getLanguages, getAppSettings, setActiveLanguageId, getSessionsByLanguage } from '../db'
 import { CATEGORIES } from '../data/categories'
-import { formatDateInput, formatElapsed, getWeekRange } from '../utils/date'
+import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
@@ -48,6 +48,12 @@ function formatTotalDuration(totalSeconds) {
   const h = Math.floor(totalSeconds / 3600)
   const m = Math.floor((totalSeconds % 3600) / 60)
   return h > 0 ? `${h}h ${m}m` : `${m}m`
+}
+
+// "1 dia" / "7 dias" — singular only at exactly 1, matching normal
+// Portuguese pluralization.
+function formatStreakValue(days) {
+  return `${days} ${days === 1 ? 'dia' : 'dias'}`
 }
 
 function sessionLabel(session) {
@@ -114,14 +120,18 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
 
   const activeLanguage = languages.find((language) => language.id === activeId)
   const groups = groupSessionsByDate(sessions)
-  const todayStr = formatDateInput(new Date())
-  const weekRange = getWeekRange(new Date())
+  const now = new Date()
+  const todayStr = formatDateInput(now)
+  const weekRange = getWeekRange(now)
+  const sessionDates = sessions.map((session) => session.date)
   const todayTotalSeconds = sessions
     .filter((session) => session.date === todayStr)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
   const weekTotalSeconds = sessions
     .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
+  const streakDays = calculateStreak(sessionDates, now)
+  const streakWeekDays = getStreakWeekDays(sessionDates, now)
 
   // Same category/subcategory key→label lookup sessionLabel() does for
   // history rows, applied to the live timer instead of a saved session.
@@ -184,7 +194,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
       </BottomSheet>
       <div className="home-history">
         <div className="home-stats">
-          <StreakCard />
+          <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
           <div className="home-stats-row">
             <NumericCard title="Hoje" number={formatTotalDuration(todayTotalSeconds)} />
             <NumericCard title="Essa semana" number={formatTotalDuration(weekTotalSeconds)} />
