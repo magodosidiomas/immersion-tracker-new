@@ -14,6 +14,31 @@
   padding-bottom: 96px;
 }
 
+.home-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.home-stats-row {
+  display: flex;
+  gap: var(--space-16);
+}
+
+/* StreakCard/NumericCard ship with Figma's fixed export widths (343px /
+   164px) since they aren't placed in a real layout anywhere else yet.
+   Same override approach StreakCard.css itself uses internally for
+   streak-item-group: scope width: 100% from here instead of changing
+   the components' own standalone defaults. */
+.home-stats .streak-card {
+  width: 100%;
+}
+
+.home-stats-row .numeric-card {
+  width: 100%;
+  flex: 1;
+}
+
 .home-history-group {
   display: flex;
   flex-direction: column;

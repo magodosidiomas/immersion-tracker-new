@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getLanguages, getAppSettings, setActiveLanguageId, getSessionsByLanguage } from '../db'
 import { CATEGORIES } from '../data/categories'
-import { formatDateInput, formatElapsed } from '../utils/date'
+import { formatDateInput, formatElapsed, getWeekRange } from '../utils/date'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
@@ -9,6 +9,8 @@ import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
 import TimerWidget from '../components/TimerWidget'
+import NumericCard from '../components/NumericCard'
+import StreakCard from '../components/StreakCard'
 import { Settings, Check, PlayArrow, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './Home.css'
@@ -36,6 +38,16 @@ function formatDuration(totalSeconds) {
   if (h > 0) return `${h}h ${m}m ${s}s`
   if (m > 0) return `${m}m ${s}s`
   return `${s}s`
+}
+
+// "3h 23m" / "32m" — like formatDuration but stops at minutes: these
+// feed the Hoje/Essa semana stat cards, which follow the Figma copy's
+// coarser precision (no seconds) since they're totals, not a single
+// session's readout.
+function formatTotalDuration(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  return h > 0 ? `${h}h ${m}m` : `${m}m`
 }
 
 function sessionLabel(session) {
@@ -103,6 +115,13 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
   const activeLanguage = languages.find((language) => language.id === activeId)
   const groups = groupSessionsByDate(sessions)
   const todayStr = formatDateInput(new Date())
+  const weekRange = getWeekRange(new Date())
+  const todayTotalSeconds = sessions
+    .filter((session) => session.date === todayStr)
+    .reduce((sum, session) => sum + session.durationSeconds, 0)
+  const weekTotalSeconds = sessions
+    .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
+    .reduce((sum, session) => sum + session.durationSeconds, 0)
 
   // Same category/subcategory key→label lookup sessionLabel() does for
   // history rows, applied to the live timer instead of a saved session.
@@ -164,6 +183,13 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
         ))}
       </BottomSheet>
       <div className="home-history">
+        <div className="home-stats">
+          <StreakCard />
+          <div className="home-stats-row">
+            <NumericCard title="Hoje" number={formatTotalDuration(todayTotalSeconds)} />
+            <NumericCard title="Essa semana" number={formatTotalDuration(weekTotalSeconds)} />
+          </div>
+        </div>
         {timer.status !== 'idle' && (
           <TimerWidget
             elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}

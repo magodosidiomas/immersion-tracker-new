@@ -19,3 +19,16 @@ export function formatElapsed(totalSeconds) {
   const s = totalSeconds % 60
   return h > 0 ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`
 }
+
+// Monday-start week (matches the streak row's Seg–Dom order), as
+// 'YYYY-MM-DD' bounds inclusive of both ends — comparable directly
+// against Session.date strings without parsing them back into Dates.
+export function getWeekRange(date) {
+  const day = date.getDay() // 0 (Sun) .. 6 (Sat)
+  const mondayOffset = day === 0 ? -6 : 1 - day
+  const monday = new Date(date)
+  monday.setDate(date.getDate() + mondayOffset)
+  const sunday = new Date(monday)
+  sunday.setDate(monday.getDate() + 6)
+  return { start: formatDateInput(monday), end: formatDateInput(sunday) }
+}
