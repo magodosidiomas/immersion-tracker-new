@@ -8,7 +8,7 @@ import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
-import { formatDateInput } from '../utils/date'
+import { formatDateInput, pad2 } from '../utils/date'
 // Pulls in .category-sheet-* (used by the picker sheet below) and
 // .finish-session-* (used by SessionForm) — shared with EditSession.
 import '../components/SessionForm.css'
@@ -142,9 +142,17 @@ function NewSession({ onClose }) {
   // `now` might still reflect the pre-start value.
   const liveMs = Math.max(0, status === 'running' && runStartedAt !== null ? accumulatedMs + (now - runStartedAt) : accumulatedMs)
   const totalSeconds = Math.floor(liveMs / 1000)
-  const display = [Math.floor(totalSeconds / 3600), Math.floor((totalSeconds % 3600) / 60), totalSeconds % 60]
-    .map((unit) => String(unit).padStart(2, '0'))
-    .join(':')
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  // MM:SS while under an hour, expands to H:MM:SS past it — leaner for
+  // the common case (most sessions land under 1h) instead of always
+  // paying for a zeroed-out hours segment. The history list and the
+  // duração edit sheet stay fixed HH:MM:SS on purpose (list alignment /
+  // an always-editable field), so this expansion is local to the live
+  // running timer only.
+  const display =
+    hours > 0 ? `${hours}:${pad2(minutes)}:${pad2(seconds)}` : `${pad2(minutes)}:${pad2(seconds)}`
 
   const categoryData = CATEGORIES.find((item) => item.key === category)
   const subcategoryLabel = categoryData?.subcategories.find((item) => item.key === subcategory)?.label
