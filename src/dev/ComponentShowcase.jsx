@@ -9,6 +9,7 @@ import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
 import SelectionChip from '../components/SelectionChip'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
+import TimerWidget from '../components/TimerWidget'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -235,6 +236,21 @@ function ComponentShowcase() {
             </Button>
           }
         />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>TimerWidget</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Mirrors the Figma "timerCard" set (hasSelection × state, 4
+        variants). Same component for Home's in-place card and the
+        floating mini-player over other screens — onToggle stops
+        propagation so it doesn't also fire onClick (which opens the
+        full timer screen).
+      </p>
+      <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <TimerWidget elapsedLabel="00:01" running />
+        <TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running />
+        <TimerWidget elapsedLabel="00:01" running={false} />
+        <TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running={false} />
       </div>
     </main>
   )
