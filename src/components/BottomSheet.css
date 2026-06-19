@@ -176,6 +176,43 @@
   width: 100%;
 }
 
+/* --- modal variant: the same centered-card look the media query
+   below gives every sheet on desktop, but opted into at every
+   breakpoint for sheets built around a text input rather than a
+   list/menu. position comes from inline style (see BottomSheet.jsx)
+   when visualViewport tracking is active; the static top:0/inset
+   here is just the pre-measurement/no-keyboard fallback. */
+.bottom-sheet-overlay[data-variant='modal'] {
+  align-items: center;
+  padding: 16px;
+}
+
+.bottom-sheet[data-variant='modal'] {
+  width: 400px;
+  max-width: 100%;
+  border-radius: var(--radius-large);
+}
+
+.bottom-sheet[data-variant='modal'][data-open='true'] {
+  animation: bottom-sheet-modal-in 0.2s ease forwards;
+}
+
+.bottom-sheet[data-variant='modal'][data-open='false'] {
+  animation: bottom-sheet-modal-out 0.2s ease forwards;
+}
+
+.bottom-sheet[data-variant='modal'] .bottom-sheet-handle-area {
+  display: none;
+}
+
+.bottom-sheet[data-variant='modal'] .bottom-sheet-body {
+  padding: 24px 16px;
+}
+
+.bottom-sheet[data-variant='modal'] .bottom-sheet-close {
+  display: flex;
+}
+
 /* --- desktop: centered modal instead of a sheet anchored to the
    bottom edge --- */
 @media (min-width: 768px) {

@@ -44,11 +44,12 @@ function clamp(value, min, max) {
 // imerso-data-model.md) but intentionally not wired up yet; that's a
 // later step once this one's settled.
 //
-// Duração itself opens a BottomSheet (same component used elsewhere,
-// e.g. ManageLanguages' delete confirmation) with three digit boxes
-// (h/m/s). Each box is uncontrolled (defaultValue, not a value prop) —
-// typing a digit shouldn't fight a React re-render for the cursor
-// position. Nothing commits until "Confirmar" is tapped; "Cancelar" or
+// Duração itself opens BottomSheet in its `modal` variant (always a
+// centered card with a real close button, never an edge-anchored
+// sheet — see BottomSheet.jsx) with three digit boxes (h/m/s). Each
+// box is uncontrolled (defaultValue, not a value prop) — typing a
+// digit shouldn't fight a React re-render for the cursor position.
+// Nothing commits until "Confirmar" is tapped; "Cancelar" or
 // dismissing the sheet discards the edit instead. durationEditKey
 // remounts the three boxes fresh every time the sheet opens, so a
 // discarded edit never leaks into the next time it's opened.
@@ -88,10 +89,13 @@ function SessionForm({
   // Focusing the hour box has to wait for editingDuration's re-render
   // to actually mount it — an effect tied to that flag, not a
   // setTimeout, so it runs right after React commits the new DOM.
+  // Calling .focus() here fires handleSegmentFocus below just like any
+  // other focus, so the box arrives empty rather than selected — same
+  // "delete what was there" behavior whether a box is focused by this
+  // initial open, by Enter advancing to it, or by typing two digits.
   useEffect(() => {
     if (!editingDuration) return
     hourRef.current?.focus()
-    hourRef.current?.select()
   }, [editingDuration])
 
   function openDurationEdit() {
@@ -102,6 +106,14 @@ function SessionForm({
   function handleSegmentBlur(ref, max) {
     const value = clamp(parseInt(ref.current.value || '0', 10), 0, max)
     ref.current.value = pad2(value)
+  }
+
+  // Shared by all three boxes: every time one becomes the active
+  // field — initial open, Enter advancing to it, or auto-advance after
+  // two digits — it arrives empty instead of pre-filled, matching the
+  // "delete what was there" spec rather than select-to-overwrite.
+  function handleSegmentFocus(event) {
+    event.target.value = ''
   }
 
   function handleConfirmDuration() {
@@ -121,8 +133,14 @@ function SessionForm({
     if (event.target.value.length === 2 && nextRef) nextRef.current?.focus()
   }
 
-  function handleSegmentKeyDown(event) {
-    if (event.key === 'Enter') event.target.blur() // blur clamps/pads the value
+  // Enter advances to the next box (or just blurs on the last one) —
+  // moving focus away fires the field's own onBlur, which still does
+  // the pad/clamp, so that doesn't need repeating here.
+  function handleSegmentKeyDown(event, nextRef) {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    if (nextRef) nextRef.current?.focus()
+    else event.target.blur()
   }
 
   function handlePickCategory(key) {
@@ -211,8 +229,9 @@ function SessionForm({
       <BottomSheet
         open={editingDuration}
         onClose={handleCancelDuration}
-        title="Duração"
+        title="Editar duração"
         contentCard={false}
+        variant="modal"
         primaryButton={
           <Button fullWidth onClick={handleConfirmDuration}>
             Confirmar
@@ -234,8 +253,9 @@ function SessionForm({
               inputMode="numeric"
               className="finish-session-duration-segment"
               onBlur={() => handleSegmentBlur(hourRef, 23)}
+              onFocus={handleSegmentFocus}
               onInput={(e) => handleSegmentInput(e, minuteRef)}
-              onKeyDown={handleSegmentKeyDown}
+              onKeyDown={(e) => handleSegmentKeyDown(e, minuteRef)}
             />
             <label htmlFor="duration-hour" className="finish-session-duration-segment-label">
               Horas
@@ -251,8 +271,9 @@ function SessionForm({
               inputMode="numeric"
               className="finish-session-duration-segment"
               onBlur={() => handleSegmentBlur(minuteRef, 59)}
+              onFocus={handleSegmentFocus}
               onInput={(e) => handleSegmentInput(e, secondRef)}
-              onKeyDown={handleSegmentKeyDown}
+              onKeyDown={(e) => handleSegmentKeyDown(e, secondRef)}
             />
             <label htmlFor="duration-minute" className="finish-session-duration-segment-label">
               Minutos
@@ -268,8 +289,9 @@ function SessionForm({
               inputMode="numeric"
               className="finish-session-duration-segment"
               onBlur={() => handleSegmentBlur(secondRef, 59)}
+              onFocus={handleSegmentFocus}
               onInput={(e) => handleSegmentInput(e, null)}
-              onKeyDown={handleSegmentKeyDown}
+              onKeyDown={(e) => handleSegmentKeyDown(e, null)}
             />
             <label htmlFor="duration-second" className="finish-session-duration-segment-label">
               Segundos

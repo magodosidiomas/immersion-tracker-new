@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './BottomSheet.css'
 import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
 
@@ -28,6 +28,25 @@ import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
 // instead of the sheet just vanishing — driven by CSS animations (see
 // BottomSheet.css) rather than a timer, so the unmount happens exactly
 // when the animation actually ends instead of guessing a duration.
+//
+// variant='modal' (opt-in, default stays 'sheet' so every existing
+// caller is unaffected): forces the centered-card presentation at
+// every breakpoint instead of only ≥768px, for sheets whose content
+// is a text input rather than a list/menu — typing doesn't suit an
+// edge-anchored sheet. It also turns on two behaviors specific to
+// having a real keyboard-triggering input inside:
+// - Visual Viewport tracking: mobile virtual keyboards shrink
+//   `visualViewport`, not the layout viewport `position: fixed` is
+//   pinned to, so without this the keyboard would simply cover the
+//   lower half of the modal. Mirroring visualViewport's height/offset
+//   onto the overlay keeps the modal centered in whatever space is
+//   actually visible above the keyboard, and re-centers automatically
+//   (no extra logic needed) once the keyboard closes and the
+//   viewport's resize event fires.
+// - Two-stage outside-tap: if a tap outside lands while an input
+//   inside is focused, it just blurs that input (dismissing the
+//   keyboard) rather than closing the modal — closing only happens on
+//   a second outside tap once nothing inside is focused.
 function BottomSheet({
   open = false,
   onClose,
@@ -38,9 +57,12 @@ function BottomSheet({
   divider = false,
   primaryButton = null,
   secondaryButton = null,
+  variant = 'sheet',
   ...props
 }) {
   const [present, setPresent] = useState(open)
+  const [viewport, setViewport] = useState(null)
+  const sheetRef = useRef(null)
 
   // Derived state, computed during render rather than in an effect:
   // the moment `open` goes true, this needs to be mounted immediately
@@ -73,19 +95,67 @@ function BottomSheet({
     }
   }, [open, onClose])
 
+  // Keyboard-aware repositioning, modal variant only: mirrors
+  // visualViewport's height/offsetTop so the overlay tracks whatever
+  // space is actually visible above an on-screen keyboard. Resize also
+  // fires when the keyboard closes, so this is what re-centers the
+  // modal on the full viewport again — no separate "keyboard closed"
+  // codepath needed.
+  useEffect(() => {
+    if (!open || variant !== 'modal' || !window.visualViewport) return
+    const vv = window.visualViewport
+    function updateViewport() {
+      setViewport({ height: vv.height, top: vv.offsetTop })
+    }
+    updateViewport()
+    vv.addEventListener('resize', updateViewport)
+    vv.addEventListener('scroll', updateViewport)
+    return () => {
+      vv.removeEventListener('resize', updateViewport)
+      vv.removeEventListener('scroll', updateViewport)
+    }
+  }, [open, variant])
+
   if (!present) return null
 
   const hasHeader = Boolean(title || description)
   const hasButtons = Boolean(primaryButton || secondaryButton)
 
+  // First outside tap while an input inside is focused just dismisses
+  // the keyboard; the modal itself only closes once nothing inside has
+  // focus. Plain `sheet` variant keeps the original one-tap-closes
+  // behavior since it never contains a keyboard-triggering field.
+  function handleOverlayClick() {
+    if (variant === 'modal') {
+      const active = document.activeElement
+      if (active && sheetRef.current?.contains(active)) {
+        active.blur()
+        return
+      }
+    }
+    onClose?.()
+  }
+
+  const overlayStyle =
+    variant === 'modal' && viewport ? { top: viewport.top, height: viewport.height } : undefined
+
   return (
     <div
       className="bottom-sheet-overlay"
       data-open={open}
-      onClick={onClose}
+      data-variant={variant}
+      style={overlayStyle}
+      onClick={handleOverlayClick}
       onAnimationEnd={handleAnimationEnd}
     >
-      <div className="bottom-sheet" data-open={open} onClick={(event) => event.stopPropagation()} {...props}>
+      <div
+        ref={sheetRef}
+        className="bottom-sheet"
+        data-open={open}
+        data-variant={variant}
+        onClick={(event) => event.stopPropagation()}
+        {...props}
+      >
         <div className="bottom-sheet-handle-area">
           <span className="bottom-sheet-handle" />
         </div>
