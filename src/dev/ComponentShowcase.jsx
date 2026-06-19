@@ -8,8 +8,9 @@ import BottomSheet from '../components/BottomSheet'
 import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
 import SelectionChip from '../components/SelectionChip'
+import ResumeSessionBanner from '../components/ResumeSessionBanner'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
-import { Bolt, Check, ArrowBack, ViewInAr } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 
 // Temporary: a visual checklist of every implemented component, so we
@@ -211,6 +212,30 @@ function ComponentShowcase() {
         Figma instances show a check on each side, so both default true.
       </p>
       <SelectionChipDemo />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ResumeSessionBanner</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Purely presentational — icon/title/description and the two buttons
+        are all passed in, same primaryButton/secondaryButton slot pattern
+        as BottomSheet. No draft-reading or resume/discard logic yet.
+      </p>
+      <div style={{ width: 343 }}>
+        <ResumeSessionBanner
+          icon={<Schedule />}
+          title="Sessão em andamento"
+          description="Iniciada há 2h09min"
+          secondaryButton={
+            <Button variant="outline" size="sm">
+              Descartar
+            </Button>
+          }
+          primaryButton={
+            <Button variant="primary" size="sm">
+              Continuar
+            </Button>
+          }
+        />
+      </div>
     </main>
   )
 }

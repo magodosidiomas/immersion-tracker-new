@@ -1,0 +1,56 @@
+.resume-session-banner {
+  display: flex;
+  gap: var(--space-12);
+  align-items: flex-start;
+  padding: var(--space-14);
+  background: var(--bg-surface-primary-8);
+  border: 1px solid var(--color-border-muted-accent);
+  border-radius: var(--radius-large);
+}
+
+.resume-session-banner-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-primary-15);
+  color: var(--color-icon-accent);
+}
+
+.resume-session-banner-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.resume-session-banner-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-session-banner-title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.resume-session-banner-description {
+  margin: 0 0 var(--space-12);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+}
+
+.resume-session-banner-actions {
+  display: flex;
+  gap: var(--space-8);
+}
