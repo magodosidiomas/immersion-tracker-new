@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: var(--space-16);
   padding: var(--space-16);
   border-radius: var(--radius-medium);
   background: var(--bg-surface-default);
@@ -22,7 +23,19 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--space-8);
-  padding: var(--space-8) 0;
+}
+
+/* --- dropdown label + chevron read as the active nav controls here
+   (unlike DayHistory's date row, where Dropdown keeps its default
+   muted styling), so both get bumped to full-brightness on/primary
+   tokens — text/primary for the label, icon/on-primary for the
+   chevron via Dropdown's own --icon-color hook. --- */
+.calendar-nav .dropdown-label {
+  color: var(--color-text-primary);
+}
+
+.calendar-nav .dropdown {
+  --icon-color: var(--color-icon-on-primary);
 }
 
 .calendar-nav-arrows {
@@ -41,7 +54,7 @@
   border: none;
   border-radius: var(--radius-full);
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--color-icon-on-primary);
   cursor: pointer;
 }
 
@@ -52,7 +65,6 @@
 
 .calendar-nav-btn:hover {
   background: var(--bg-surface-primary-4);
-  color: var(--color-text-primary);
 }
 
 /* --- type=date-picker: year grid that replaces the day grid while
