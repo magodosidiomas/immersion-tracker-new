@@ -220,6 +220,7 @@ function NewSession({ timer, onClose }) {
 // the duration math, so it defaults to today and is edited on its own.
 function FinishSession({ draft, category, subcategory, languageId, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   async function handleSave(fields) {
     if (!languageId || saving) return
@@ -248,8 +249,25 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
         onSave={handleSave}
         saving={saving}
         secondaryButton={
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={onDiscard}>
+          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
             Descartar sessão
+          </Button>
+        }
+      />
+      <BottomSheet
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Descartar sessão?"
+        description="O tempo registrado será perdido e essa sessão não será salva."
+        contentCard={false}
+        primaryButton={
+          <Button variant="destructive" fullWidth onClick={onDiscard}>
+            Descartar
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="ghost" fullWidth onClick={() => setConfirmOpen(false)}>
+            Cancelar
           </Button>
         }
       />
