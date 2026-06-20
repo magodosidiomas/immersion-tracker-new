@@ -75,3 +75,41 @@ export function calculateStreak(sessionDates, today) {
   }
   return streak
 }
+
+// Mon-start weeks covering `month` (0-11) of `year`, padded with
+// trailing days of the previous month and leading days of the next so
+// every week has 7 cells — the shape Calendar's `weeks` prop expects:
+// rows of { day, state, disabled }. Boundary days use 'disabled',
+// matching how the original Figma calendar instance styled them, and
+// are flagged disabled:true so they're non-interactive, not just
+// styled to look that way. sessionDates is every Session.date for
+// whichever language the caller cares about, same input shape as
+// getStreakWeekDays.
+export function getCalendarWeeks(sessionDates, today, year, month) {
+  const dates = new Set(sessionDates)
+  const todayStr = formatDateInput(today)
+
+  const firstWeekday = new Date(year, month, 1).getDay() // 0 (Sun) .. 6 (Sat)
+  const leadingCount = firstWeekday === 0 ? 6 : firstWeekday - 1
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const trailingCount = (7 - ((leadingCount + daysInMonth) % 7)) % 7
+
+  const cells = []
+  for (let i = leadingCount; i > 0; i--) {
+    cells.push({ day: new Date(year, month, 1 - i).getDate(), state: 'disabled', disabled: true })
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = formatDateInput(new Date(year, month, day))
+    const state = dateStr === todayStr ? 'today' : dates.has(dateStr) ? 'active' : undefined
+    cells.push({ day, state })
+  }
+  for (let day = 1; day <= trailingCount; day++) {
+    cells.push({ day, state: 'disabled', disabled: true })
+  }
+
+  const weeks = []
+  for (let i = 0; i < cells.length; i += 7) {
+    weeks.push(cells.slice(i, i + 7))
+  }
+  return weeks
+}

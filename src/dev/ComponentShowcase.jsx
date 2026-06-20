@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
@@ -19,6 +19,8 @@ import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
+import { getAppSettings, getSessionsByLanguage } from '../db'
+import { getCalendarWeeks } from '../utils/date'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -351,11 +353,18 @@ function ComponentShowcase() {
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Calendar</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
-        Visual only — sample month from Figma's own mockup, not real
-        date math. Nav dropdowns are placeholders (no menu yet, month/year
-        switching isn't defined).
+        Real month grid and today now — bare default below has no
+        marked days. Nav dropdowns are still placeholders (no menu,
+        month/year switching isn't built yet).
       </p>
       <Calendar />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Calendar (idioma ativo)</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Same component, fed with real sessions from the active
+        language — marks every day that has at least one session.
+      </p>
+      <CalendarDemo />
     </main>
   )
 }
@@ -461,6 +470,28 @@ function BottomSheetDemo() {
       </BottomSheet>
     </>
   )
+}
+
+// Same data-fetch shape as Home's sessionDates (active language's
+// sessions, refetched on mount only — this is a DS check, not a live
+// screen). Falls back to an empty calendar if no language is active
+// yet, instead of erroring.
+function CalendarDemo() {
+  const [sessionDates, setSessionDates] = useState([])
+
+  useEffect(() => {
+    getAppSettings().then((settings) => {
+      if (!settings.activeLanguageId) return
+      getSessionsByLanguage(settings.activeLanguageId).then((sessions) =>
+        setSessionDates(sessions.map((session) => session.date))
+      )
+    })
+  }, [])
+
+  const today = new Date()
+  const weeks = getCalendarWeeks(sessionDates, today, today.getFullYear(), today.getMonth())
+
+  return <Calendar weeks={weeks} />
 }
 
 export default ComponentShowcase
