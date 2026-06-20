@@ -18,6 +18,7 @@ import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import CalendarItem from '../components/CalendarItem'
+import Calendar from '../components/Calendar'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -347,6 +348,14 @@ function ComponentShowcase() {
         <CalendarItem day={3} state="white-version-month" />
         <CalendarItem day={3} state="white-version-today" />
       </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Calendar</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Visual only — sample month from Figma's own mockup, not real
+        date math. Nav dropdowns are placeholders (no menu yet, month/year
+        switching isn't defined).
+      </p>
+      <Calendar />
     </main>
   )
 }
