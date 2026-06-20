@@ -17,6 +17,7 @@ import NumericCard from '../components/NumericCard'
 import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
+import CalendarItem from '../components/CalendarItem'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
@@ -330,6 +331,22 @@ function ComponentShowcase() {
         component only for now — same scope as StreakItemGroup.
       </p>
       <StreakCard />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>CalendarItem</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        All 7 documented states (hover is plain CSS on active, not a
+        prop — see SegmentedButton). Base for the Calendar component, next.
+      </p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <CalendarItem day={3} state="default" />
+        <CalendarItem day={3} state="active" />
+        <CalendarItem day={3} state="today" />
+        <CalendarItem day={3} state="disabled" />
+        <CalendarItem day={3} state="weekend" />
+        <CalendarItem day={3} state="month" />
+        <CalendarItem day={3} state="white-version-month" />
+        <CalendarItem day={3} state="white-version-today" />
+      </div>
     </main>
   )
 }

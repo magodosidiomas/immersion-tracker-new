@@ -1,0 +1,64 @@
+.calendar-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-40);
+  height: var(--space-40);
+  border: none;
+  border-radius: var(--radius-small);
+  background: transparent;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+/* --- today --- */
+.calendar-item[data-state='today'] {
+  background: var(--bg-surface-selected);
+  color: var(--color-text-primary);
+}
+
+/* --- active (studied/marked day) --- */
+.calendar-item[data-state='active'] {
+  background: var(--bg-surface-primary);
+  color: var(--color-text-primary);
+}
+.calendar-item[data-state='active']:hover {
+  background: var(--bg-surface-primary-hover);
+}
+
+/* --- disabled --- */
+.calendar-item[data-state='disabled'] {
+  border-radius: var(--radius-full);
+  /* Figma gives this as a flat hex with no backing variable, unlike
+     every other color here — kept literal rather than inventing a
+     token for a single undocumented value. */
+  color: #68676a;
+  cursor: not-allowed;
+}
+
+/* --- weekend --- */
+.calendar-item[data-state='weekend'] {
+  border-radius: var(--radius-full);
+  color: var(--color-text-on-destructive);
+}
+
+/* --- month (boundary days from adjacent months) --- */
+.calendar-item[data-state='month'] {
+  border-radius: var(--radius-full);
+}
+
+/* --- white-version/month --- */
+.calendar-item[data-state='white-version-month'] {
+  border-radius: var(--radius-full);
+  color: var(--color-text-tertiary);
+}
+
+/* --- white-version/today --- */
+.calendar-item[data-state='white-version-today'] {
+  background: var(--bg-surface-inverse);
+  color: var(--color-text-on-inverse-accent);
+}
