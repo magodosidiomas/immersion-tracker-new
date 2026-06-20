@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getSessionsByLanguage } from '../db'
 import { CATEGORIES } from '../data/categories'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
+import { sessionLabel, formatDuration } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import ListItem from '../components/ListItem'
@@ -31,18 +32,6 @@ function formatGroupLabel(dateStr, todayStr) {
   return `${day} ${MONTH_LABELS[month - 1]}`
 }
 
-// "1h 16m 24s" / "32m 15s" / "15m 20s" — each unit only shows once
-// it's non-zero reading top-down, matching the Figma copy (no leading
-// "0h" on a 32-minute session).
-function formatDuration(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600)
-  const m = Math.floor((totalSeconds % 3600) / 60)
-  const s = totalSeconds % 60
-  if (h > 0) return `${h}h ${m}m ${s}s`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
-}
-
 // "3h 23m" / "32m" — like formatDuration but stops at minutes: these
 // feed the Hoje/Essa semana stat cards, which follow the Figma copy's
 // coarser precision (no seconds) since they're totals, not a single
@@ -57,13 +46,6 @@ function formatTotalDuration(totalSeconds) {
 // Portuguese pluralization.
 function formatStreakValue(days) {
   return `${days} ${days === 1 ? 'dia' : 'dias'}`
-}
-
-function sessionLabel(session) {
-  const category = CATEGORIES.find((item) => item.key === session.category)
-  const subcategory = category?.subcategories.find((item) => item.key === session.subcategory)
-  if (!category) return '—'
-  return subcategory ? `${category.label} · ${subcategory.label}` : category.label
 }
 
 // Newest day first, newest session first within a day. Days group by

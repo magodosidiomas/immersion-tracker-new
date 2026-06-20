@@ -9,7 +9,7 @@ import './Statistics.css'
 // Second main tab, alongside Home — reached only via BottomNav. Same
 // LanguageTopNav as Home (active language + switcher + settings), no
 // back arrow since switching tabs isn't a drill-down.
-function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages }) {
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenDay }) {
   const [activeId, setActiveId] = useState(null)
   const [sessionDates, setSessionDates] = useState([])
 
@@ -32,7 +32,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages }) {
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <Calendar sessionDates={sessionDates} />
+        <Calendar sessionDates={sessionDates} onSelectDay={onOpenDay} />
       </div>
       <div className="statistics-bottom-layer">
         <BottomNav

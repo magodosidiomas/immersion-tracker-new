@@ -2,12 +2,32 @@ export function pad2(n) {
   return String(n).padStart(2, '0')
 }
 
+export const MONTH_LABELS_FULL = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+]
+
 // 'YYYY-MM-DD' in local time — matches the <input type="date"> format
 // and is what Session.date is stored as. Local (not UTC) so a session
 // logged late at night still lands on the calendar day it actually
 // happened on.
 export function formatDateInput(date) {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+}
+
+// Inverse of formatDateInput — local-time Date from a stored
+// Session.date string. Splitting and constructing with (y, m-1, d)
+// instead of `new Date(dateStr)` sidesteps that constructor's
+// UTC-midnight parsing, which can land on the wrong local day.
+export function parseDateInput(dateStr) {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
+// "18 de abril, 2026" — DayHistory's date-picker label.
+export function formatFullDate(dateStr) {
+  const date = parseDateInput(dateStr)
+  return `${date.getDate()} de ${MONTH_LABELS_FULL[date.getMonth()].toLowerCase()}, ${date.getFullYear()}`
 }
 
 // "1:32:14" past an hour, "32:14" under it — shared by the timer

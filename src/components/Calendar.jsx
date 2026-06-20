@@ -1,14 +1,10 @@
 import { useState } from 'react'
 import './Calendar.css'
 import CalendarItem from './CalendarItem'
-import { getCalendarWeeks } from '../utils/date'
+import { getCalendarWeeks, formatDateInput, MONTH_LABELS_FULL } from '../utils/date'
 import { ChevronLeft, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Thu', 'Fri', 'Sa', 'Su']
-const MONTH_LABELS_FULL = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
-]
 
 // Mirrors the Figma "calendar" component, but the header is a
 // prev/next stepper instead of Figma's two dropdowns — Option B from
@@ -23,7 +19,13 @@ const MONTH_LABELS_FULL = [
 // (sessions.map(s => s.date)), passed straight through. Calendar does
 // the getCalendarWeeks call itself, recomputed each time the viewed
 // month changes.
-function Calendar({ sessionDates = [], initialDate, ...props }) {
+//
+// onSelectDay reports the tapped cell as a 'YYYY-MM-DD' string (same
+// shape as sessionDates), not a Date — every consumer so far only
+// needs it for comparing against/storing as Session.date. Boundary
+// cells (previous/next month, state 'disabled') are real
+// disabled={true} buttons already, so they never reach this handler.
+function Calendar({ sessionDates = [], initialDate, onSelectDay, ...props }) {
   const today = new Date()
   const [viewDate, setViewDate] = useState(initialDate ?? today)
   const month = viewDate.getMonth()
@@ -75,6 +77,7 @@ function Calendar({ sessionDates = [], initialDate, ...props }) {
                 day={cell.day}
                 state={cell.state || 'default'}
                 disabled={cell.disabled}
+                onClick={() => onSelectDay?.(formatDateInput(new Date(year, month, cell.day)))}
               />
             ))}
           </div>

@@ -9,6 +9,7 @@ import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
 import EditSession from './screens/EditSession'
 import Statistics from './screens/Statistics'
+import DayHistory from './screens/DayHistory'
 import { getAppSettings } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 
@@ -44,6 +45,11 @@ function App() {
   // Which session EditSession is open for — set right before switching
   // to that screen, from the row tapped in Home's history list.
   const [editingSession, setEditingSession] = useState(null)
+
+  // Which day DayHistory is showing — set right before switching to
+  // that screen, from the cell tapped in Statistics' Calendar. Kept
+  // separate from editingSession (a date string, not a Session row).
+  const [historyDate, setHistoryDate] = useState(null)
 
   // Lifted here (not inside NewSession) so Home's TimerWidget can show
   // and tick the same live timer without that screen being open — see
@@ -142,6 +148,19 @@ function App() {
         onOpenHome={() => window.history.back()}
         onOpenSettings={() => navigate('settings')}
         onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenDay={(dateStr) => {
+          setHistoryDate(dateStr)
+          navigate('day-history')
+        }}
+      />
+    )
+  }
+  if (screen === 'day-history') {
+    return (
+      <DayHistory
+        date={historyDate}
+        onBack={() => window.history.back()}
+        onOpenEditSession={(session) => navigate('edit-session', session)}
       />
     )
   }
