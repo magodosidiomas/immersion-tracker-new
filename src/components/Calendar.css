@@ -14,8 +14,41 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-8);
+  gap: 4px;
   padding: var(--space-8) 0;
+}
+
+.calendar-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.calendar-nav-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--bg-surface-primary-4);
+  color: var(--color-text-primary);
+}
+
+.calendar-nav-label {
+  width: 160px;
+  text-align: center;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
 }
 
 .calendar-grid {

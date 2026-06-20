@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import './Calendar.css'
-import Dropdown from './Dropdown'
 import CalendarItem from './CalendarItem'
 import { getCalendarWeeks } from '../utils/date'
+import { ChevronLeft, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Thu', 'Fri', 'Sa', 'Su']
 const MONTH_LABELS_FULL = [
@@ -9,30 +10,54 @@ const MONTH_LABELS_FULL = [
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ]
 
-// Mirrors the Figma "calendar" component. Defaults to today's real
-// month with no marked days when used bare — month/year/weeks are all
-// overridable for a caller that has real session data and a specific
-// month to show.
+// Mirrors the Figma "calendar" component, but the header is a
+// prev/next stepper instead of Figma's two dropdowns — Option B from
+// the nav exploration, chosen over dropdown+bottomsheet as the
+// everyday interaction. A tap-the-label sheet for jumping further was
+// discussed too but is deliberately not built yet (arrows only for
+// now).
 //
-// The two header dropdowns are the month/year nav — Figma marks both
-// hasSelection=true, so they use Dropdown's `selected` look. They stay
-// placeholders (onClick passthrough only, no menu): prev/next-month
-// switching isn't decided yet, intentionally out of scope here.
-//
-// Weekday letters reuse calendarItem's instance in Figma, but aren't
-// made CalendarItem here — same reasoning as StreakItem choosing a div
-// over a button: a label isn't an interactive control.
-function Calendar({ monthLabel, yearLabel, weeks, onMonthClick, onYearClick, ...props }) {
+// Stepping means Calendar now has to own which month it's showing, so
+// the prop surface is sessionDates (raw Session.date strings) instead
+// of a precomputed weeks grid — the same shape Home.jsx already builds
+// (sessions.map(s => s.date)), passed straight through. Calendar does
+// the getCalendarWeeks call itself, recomputed each time the viewed
+// month changes.
+function Calendar({ sessionDates = [], initialDate, ...props }) {
   const today = new Date()
-  const resolvedMonthLabel = monthLabel ?? MONTH_LABELS_FULL[today.getMonth()]
-  const resolvedYearLabel = yearLabel ?? String(today.getFullYear())
-  const resolvedWeeks = weeks ?? getCalendarWeeks([], today, today.getFullYear(), today.getMonth())
+  const [viewDate, setViewDate] = useState(initialDate ?? today)
+  const month = viewDate.getMonth()
+  const year = viewDate.getFullYear()
+  const weeks = getCalendarWeeks(sessionDates, today, year, month)
+
+  // Always step from day 1 so e.g. Jan 31 -> Feb doesn't get pulled
+  // into March by JS Date's day-overflow rollover.
+  function stepMonth(direction) {
+    setViewDate(new Date(year, month + direction, 1))
+  }
 
   return (
     <div className="calendar" {...props}>
       <div className="calendar-nav">
-        <Dropdown label={resolvedMonthLabel} selected onClick={onMonthClick} />
-        <Dropdown label={resolvedYearLabel} selected onClick={onYearClick} />
+        <button
+          type="button"
+          className="calendar-nav-btn"
+          onClick={() => stepMonth(-1)}
+          aria-label="Mês anterior"
+        >
+          <ChevronLeft />
+        </button>
+        <span className="calendar-nav-label">
+          {MONTH_LABELS_FULL[month]} {year}
+        </span>
+        <button
+          type="button"
+          className="calendar-nav-btn"
+          onClick={() => stepMonth(1)}
+          aria-label="Próximo mês"
+        >
+          <ChevronRight />
+        </button>
       </div>
       <div className="calendar-grid">
         <div className="calendar-row calendar-weekdays">
@@ -42,7 +67,7 @@ function Calendar({ monthLabel, yearLabel, weeks, onMonthClick, onYearClick, ...
             </span>
           ))}
         </div>
-        {resolvedWeeks.map((week, weekIndex) => (
+        {weeks.map((week, weekIndex) => (
           <div className="calendar-row" key={weekIndex}>
             {week.map((cell, dayIndex) => (
               <CalendarItem
