@@ -36,19 +36,9 @@
 }
 
 .finish-session-divider {
-  position: relative;
   height: 1px;
-}
-
-.finish-session-divider::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 100vw;
-  height: 1px;
+  margin: 0 calc(-1 * var(--space-16));
   background: var(--color-border-subtle);
-  transform: translateX(-50%);
 }
 
 .finish-session-time-row {
