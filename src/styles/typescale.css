@@ -21,6 +21,7 @@
      divide by 100 for the CSS unitless equivalent) */
   --line-height-tight: 1; /* used by: all label/* styles (100%) */
   --line-height-snug: 1.1; /* used by: heading/*, label/regular/* (110%) */
+  --line-height-normal: 1.2; /* used by: title/title-small (120%) */
   --line-height-relaxed: 1.5; /* used by: body/* (150%), BottomSheet description */
   --line-height-loose: 1.4; /* used by: body/body-4, body/body-5 (140%), InputField hint */
 

@@ -11,6 +11,7 @@ import SelectionChip from '../components/SelectionChip'
 import SegmentedButton from '../components/SegmentedButton'
 import SegmentedControl from '../components/SegmentedControl'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
+import Banner from '../components/Banner'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakItem from '../components/StreakItem'
@@ -234,6 +235,30 @@ function ComponentShowcase() {
         no separate prop. Fills its container's width by default.
       </p>
       <SegmentedControlDemo />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Banner</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        type=primary/secondary. Same icon/title/description/primaryButton/
+        secondaryButton slot pattern as ResumeSessionBanner.
+      </p>
+      <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <Banner
+          type="primary"
+          icon={<Bolt />}
+          title="Título"
+          description="Aqui vai uma descrição"
+          secondaryButton={<Button variant="outline" size="sm">Button label</Button>}
+          primaryButton={<Button variant="primary" size="sm">Button label</Button>}
+        />
+        <Banner
+          type="secondary"
+          icon={<Bolt />}
+          title="Título"
+          description="Aqui vai uma descrição"
+          secondaryButton={<Button variant="outline" size="sm">Button label</Button>}
+          primaryButton={<Button variant="primary" size="sm">Button label</Button>}
+        />
+      </div>
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ResumeSessionBanner</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
