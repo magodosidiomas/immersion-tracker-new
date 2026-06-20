@@ -1,0 +1,20 @@
+/* display:flex on a nav fills its parent's width by default — same
+   reasoning as SegmentedControl, no hardcoded 360px from the Figma
+   frame. Fixed positioning + the full-viewport-width border trick
+   TopNav uses (#root caps at 480px) are an integration-phase concern,
+   not this component's — deferred until it's placed in a real screen. */
+.bottom-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+  padding: var(--space-12) var(--space-16);
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--bg-surface-base);
+}
+
+/* width:fill in Figma → flex:1 here, applied from the parent so
+   NavItem itself stays fit-content for its standalone use. */
+.bottom-nav .nav-item {
+  flex: 1;
+}

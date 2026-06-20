@@ -20,9 +20,10 @@ import StreakCard from '../components/StreakCard'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
 import NavItem from '../components/NavItem'
+import BottomNav from '../components/BottomNav'
 import { getAppSettings, getSessionsByLanguage } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
-import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Bolt, Check, ArrowBack, ViewInAr, Schedule, Home, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 
 // Temporary: a visual checklist of every implemented component, so we
@@ -373,6 +374,23 @@ function ComponentShowcase() {
       <div style={{ display: 'flex', gap: 16 }}>
         <NavItem icon={<ViewInAr />} label="Label" />
         <NavItem icon={<ViewInAr />} label="Label" active />
+      </div>
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>BottomNav</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        items.length replaces hasItem1-5, same idea as
+        SegmentedControl&apos;s options array.
+      </p>
+      <div style={{ width: 375 }}>
+        <BottomNav
+          items={[
+            { label: 'Home', icon: <Home />, active: true },
+            { label: 'Dashboard', icon: <BarChart /> },
+            { label: 'Label', icon: <ViewInAr /> },
+            { label: 'Label', icon: <ViewInAr /> },
+            { label: 'Label', icon: <ViewInAr /> },
+          ]}
+        />
       </div>
     </main>
   )
