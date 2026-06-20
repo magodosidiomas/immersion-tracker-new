@@ -354,8 +354,8 @@ function ComponentShowcase() {
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>Calendar</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
-        ‹ › step one month at a time (try it). Tap-to-jump for bigger
-        gaps was discussed but isn't built yet — arrows only for now.
+        ‹ › step one month at a time. Tap the label to jump straight to
+        a different year — picking one returns to the month grid.
       </p>
       <Calendar />
 

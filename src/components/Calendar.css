@@ -9,13 +9,27 @@
   background: var(--bg-surface-default);
 }
 
+/* --- color=light: for placing the calendar on a surface that's
+   already elevated (e.g. inside a BottomSheet), so it doesn't paint
+   the same default-surface background twice. --- */
+.calendar[data-color='light'] {
+  background: var(--bg-surface-card);
+}
+
 .calendar-nav {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+}
+
+.calendar-nav-arrows {
+  display: flex;
   align-items: center;
   gap: 4px;
-  padding: var(--space-8) 0;
+  flex-shrink: 0;
 }
 
 .calendar-nav-btn {
@@ -41,14 +55,31 @@
   color: var(--color-text-primary);
 }
 
-.calendar-nav-label {
-  width: 160px;
-  text-align: center;
+/* --- type=date-picker: year grid that replaces the day grid while
+   picking a year. SelectionChip already wraps naturally (flex-wrap),
+   so this is just the label + a wrapping row, no new chip styling
+   needed. --- */
+.calendar-year-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+}
+
+.calendar-year-picker-label {
+  margin: 0;
   font-family: var(--font-family-main);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-label-medium);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+}
+
+.calendar-year-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
 }
 
 .calendar-grid {
