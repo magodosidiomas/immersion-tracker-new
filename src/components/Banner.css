@@ -10,6 +10,7 @@
 
 .banner[data-type='secondary'] {
   background: var(--bg-surface-elevated);
+  border: none;
 }
 
 .banner-icon {
