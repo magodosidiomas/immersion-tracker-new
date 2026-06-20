@@ -34,7 +34,9 @@ function App() {
 
   // Home vs Settings vs ManageLanguages vs AddLanguages is plain state,
   // not a route — still simpler than a router for this size of nav (no
-  // deep-linking need yet).
+  // deep-linking need yet). Browser/device history is layered on top of
+  // this state below, so the OS back button steps through screens
+  // instead of closing the page.
   const [screen, setScreen] = useState('home')
 
   // Which session EditSession is open for — set right before switching
@@ -45,6 +47,34 @@ function App() {
   // and tick the same live timer without that screen being open — see
   // useTimerDraft for the IndexedDB recovery rules.
   const timer = useTimerDraft()
+
+  // Every forward navigation pushes a history entry carrying the target
+  // screen. Going "back" — whether via the device/browser back button or
+  // an in-app back/close button calling window.history.back() — fires
+  // 'popstate', and the listener below just mirrors history.state into
+  // `screen`. This keeps both back mechanisms identical by construction:
+  // there's no separate hardcoded "go to settings" style back target
+  // anymore, the back button always retraces the actual path taken to
+  // reach the current screen (e.g. opening Manage Languages from Home's
+  // shortcut now goes back to Home, not Settings, since Settings was
+  // never visited in that path).
+  const navigate = (nextScreen, session = null) => {
+    setEditingSession(session)
+    setScreen(nextScreen)
+    window.history.pushState({ screen: nextScreen }, '')
+  }
+
+  useEffect(() => {
+    if (isDesignSystem || isOnboardingPreview) return
+    // Base entry for the session: Home, with no forward entries ahead of
+    // it. Pressing back from here exits the page, same as any app's root.
+    window.history.replaceState({ screen: 'home' }, '')
+    const onPopState = (event) => {
+      setScreen(event.state?.screen ?? 'home')
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [isDesignSystem, isOnboardingPreview])
 
   useEffect(() => {
     if (isDesignSystem || isOnboardingPreview) return
@@ -63,21 +93,22 @@ function App() {
   // (X) and finishing (Adicionar) return there, since either way the
   // list it shows may need refetching.
   if (screen === 'add-languages') {
-    return <AddLanguages onClose={() => setScreen('manage-languages')} />
+    return <AddLanguages onClose={() => window.history.back()} />
   }
-  // ManageLanguages sits inside Settings in the nav hierarchy, so its
-  // back button always returns to 'settings' — even when this screen
-  // was reached via Home's dropdown shortcut below.
   if (screen === 'manage-languages') {
     return (
       <ManageLanguages
-        onBack={() => setScreen('settings')}
-        onOpenAddLanguages={() => setScreen('add-languages')}
+        onBack={() => window.history.back()}
+        onOpenAddLanguages={() => navigate('add-languages')}
         // Removing the last language drops activeLanguageId to null.
         // Resetting `screen` here too (not just hasLanguage) matters:
         // without it, picking a language in onboarding would render
         // this same screen again, since `screen` would still be stuck
-        // on 'manage-languages' from before the delete.
+        // on 'manage-languages' from before the delete. This is a direct
+        // reset, not a back navigation, so it doesn't touch history —
+        // any stale forward entries left behind are harmless, since
+        // hasLanguage === false renders the onboarding screen regardless
+        // of what `screen` says.
         onAllLanguagesRemoved={() => {
           setHasLanguage(false)
           setScreen('home')
@@ -87,25 +118,22 @@ function App() {
   }
   if (screen === 'settings') {
     return (
-      <Settings onBack={() => setScreen('home')} onOpenManageLanguages={() => setScreen('manage-languages')} />
+      <Settings onBack={() => window.history.back()} onOpenManageLanguages={() => navigate('manage-languages')} />
     )
   }
   if (screen === 'new-session') {
-    return <NewSession timer={timer} onClose={() => setScreen('home')} />
+    return <NewSession timer={timer} onClose={() => window.history.back()} />
   }
   if (screen === 'edit-session') {
-    return <EditSession session={editingSession} onBack={() => setScreen('home')} onSaved={() => setScreen('home')} />
+    return <EditSession session={editingSession} onBack={() => window.history.back()} onSaved={() => window.history.back()} />
   }
   return (
     <Home
       timer={timer}
-      onOpenSettings={() => setScreen('settings')}
-      onOpenManageLanguages={() => setScreen('manage-languages')}
-      onOpenNewSession={() => setScreen('new-session')}
-      onOpenEditSession={(session) => {
-        setEditingSession(session)
-        setScreen('edit-session')
-      }}
+      onOpenSettings={() => navigate('settings')}
+      onOpenManageLanguages={() => navigate('manage-languages')}
+      onOpenNewSession={() => navigate('new-session')}
+      onOpenEditSession={(session) => navigate('edit-session', session)}
     />
   )
 }
