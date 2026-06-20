@@ -5,6 +5,32 @@
   background: var(--bg-surface-base);
 }
 
+.statistics-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: var(--space-16);
+  /* Clears the fixed BottomNav so the calendar's bottom edge stays
+     visible/tappable, same reasoning as Home's home-history padding. */
+  padding-bottom: 96px;
+}
+
+.statistics-title {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-heading-6);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
+/* Calendar ships with Figma's fixed export width (343px) since it
+   isn't placed in a real layout anywhere else yet — same override
+   approach Home.css uses for StreakCard/NumericCard. */
+.statistics-content .calendar {
+  width: 100%;
+}
+
 /* Same centered-column fixed-layer trick as Home's bottom layer — #root
    caps at 480px (see index.css), so a plain `fixed` bottom nav would
    stick to the real viewport edge on wider screens instead of the
