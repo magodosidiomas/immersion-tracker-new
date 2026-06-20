@@ -137,7 +137,13 @@ function App() {
     return <EditSession session={editingSession} onBack={() => window.history.back()} onSaved={() => window.history.back()} />
   }
   if (screen === 'stats') {
-    return <Statistics onOpenHome={() => window.history.back()} />
+    return (
+      <Statistics
+        onOpenHome={() => window.history.back()}
+        onOpenSettings={() => navigate('settings')}
+        onOpenManageLanguages={() => navigate('manage-languages')}
+      />
+    )
   }
   return (
     <Home

@@ -1,16 +1,30 @@
 /* display:flex on a nav fills its parent's width by default — same
    reasoning as SegmentedControl, no hardcoded 360px from the Figma
-   frame. Fixed positioning + the full-viewport-width border trick
-   TopNav uses (#root caps at 480px) are an integration-phase concern,
-   not this component's — deferred until it's placed in a real screen. */
+   frame. Fixed positioning (#root caps at 480px) is an integration-phase
+   concern, not this component's — deferred until it's placed in a real
+   screen. The divider itself isn't deferred though: same full-viewport-
+   width trick as TopNav's, just on the top edge instead of the bottom,
+   so it reads as a real divider instead of a short line floating
+   mid-screen on viewports wider than the 480px column. */
 .bottom-nav {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-16);
   width: 100%;
   padding: var(--space-12) var(--space-16);
-  border-top: 1px solid var(--color-border-subtle);
   background: var(--bg-surface-base);
+}
+
+.bottom-nav::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 100vw;
+  height: 1px;
+  background: var(--color-border-subtle);
+  transform: translateX(-50%);
 }
 
 /* width:fill in Figma → flex:1 here, applied from the parent so

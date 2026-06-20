@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
-import { getLanguages, getAppSettings, setActiveLanguageId, getSessionsByLanguage } from '../db'
+import { getSessionsByLanguage } from '../db'
 import { CATEGORIES } from '../data/categories'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
-import TopNav from '../components/TopNav'
-import BottomSheet from '../components/BottomSheet'
+import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
-import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
@@ -13,14 +11,11 @@ import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakCard from '../components/StreakCard'
 import {
-  Settings,
-  Check,
   PlayArrow,
   Schedule,
   Home as HomeIcon,
   BarChart,
 } from '@nine-thirty-five/material-symbols-react/outlined'
-import Flag from '../components/Flag'
 import './Home.css'
 
 const MONTH_LABELS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
@@ -93,40 +88,23 @@ function groupSessionsByDate(sessions) {
 }
 
 // First real screen after onboarding: the top nav (active language +
-// switcher + settings entry point), a history list (or EmptyState when
-// the active language has no sessions yet), and a FAB that opens the
-// timer (NewSession).
-//
-// The switcher picks from already-added languages (getLanguages), not
-// AVAILABLE_LANGUAGES — that catalog is only for adding a new language,
-// a flow that lives in Settings > Gerenciar idiomas. Tapping a row
-// switches and closes immediately, no Save/Cancel: this is a quick
-// swap of what's already active, not a form. The sheet's primaryButton
-// is a shortcut straight into that same management screen.
+// switcher + settings entry point, via LanguageTopNav), a history list
+// (or EmptyState when the active language has no sessions yet), and a
+// FAB that opens the timer (NewSession).
 function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics }) {
-  const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
-  const [switcherOpen, setSwitcherOpen] = useState(false)
   const [sessions, setSessions] = useState([])
 
-  useEffect(() => {
-    Promise.all([getLanguages(), getAppSettings()]).then(([langs, settings]) => {
-      setLanguages(langs)
-      setActiveId(settings.activeLanguageId)
-    })
-  }, [])
-
-  // Refetches on every activeId change — both an explicit switch below
-  // and Home's own mount (Home fully unmounts/remounts when navigating
-  // away and back, e.g. after saving a new or edited session, so this
-  // alone is enough to pick up fresh data without a separate "refresh"
-  // signal).
+  // Refetches on every activeId change — both an explicit switch in
+  // LanguageTopNav and Home's own mount (Home fully unmounts/remounts
+  // when navigating away and back, e.g. after saving a new or edited
+  // session, so this alone is enough to pick up fresh data without a
+  // separate "refresh" signal).
   useEffect(() => {
     if (!activeId) return
     getSessionsByLanguage(activeId).then(setSessions)
   }, [activeId])
 
-  const activeLanguage = languages.find((language) => language.id === activeId)
   const groups = groupSessionsByDate(sessions)
   const now = new Date()
   const todayStr = formatDateInput(now)
@@ -146,60 +124,13 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
   const timerCategoryData = CATEGORIES.find((item) => item.key === timer.category)
   const timerSubcategoryLabel = timerCategoryData?.subcategories.find((item) => item.key === timer.subcategory)?.label
 
-  async function handlePick(language) {
-    setSwitcherOpen(false)
-    if (language.id === activeId) return
-    setActiveId(language.id)
-    await setActiveLanguageId(language.id)
-  }
-
-  function handleManageLanguages() {
-    setSwitcherOpen(false)
-    onOpenManageLanguages()
-  }
-
   return (
     <main className="home">
-      <TopNav
-        title={activeLanguage?.name}
-        flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
-        hasDropdown
-        hasDivider
-        onDropdownClick={() => setSwitcherOpen(true)}
-        trailingRight={
-          <button
-            type="button"
-            className="top-nav-icon-reset"
-            onClick={onOpenSettings}
-            aria-label="Configurações"
-          >
-            <Settings />
-          </button>
-        }
+      <LanguageTopNav
+        onOpenSettings={onOpenSettings}
+        onOpenManageLanguages={onOpenManageLanguages}
+        onActiveLanguageChange={setActiveId}
       />
-      <BottomSheet
-        open={switcherOpen}
-        onClose={() => setSwitcherOpen(false)}
-        title="Idioma"
-        description="Escolha o idioma ativo."
-        primaryButton={
-          <Button variant="outline" leadingIcon={<Settings />} onClick={handleManageLanguages}>
-            Gerenciar idiomas
-          </Button>
-        }
-      >
-        {languages.map((language, index) => (
-          <SelectableListItem
-            key={language.id}
-            label={language.name}
-            flag={<Flag code={language.flagCode} />}
-            selected={language.id === activeId}
-            trailingIcon={language.id === activeId ? <Check /> : null}
-            divider={index > 0}
-            onClick={() => handlePick(language)}
-          />
-        ))}
-      </BottomSheet>
       <div className="home-history">
         <div className="home-stats">
           <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />

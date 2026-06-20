@@ -1,15 +1,16 @@
-import TopNav from '../components/TopNav'
+import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
-// Second main tab, alongside Home — reached only via BottomNav, so its
-// TopNav has no back arrow (switching tabs isn't a drill-down). Content
-// is still empty; this is just the shell (topnav + bottomnav) for now.
-function Statistics({ onOpenHome }) {
+// Second main tab, alongside Home — reached only via BottomNav. Same
+// LanguageTopNav as Home (active language + switcher + settings), no
+// back arrow since switching tabs isn't a drill-down. Content is still
+// empty; this is just the shell (topnav + bottomnav) for now.
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages }) {
   return (
     <main className="statistics">
-      <TopNav title="Estatísticas" />
+      <LanguageTopNav onOpenSettings={onOpenSettings} onOpenManageLanguages={onOpenManageLanguages} />
       <div className="statistics-bottom-layer">
         <BottomNav
           items={[
