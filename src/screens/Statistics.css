@@ -1,0 +1,23 @@
+.statistics {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--bg-surface-base);
+}
+
+/* Same centered-column fixed-layer trick as Home's bottom layer — #root
+   caps at 480px (see index.css), so a plain `fixed` bottom nav would
+   stick to the real viewport edge on wider screens instead of the
+   app's own column. */
+.statistics-bottom-layer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.statistics-bottom-layer .bottom-nav {
+  padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
+}

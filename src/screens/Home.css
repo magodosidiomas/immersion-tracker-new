@@ -10,8 +10,9 @@
   flex-direction: column;
   gap: var(--space-24);
   padding: var(--space-16);
-  /* Clears the floating FAB so the last card's rows stay tappable. */
-  padding-bottom: 96px;
+  /* Clears the floating FAB row + BottomNav stacked below it so the
+     last card's rows stay tappable. */
+  padding-bottom: 164px;
 }
 
 .home-stats {
@@ -78,26 +79,40 @@
    max-width/centering (see index.css) fixes that: the layer spans
    edge-to-edge but is itself capped+centered the same way, so the
    button lands at the column's corner either way.
+   The layer now also holds the BottomNav, stacked below the FAB row
+   in a column — that way the FAB sits just above the nav bar instead
+   of overlapping it, without needing to hardcode the nav bar's height.
    The layer covers the whole screen, so it needs pointer-events: none
-   to not block taps on what's behind it everywhere except the button
-   itself. */
-.home-fab-layer {
+   to not block taps on what's behind it everywhere except its two
+   rows. */
+.home-bottom-layer {
   position: fixed;
   inset: 0;
   max-width: 480px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   justify-content: flex-end;
-  padding: var(--space-16);
-  padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
   pointer-events: none;
 }
 
-.home-fab-layer > * {
+.home-bottom-layer > * {
   pointer-events: auto;
 }
 
-.home-fab-layer .timer-widget {
+.home-fab-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-16);
+}
+
+.home-fab-row .timer-widget {
   width: 100%;
+}
+
+/* BottomNav is now the element actually touching the screen edge, so
+   the safe-area handling that used to live on the FAB layer moves
+   here. */
+.home-bottom-layer .bottom-nav {
+  padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
 }

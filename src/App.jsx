@@ -8,6 +8,7 @@ import ManageLanguages from './screens/ManageLanguages'
 import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
 import EditSession from './screens/EditSession'
+import Statistics from './screens/Statistics'
 import { getAppSettings } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 
@@ -135,6 +136,9 @@ function App() {
   if (screen === 'edit-session') {
     return <EditSession session={editingSession} onBack={() => window.history.back()} onSaved={() => window.history.back()} />
   }
+  if (screen === 'stats') {
+    return <Statistics onOpenHome={() => window.history.back()} />
+  }
   return (
     <Home
       timer={timer}
@@ -142,6 +146,7 @@ function App() {
       onOpenManageLanguages={() => navigate('manage-languages')}
       onOpenNewSession={() => navigate('new-session')}
       onOpenEditSession={(session) => navigate('edit-session', session)}
+      onOpenStatistics={() => navigate('stats')}
     />
   )
 }

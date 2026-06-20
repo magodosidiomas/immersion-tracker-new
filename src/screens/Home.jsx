@@ -4,6 +4,7 @@ import { CATEGORIES } from '../data/categories'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
 import TopNav from '../components/TopNav'
 import BottomSheet from '../components/BottomSheet'
+import BottomNav from '../components/BottomNav'
 import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
@@ -11,7 +12,14 @@ import EmptyState from '../components/EmptyState'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakCard from '../components/StreakCard'
-import { Settings, Check, PlayArrow, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
+import {
+  Settings,
+  Check,
+  PlayArrow,
+  Schedule,
+  Home as HomeIcon,
+  BarChart,
+} from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './Home.css'
 
@@ -95,7 +103,7 @@ function groupSessionsByDate(sessions) {
 // switches and closes immediately, no Save/Cancel: this is a quick
 // swap of what's already active, not a form. The sheet's primaryButton
 // is a shortcut straight into that same management screen.
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -228,21 +236,29 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
           ))
         )}
       </div>
-      <div className="home-fab-layer">
-        {timer.status === 'idle' ? (
-          <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
-            Iniciar timer
-          </Button>
-        ) : (
-          <TimerWidget
-            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-            category={timerCategoryData?.label ?? null}
-            subcategory={timerSubcategoryLabel}
-            running={timer.status === 'running'}
-            onClick={onOpenNewSession}
-            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
-          />
-        )}
+      <div className="home-bottom-layer">
+        <div className="home-fab-row">
+          {timer.status === 'idle' ? (
+            <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
+              Iniciar timer
+            </Button>
+          ) : (
+            <TimerWidget
+              elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+              category={timerCategoryData?.label ?? null}
+              subcategory={timerSubcategoryLabel}
+              running={timer.status === 'running'}
+              onClick={onOpenNewSession}
+              onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+            />
+          )}
+        </div>
+        <BottomNav
+          items={[
+            { label: 'Início', icon: <HomeIcon />, active: true },
+            { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
+          ]}
+        />
       </div>
     </main>
   )
