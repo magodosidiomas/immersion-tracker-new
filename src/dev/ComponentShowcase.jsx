@@ -8,6 +8,7 @@ import BottomSheet from '../components/BottomSheet'
 import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
 import SelectionChip from '../components/SelectionChip'
+import SegmentedButton from '../components/SegmentedButton'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
@@ -218,6 +219,14 @@ function ComponentShowcase() {
       </p>
       <SelectionChipDemo />
 
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>SegmentedButton</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Base of segmentedControl — selected toggled here for real. Only
+        the selected variant has a documented hover change, so unselected
+        has none.
+      </p>
+      <SegmentedButtonDemo />
+
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ResumeSessionBanner</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
         Purely presentational — icon/title/description and the two buttons
@@ -298,6 +307,21 @@ function SelectionChipDemo() {
     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
       <SelectionChip selected={selected} onClick={() => setSelected((s) => !s)} />
       <SelectionChip label="No icons" hasLeadingIcon={false} hasTrailingIcon={false} />
+    </div>
+  )
+}
+
+function SegmentedButtonDemo() {
+  const [selected, setSelected] = useState(0)
+  return (
+    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+      {[0, 1, 2].map((i) => (
+        <SegmentedButton
+          key={i}
+          selected={selected === i}
+          onClick={() => setSelected(i)}
+        />
+      ))}
     </div>
   )
 }

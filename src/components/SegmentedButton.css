@@ -1,0 +1,33 @@
+.segmented-button {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--radius-medium);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.segmented-button-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: 0.01em;
+}
+
+/* --- selected --- */
+.segmented-button[data-selected='true'] {
+  background: var(--bg-surface-selected);
+  color: var(--color-text-primary);
+}
+
+/* Only the selected variant has a documented hover change — unselected
+   buttons stay as-is on hover, per the Figma variants. */
+.segmented-button[data-selected='true']:hover {
+  background: var(--bg-surface-input);
+}
