@@ -19,6 +19,7 @@ import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
+import NavItem from '../components/NavItem'
 import { getAppSettings, getSessionsByLanguage } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -363,6 +364,16 @@ function ComponentShowcase() {
         language — marks every day that has at least one session.
       </p>
       <CalendarDemo />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>NavItem</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Atom for bottom-nav, next. isActive maps to active — hover for
+        real here too, same as Button/SegmentedButton.
+      </p>
+      <div style={{ display: 'flex', gap: 16 }}>
+        <NavItem icon={<ViewInAr />} label="Label" />
+        <NavItem icon={<ViewInAr />} label="Label" active />
+      </div>
     </main>
   )
 }
