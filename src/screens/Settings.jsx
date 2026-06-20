@@ -3,9 +3,9 @@ import SelectableListItem from '../components/SelectableListItem'
 import { ArrowBack, Public, Backup, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Settings.css'
 
-// "Idiomas" opens the language management screen. "Backup" is drawn
-// per Figma but inert for now — that flow isn't designed yet.
-function Settings({ onBack, onOpenManageLanguages }) {
+// "Idiomas" opens the language management screen, "Backup" opens the
+// export/import screen.
+function Settings({ onBack, onOpenManageLanguages, onOpenBackup }) {
   return (
     <main className="settings">
       <TopNav
@@ -25,7 +25,13 @@ function Settings({ onBack, onOpenManageLanguages }) {
             trailingIcon={<ChevronRight />}
             onClick={onOpenManageLanguages}
           />
-          <SelectableListItem label="Backup" leadingIcon={<Backup />} trailingIcon={<ChevronRight />} divider />
+          <SelectableListItem
+            label="Backup"
+            leadingIcon={<Backup />}
+            trailingIcon={<ChevronRight />}
+            divider
+            onClick={onOpenBackup}
+          />
         </div>
       </div>
     </main>

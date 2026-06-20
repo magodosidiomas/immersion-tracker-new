@@ -3,6 +3,7 @@ import ComponentShowcase from './dev/ComponentShowcase'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
+import Backup from './screens/Backup'
 import ManageLanguages from './screens/ManageLanguages'
 import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
@@ -116,9 +117,16 @@ function App() {
       />
     )
   }
+  if (screen === 'backup') {
+    return <Backup onBack={() => window.history.back()} />
+  }
   if (screen === 'settings') {
     return (
-      <Settings onBack={() => window.history.back()} onOpenManageLanguages={() => navigate('manage-languages')} />
+      <Settings
+        onBack={() => window.history.back()}
+        onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenBackup={() => navigate('backup')}
+      />
     )
   }
   if (screen === 'new-session') {

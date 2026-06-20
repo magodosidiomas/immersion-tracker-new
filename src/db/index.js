@@ -83,6 +83,12 @@ async function remove(storeName, key) {
   return requestToPromise(tx.objectStore(storeName).delete(key))
 }
 
+async function clearStore(storeName) {
+  const db = await openDB()
+  const tx = db.transaction(storeName, 'readwrite')
+  return requestToPromise(tx.objectStore(storeName).clear())
+}
+
 function generateId() {
   return crypto.randomUUID()
 }
@@ -235,4 +241,55 @@ export async function saveDraftSession(draft) {
 
 export async function deleteDraftSession() {
   await remove('timerDraft', DRAFT_ID)
+}
+
+// ---------- Backup (export / import) ----------
+
+// Everything a restore needs to fully recreate the user's data.
+// timerDraft is deliberately excluded — an in-progress timer is
+// transient app state, not data worth carrying into a backup file.
+export async function exportData() {
+  const [languages, sessions, appSettings] = await Promise.all([
+    getAll('languages'),
+    getAll('sessions'),
+    getAppSettings(),
+  ])
+  return {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    languages,
+    sessions,
+    appSettings,
+  }
+}
+
+// Full replace, not a merge: wipes languages/sessions/appSettings/
+// timerDraft and writes the imported file in their place. timerDraft is
+// cleared even though it isn't part of the export, since a leftover
+// draft could otherwise reference a languageId that no longer exists
+// after the replace. activeLanguageId falls back to the imported
+// file's first language if the original active one wasn't included.
+export async function importData(data) {
+  const languages = Array.isArray(data?.languages) ? data.languages : []
+  const sessions = Array.isArray(data?.sessions) ? data.sessions : []
+
+  await Promise.all([
+    clearStore('languages'),
+    clearStore('sessions'),
+    clearStore('appSettings'),
+    clearStore('timerDraft'),
+  ])
+
+  for (const language of languages) {
+    await put('languages', language)
+  }
+  for (const session of sessions) {
+    await put('sessions', session)
+  }
+
+  const importedActiveId = data?.appSettings?.activeLanguageId
+  const activeLanguageId = languages.some((language) => language.id === importedActiveId)
+    ? importedActiveId
+    : (languages[0]?.id ?? null)
+  await put('appSettings', { id: SETTINGS_ID, activeLanguageId })
 }
