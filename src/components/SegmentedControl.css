@@ -1,0 +1,20 @@
+/* display:flex (not inline-flex) on a div fills its parent's width by
+   default — that's what gives us the Figma frame's 296px in real usage
+   without hardcoding it, since that width was just this instance's
+   context, not an intrinsic property of the component. */
+.segmented-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 12px;
+  padding: var(--radius-small);
+  border-radius: var(--radius-large);
+  border: 1px solid var(--bg-surface-card);
+}
+
+/* width:fill in Figma → flex:1 here, applied from the parent so
+   SegmentedButton itself stays fit-content for its standalone use. */
+.segmented-control .segmented-button {
+  flex: 1;
+  width: auto;
+}

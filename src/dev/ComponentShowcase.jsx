@@ -9,6 +9,7 @@ import Checkbox from '../components/Checkbox'
 import InputField from '../components/InputField'
 import SelectionChip from '../components/SelectionChip'
 import SegmentedButton from '../components/SegmentedButton'
+import SegmentedControl from '../components/SegmentedControl'
 import ResumeSessionBanner from '../components/ResumeSessionBanner'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
@@ -227,6 +228,13 @@ function ComponentShowcase() {
       </p>
       <SegmentedButtonDemo />
 
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>SegmentedControl</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        options.length replaces hasThirdButton — 2 or 3 items both work,
+        no separate prop. Fills its container's width by default.
+      </p>
+      <SegmentedControlDemo />
+
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ResumeSessionBanner</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
         Purely presentational — icon/title/description and the two buttons
@@ -322,6 +330,32 @@ function SegmentedButtonDemo() {
           onClick={() => setSelected(i)}
         />
       ))}
+    </div>
+  )
+}
+
+function SegmentedControlDemo() {
+  const [value3, setValue3] = useState('a')
+  const [value2, setValue2] = useState('x')
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: 296 }}>
+      <SegmentedControl
+        options={[
+          { label: 'Label', value: 'a' },
+          { label: 'Label', value: 'b' },
+          { label: 'Label', value: 'c' },
+        ]}
+        value={value3}
+        onChange={setValue3}
+      />
+      <SegmentedControl
+        options={[
+          { label: 'Label', value: 'x' },
+          { label: 'Label', value: 'y' },
+        ]}
+        value={value2}
+        onChange={setValue2}
+      />
     </div>
   )
 }
