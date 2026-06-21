@@ -68,11 +68,6 @@ button.data-card-row {
   color: var(--color-text-secondary);
 }
 
-.data-card-row-nested .data-card-time,
-.data-card-row-nested .data-card-percent {
-  font-size: var(--font-size-body-tiny);
-}
-
 .data-card-chevron {
   display: inline-flex;
   flex-shrink: 0;
@@ -108,8 +103,8 @@ button.data-card-row {
 .data-card-items {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
-  padding-left: var(--space-16);
+  gap: var(--space-16);
+  padding: var(--space-12) 0 var(--space-8) var(--space-16);
   border-left: 1px solid var(--color-border-subtle);
 }
 
