@@ -5,6 +5,7 @@ export const CATEGORIES = [
   {
     key: 'imersao',
     label: 'Imersão',
+    colorRamp: 'data-violet',
     subcategories: [
       { key: 'simultaneo', label: 'Simultâneo' },
       { key: 'escuta', label: 'Escuta' },
@@ -14,6 +15,7 @@ export const CATEGORIES = [
   {
     key: 'imersaoInterativa',
     label: 'Imersão interativa',
+    colorRamp: 'data-teal',
     subcategories: [
       { key: 'simultaneo', label: 'Simultâneo' },
       { key: 'escuta', label: 'Escuta' },
@@ -23,6 +25,7 @@ export const CATEGORIES = [
   {
     key: 'estudo',
     label: 'Estudo',
+    colorRamp: 'data-amber',
     subcategories: [
       { key: 'vocabulario', label: 'Vocabulário' },
       { key: 'gramatica', label: 'Gramática' },
@@ -32,6 +35,7 @@ export const CATEGORIES = [
   {
     key: 'producao',
     label: 'Produção',
+    colorRamp: 'data-pink',
     subcategories: [
       { key: 'fala', label: 'Fala' },
       { key: 'escrita', label: 'Escrita' },
