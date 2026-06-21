@@ -12,6 +12,7 @@ import Statistics from './screens/Statistics'
 import DayHistory from './screens/DayHistory'
 import { getAppSettings } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
+import { useViewportHeight } from './hooks/useViewportHeight'
 
 // Design system viewer lives at the #design-system hash instead of a
 // real route. No router needed for one hidden page, and a hash never
@@ -27,6 +28,8 @@ import { useTimerDraft } from './hooks/useTimerDraft'
 //
 // Visit it at: <site-url>/#onboarding
 function App() {
+  useViewportHeight()
+
   const isDesignSystem = window.location.hash === '#design-system'
   const isOnboardingPreview = window.location.hash === '#onboarding'
 
