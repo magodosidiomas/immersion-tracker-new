@@ -31,6 +31,10 @@
   width: 100%;
 }
 
+.statistics-content .data-card {
+  width: 100%;
+}
+
 /* Same centered-column fixed-layer trick as Home's bottom layer — #root
    caps at 480px (see index.css), so a plain `fixed` bottom nav would
    stick to the real viewport edge on wider screens instead of the

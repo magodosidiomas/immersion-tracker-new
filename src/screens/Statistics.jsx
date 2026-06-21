@@ -3,6 +3,8 @@ import { getSessionsByLanguage } from '../db'
 import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
+import DataCard from '../components/DataCard'
+import { categoryBreakdown } from '../utils/sessions'
 import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
@@ -11,16 +13,15 @@ import './Statistics.css'
 // back arrow since switching tabs isn't a drill-down.
 function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenDay }) {
   const [activeId, setActiveId] = useState(null)
-  const [sessionDates, setSessionDates] = useState([])
+  const [sessions, setSessions] = useState([])
 
-  // Same shape Home builds for its own Calendar usage in the showcase
-  // (CalendarDemo): just the date strings, Calendar does its own
-  // month-grid math from there.
+  // Full session objects, not just dates — Calendar only needs the
+  // dates (mapped below) but DataCard's category breakdown needs
+  // category/subcategory/durationSeconds too. One fetch, two derived
+  // views, instead of querying the same language's sessions twice.
   useEffect(() => {
     if (!activeId) return
-    getSessionsByLanguage(activeId).then((sessions) =>
-      setSessionDates(sessions.map((session) => session.date))
-    )
+    getSessionsByLanguage(activeId).then(setSessions)
   }, [activeId])
 
   return (
@@ -32,7 +33,11 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <Calendar sessionDates={sessionDates} onSelectDay={onOpenDay} />
+        <DataCard groups={categoryBreakdown(sessions)} />
+        <Calendar
+          sessionDates={sessions.map((session) => session.date)}
+          onSelectDay={onOpenDay}
+        />
       </div>
       <div className="statistics-bottom-layer">
         <BottomNav

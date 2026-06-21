@@ -31,3 +31,27 @@ export function formatDurationShort(totalSeconds) {
   if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`
   return `${m}m`
 }
+
+// Sessions -> DataCard's groups/items shape, one group per category in
+// taxonomy order. Categories/subcategories with no sessions yet still
+// show up at 0s/0% rather than disappearing, so the card's shape
+// doesn't jump around as the first sessions of a new category land.
+export function categoryBreakdown(sessions) {
+  return CATEGORIES.map((category) => {
+    const categorySessions = sessions.filter((session) => session.category === category.key)
+    const items = category.subcategories.map((sub) => ({
+      key: sub.key,
+      label: sub.label,
+      totalSeconds: categorySessions
+        .filter((session) => session.subcategory === sub.key)
+        .reduce((sum, session) => sum + session.durationSeconds, 0),
+    }))
+    return {
+      key: category.key,
+      label: category.label,
+      colorRamp: category.colorRamp,
+      totalSeconds: items.reduce((sum, item) => sum + item.totalSeconds, 0),
+      items,
+    }
+  })
+}
