@@ -17,6 +17,7 @@ import NumericCard from '../components/NumericCard'
 import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
+import DataCard from '../components/DataCard'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
 import NavItem from '../components/NavItem'
@@ -25,6 +26,59 @@ import { getAppSettings, getSessionsByLanguage } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { Bolt, Check, ArrowBack, ViewInAr, Schedule, Home, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
+
+// Sample groups for DataCard — shaped like CATEGORIES with totals
+// attached, but the component itself doesn't know that; it's just
+// label/colorRamp/totalSeconds/items. Numbers are arbitrary, chosen to
+// exercise different magnitudes (one big group, a few small ones) and
+// a 4-item group (Produção) alongside three 3-item ones.
+const DATA_CARD_SAMPLE = [
+  {
+    key: 'imersao',
+    label: 'Imersão',
+    colorRamp: 'data-violet',
+    totalSeconds: 9360,
+    items: [
+      { key: 'simultaneo', label: 'Simultâneo', totalSeconds: 7200 },
+      { key: 'escuta', label: 'Escuta', totalSeconds: 1980 },
+      { key: 'leitura', label: 'Leitura', totalSeconds: 180 },
+    ],
+  },
+  {
+    key: 'imersaoInterativa',
+    label: 'Imersão interativa',
+    colorRamp: 'data-teal',
+    totalSeconds: 1800,
+    items: [
+      { key: 'simultaneo', label: 'Simultâneo', totalSeconds: 900 },
+      { key: 'escuta', label: 'Escuta', totalSeconds: 600 },
+      { key: 'leitura', label: 'Leitura', totalSeconds: 300 },
+    ],
+  },
+  {
+    key: 'estudo',
+    label: 'Estudo',
+    colorRamp: 'data-amber',
+    totalSeconds: 600,
+    items: [
+      { key: 'vocabulario', label: 'Vocabulário', totalSeconds: 240 },
+      { key: 'gramatica', label: 'Gramática', totalSeconds: 180 },
+      { key: 'pronuncia', label: 'Pronúncia', totalSeconds: 180 },
+    ],
+  },
+  {
+    key: 'producao',
+    label: 'Produção',
+    colorRamp: 'data-pink',
+    totalSeconds: 600,
+    items: [
+      { key: 'fala', label: 'Fala', totalSeconds: 300 },
+      { key: 'escrita', label: 'Escrita', totalSeconds: 120 },
+      { key: 'conversacao', label: 'Conversação', totalSeconds: 180 },
+      { key: 'aula', label: 'Aula', totalSeconds: 0 },
+    ],
+  },
+]
 
 // Temporary: a visual checklist of every implemented component, so we
 // can compare against Figma before building real screens. This file
@@ -392,6 +446,14 @@ function ComponentShowcase() {
           ]}
         />
       </div>
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DataCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        groups/items, not categories/subcategories — generic on purpose,
+        see the comment in DataCard.jsx. Percent is always of the grand
+        total across all groups, never of the parent group. Tap a group
+        to expand; each opens independently.
+      </p>
+      <DataCard groups={DATA_CARD_SAMPLE} />
     </main>
   )
 }

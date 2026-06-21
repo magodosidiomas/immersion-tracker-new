@@ -1,0 +1,120 @@
+.data-card {
+  width: 343px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
+}
+
+.data-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.data-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+}
+
+button.data-card-row {
+  cursor: pointer;
+}
+
+.data-card-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.data-card-row-nested .data-card-label {
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+}
+
+.data-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex-shrink: 0;
+}
+
+.data-card-time {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.data-card-percent {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+}
+
+.data-card-row-nested .data-card-time,
+.data-card-row-nested .data-card-percent {
+  font-size: var(--font-size-body-tiny);
+}
+
+.data-card-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.data-card-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+.data-card-chevron[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+.data-card-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-input);
+  overflow: hidden;
+}
+
+.data-card-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.data-card-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding-left: var(--space-16);
+  border-left: 1px solid var(--color-border-subtle);
+}
+
+.data-card-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

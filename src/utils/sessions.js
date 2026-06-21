@@ -20,3 +20,14 @@ export function formatDuration(totalSeconds) {
   if (m > 0) return `${m}m ${s}s`
   return `${s}s`
 }
+
+// "2h 11m" / "2h" / "11m" — same top-down "only show non-zero units"
+// rule as formatDuration, but rounded to the minute and with no
+// seconds unit at all. For rollups (DataCard and other stat totals)
+// where second-level precision is just noise.
+export function formatDurationShort(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`
+  return `${m}m`
+}
