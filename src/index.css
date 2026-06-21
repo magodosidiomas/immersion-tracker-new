@@ -18,6 +18,16 @@
   box-sizing: border-box;
 }
 
+/* Prevents the document itself from rubber-band/bounce-scrolling.
+   Screens like Home/Statistics already cap their own height and scroll
+   internally (see Home.css), but without this, dragging past an inner
+   list's edge chains up to the document — the browser drags the whole
+   page (BottomNav included) and reveals empty canvas beyond it. This
+   doesn't block normal scrolling anywhere, only the chained bounce. */
+html, body {
+  overscroll-behavior-y: none;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family-main);
