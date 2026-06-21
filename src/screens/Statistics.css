@@ -8,11 +8,9 @@
 .statistics-content {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 24px;
   padding: var(--space-16);
-  /* Clears the fixed BottomNav so the calendar's bottom edge stays
-     visible/tappable, same reasoning as Home's home-history padding. */
-  padding-bottom: 96px;
 }
 
 .statistics-title {
@@ -35,17 +33,14 @@
   width: 100%;
 }
 
-/* Same centered-column fixed-layer trick as Home's bottom layer — #root
-   caps at 480px (see index.css), so a plain `fixed` bottom nav would
-   stick to the real viewport edge on wider screens instead of the
-   app's own column. */
+/* Sticky instead of fixed — see Home.css's home-bottom-layer comment
+   for why: fixed elements visibly jump during the mobile browser's
+   toolbar show/hide animation, which read as the BottomNav growing
+   and could swallow a tap mid-jump. Already sits inside #root's
+   capped column, so no extra centering needed. */
 .statistics-bottom-layer {
-  position: fixed;
-  left: 0;
-  right: 0;
+  position: sticky;
   bottom: 0;
-  max-width: 480px;
-  margin: 0 auto;
 }
 
 .statistics-bottom-layer .bottom-nav {

@@ -8,11 +8,9 @@
 .home-history {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: var(--space-24);
   padding: var(--space-16);
-  /* Clears the floating FAB row + BottomNav stacked below it so the
-     last card's rows stay tappable. */
-  padding-bottom: 164px;
 }
 
 .home-stats {
@@ -65,39 +63,25 @@
   background: var(--bg-surface-default);
 }
 
-/* `absolute` anchored the FAB to `.home`'s own box, sized (at the
-   time) via `min-height: 100vh` — mobile browsers compute that
-   against the *largest* possible viewport (address bar collapsed),
-   taller than what's actually visible while it's showing, so the FAB
-   sat below the fold until you scrolled. `fixed` tracks the real
-   visual viewport directly, sidestepping that regardless of which
-   vh-flavored unit `.home` itself ends up using.
-   But plain `fixed` pins to the actual window, which on a wide
-   desktop viewport is far past #root's centered 480px column — the
-   FAB would end up stranded at the real browser edge instead of the
-   app's. Wrapping it in a full-width fixed layer that mirrors #root's
-   max-width/centering (see index.css) fixes that: the layer spans
-   edge-to-edge but is itself capped+centered the same way, so the
-   button lands at the column's corner either way.
-   The layer now also holds the BottomNav, stacked below the FAB row
-   in a column — that way the FAB sits just above the nav bar instead
-   of overlapping it, without needing to hardcode the nav bar's height.
-   The layer covers the whole screen, so it needs pointer-events: none
-   to not block taps on what's behind it everywhere except its two
-   rows. */
+/* `position: fixed; inset: 0` used to anchor this layer (FAB row +
+   BottomNav) straight to the viewport. That tracked the *visual*
+   viewport correctly at rest, but mobile browsers don't move fixed
+   elements in lockstep while their address-bar toolbar is animating
+   in/out on scroll — the layer visibly jumped during that animation,
+   which read as the BottomNav "growing", and a tap landing mid-jump
+   missed its target, needing a second tap to register.
+   `sticky` avoids that: it's a normal flex child (last in `.home`'s
+   column, after `.home-history` which now takes `flex: 1` so this
+   layer still sits flush with the bottom edge when content is short)
+   that only sticks to the viewport bottom once you scroll past it, no
+   independent fixed-viewport tracking to fall out of sync. It also
+   already lives inside #root's centered 480px column, so the old
+   max-width/margin/pointer-events overlay trick isn't needed anymore. */
 .home-bottom-layer {
-  position: fixed;
-  inset: 0;
-  max-width: 480px;
-  margin: 0 auto;
+  position: sticky;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  pointer-events: none;
-}
-
-.home-bottom-layer > * {
-  pointer-events: auto;
 }
 
 .home-fab-row {
