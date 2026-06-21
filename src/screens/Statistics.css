@@ -1,14 +1,17 @@
 .statistics {
   display: flex;
   flex-direction: column;
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100dvh);
   background: var(--bg-surface-base);
+  overflow: hidden;
 }
 
 .statistics-content {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   gap: 24px;
   padding: var(--space-16);
 }
@@ -33,14 +36,13 @@
   width: 100%;
 }
 
-/* Sticky instead of fixed — see Home.css's home-bottom-layer comment
-   for why: fixed elements visibly jump during the mobile browser's
-   toolbar show/hide animation, which read as the BottomNav growing
-   and could swallow a tap mid-jump. Already sits inside #root's
-   capped column, so no extra centering needed. */
+/* `.statistics` no longer scrolls (height-clamped + overflow: hidden)
+   — only `.statistics-content` scrolls internally now. Same reasoning
+   as Home.css's home-bottom-layer: as a plain flex item outside the
+   scroll area, it's never off-screen and needs no fixed/sticky
+   positioning to track the viewport. */
 .statistics-bottom-layer {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
 }
 
 .statistics-bottom-layer .bottom-nav {

@@ -1,14 +1,17 @@
 .home {
   display: flex;
   flex-direction: column;
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100dvh);
   background: var(--bg-surface-base);
+  overflow: hidden;
 }
 
 .home-history {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   gap: var(--space-24);
   padding: var(--space-16);
 }
@@ -63,25 +66,17 @@
   background: var(--bg-surface-default);
 }
 
-/* `position: fixed; inset: 0` used to anchor this layer (FAB row +
-   BottomNav) straight to the viewport. That tracked the *visual*
-   viewport correctly at rest, but mobile browsers don't move fixed
-   elements in lockstep while their address-bar toolbar is animating
-   in/out on scroll — the layer visibly jumped during that animation,
-   which read as the BottomNav "growing", and a tap landing mid-jump
-   missed its target, needing a second tap to register.
-   `sticky` avoids that: it's a normal flex child (last in `.home`'s
-   column, after `.home-history` which now takes `flex: 1` so this
-   layer still sits flush with the bottom edge when content is short)
-   that only sticks to the viewport bottom once you scroll past it, no
-   independent fixed-viewport tracking to fall out of sync. It also
-   already lives inside #root's centered 480px column, so the old
-   max-width/margin/pointer-events overlay trick isn't needed anymore. */
+/* `.home` no longer scrolls (height-clamped + overflow: hidden) —
+   only `.home-history` scrolls internally now. This layer sits
+   outside that scrolling area as a normal flex item, so it's never
+   off-screen and never needs fixed/sticky positioning to track the
+   viewport at all: no more toolbar-animation jump (was reading as the
+   BottomNav "growing" + swallowing taps), and no more "stuck until
+   scrolled near the bottom" behavior from sticky. */
 .home-bottom-layer {
-  position: sticky;
-  bottom: 0;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .home-fab-row {
