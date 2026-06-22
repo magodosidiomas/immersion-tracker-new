@@ -140,10 +140,10 @@ export async function addLanguage({ name, flagCode }) {
 // precede this call is a separate, not-yet-built piece.
 export async function removeLanguage(languageId) {
   const sessions = await getSessionsByLanguage(languageId)
-  for (const session of sessions) {
-    await remove('sessions', session.id)
-  }
-  await remove('languages', languageId)
+  await Promise.all([
+    ...sessions.map((session) => remove('sessions', session.id)),
+    remove('languages', languageId),
+  ])
 
   const draft = await getOne('timerDraft', DRAFT_ID)
   if (draft?.languageId === languageId) {
@@ -163,10 +163,10 @@ export async function removeLanguage(languageId) {
 // sorts by, so this is the only function that needs to know reordering
 // exists.
 export async function reorderLanguages(orderedIds) {
-  for (let index = 0; index < orderedIds.length; index += 1) {
-    const language = await getOne('languages', orderedIds[index])
-    if (language) await put('languages', { ...language, order: index })
-  }
+  const languages = await Promise.all(orderedIds.map((id) => getOne('languages', id)))
+  await Promise.all(
+    languages.map((language, index) => language && put('languages', { ...language, order: index }))
+  )
 }
 
 // ---------- App settings ----------
@@ -280,12 +280,10 @@ export async function importData(data) {
     clearStore('timerDraft'),
   ])
 
-  for (const language of languages) {
-    await put('languages', language)
-  }
-  for (const session of sessions) {
-    await put('sessions', session)
-  }
+  await Promise.all([
+    ...languages.map((language) => put('languages', language)),
+    ...sessions.map((session) => put('sessions', session)),
+  ])
 
   const importedActiveId = data?.appSettings?.activeLanguageId
   const activeLanguageId = languages.some((language) => language.id === importedActiveId)
