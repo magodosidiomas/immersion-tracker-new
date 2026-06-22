@@ -26,7 +26,6 @@
    doesn't block normal scrolling anywhere, only the chained bounce. */
 html, body {
   overscroll-behavior-y: none;
-  overflow-x: hidden;
 }
 
 body {
@@ -42,4 +41,5 @@ body {
   max-width: 480px;
   min-height: 100dvh;
   margin: 0 auto;
+  overflow-x: hidden;
 }
