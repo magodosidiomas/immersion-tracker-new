@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Button from '../components/Button'
 import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
@@ -18,6 +18,7 @@ import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
+import DurationInput from '../components/DurationInput'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
 import NavItem from '../components/NavItem'
@@ -454,6 +455,15 @@ function ComponentShowcase() {
         to expand; each opens independently.
       </p>
       <DataCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DurationInput</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Segment inputs for h:m:s (duração) or h:m (horário). Uncontrolled
+        internally; parent reads via ref.getValue(). Error state drives
+        red border + red bg + message below. editKey pattern: bump a key
+        prop on the component to remount fresh on each sheet open.
+      </p>
+      <DurationInputDemo />
     </main>
   )
 }
@@ -579,6 +589,36 @@ function CalendarDemo() {
   }, [])
 
   return <Calendar sessionDates={sessionDates} />
+}
+
+function DurationInputDemo() {
+  const refHMS = useRef(null)
+  const refHM = useRef(null)
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 48, maxWidth: 343 }}>
+      <div>
+        <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
+          hasSeconds=true (duração)
+        </p>
+        <DurationInput ref={refHMS} hasSeconds initialValue={{ hours: 0, minutes: 20, seconds: 30 }} />
+      </div>
+      <div>
+        <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
+          hasSeconds=false (horário)
+        </p>
+        <DurationInput ref={refHM} initialValue={{ hours: 12, minutes: 34, seconds: 0 }} />
+      </div>
+      <div>
+        <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
+          state=error
+        </p>
+        <DurationInput
+          initialValue={{ hours: 12, minutes: 10, seconds: 0 }}
+          errorMessage="O horário de término precisa ser depois do início (12:35)."
+        />
+      </div>
+    </div>
+  )
 }
 
 export default ComponentShowcase
