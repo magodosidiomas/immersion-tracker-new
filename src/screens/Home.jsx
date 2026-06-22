@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getSessionsByLanguage } from '../db'
-import { CATEGORIES } from '../data/categories'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
-import { sessionLabel, formatDuration } from '../utils/sessions'
+import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import ListItem from '../components/ListItem'
@@ -32,41 +31,10 @@ function formatGroupLabel(dateStr, todayStr) {
   return `${day} ${MONTH_LABELS[month - 1]}`
 }
 
-// "3h 23m" / "32m" — like formatDuration but stops at minutes: these
-// feed the Hoje/Essa semana stat cards, which follow the Figma copy's
-// coarser precision (no seconds) since they're totals, not a single
-// session's readout.
-function formatTotalDuration(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600)
-  const m = Math.floor((totalSeconds % 3600) / 60)
-  return h > 0 ? `${h}h ${m}m` : `${m}m`
-}
-
 // "1 dia" / "7 dias" — singular only at exactly 1, matching normal
 // Portuguese pluralization.
 function formatStreakValue(days) {
   return `${days} ${days === 1 ? 'dia' : 'dias'}`
-}
-
-// Newest day first, newest session first within a day. Days group by
-// the session's stored `date` string directly — lexicographic
-// 'YYYY-MM-DD' sort is also chronological sort, no Date parsing needed
-// just to order them.
-function groupSessionsByDate(sessions) {
-  const groups = []
-  for (const session of sessions) {
-    let group = groups.find((g) => g.date === session.date)
-    if (!group) {
-      group = { date: session.date, sessions: [] }
-      groups.push(group)
-    }
-    group.sessions.push(session)
-  }
-  groups.sort((a, b) => (a.date < b.date ? 1 : -1))
-  for (const group of groups) {
-    group.sessions.sort((a, b) => (a.startTime < b.startTime ? 1 : -1))
-  }
-  return groups
 }
 
 // First real screen after onboarding: the top nav (active language +
@@ -101,10 +69,8 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
   const streakDays = calculateStreak(sessionDates, now)
   const streakWeekDays = getStreakWeekDays(sessionDates, now)
 
-  // Same category/subcategory key→label lookup sessionLabel() does for
-  // history rows, applied to the live timer instead of a saved session.
-  const timerCategoryData = CATEGORIES.find((item) => item.key === timer.category)
-  const timerSubcategoryLabel = timerCategoryData?.subcategories.find((item) => item.key === timer.subcategory)?.label
+  // Category label lookup for the live timer, via shared getCategoryLabel.
+  const { categoryLabel: timerCategoryLabel, subcategoryLabel: timerSubcategoryLabel } = getCategoryLabel(timer.category, timer.subcategory)
 
   return (
     <main className="home">
@@ -117,8 +83,8 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
         <div className="home-stats">
           <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
           <div className="home-stats-row">
-            <NumericCard title="Hoje" number={formatTotalDuration(todayTotalSeconds)} />
-            <NumericCard title="Essa semana" number={formatTotalDuration(weekTotalSeconds)} />
+            <NumericCard title="Hoje" number={formatDurationShort(todayTotalSeconds)} />
+            <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
           </div>
         </div>
         {groups.length === 0 ? (
@@ -139,7 +105,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
                   <ListItem
                     key={session.id}
                     label={sessionLabel(session)}
-                    description={formatDuration(session.durationSeconds)}
+                    description={formatDurationShort(session.durationSeconds)}
                     divider={index < group.sessions.length - 1}
                     onClick={() => onOpenEditSession(session)}
                   />
@@ -158,7 +124,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
           ) : (
             <TimerWidget
               elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-              category={timerCategoryData?.label ?? null}
+              category={timerCategoryLabel}
               subcategory={timerSubcategoryLabel}
               running={timer.status === 'running'}
               onClick={onOpenNewSession}

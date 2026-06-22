@@ -9,6 +9,7 @@ import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-f
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
 import { formatDateInput, formatElapsed } from '../utils/date'
+import { getCategoryLabel } from '../utils/sessions'
 // Pulls in .category-sheet-* (used by the picker sheet below) and
 // .finish-session-* (used by SessionForm) — shared with EditSession.
 import '../components/SessionForm.css'
@@ -81,8 +82,7 @@ function NewSession({ timer, onClose }) {
   const totalSeconds = Math.floor(timer.liveMs / 1000)
   const display = formatElapsed(totalSeconds)
 
-  const categoryData = CATEGORIES.find((item) => item.key === timer.category)
-  const subcategoryLabel = categoryData?.subcategories.find((item) => item.key === timer.subcategory)?.label
+  const { categoryLabel, subcategoryLabel } = getCategoryLabel(timer.category, timer.subcategory)
   const pendingCategoryData = CATEGORIES.find((item) => item.key === pendingCategory)
 
   if (phase === 'finish') {
@@ -118,9 +118,9 @@ function NewSession({ timer, onClose }) {
       />
       <div className="new-session-body">
         <Dropdown
-          label={categoryData ? categoryData.label : 'Selecionar categoria'}
+          label={categoryLabel ?? 'Selecionar categoria'}
           secondaryLabel={subcategoryLabel}
-          selected={Boolean(categoryData)}
+          selected={Boolean(categoryLabel)}
           onClick={openCategorySheet}
         />
         <span className="new-session-timer">{display}</span>

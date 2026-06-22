@@ -1,5 +1,19 @@
 import { CATEGORIES } from '../data/categories'
 
+// Resolves a category+subcategory key pair to their display labels.
+// Returns { categoryLabel, subcategoryLabel } — subcategoryLabel is
+// null when the subcategory key isn't found or wasn't provided.
+// Shared by any screen that needs to show a live timer's selection
+// (Home, NewSession) without re-implementing the same find() chain.
+export function getCategoryLabel(categoryKey, subcategoryKey) {
+  const category = CATEGORIES.find((item) => item.key === categoryKey)
+  const subcategory = category?.subcategories.find((item) => item.key === subcategoryKey)
+  return {
+    categoryLabel: category?.label ?? null,
+    subcategoryLabel: subcategory?.label ?? null,
+  }
+}
+
 // "Imersão · Escuta" — category/subcategory key→label lookup, shared
 // by every screen that lists Session rows (Home's history, DayHistory).
 export function sessionLabel(session) {
@@ -30,6 +44,27 @@ export function formatDurationShort(totalSeconds) {
   const m = Math.floor((totalSeconds % 3600) / 60)
   if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`
   return `${m}m`
+}
+
+// Newest day first, newest session within a day first. Groups by the
+// stored `date` string — 'YYYY-MM-DD' lexicographic order is also
+// chronological, so no Date parsing is needed just to sort.
+// Shared by Home and DayHistory (and any future screen that lists sessions).
+export function groupSessionsByDate(sessions) {
+  const groups = []
+  for (const session of sessions) {
+    let group = groups.find((g) => g.date === session.date)
+    if (!group) {
+      group = { date: session.date, sessions: [] }
+      groups.push(group)
+    }
+    group.sessions.push(session)
+  }
+  groups.sort((a, b) => (a.date < b.date ? 1 : -1))
+  for (const group of groups) {
+    group.sessions.sort((a, b) => (a.startTime < b.startTime ? 1 : -1))
+  }
+  return groups
 }
 
 // Sessions -> DataCard's groups/items shape, one group per category in
