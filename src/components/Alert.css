@@ -1,0 +1,101 @@
+.alert {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  border-radius: var(--spacing-border-radius-radius-medium, 8px);
+}
+
+.alert[data-type='error'] {
+  background: var(--bg-semantic-destructive-light-bg);
+}
+.alert[data-type='success'] {
+  background: var(--bg-semantic-success-bg);
+}
+.alert[data-type='alert'] {
+  background: var(--bg-semantic-warning);
+}
+.alert[data-type='info'] {
+  background: var(--bg-surface-primary-8);
+}
+
+/* content */
+.alert-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.alert-title-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.alert-title {
+  width: 100%;
+  font-family: Figtree, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  margin: 0;
+}
+
+.alert-description-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.alert-description {
+  width: 100%;
+  font-family: Figtree, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+/* colors per type */
+.alert[data-type='error'] .alert-icon,
+.alert[data-type='error'] .alert-title,
+.alert[data-type='error'] .alert-description {
+  color: var(--color-text-on-destructive);
+}
+
+.alert[data-type='success'] .alert-icon,
+.alert[data-type='success'] .alert-title,
+.alert[data-type='success'] .alert-description {
+  color: var(--color-text-on-success);
+}
+
+.alert[data-type='alert'] .alert-icon,
+.alert[data-type='alert'] .alert-title,
+.alert[data-type='alert'] .alert-description {
+  color: var(--color-text-on-alert);
+}
+
+.alert[data-type='info'] .alert-icon,
+.alert[data-type='info'] .alert-title,
+.alert[data-type='info'] .alert-description {
+  color: var(--color-text-muted-accent);
+}

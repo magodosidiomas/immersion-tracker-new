@@ -19,6 +19,7 @@ import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
 import DurationInput from '../components/DurationInput'
+import Alert from '../components/Alert'
 import CalendarItem from '../components/CalendarItem'
 import Calendar from '../components/Calendar'
 import NavItem from '../components/NavItem'
@@ -464,6 +465,16 @@ function ComponentShowcase() {
         prop on the component to remount fresh on each sheet open.
       </p>
       <DurationInputDemo />
+
+      <h2>Alert</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 343 }}>
+        <Alert type="error" title="Título" description="Descrição" />
+        <Alert type="success" title="Título" description="Descrição" />
+        <Alert type="alert" title="Título" description="Descrição" />
+        <Alert type="info" title="Título" description="Descrição" />
+        <Alert type="error" title="Só título, sem descrição" />
+        <Alert type="info" description="Só descrição, sem título" />
+      </div>
     </main>
   )
 }

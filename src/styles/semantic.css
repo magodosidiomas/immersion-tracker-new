@@ -25,6 +25,7 @@
   --bg-semantic-destructive: var(--color-red-800);
   --bg-semantic-destructive-hover: var(--color-red-900);
   --bg-semantic-destructive-hover-ghost: var(--color-red-400-8);
+  --bg-semantic-destructive-light-bg: var(--color-red-400-8);
   --bg-semantic-success-bg: var(--color-green-400-8);
   --bg-semantic-warning: var(--color-amber-400-8);
   /* spacing */
