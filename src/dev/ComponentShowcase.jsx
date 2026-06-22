@@ -606,7 +606,7 @@ function DurationInputDemo() {
         <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
           hasSeconds=false (horário)
         </p>
-        <DurationInput ref={refHM} initialValue={{ hours: 12, minutes: 34, seconds: 0 }} />
+        <DurationInput ref={refHM} hasSeconds={false} initialValue={{ hours: 12, minutes: 34, seconds: 0 }} />
       </div>
       <div>
         <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>

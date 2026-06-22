@@ -22,7 +22,7 @@ function clamp(value, min, max) {
 //   ref.current.getValue()   → { hours, minutes, seconds }
 //   ref.current.focusFirst() → focuses the hours field
 const DurationInput = forwardRef(function DurationInput(
-  { hasSeconds = true, initialValue = { hours: 0, minutes: 0, seconds: 0 }, errorMessage = null },
+  { hasSeconds = false, initialValue = { hours: 0, minutes: 0, seconds: 0 }, errorMessage = null },
   ref,
 ) {
   const hourRef = useRef(null)
