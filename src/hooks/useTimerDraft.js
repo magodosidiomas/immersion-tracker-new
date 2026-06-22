@@ -44,8 +44,8 @@ export function useTimerDraft() {
       runStartedAt: startedAt,
       firstStartedAt: startedAt,
       languageId,
-      category: null,
-      subcategory: null,
+      category: draft.category,
+      subcategory: draft.subcategory,
     }
     setNow(startedAt) // avoid a stale `now` making the first render's elapsed time negative
     setDraft(next)
