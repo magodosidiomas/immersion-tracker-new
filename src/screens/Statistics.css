@@ -3,7 +3,6 @@
   flex-direction: column;
   height: var(--app-height, 100dvh);
   background: var(--bg-surface-base);
-  overflow: hidden;
 }
 
 .statistics-content {
