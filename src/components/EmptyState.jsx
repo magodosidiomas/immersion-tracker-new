@@ -7,9 +7,9 @@ import './EmptyState.css'
 // First use: Home when the active language has no sessions yet. Built
 // generic (icon/copy/button all passed in) so other empty lists can
 // reuse it later without a new component.
-function EmptyState({ icon, title, description, buttonLabel, buttonIcon, onButtonClick }) {
+function EmptyState({ icon, title, description, buttonLabel, buttonIcon, onButtonClick, style = 'transparent' }) {
   return (
-    <div className="empty-state">
+    <div className="empty-state" data-style={style}>
       <span className="empty-state-icon">{icon}</span>
       <div className="empty-state-text">
         <h3 className="empty-state-title">{title}</h3>
