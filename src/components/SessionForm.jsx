@@ -321,6 +321,7 @@ function SessionForm({
         <DurationInput
           ref={startInputRef}
           key={startEditKey}
+          hasSeconds={false}
           initialValue={{ hours: startAt.getHours(), minutes: startAt.getMinutes(), seconds: 0 }}
         />
       </BottomSheet>
@@ -346,6 +347,7 @@ function SessionForm({
         <DurationInput
           ref={endInputRef}
           key={endEditKey}
+          hasSeconds={false}
           initialValue={{ hours: endAt.getHours(), minutes: endAt.getMinutes(), seconds: 0 }}
           errorMessage={endTimeError}
         />
