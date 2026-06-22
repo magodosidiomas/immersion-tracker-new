@@ -34,6 +34,11 @@
   outline: none;
 }
 
+.duration-input-segment:hover {
+  border-color: var(--color-border-accent);
+  background: var(--bg-surface-primary-4);
+}
+
 .duration-input-segment:focus {
   border-color: var(--color-border-accent);
   background: var(--bg-surface-input);
