@@ -87,9 +87,9 @@
 }
 
 .list-item-divider {
-  width: 100%;
+  width: calc(100% + 16px);
+  margin: 8px -8px;
   height: 1px;
-  margin: 8px 0;
   background: var(--color-border-subtle);
 }
 
