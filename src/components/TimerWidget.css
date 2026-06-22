@@ -79,3 +79,12 @@
   width: 24px;
   height: 24px;
 }
+
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.75); }
+}
+
+.timer-widget[data-running="true"] .timer-widget-dot {
+  animation: timer-pulse 1.2s ease-in-out infinite;
+}

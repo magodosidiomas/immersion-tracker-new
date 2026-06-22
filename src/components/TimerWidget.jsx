@@ -20,7 +20,7 @@ function TimerWidget({
   const label = category ? (subcategory ? `${category} · ${subcategory}` : category) : 'Sem categoria'
 
   return (
-    <div className="timer-widget" onClick={onClick}>
+    <div className="timer-widget" data-running={running} onClick={onClick}>
       <div className="timer-widget-row">
         <div className="timer-widget-text">
           <p className="timer-widget-label">{label}</p>
