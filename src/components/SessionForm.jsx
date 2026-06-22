@@ -75,6 +75,7 @@ function SessionForm({
   const [startEditKey, setStartEditKey] = useState(0)
   const [endEditKey, setEndEditKey] = useState(0)
 
+  const [startTimeError, setStartTimeError] = useState(null)
   const [endTimeError, setEndTimeError] = useState(null)
 
   // endAt is always derived — never independent state.
@@ -120,20 +121,27 @@ function SessionForm({
 
   function openStartEdit() {
     setStartEditKey((k) => k + 1)
+    setStartTimeError(null)
     setEditingStart(true)
   }
 
   function handleConfirmStart() {
     const { hours, minutes } = startInputRef.current.getValue()
     const newStartAt = buildDateWithTime(startAt, hours, minutes)
-    // fim stays put; duration is recalculated from the gap.
-    const newDuration = Math.max(0, (endAt.getTime() - newStartAt.getTime()) / 1000)
+    if (newStartAt >= endAt) {
+      setStartTimeError(
+        `O horário de início precisa ser antes do de término (Você terminou às ${formatHM(endAt)}).`,
+      )
+      return // sheet stays open
+    }
     setStartAt(newStartAt)
-    setDurationSeconds(newDuration)
+    setDurationSeconds((endAt.getTime() - newStartAt.getTime()) / 1000)
+    setStartTimeError(null)
     setEditingStart(false)
   }
 
   function handleCancelStart() {
+    setStartTimeError(null)
     setEditingStart(false)
   }
 
@@ -150,7 +158,7 @@ function SessionForm({
     const newEndAt = buildDateWithTime(startAt, hours, minutes)
     if (newEndAt <= startAt) {
       setEndTimeError(
-        `O horário de término precisa ser depois do início (${formatHM(startAt)}).`,
+        `O horário de término precisa ser depois do de início (Você iniciou às ${formatHM(startAt)}).`,
       )
       return // sheet stays open
     }
@@ -323,6 +331,7 @@ function SessionForm({
           key={startEditKey}
           hasSeconds={false}
           initialValue={{ hours: startAt.getHours(), minutes: startAt.getMinutes(), seconds: 0 }}
+          errorMessage={startTimeError}
         />
       </BottomSheet>
 
