@@ -8,25 +8,8 @@
   --icon-color: var(--color-icon-muted-gray);
 }
 
-/* border-bottom would only span #root's own width (480px max,
-   centered — see index.css), so on wider viewports it reads as a
-   short line floating mid-screen instead of a real divider. This
-   breaks it out to the full viewport width instead: ::after centered
-   via left:50% + translateX(-50%) lines up with #root's own centering,
-   so it still sits exactly under the nav on any width. */
 .top-nav[data-divider='true'] {
-  position: relative;
-}
-
-.top-nav[data-divider='true']::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 100vw;
-  height: 1px;
-  background: var(--color-border-subtle);
-  transform: translateX(-50%);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .top-nav-leading {
