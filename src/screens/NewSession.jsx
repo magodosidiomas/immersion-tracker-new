@@ -8,7 +8,7 @@ import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
-import { formatDateInput, formatElapsed } from '../utils/date'
+import { formatElapsed } from '../utils/date'
 import { getCategoryLabel } from '../utils/sessions'
 // Pulls in .category-sheet-* (used by the picker sheet below) and
 // .finish-session-* (used by SessionForm) — shared with EditSession.
@@ -243,7 +243,6 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
       <SessionForm
         initialStartAt={draft.startAt}
         initialDurationSeconds={draft.durationSeconds}
-        initialDate={formatDateInput(new Date())}
         initialCategory={category}
         initialSubcategory={subcategory}
         onSave={handleSave}

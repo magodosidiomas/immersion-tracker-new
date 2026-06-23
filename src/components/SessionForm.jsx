@@ -4,7 +4,8 @@ import SelectionChip from './SelectionChip'
 import Button from './Button'
 import BottomSheet from './BottomSheet'
 import DurationInput from './DurationInput'
-import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
+import Alert from './Alert'
+import { Edit, CalendarToday } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -18,17 +19,30 @@ function formatHMS(totalSeconds) {
   return `${pad2(h)}:${pad2(m)}:${pad2(s)}`
 }
 
-// HH:MM — início/fim's view-mode display.
+// HH:MM — time display.
 function formatHM(date) {
   return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`
 }
 
-// Returns a new Date with the same date portion as `reference` but
-// with hours/minutes replaced, and seconds zeroed out.
-function buildDateWithTime(reference, hours, minutes) {
-  const d = new Date(reference)
-  d.setHours(hours, minutes, 0, 0)
-  return d
+// YYYY-MM-DD — value for <input type="date">.
+function toDateString(date) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+}
+
+// Returns a new Date with the date portion replaced by dateStr ("YYYY-MM-DD"),
+// keeping the original time.
+function setDatePortion(existingDate, dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  const result = new Date(existingDate)
+  result.setFullYear(y, m - 1, d)
+  return result
+}
+
+// Returns a new Date with the time portion replaced, keeping the original date.
+function setTimePortion(existingDate, hours, minutes) {
+  const result = new Date(existingDate)
+  result.setHours(hours, minutes, 0, 0)
+  return result
 }
 
 // The session-details form — same fields and edit rules whether you're
@@ -38,20 +52,19 @@ function buildDateWithTime(reference, hours, minutes) {
 // edits move the numbers. onSave receives the assembled fields
 // (category/subcategory/date/startTime/endTime/durationSeconds).
 //
-// Edit rules (from imerso-data-model.md):
-// - editing duração → recalculates fim, início stays
-// - editing início → recalculates duração, fim stays
-// - editing fim → recalculates duração, início stays
-// - fim before início is blocked: error shown inside the fim sheet,
-//   Confirmar stays disabled until the value is valid
+// State model: startAt and endAt are independent full Dates.
+// durationSeconds is derived. Editing duration recalculates endAt.
+// Editing a time updates only the time portion of that Date.
+// Editing a date updates only the date portion.
 //
-// Each time input opens a BottomSheet (modal variant) with a
-// DurationInput. An editKey is bumped on every open so DurationInput
-// remounts fresh — discarded edits never leak into the next open.
+// Validation:
+// - Duration dialog: blocks zero (error inside DurationInput)
+// - Time dialogs: block result < 1 min difference (error inside dialog)
+// - Form level: invalid state (endAt <= startAt or diff < 60s) shows
+//   Alert + disables Salvar
 function SessionForm({
   initialStartAt,
   initialDurationSeconds,
-  initialDate,
   initialCategory,
   initialSubcategory,
   onSave,
@@ -60,8 +73,13 @@ function SessionForm({
   secondaryButton = null,
 }) {
   const [startAt, setStartAt] = useState(initialStartAt)
-  const [durationSeconds, setDurationSeconds] = useState(initialDurationSeconds)
-  const [sessionDate, setSessionDate] = useState(initialDate)
+  const [endAt, setEndAt] = useState(
+    new Date(initialStartAt.getTime() + initialDurationSeconds * 1000),
+  )
+
+  // Track which date field was last changed to show contextual error copy.
+  const [lastChangedDate, setLastChangedDate] = useState(null)
+
   const [selectedCategory, setSelectedCategory] = useState(initialCategory ?? CATEGORIES[0].key)
   const [selectedSubcategory, setSelectedSubcategory] = useState(
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
@@ -78,16 +96,24 @@ function SessionForm({
   const [startTimeError, setStartTimeError] = useState(null)
   const [endTimeError, setEndTimeError] = useState(null)
 
-  // endAt is always derived — never independent state.
-  const endAt = new Date(startAt.getTime() + durationSeconds * 1000)
-
   const durationInputRef = useRef(null)
   const startInputRef = useRef(null)
   const endInputRef = useRef(null)
 
-  // Auto-focus the first field each time a sheet opens. Tied to the
-  // open flag so it fires after React commits the new DOM (same
-  // pattern as the original hourRef auto-focus).
+  // durationSeconds and validity are always derived.
+  const durationSeconds = Math.round((endAt.getTime() - startAt.getTime()) / 1000)
+  const isValid = durationSeconds >= 60
+
+  let formAlert = null
+  if (durationSeconds < 0) {
+    formAlert =
+      lastChangedDate === 'end'
+        ? 'Data final precisa ser depois da data de início. Ajuste as datas para continuar.'
+        : 'Data de início precisa ser antes da data final. Ajuste as datas para continuar.'
+  } else if (durationSeconds < 60) {
+    formAlert = 'Início e término precisam ter pelo menos 1 minuto de diferença.'
+  }
+
   useEffect(() => {
     if (editingDuration) durationInputRef.current?.focusFirst()
   }, [editingDuration])
@@ -109,15 +135,13 @@ function SessionForm({
 
   function handleConfirmDuration() {
     const { hours, minutes, seconds } = durationInputRef.current.getValue()
-    setDurationSeconds(hours * 3600 + minutes * 60 + seconds)
+    const newDuration = hours * 3600 + minutes * 60 + seconds
+    if (newDuration === 0) return // error shown inside DurationInput
+    setEndAt(new Date(startAt.getTime() + newDuration * 1000))
     setEditingDuration(false)
   }
 
-  function handleCancelDuration() {
-    setEditingDuration(false)
-  }
-
-  // --- Start handlers ---
+  // --- Start time handlers ---
 
   function openStartEdit() {
     setStartEditKey((k) => k + 1)
@@ -127,15 +151,12 @@ function SessionForm({
 
   function handleConfirmStart() {
     const { hours, minutes } = startInputRef.current.getValue()
-    const newStartAt = buildDateWithTime(startAt, hours, minutes)
-    if (newStartAt >= endAt) {
-      setStartTimeError(
-        `O horário de início precisa ser antes do de término (Você terminou às ${formatHM(endAt)}).`,
-      )
-      return // sheet stays open
+    const newStartAt = setTimePortion(startAt, hours, minutes)
+    if (endAt.getTime() - newStartAt.getTime() < 60000) {
+      setStartTimeError('Início e término precisam ter pelo menos 1 minuto de diferença.')
+      return
     }
     setStartAt(newStartAt)
-    setDurationSeconds((endAt.getTime() - newStartAt.getTime()) / 1000)
     setStartTimeError(null)
     setEditingStart(false)
   }
@@ -145,7 +166,7 @@ function SessionForm({
     setEditingStart(false)
   }
 
-  // --- End handlers ---
+  // --- End time handlers ---
 
   function openEndEdit() {
     setEndEditKey((k) => k + 1)
@@ -155,14 +176,12 @@ function SessionForm({
 
   function handleConfirmEnd() {
     const { hours, minutes } = endInputRef.current.getValue()
-    const newEndAt = buildDateWithTime(startAt, hours, minutes)
-    if (newEndAt <= startAt) {
-      setEndTimeError(
-        `O horário de término precisa ser depois do de início (Você iniciou às ${formatHM(startAt)}).`,
-      )
-      return // sheet stays open
+    const newEndAt = setTimePortion(endAt, hours, minutes)
+    if (newEndAt.getTime() - startAt.getTime() < 60000) {
+      setEndTimeError('Início e término precisam ter pelo menos 1 minuto de diferença.')
+      return
     }
-    setDurationSeconds((newEndAt.getTime() - startAt.getTime()) / 1000)
+    setEndAt(newEndAt)
     setEndTimeError(null)
     setEditingEnd(false)
   }
@@ -170,6 +189,20 @@ function SessionForm({
   function handleCancelEnd() {
     setEndTimeError(null)
     setEditingEnd(false)
+  }
+
+  // --- Date handlers ---
+
+  function handleStartDateChange(e) {
+    if (!e.target.value) return
+    setStartAt(setDatePortion(startAt, e.target.value))
+    setLastChangedDate('start')
+  }
+
+  function handleEndDateChange(e) {
+    if (!e.target.value) return
+    setEndAt(setDatePortion(endAt, e.target.value))
+    setLastChangedDate('end')
   }
 
   // --- Category handlers ---
@@ -180,10 +213,11 @@ function SessionForm({
   }
 
   function handleSave() {
+    if (!isValid) return
     onSave({
       category: selectedCategory,
       subcategory: selectedSubcategory,
-      date: sessionDate,
+      date: toDateString(startAt),
       startTime: startAt.toISOString(),
       endTime: endAt.toISOString(),
       durationSeconds,
@@ -195,6 +229,7 @@ function SessionForm({
   return (
     <>
       <div className="finish-session-body">
+        {/* Duration */}
         <div className="finish-session-field-group finish-session-duration-group">
           <span className="category-sheet-label">Duração</span>
           <button
@@ -203,39 +238,53 @@ function SessionForm({
             aria-label="Editar duração"
             onClick={openDurationEdit}
           >
-            <span className="finish-session-duration-display">{formatHMS(durationSeconds)}</span>
+            <span
+              className="finish-session-duration-display"
+              data-invalid={!isValid ? 'true' : undefined}
+            >
+              {isValid ? formatHMS(durationSeconds) : '--:--:--'}
+            </span>
             <Edit className="finish-session-duration-icon" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="finish-session-time-row">
-          <div className="finish-session-time-display">
-            <span className="category-sheet-label">Início</span>
-            <button
-              type="button"
-              className="finish-session-time-button"
-              aria-label="Editar início"
-              onClick={openStartEdit}
-            >
-              <span className="finish-session-time-value">{formatHM(startAt)}</span>
-              <Edit className="finish-session-duration-icon" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="finish-session-time-display">
-            <span className="category-sheet-label">Fim</span>
-            <button
-              type="button"
-              className="finish-session-time-button"
-              aria-label="Editar fim"
-              onClick={openEndEdit}
-            >
-              <span className="finish-session-time-value">{formatHM(endAt)}</span>
-              <Edit className="finish-session-duration-icon" aria-hidden="true" />
-            </button>
-          </div>
+        {/* Início row */}
+        <div className="finish-session-time-grid">
+          <InputField
+            label="Início"
+            value={formatHM(startAt)}
+            readOnly
+            onClick={openStartEdit}
+          />
+          <InputField
+            label="Data de início"
+            type="date"
+            value={toDateString(startAt)}
+            onChange={handleStartDateChange}
+            trailingIcon={<CalendarToday />}
+          />
         </div>
 
-        <InputField label="Data" type="date" value={sessionDate} onChange={(e) => setSessionDate(e.target.value)} />
+        {/* Inline form alert */}
+        {formAlert && <Alert type="error" description={formAlert} />}
+
+        {/* Fim row */}
+        <div className="finish-session-time-grid">
+          <InputField
+            label="Fim"
+            value={formatHM(endAt)}
+            readOnly
+            onClick={openEndEdit}
+          />
+          <InputField
+            label="Data final"
+            type="date"
+            value={toDateString(endAt)}
+            onChange={handleEndDateChange}
+            trailingIcon={<CalendarToday />}
+          />
+        </div>
+
         <div className="finish-session-divider" />
 
         <div className="finish-session-field-group">
@@ -272,7 +321,7 @@ function SessionForm({
       </div>
 
       <div className="finish-session-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving}>
+        <Button fullWidth onClick={handleSave} disabled={saving || !isValid}>
           {primaryLabel}
         </Button>
         {secondaryButton}
@@ -281,7 +330,7 @@ function SessionForm({
       {/* Duração */}
       <BottomSheet
         open={editingDuration}
-        onClose={handleCancelDuration}
+        onClose={() => setEditingDuration(false)}
         title="Editar duração"
         contentCard={false}
         variant="modal"
@@ -291,7 +340,7 @@ function SessionForm({
           </Button>
         }
         secondaryButton={
-          <Button variant="outline" fullWidth onClick={handleCancelDuration}>
+          <Button variant="outline" fullWidth onClick={() => setEditingDuration(false)}>
             Cancelar
           </Button>
         }
@@ -301,9 +350,9 @@ function SessionForm({
           key={durationEditKey}
           hasSeconds
           initialValue={{
-            hours: Math.floor(durationSeconds / 3600),
-            minutes: Math.floor((durationSeconds % 3600) / 60),
-            seconds: durationSeconds % 60,
+            hours: Math.floor(Math.max(0, durationSeconds) / 3600),
+            minutes: Math.floor((Math.max(0, durationSeconds) % 3600) / 60),
+            seconds: Math.max(0, durationSeconds) % 60,
           }}
         />
       </BottomSheet>
@@ -312,7 +361,7 @@ function SessionForm({
       <BottomSheet
         open={editingStart}
         onClose={handleCancelStart}
-        title="Editar horário inicial"
+        title="Editar horário de início"
         contentCard={false}
         variant="modal"
         primaryButton={

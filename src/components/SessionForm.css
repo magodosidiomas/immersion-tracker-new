@@ -131,3 +131,17 @@
   gap: var(--space-16);
   padding: var(--space-16);
 }
+
+.finish-session-time-grid {
+  display: flex;
+  gap: var(--space-12);
+}
+
+.finish-session-time-grid > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.finish-session-duration-display[data-invalid] {
+  color: var(--color-text-on-destructive);
+}
