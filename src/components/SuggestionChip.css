@@ -3,12 +3,12 @@
   width: fit-content;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 8px;
   border-radius: var(--radius-medium);
   border: 1px solid var(--color-border-default);
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   cursor: pointer;
 }
 
@@ -26,9 +26,9 @@
 
 .suggestion-chip-label {
   font-family: var(--font-family-main);
-  font-weight: var(--font-weight-regular);
+  font-weight: 400;
   font-size: var(--font-size-label-small);
-  line-height: var(--line-height-snug);
+  line-height: 1.1;
   letter-spacing: 0.01em;
 }
 
@@ -36,17 +36,21 @@
 .suggestion-chip:hover:not(:disabled) {
   border-color: var(--color-border-accent);
   background: var(--bg-surface-primary-8);
-  color: var(--color-text-primary);
 }
 
-/* --- pressed --- */
+/* --- pressed (persistent toggle state) --- */
+.suggestion-chip[data-pressed="true"] {
+  background: var(--bg-surface-primary-15);
+}
+
+/* --- active (transient press) --- */
 .suggestion-chip:active:not(:disabled) {
   background: var(--bg-surface-primary-15);
-  color: var(--color-text-primary);
 }
 
 /* --- disabled --- */
 .suggestion-chip:disabled {
-  opacity: 0.38;
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-tertiary);
   cursor: not-allowed;
 }

@@ -1,10 +1,10 @@
 import './SuggestionChip.css'
-import { Check } from '@nine-thirty-five/material-symbols-react/outlined'
 
 function SuggestionChip({
   label = 'Button label',
   leadingIcon,
   trailingIcon,
+  pressed = false,
   disabled = false,
   ...props
 }) {
@@ -12,7 +12,9 @@ function SuggestionChip({
     <button
       type="button"
       className="suggestion-chip"
+      data-pressed={pressed}
       disabled={disabled}
+      aria-pressed={pressed}
       {...props}
     >
       {leadingIcon && <span className="suggestion-chip-icon">{leadingIcon}</span>}
