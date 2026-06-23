@@ -5,7 +5,7 @@ import Button from './Button'
 import BottomSheet from './BottomSheet'
 import DurationInput from './DurationInput'
 import Alert from './Alert'
-import { Edit, CalendarToday } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -93,6 +93,7 @@ function SessionForm({
   const [startEditKey, setStartEditKey] = useState(0)
   const [endEditKey, setEndEditKey] = useState(0)
 
+  const [durationError, setDurationError] = useState(null)
   const [startTimeError, setStartTimeError] = useState(null)
   const [endTimeError, setEndTimeError] = useState(null)
 
@@ -130,14 +131,19 @@ function SessionForm({
 
   function openDurationEdit() {
     setDurationEditKey((k) => k + 1)
+    setDurationError(null)
     setEditingDuration(true)
   }
 
   function handleConfirmDuration() {
     const { hours, minutes, seconds } = durationInputRef.current.getValue()
     const newDuration = hours * 3600 + minutes * 60 + seconds
-    if (newDuration === 0) return // error shown inside DurationInput
+    if (newDuration === 0) {
+      setDurationError('A duração não pode ser zero.')
+      return
+    }
     setEndAt(new Date(startAt.getTime() + newDuration * 1000))
+    setDurationError(null)
     setEditingDuration(false)
   }
 
@@ -261,7 +267,6 @@ function SessionForm({
             type="date"
             value={toDateString(startAt)}
             onChange={handleStartDateChange}
-            trailingIcon={<CalendarToday />}
           />
         </div>
 
@@ -281,7 +286,6 @@ function SessionForm({
             type="date"
             value={toDateString(endAt)}
             onChange={handleEndDateChange}
-            trailingIcon={<CalendarToday />}
           />
         </div>
 
@@ -354,6 +358,7 @@ function SessionForm({
             minutes: Math.floor((Math.max(0, durationSeconds) % 3600) / 60),
             seconds: Math.max(0, durationSeconds) % 60,
           }}
+          errorMessage={durationError}
         />
       </BottomSheet>
 
