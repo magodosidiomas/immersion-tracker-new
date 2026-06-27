@@ -7,6 +7,7 @@ import BottomNav from '../components/BottomNav'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
+import Alert from '../components/Alert'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakCard from '../components/StreakCard'
@@ -44,15 +45,17 @@ function formatStreakValue(days) {
 function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
+  const [sessionError, setSessionError] = useState(false)
 
-  // Refetches on every activeId change — both an explicit switch in
-  // LanguageTopNav and Home's own mount (Home fully unmounts/remounts
-  // when navigating away and back, e.g. after saving a new or edited
-  // session, so this alone is enough to pick up fresh data without a
-  // separate "refresh" signal).
   useEffect(() => {
     if (!activeId) return
-    getSessionsByLanguage(activeId).then(setSessions)
+    setSessionError(false)
+    getSessionsByLanguage(activeId)
+      .then(setSessions)
+      .catch((err) => {
+        console.error('Erro ao carregar sessões:', err)
+        setSessionError(true)
+      })
   }, [activeId])
 
   const groups = groupSessionsByDate(sessions)
@@ -87,7 +90,9 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
             <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
           </div>
         </div>
-        {groups.length === 0 ? (
+        {sessionError ? (
+          <Alert description="Erro ao carregar sessões. Tente fechar e reabrir o app." />
+        ) : groups.length === 0 ? (
           <EmptyState
             icon={<Schedule />}
             title="Nenhuma sessão ainda"

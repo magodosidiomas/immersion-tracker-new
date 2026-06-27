@@ -6,6 +6,7 @@ import BottomSheet from '../components/BottomSheet'
 import SelectionChip from '../components/SelectionChip'
 import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import Alert from '../components/Alert'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
 import { formatElapsed } from '../utils/date'
@@ -127,7 +128,7 @@ function NewSession({ timer, onClose }) {
       </div>
       <div className="new-session-footer">
         {timer.status === 'idle' && (
-          <Button leadingIcon={<PlayArrow />} fullWidth onClick={() => timer.start(activeLanguageId)}>
+          <Button leadingIcon={<PlayArrow />} fullWidth disabled={!activeLanguageId} onClick={() => timer.start(activeLanguageId)}>
             Iniciar
           </Button>
         )}
@@ -220,13 +221,21 @@ function NewSession({ timer, onClose }) {
 // the duration math, so it defaults to today and is edited on its own.
 function FinishSession({ draft, category, subcategory, languageId, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   async function handleSave(fields) {
     if (!languageId || saving) return
     setSaving(true)
-    await createSession({ languageId, ...fields })
-    onSaved()
+    setSaveError(null)
+    try {
+      await createSession({ languageId, ...fields })
+      onSaved()
+    } catch (err) {
+      console.error('Erro ao salvar sessão:', err)
+      setSaveError('Não foi possível salvar a sessão. Tente novamente.')
+      setSaving(false)
+    }
   }
 
   return (
@@ -240,13 +249,14 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
           </button>
         }
       />
+      {saveError && <Alert description={saveError} />}
       <SessionForm
         initialStartAt={draft.startAt}
         initialDurationSeconds={draft.durationSeconds}
         initialCategory={category}
         initialSubcategory={subcategory}
         onSave={handleSave}
-        saving={saving}
+        saving={saving || !languageId}
         secondaryButton={
           <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
             Descartar sessão

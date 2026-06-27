@@ -24,10 +24,15 @@ export function useTimerDraft() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    getDraftSession().then((found) => {
-      if (found) setDraft(found)
-      setLoaded(true)
-    })
+    getDraftSession()
+      .then((found) => {
+        if (found) setDraft(found)
+        setLoaded(true)
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar rascunho do timer:', err)
+        setLoaded(true) // still mark as loaded so the app doesn't block forever
+      })
   }, [])
 
   useEffect(() => {
