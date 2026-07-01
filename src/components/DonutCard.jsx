@@ -13,8 +13,8 @@ import './DonutCard.css'
 // Percentages are relative to the grand total across all groups —
 // same convention as DataCard, so a donut and a bar view of the same
 // data always agree.
-const SIZE = 220
-const STROKE = 20
+const SIZE = 180
+const STROKE = 16
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
@@ -31,11 +31,15 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
   const grandTotal = sortedGroups.reduce((sum, group) => sum + group.totalSeconds, 0)
   const pct = (seconds) => (grandTotal ? (seconds / grandTotal) * 100 : 0)
 
-  const top = sortedGroups[0] ?? null
-  const active = sortedGroups.find((group) => group.key === activeKey)
-  const displayed = centerLabel ?? active ?? top
-  const label = displayed?.label ?? '—'
-  const time = displayed?.totalSeconds ?? 0
+  // With nothing selected, the center shows the grand total (like a
+  // subtotal line, not "this one category happens to be biggest") —
+  // selecting a slice (click/tap, either on the ring or the legend
+  // row) swaps it to that group's own label/time/percent.
+  const active = centerLabel ?? sortedGroups.find((group) => group.key === activeKey)
+
+  function toggle(key) {
+    setActiveKey((current) => (current === key ? null : key))
+  }
 
   // Cumulative offsets computed up front (not mutated during the map
   // below) — each arc's dash-offset is the sum of every prior arc's
@@ -71,6 +75,7 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
             ) : (
               arcs.map(({ group, length, offset }) => {
                 const ramp = CHART_COLORS[group.colorRamp] ?? []
+                const dimmed = activeKey && group.key !== activeKey
                 return (
                   <circle
                     key={group.key}
@@ -83,28 +88,45 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
                     strokeWidth={STROKE}
                     strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
                     strokeDashoffset={-offset}
+                    style={{ opacity: dimmed ? 0.35 : 1 }}
                     transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
                     onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
                     onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
-                    onClick={() =>
-                      setActiveKey((current) => (current === group.key ? null : group.key))
-                    }
+                    onClick={() => toggle(group.key)}
                   />
                 )
               })
             )}
           </svg>
           <div className="donut-card-center">
-            <span className="donut-card-center-label">{label}</span>
-            <span className="donut-card-center-time">{formatDurationShort(time)}</span>
+            {active ? (
+              <>
+                <span className="donut-card-center-label">{active.label}</span>
+                <span className="donut-card-center-time">
+                  {formatDurationShort(active.totalSeconds)} · {Math.round(pct(active.totalSeconds))}%
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="donut-card-center-label">{formatDurationShort(grandTotal)}</span>
+                <span className="donut-card-center-time">Total</span>
+              </>
+            )}
           </div>
         </div>
 
         <div className="donut-card-legend">
           {sortedGroups.map((group) => {
             const ramp = CHART_COLORS[group.colorRamp] ?? []
+            const isActive = group.key === activeKey
             return (
-              <div className="donut-card-legend-row" key={group.key}>
+              <button
+                type="button"
+                className="donut-card-legend-row"
+                data-active={isActive}
+                key={group.key}
+                onClick={() => toggle(group.key)}
+              >
                 <span className="donut-card-legend-label">
                   <span
                     className="donut-card-dot"
@@ -120,7 +142,7 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
                     {Math.round(pct(group.totalSeconds))}%
                   </span>
                 </span>
-              </div>
+              </button>
             )
           })}
         </div>
