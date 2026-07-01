@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { CHART_COLORS } from '../data/chartColors'
 import { formatDurationShort } from '../utils/sessions'
-import CardTitleRow from './CardTitleRow'
 import './DonutCard.css'
 
 // Mirrors the Figma "Visão geral" donut — a ring built from one arc per
@@ -54,7 +53,12 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
 
   return (
     <div className="donut-card-group">
-      {title && <CardTitleRow title={title} description={description} />}
+      {title && (
+        <div className="donut-card-header">
+          <p className="donut-card-title">{title}</p>
+          {description && <p className="donut-card-description">{description}</p>}
+        </div>
+      )}
       <div className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
         <div className="donut-card-ring-wrap">
           <svg

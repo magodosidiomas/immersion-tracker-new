@@ -42,16 +42,18 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
         />
-        <DonutCard
-          title="Visão geral"
-          description="Como seu tempo se divide entre as categorias."
-          groups={categoryBreakdown(sessions)}
-        />
-        <SkillCard groups={categoryBreakdown(sessions)} />
-        <FormatCard groups={categoryBreakdown(sessions)} />
-        <ReceptionCard groups={categoryBreakdown(sessions)} />
-        <ProductionCard groups={categoryBreakdown(sessions)} />
-        <StudyCard groups={categoryBreakdown(sessions)} />
+        <div className="statistics-cards">
+          <DonutCard
+            title="Visão geral"
+            description="Como seu tempo se divide entre as categorias."
+            groups={categoryBreakdown(sessions)}
+          />
+          <SkillCard groups={categoryBreakdown(sessions)} />
+          <FormatCard groups={categoryBreakdown(sessions)} />
+          <ReceptionCard groups={categoryBreakdown(sessions)} />
+          <ProductionCard groups={categoryBreakdown(sessions)} />
+          <StudyCard groups={categoryBreakdown(sessions)} />
+        </div>
       </div>
       <div className="statistics-bottom-layer">
         <BottomNav

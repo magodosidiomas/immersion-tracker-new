@@ -1,8 +1,32 @@
 .donut-card-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-12);
   width: 100%;
+}
+
+.donut-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.donut-card-title {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
+.donut-card-description {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
 }
 
 .donut-card {

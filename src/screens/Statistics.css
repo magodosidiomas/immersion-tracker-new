@@ -35,6 +35,17 @@
   width: 100%;
 }
 
+.statistics-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.statistics-cards > * + * {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-24);
+}
+
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)
    — only `.statistics-content` scrolls internally now. Same reasoning
    as Home.css's home-bottom-layer: as a plain flex item outside the
