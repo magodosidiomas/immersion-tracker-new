@@ -1,3 +1,18 @@
+.donut-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+}
+
+.donut-card-title {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
 .donut-card {
   width: 343px;
   height: fit-content;
@@ -14,15 +29,6 @@
   width: 100%;
   padding: 0;
   background: none;
-}
-
-.donut-card-title {
-  width: 100%;
-  margin: 0;
-  font-family: var(--font-family-main);
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-body-small);
-  color: var(--color-text-secondary);
 }
 
 .donut-card-ring-wrap {

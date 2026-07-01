@@ -42,10 +42,12 @@ function ImmersionCard({ groups = [], ...props }) {
   ]
 
   return (
-    <div className="immersion-card" {...props}>
+    <div className="immersion-card-group">
       <p className="immersion-card-title">Imersão</p>
-      <SegmentedControl options={TABS} value={tab} onChange={setTab} />
-      <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />
+      <div className="immersion-card" {...props}>
+        <SegmentedControl options={TABS} value={tab} onChange={setTab} />
+        <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />
+      </div>
     </div>
   )
 }

@@ -1,11 +1,8 @@
-.immersion-card {
-  width: 343px;
+.immersion-card-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
-  padding: var(--space-16);
-  border-radius: var(--radius-medium);
-  background: var(--bg-surface-default);
+  gap: var(--space-8);
+  width: 100%;
 }
 
 .immersion-card-title {
@@ -14,6 +11,16 @@
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-body-small);
   color: var(--color-text-secondary);
+}
+
+.immersion-card {
+  width: 343px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
 }
 
 .immersion-card .segmented-control {
