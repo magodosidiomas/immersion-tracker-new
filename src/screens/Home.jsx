@@ -106,10 +106,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
           <EmptyState
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
-            description="Toque em iniciar timer pra registrar sua primeira sessão"
-            buttonLabel="Iniciar timer"
-            buttonIcon={<PlayArrow />}
-            onButtonClick={onOpenNewSession}
+            description="Toque em nova sessão pra registrar sua primeira sessão"
           />
         ) : (
           groups.map((group) => (
@@ -133,8 +130,8 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
       <div className="home-bottom-layer">
         <div className="home-fab-row">
           {timer.status === 'idle' ? (
-            <Button leadingIcon={<PlayArrow />} onClick={onOpenNewSession}>
-              Iniciar timer
+            <Button leadingIcon={<Add />} onClick={onOpenNewSession}>
+              Nova sessão
             </Button>
           ) : (
             <TimerWidget
