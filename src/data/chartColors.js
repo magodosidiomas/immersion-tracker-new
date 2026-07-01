@@ -2,10 +2,10 @@
 // not tied to any taxonomy. Step 0 is the most saturated tone (used for
 // totals); later steps lighten for nested breakdowns.
 const CHART_PRIMITIVES = {
-  violet: ['#8d6af5', '#a086ed', '#b19ee7', '#c0b3e5'],
-  teal: ['#5dcaa5', '#7acaaf', '#93cbb8', '#aacfc2'],
-  amber: ['#f59e42', '#eaac69', '#e4b88a', '#e1c5a7'],
-  pink: ['#f2629e', '#ea82ad', '#e794b6', '#e5a5bf', '#e4b4c8'],
+  violet: ['#8d6af5', '#ad95f7', '#c7b8f5', '#ddd3f7'],
+  teal: ['#5dcaa5', '#8ad9bd', '#b0e5d1', '#cfeee0'],
+  amber: ['#f59e42', '#f7b96e', '#f9d29b', '#fbe3c0'],
+  pink: ['#f2629e', '#f593b8', '#f7b8cd', '#fad4dd', '#fce7ec'],
 }
 
 // Tokens — semantic layer that data-vis components actually consume.
