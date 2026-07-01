@@ -5,6 +5,7 @@ import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
+import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
 import { categoryBreakdown } from '../utils/sessions'
@@ -46,6 +47,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
           groups={categoryBreakdown(sessions)}
         />
         <ImmersionCard groups={categoryBreakdown(sessions)} />
+        <ReceptionCard groups={categoryBreakdown(sessions)} />
         <ProductionCard groups={categoryBreakdown(sessions)} />
         <StudyCard groups={categoryBreakdown(sessions)} />
       </div>

@@ -9,15 +9,15 @@ import './ImmersionCard.css'
 // - habilidade: Simultâneo/Escuta/Leitura, summed across Imersão AND
 //   Imersão interativa — the point is "how much do I listen/read
 //   overall", not to split it by which of the two immersion
-//   categories it came from (that's what the Tipo tab is for).
-// - tipo: Imersão vs. Imersão interativa, i.e. the category-level
-//   split between the two immersion types.
+//   categories it came from (that's what the Formato tab is for).
+// - formato: Imersão vs. Imersão interativa, i.e. the category-level
+//   split between the two immersion formats.
 //
 // Takes the full categoryBreakdown() output (all 4 categories) since
 // both tabs need imersaoInterativa's data alongside imersao's.
 const TABS = [
   { value: 'habilidade', label: 'Habilidade' },
-  { value: 'tipo', label: 'Tipo' },
+  { value: 'formato', label: 'Formato' },
 ]
 
 const SKILL_LABELS = { simultaneo: 'Simultâneo', escuta: 'Escuta', leitura: 'Leitura' }
@@ -42,7 +42,7 @@ function ImmersionCard({ groups = [], ...props }) {
     }
   })
 
-  const tipoGroups = [
+  const formatoGroups = [
     { key: 'imersao', label: 'Imersão', colorRamp: 'data-violet', totalSeconds: imersao?.totalSeconds ?? 0 },
     {
       key: 'imersaoInterativa',
@@ -60,12 +60,12 @@ function ImmersionCard({ groups = [], ...props }) {
           Escuta ou Leitura, somando Imersão e Imersão interativa.
         </p>
         <p className="card-title-row-section">
-          <strong>Tipo</strong> — compara o tempo de Imersão com o de Imersão interativa.
+          <strong>Formato</strong> — compara o tempo de Imersão com o de Imersão interativa.
         </p>
       </CardTitleRow>
       <div className="immersion-card" {...props}>
         <SegmentedControl options={TABS} value={tab} onChange={setTab} />
-        <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />
+        <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : formatoGroups} />
       </div>
     </div>
   )

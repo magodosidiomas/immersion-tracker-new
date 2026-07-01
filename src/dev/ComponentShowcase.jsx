@@ -20,6 +20,7 @@ import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
+import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
 import DurationInput from '../components/DurationInput'
@@ -475,17 +476,25 @@ function ComponentShowcase() {
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ImmersionCard</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
-        SegmentedControl (Habilidade/Tipo) over a bare DonutCard. Habilidade
-        shows Imersão's own subcategories shaded from the violet ramp; Tipo
-        compares Imersão vs. Imersão interativa at the category level.
+        SegmentedControl (Habilidade/Formato) over a bare DonutCard. Habilidade
+        shows Simultâneo/Escuta/Leitura summed across Imersão and Imersão
+        interativa; Formato compares Imersão vs. Imersão interativa at the
+        category level.
       </p>
       <ImmersionCard groups={DATA_CARD_SAMPLE} />
 
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ReceptionCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        No SegmentedControl — Recepção (Escuta+Leitura from Imersão and
+        Imersão interativa) vs. Produção's full total, each with a short
+        description line under the label.
+      </p>
+      <ReceptionCard groups={DATA_CARD_SAMPLE} />
+
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ProductionCard</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
-        Distribuição compares Recepção (Escuta+Leitura from Imersão and
-        Imersão interativa) vs. Produção's full total; Tipo shows Produção's
-        own subcategories shaded from the pink ramp.
+        No SegmentedControl — just Produção's own subcategories
+        (Fala/Escrita/Conversação/Aula) shaded from the pink ramp.
       </p>
       <ProductionCard groups={DATA_CARD_SAMPLE} />
 

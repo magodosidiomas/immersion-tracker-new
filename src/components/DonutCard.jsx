@@ -132,7 +132,12 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
                     className="donut-card-dot"
                     style={{ backgroundColor: ramp[group.rampIndex ?? 0] }}
                   />
-                  {group.label}
+                  <span className="donut-card-legend-text">
+                    <span className="donut-card-legend-name">{group.label}</span>
+                    {group.description && (
+                      <span className="donut-card-legend-description">{group.description}</span>
+                    )}
+                  </span>
                 </span>
                 <span className="donut-card-legend-meta">
                   <span className="donut-card-legend-time">

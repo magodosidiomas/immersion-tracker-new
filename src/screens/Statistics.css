@@ -32,8 +32,7 @@
 }
 
 .statistics-content .donut-card,
-.statistics-content .immersion-card,
-.statistics-content .production-card {
+.statistics-content .immersion-card {
   width: 100%;
 }
 

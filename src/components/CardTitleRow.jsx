@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Info } from '@nine-thirty-five/material-symbols-react/outlined'
 import BottomSheet from './BottomSheet'
+import Button from './Button'
 import './CardTitleRow.css'
 
 // Shared header for every stats card — the label text plus an
@@ -31,6 +32,7 @@ function CardTitleRow({ title, description, children }) {
             title={title}
             description={children ? null : description}
             contentCard={false}
+            primaryButton={<Button onClick={() => setOpen(false)}>Entendi</Button>}
           >
             {children}
           </BottomSheet>
