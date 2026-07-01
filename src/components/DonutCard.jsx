@@ -56,27 +56,40 @@ function DonutCard({ groups = [], centerLabel, bare = false, ...props }) {
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
         >
-          {arcs.map(({ group, length, offset }) => {
-            const ramp = CHART_COLORS[group.colorRamp] ?? []
-            return (
-              <circle
-                key={group.key}
-                className="donut-card-arc"
-                cx={SIZE / 2}
-                cy={SIZE / 2}
-                r={RADIUS}
-                fill="none"
-                stroke={ramp[group.rampIndex ?? 0]}
-                strokeWidth={STROKE}
-                strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
-                strokeDashoffset={-offset}
-                transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-                onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
-                onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
-                onClick={() => setActiveKey((current) => (current === group.key ? null : group.key))}
-              />
-            )
-          })}
+          {grandTotal === 0 ? (
+            <circle
+              className="donut-card-arc donut-card-arc-empty"
+              cx={SIZE / 2}
+              cy={SIZE / 2}
+              r={RADIUS}
+              fill="none"
+              strokeWidth={STROKE}
+            />
+          ) : (
+            arcs.map(({ group, length, offset }) => {
+              const ramp = CHART_COLORS[group.colorRamp] ?? []
+              return (
+                <circle
+                  key={group.key}
+                  className="donut-card-arc"
+                  cx={SIZE / 2}
+                  cy={SIZE / 2}
+                  r={RADIUS}
+                  fill="none"
+                  stroke={ramp[group.rampIndex ?? 0]}
+                  strokeWidth={STROKE}
+                  strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
+                  strokeDashoffset={-offset}
+                  transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
+                  onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
+                  onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
+                  onClick={() =>
+                    setActiveKey((current) => (current === group.key ? null : group.key))
+                  }
+                />
+              )
+            })
+          )}
         </svg>
         <div className="donut-card-center">
           <span className="donut-card-center-label">{label}</span>

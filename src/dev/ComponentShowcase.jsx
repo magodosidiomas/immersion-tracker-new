@@ -21,6 +21,7 @@ import DataCard from '../components/DataCard'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
 import ProductionCard from '../components/ProductionCard'
+import StudyCard from '../components/StudyCard'
 import DurationInput from '../components/DurationInput'
 import Alert from '../components/Alert'
 import CalendarItem from '../components/CalendarItem'
@@ -483,6 +484,13 @@ function ComponentShowcase() {
         own subcategories shaded from the pink ramp.
       </p>
       <ProductionCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>StudyCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        No SegmentedControl — just Estudo's own subcategories
+        (Vocabulário/Gramática/Pronúncia) shaded from the amber ramp.
+      </p>
+      <StudyCard groups={DATA_CARD_SAMPLE} />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DurationInput</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

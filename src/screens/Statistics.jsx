@@ -6,6 +6,7 @@ import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
 import ProductionCard from '../components/ProductionCard'
+import StudyCard from '../components/StudyCard'
 import { categoryBreakdown } from '../utils/sessions'
 import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
@@ -38,6 +39,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
         <DonutCard groups={categoryBreakdown(sessions)} />
         <ImmersionCard groups={categoryBreakdown(sessions)} />
         <ProductionCard groups={categoryBreakdown(sessions)} />
+        <StudyCard groups={categoryBreakdown(sessions)} />
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}

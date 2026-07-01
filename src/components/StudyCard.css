@@ -1,0 +1,9 @@
+.study-card {
+  width: 343px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
+}

@@ -35,6 +35,15 @@
   opacity: 0.85;
 }
 
+.donut-card-arc-empty {
+  cursor: default;
+  stroke: var(--color-text-tertiary);
+}
+
+.donut-card-arc-empty:hover {
+  opacity: 1;
+}
+
 .donut-card-center {
   position: absolute;
   display: flex;
