@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CHART_COLORS } from '../data/chartColors'
 import { formatDurationShort } from '../utils/sessions'
 import './DonutCard.css'
@@ -24,6 +24,22 @@ const MIN_ARC_FRACTION = 0.025
 
 function DonutCard({ groups = [], centerLabel, title, description, bare = false, ...props }) {
   const [activeKey, setActiveKey] = useState(null)
+  const cardRef = useRef(null)
+
+  // Tapping/clicking anywhere outside the card clears the selection —
+  // same expectation as a popover dismissing on an outside tap. Only
+  // listens while a slice is actually selected, and skips capture so
+  // the row/arc's own onClick (which does the toggling) runs first.
+  useEffect(() => {
+    if (!activeKey) return
+    function handlePointerDown(event) {
+      if (cardRef.current && !cardRef.current.contains(event.target)) {
+        setActiveKey(null)
+      }
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [activeKey])
 
   const sortedGroups = [...groups].sort((a, b) => b.totalSeconds - a.totalSeconds)
 
@@ -59,7 +75,7 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
           {description && <p className="donut-card-description">{description}</p>}
         </div>
       )}
-      <div className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
+      <div ref={cardRef} className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
         <div className="donut-card-ring-wrap">
           <svg
             className="donut-card-ring"
