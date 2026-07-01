@@ -97,6 +97,7 @@ const variants = [
   'primary',
   'outline',
   'ghost',
+  'warning',
   'destructive',
   'destructive-outline',
   'destructive-ghost',
