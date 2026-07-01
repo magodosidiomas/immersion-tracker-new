@@ -134,7 +134,7 @@ function NewSession({ timer, onClose }) {
         )}
         {timer.status === 'running' && (
           <>
-            <Button leadingIcon={<Pause />} fullWidth onClick={timer.pause}>
+            <Button variant="warning" leadingIcon={<Pause />} fullWidth onClick={timer.pause}>
               Pausar
             </Button>
             <Button variant="outline" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>
