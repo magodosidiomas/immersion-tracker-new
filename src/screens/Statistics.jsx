@@ -36,7 +36,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <DonutCard groups={categoryBreakdown(sessions)} />
+        <DonutCard title="Visão geral" groups={categoryBreakdown(sessions)} />
         <ImmersionCard groups={categoryBreakdown(sessions)} />
         <ProductionCard groups={categoryBreakdown(sessions)} />
         <StudyCard groups={categoryBreakdown(sessions)} />

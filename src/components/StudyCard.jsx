@@ -18,7 +18,7 @@ function StudyCard({ groups = [], ...props }) {
 
   return (
     <div className="study-card" {...props}>
-      <DonutCard bare groups={subcategoryGroups} />
+      <DonutCard bare title="Estudo" groups={subcategoryGroups} />
     </div>
   )
 }

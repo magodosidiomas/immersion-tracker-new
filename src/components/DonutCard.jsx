@@ -22,7 +22,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 // visual; the legend/percent always show the real number.
 const MIN_ARC_FRACTION = 0.025
 
-function DonutCard({ groups = [], centerLabel, bare = false, ...props }) {
+function DonutCard({ groups = [], centerLabel, title, bare = false, ...props }) {
   const [activeKey, setActiveKey] = useState(null)
 
   const sortedGroups = [...groups].sort((a, b) => b.totalSeconds - a.totalSeconds)
@@ -49,6 +49,7 @@ function DonutCard({ groups = [], centerLabel, bare = false, ...props }) {
 
   return (
     <div className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
+      {title && <p className="donut-card-title">{title}</p>}
       <div className="donut-card-ring-wrap">
         <svg
           className="donut-card-ring"

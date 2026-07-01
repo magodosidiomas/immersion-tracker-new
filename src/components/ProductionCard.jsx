@@ -49,6 +49,7 @@ function ProductionCard({ groups = [], ...props }) {
 
   return (
     <div className="production-card" {...props}>
+      <p className="production-card-title">Produção</p>
       <SegmentedControl options={TABS} value={tab} onChange={setTab} />
       <DonutCard bare groups={tab === 'distribuicao' ? distribuicaoGroups : tipoGroups} />
     </div>

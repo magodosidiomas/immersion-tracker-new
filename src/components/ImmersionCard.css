@@ -8,6 +8,14 @@
   background: var(--bg-surface-default);
 }
 
+.immersion-card-title {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
 .immersion-card .segmented-control {
   width: 100%;
 }

@@ -43,6 +43,7 @@ function ImmersionCard({ groups = [], ...props }) {
 
   return (
     <div className="immersion-card" {...props}>
+      <p className="immersion-card-title">Imersão</p>
       <SegmentedControl options={TABS} value={tab} onChange={setTab} />
       <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />
     </div>
