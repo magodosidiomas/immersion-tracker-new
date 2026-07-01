@@ -64,7 +64,7 @@
   --icon-color: var(--color-icon-on-warning);
 }
 .button[data-variant='warning']:hover:not(:disabled) {
-  background: var(--color-border-warning-subtle);
+  background: var(--bg-semantic-warning-stronger);
 }
 
 /* --- destructive --- */
