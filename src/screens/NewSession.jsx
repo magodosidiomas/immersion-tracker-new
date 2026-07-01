@@ -67,7 +67,7 @@ function NewSession({ timer, onClose }) {
   // SessionForm's `touched` gate).
   function handleManualEntry() {
     const now = new Date()
-    setFinishDraft({ startAt: now, durationSeconds: 0 })
+    setFinishDraft({ startAt: now, durationSeconds: 0, manual: true })
     setPhase('finish')
   }
 
@@ -103,6 +103,7 @@ function NewSession({ timer, onClose }) {
         category={timer.category}
         subcategory={timer.subcategory}
         languageId={timer.languageId ?? activeLanguageId}
+        autoOpenDuration={Boolean(finishDraft.manual)}
         onBack={() => setPhase('timer')}
         onDiscard={() => {
           timer.clearDraft()
@@ -234,7 +235,7 @@ function NewSession({ timer, onClose }) {
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -270,6 +271,7 @@ function FinishSession({ draft, category, subcategory, languageId, onBack, onDis
         initialDurationSeconds={draft.durationSeconds}
         initialCategory={category}
         initialSubcategory={subcategory}
+        autoOpenDuration={autoOpenDuration}
         onSave={handleSave}
         saving={saving || !languageId}
         secondaryButton={

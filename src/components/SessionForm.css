@@ -145,3 +145,7 @@
 .finish-session-duration-display[data-invalid] {
   color: var(--color-text-on-destructive);
 }
+
+.duration-shortcut-chips {
+  margin-top: var(--space-16);
+}

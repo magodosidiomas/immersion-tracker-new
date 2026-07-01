@@ -39,6 +39,11 @@ const DurationInput = forwardRef(function DurationInput(
     focusFirst() {
       hourRef.current?.focus()
     },
+    setValue({ hours, minutes, seconds }) {
+      if (hourRef.current) hourRef.current.value = pad2(hours)
+      if (minuteRef.current) minuteRef.current.value = pad2(minutes)
+      if (hasSeconds && secondRef.current) secondRef.current.value = pad2(seconds)
+    },
   }))
 
   function handleBlur(inputRef, max) {

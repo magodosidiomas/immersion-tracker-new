@@ -71,6 +71,7 @@ function SessionForm({
   saving = false,
   primaryLabel = 'Salvar',
   secondaryButton = null,
+  autoOpenDuration = false,
 }) {
   const [startAt, setStartAt] = useState(initialStartAt)
   const [endAt, setEndAt] = useState(
@@ -126,6 +127,13 @@ function SessionForm({
   useEffect(() => {
     if (editingDuration) durationInputRef.current?.focusFirst()
   }, [editingDuration])
+
+  // Registro manual (Clockify-style): land straight in the duration
+  // editor instead of showing a static 00:00:00 screen first.
+  useEffect(() => {
+    if (autoOpenDuration) openDurationEdit()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (editingStart) startInputRef.current?.focusFirst()
@@ -373,6 +381,24 @@ function SessionForm({
           }}
           errorMessage={durationError}
         />
+        <div className="category-sheet-chips duration-shortcut-chips">
+          {[15, 30, 45, 60].map((minutes) => (
+            <SelectionChip
+              key={minutes}
+              label={minutes < 60 ? `${minutes}m` : '1h'}
+              hasLeadingIcon={false}
+              hasTrailingIcon={false}
+              selected={false}
+              onClick={() =>
+                durationInputRef.current.setValue({
+                  hours: Math.floor(minutes / 60),
+                  minutes: minutes % 60,
+                  seconds: 0,
+                })
+              }
+            />
+          ))}
+        </div>
       </BottomSheet>
 
       {/* Início */}
