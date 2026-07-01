@@ -57,6 +57,16 @@
   background: var(--bg-surface-primary-15);
 }
 
+/* --- warning --- */
+.button[data-variant='warning'] {
+  background: var(--bg-semantic-warning);
+  color: var(--color-text-on-alert);
+  --icon-color: var(--color-icon-on-warning);
+}
+.button[data-variant='warning']:hover:not(:disabled) {
+  background: var(--color-border-warning-subtle);
+}
+
 /* --- destructive --- */
 .button[data-variant='destructive'] {
   background: var(--bg-semantic-destructive);
@@ -96,6 +106,7 @@
 }
 
 .button[data-variant='primary']:disabled,
+.button[data-variant='warning']:disabled,
 .button[data-variant='destructive']:disabled {
   background: var(--bg-surface-input);
   border: none;
