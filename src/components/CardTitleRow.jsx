@@ -8,13 +8,14 @@ import './CardTitleRow.css'
 // Lives outside each card's bordered box (see DonutCard/Immersion/
 // ProductionCard's *-group wrappers), so this is the row that sits
 // right above the card, not inside its padding.
-function CardTitleRow({ title, description }) {
+function CardTitleRow({ title, description, children }) {
   const [open, setOpen] = useState(false)
+  const hasInfo = Boolean(description || children)
 
   return (
     <div className="card-title-row">
       <p className="card-title-row-label">{title}</p>
-      {description && (
+      {hasInfo && (
         <>
           <button
             type="button"
@@ -28,8 +29,11 @@ function CardTitleRow({ title, description }) {
             open={open}
             onClose={() => setOpen(false)}
             title={title}
-            description={description}
-          />
+            description={children ? null : description}
+            contentCard={false}
+          >
+            {children}
+          </BottomSheet>
         </>
       )}
     </div>

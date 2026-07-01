@@ -50,10 +50,16 @@ function ProductionCard({ groups = [], ...props }) {
 
   return (
     <div className="production-card-group">
-      <CardTitleRow
-        title="Produção"
-        description="Distribuição compara o tempo de recepção (Escuta e Leitura, de Imersão e Imersão interativa) com o tempo de Produção. Tipo mostra a divisão entre Fala, Escrita, Conversação e Aula."
-      />
+      <CardTitleRow title="Produção">
+        <p className="card-title-row-section">
+          <strong>Distribuição</strong> — compara o tempo de recepção (Escuta e Leitura, de
+          Imersão e Imersão interativa) com o tempo de Produção (Fala, Escrita, Conversação e
+          Aula).
+        </p>
+        <p className="card-title-row-section">
+          <strong>Tipo</strong> — mostra a divisão entre Fala, Escrita, Conversação e Aula.
+        </p>
+      </CardTitleRow>
       <div className="production-card" {...props}>
         <SegmentedControl options={TABS} value={tab} onChange={setTab} />
         <DonutCard bare groups={tab === 'distribuicao' ? distribuicaoGroups : tipoGroups} />

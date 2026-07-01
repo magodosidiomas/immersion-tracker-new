@@ -37,3 +37,21 @@
   outline-offset: 2px;
   border-radius: var(--radius-small);
 }
+
+.card-title-row-section {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.card-title-row-section + .card-title-row-section {
+  margin-top: var(--space-12);
+}
+
+.card-title-row-section strong {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}

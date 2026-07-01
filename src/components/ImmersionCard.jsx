@@ -6,17 +6,21 @@ import './ImmersionCard.css'
 
 // "Imersão" stats card — a SegmentedControl switching between two
 // DonutCard views over the same underlying data:
-// - habilidade: Imersão's own subcategories (Simultâneo/Escuta/Leitura),
-//   shaded from the violet ramp so it reads as "inside Imersão".
+// - habilidade: Simultâneo/Escuta/Leitura, summed across Imersão AND
+//   Imersão interativa — the point is "how much do I listen/read
+//   overall", not to split it by which of the two immersion
+//   categories it came from (that's what the Tipo tab is for).
 // - tipo: Imersão vs. Imersão interativa, i.e. the category-level
 //   split between the two immersion types.
 //
 // Takes the full categoryBreakdown() output (all 4 categories) since
-// the "tipo" tab needs imersaoInterativa's total alongside imersao's.
+// both tabs need imersaoInterativa's data alongside imersao's.
 const TABS = [
   { value: 'habilidade', label: 'Habilidade' },
   { value: 'tipo', label: 'Tipo' },
 ]
+
+const SKILL_LABELS = { simultaneo: 'Simultâneo', escuta: 'Escuta', leitura: 'Leitura' }
 
 function ImmersionCard({ groups = [], ...props }) {
   const [tab, setTab] = useState('habilidade')
@@ -24,13 +28,19 @@ function ImmersionCard({ groups = [], ...props }) {
   const imersao = groups.find((group) => group.key === 'imersao')
   const interativa = groups.find((group) => group.key === 'imersaoInterativa')
 
-  const habilidadeGroups = (imersao?.items ?? []).map((item, index) => ({
-    key: item.key,
-    label: item.label,
-    colorRamp: 'data-violet',
-    rampIndex: index,
-    totalSeconds: item.totalSeconds,
-  }))
+  const habilidadeGroups = Object.keys(SKILL_LABELS).map((key, index) => {
+    const seconds = [imersao, interativa]
+      .flatMap((group) => group?.items ?? [])
+      .filter((item) => item.key === key)
+      .reduce((sum, item) => sum + item.totalSeconds, 0)
+    return {
+      key,
+      label: SKILL_LABELS[key],
+      colorRamp: 'data-violet',
+      rampIndex: index,
+      totalSeconds: seconds,
+    }
+  })
 
   const tipoGroups = [
     { key: 'imersao', label: 'Imersão', colorRamp: 'data-violet', totalSeconds: imersao?.totalSeconds ?? 0 },
@@ -44,10 +54,15 @@ function ImmersionCard({ groups = [], ...props }) {
 
   return (
     <div className="immersion-card-group">
-      <CardTitleRow
-        title="Imersão"
-        description="Habilidade mostra a divisão entre Simultâneo, Escuta e Leitura dentro da Imersão. Tipo compara o tempo de Imersão com o de Imersão interativa."
-      />
+      <CardTitleRow title="Imersão">
+        <p className="card-title-row-section">
+          <strong>Habilidade</strong> — mostra qual tipo de imersão você pratica mais: Simultâneo,
+          Escuta ou Leitura, somando Imersão e Imersão interativa.
+        </p>
+        <p className="card-title-row-section">
+          <strong>Tipo</strong> — compara o tempo de Imersão com o de Imersão interativa.
+        </p>
+      </CardTitleRow>
       <div className="immersion-card" {...props}>
         <SegmentedControl options={TABS} value={tab} onChange={setTab} />
         <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />
