@@ -28,6 +28,7 @@
   --bg-semantic-destructive-light-bg: var(--color-red-400-8);
   --bg-semantic-success-bg: var(--color-green-400-8);
   --bg-semantic-warning: var(--color-amber-400-8);
+  --bg-semantic-warning-stronger: var(--color-amber-400-22);
   /* spacing */
   --radius-none: var(--space-0);
   --radius-xsmall: var(--space-2);
