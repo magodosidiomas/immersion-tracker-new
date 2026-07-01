@@ -56,7 +56,6 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
           width={SIZE}
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
-          onMouseLeave={() => setActiveKey(null)}
         >
           {arcs.map(({ group, length, offset }) => {
             const ramp = CHART_COLORS[group.colorRamp] ?? []
@@ -73,7 +72,8 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
                 strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
                 strokeDashoffset={-offset}
                 transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-                onMouseEnter={() => setActiveKey(group.key)}
+                onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
+                onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
                 onClick={() => setActiveKey((current) => (current === group.key ? null : group.key))}
               />
             )
@@ -95,11 +95,11 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
                 {group.label}
               </span>
               <span className="donut-card-legend-meta">
-                <span className="donut-card-legend-percent">
-                  {Math.round(pct(group.totalSeconds))}%
-                </span>
                 <span className="donut-card-legend-time">
                   {formatDurationShort(group.totalSeconds)}
+                </span>
+                <span className="donut-card-legend-percent">
+                  {Math.round(pct(group.totalSeconds))}%
                 </span>
               </span>
             </div>
