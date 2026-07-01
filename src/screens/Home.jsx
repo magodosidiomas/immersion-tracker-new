@@ -83,13 +83,15 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
         onActiveLanguageChange={setActiveId}
       />
       <div className="home-history">
-        <div className="home-stats">
-          <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
-          <div className="home-stats-row">
-            <NumericCard title="Hoje" number={formatDurationShort(todayTotalSeconds)} />
-            <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
+        {groups.length > 0 && (
+          <div className="home-stats">
+            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
+            <div className="home-stats-row">
+              <NumericCard title="Hoje" number={formatDurationShort(todayTotalSeconds)} />
+              <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
+            </div>
           </div>
-        </div>
+        )}
         {sessionError ? (
           <Alert description="Erro ao carregar sessões. Tente fechar e reabrir o app." />
         ) : groups.length === 0 ? (
