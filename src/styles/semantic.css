@@ -30,6 +30,7 @@
   --bg-semantic-warning: var(--color-amber-400-8);
   /* spacing */
   --radius-none: var(--space-0);
+  --radius-xsmall: var(--space-2);
   --radius-small: var(--space-4);
   --radius-medium: var(--space-8);
   --radius-large: var(--space-12);

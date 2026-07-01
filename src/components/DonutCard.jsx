@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CHART_COLORS } from '../data/chartColors'
 import { formatDurationShort } from '../utils/sessions'
 import './DonutCard.css'
@@ -11,12 +12,19 @@ import './DonutCard.css'
 // Percentages are relative to the grand total across all groups —
 // same convention as DataCard, so a donut and a bar view of the same
 // data always agree.
-const SIZE = 160
-const STROKE = 18
+const SIZE = 200
+const STROKE = 20
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
+// Slices under this fraction still render at this minimum length —
+// otherwise a 1-2% group is a sliver too thin to see or tap. Purely
+// visual; the legend/percent always show the real number.
+const MIN_ARC_FRACTION = 0.025
+
 function DonutCard({ groups = [], centerLabel, ...props }) {
+  const [activeKey, setActiveKey] = useState(null)
+
   const grandTotal = groups.reduce((sum, group) => sum + group.totalSeconds, 0)
   const pct = (seconds) => (grandTotal ? (seconds / grandTotal) * 100 : 0)
 
@@ -24,20 +32,21 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
     (best, group) => (group.totalSeconds > (best?.totalSeconds ?? -1) ? group : best),
     null,
   )
-  const label = centerLabel?.label ?? top?.label ?? '—'
-  const time = centerLabel?.totalSeconds ?? top?.totalSeconds ?? 0
+  const active = groups.find((group) => group.key === activeKey)
+  const displayed = centerLabel ?? active ?? top
+  const label = displayed?.label ?? '—'
+  const time = displayed?.totalSeconds ?? 0
 
   // Cumulative offsets computed up front (not mutated during the map
   // below) — each arc's dash-offset is the sum of every prior arc's
-  // length, keeping render side-effect-free.
-  let cumulative = 0
-  const arcs = groups.map((group) => {
+  // (visual, floor-applied) length, keeping render side-effect-free.
+  const arcs = groups.reduce((acc, group) => {
     const fraction = pct(group.totalSeconds) / 100
-    const length = fraction * CIRCUMFERENCE
-    const arc = { group, length, offset: cumulative }
-    cumulative += length
-    return arc
-  })
+    const visualFraction = fraction > 0 ? Math.max(fraction, MIN_ARC_FRACTION) : 0
+    const length = visualFraction * CIRCUMFERENCE
+    const offset = acc.length ? acc[acc.length - 1].offset + acc[acc.length - 1].length : 0
+    return [...acc, { group, length, offset }]
+  }, [])
 
   return (
     <div className="donut-card" {...props}>
@@ -47,12 +56,14 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
           width={SIZE}
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
+          onMouseLeave={() => setActiveKey(null)}
         >
           {arcs.map(({ group, length, offset }) => {
             const ramp = CHART_COLORS[group.colorRamp] ?? []
             return (
               <circle
                 key={group.key}
+                className="donut-card-arc"
                 cx={SIZE / 2}
                 cy={SIZE / 2}
                 r={RADIUS}
@@ -62,6 +73,8 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
                 strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
                 strokeDashoffset={-offset}
                 transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
+                onMouseEnter={() => setActiveKey(group.key)}
+                onClick={() => setActiveKey((current) => (current === group.key ? null : group.key))}
               />
             )
           })}
