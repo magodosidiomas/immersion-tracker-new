@@ -12,7 +12,7 @@ import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
 import StreakCard from '../components/StreakCard'
 import {
-  PlayArrow,
+  Add,
   Schedule,
   Home as HomeIcon,
   BarChart,
