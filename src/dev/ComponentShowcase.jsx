@@ -18,6 +18,7 @@ import StreakItem from '../components/StreakItem'
 import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
+import DonutCard from '../components/DonutCard'
 import DurationInput from '../components/DurationInput'
 import Alert from '../components/Alert'
 import CalendarItem from '../components/CalendarItem'
@@ -456,6 +457,14 @@ function ComponentShowcase() {
         to expand; each opens independently.
       </p>
       <DataCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DonutCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Same groups shape as DataCard — a ring built from stacked arcs plus
+        a flat legend, no expand/collapse. Center label shows the largest
+        group by default, or pass centerLabel to override.
+      </p>
+      <DonutCard groups={DATA_CARD_SAMPLE} />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DurationInput</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

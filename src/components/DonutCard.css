@@ -1,0 +1,98 @@
+.donut-card {
+  width: 343px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-default);
+}
+
+.donut-card-ring-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  padding: var(--space-24) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-card-ring circle {
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.donut-card-center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  pointer-events: none;
+}
+
+.donut-card-center-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body-medium);
+  color: var(--color-text-primary);
+}
+
+.donut-card-center-time {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
+.donut-card-legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+}
+
+.donut-card-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.donut-card-legend-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-medium);
+  color: var(--color-text-primary);
+}
+
+.donut-card-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-small);
+  flex-shrink: 0;
+}
+
+.donut-card-legend-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.donut-card-legend-percent {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
+.donut-card-legend-time {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-primary);
+}

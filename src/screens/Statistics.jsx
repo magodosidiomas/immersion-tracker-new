@@ -3,7 +3,7 @@ import { getSessionsByLanguage } from '../db'
 import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
-import DataCard from '../components/DataCard'
+import DonutCard from '../components/DonutCard'
 import { categoryBreakdown } from '../utils/sessions'
 import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
@@ -33,7 +33,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <DataCard groups={categoryBreakdown(sessions)} />
+        <DonutCard groups={categoryBreakdown(sessions)} />
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
