@@ -19,7 +19,8 @@ import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
 import DonutCard from '../components/DonutCard'
-import ImmersionCard from '../components/ImmersionCard'
+import SkillCard from '../components/SkillCard'
+import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
@@ -474,14 +475,20 @@ function ComponentShowcase() {
         groups={DATA_CARD_SAMPLE}
       />
 
-      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ImmersionCard</h1>
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>SkillCard</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>
-        SegmentedControl (Habilidade/Formato) over a bare DonutCard. Habilidade
-        shows Simultâneo/Escuta/Leitura summed across Imersão and Imersão
-        interativa; Formato compares Imersão vs. Imersão interativa at the
-        category level.
+        No SegmentedControl — Simultâneo/Escuta/Leitura summed across
+        Imersão and Imersão interativa. Used to be the "Habilidade" tab of a
+        combined Imersão card before it got split into two.
       </p>
-      <ImmersionCard groups={DATA_CARD_SAMPLE} />
+      <SkillCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>FormatCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        No SegmentedControl — Imersão vs. Imersão interativa at the category
+        level. Used to be the "Formato" tab of the same combined card.
+      </p>
+      <FormatCard groups={DATA_CARD_SAMPLE} />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ReceptionCard</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

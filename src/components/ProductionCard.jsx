@@ -19,7 +19,7 @@ function ProductionCard({ groups = [], ...props }) {
   return (
     <DonutCard
       title="Produção"
-      description="Como seu tempo de Produção se divide entre Fala, Escrita, Conversação e Aula."
+      description="Como seu tempo de produção se divide."
       groups={subcategoryGroups}
       {...props}
     />

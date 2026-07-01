@@ -37,7 +37,7 @@ function ReceptionCard({ groups = [], ...props }) {
   return (
     <DonutCard
       title="Recepção vs. Produção"
-      description="Compara o tempo de recepção (Escuta e Leitura, de Imersão e Imersão interativa) com o tempo de Produção (Fala, Escrita, Conversação e Aula)."
+      description="Compara o tempo de recepção (escuta e leitura) com o de produção (fala e escrita)."
       groups={distribuicaoGroups}
       {...props}
     />

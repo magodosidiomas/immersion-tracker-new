@@ -4,7 +4,8 @@ import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
-import ImmersionCard from '../components/ImmersionCard'
+import SkillCard from '../components/SkillCard'
+import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
@@ -43,10 +44,11 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
         />
         <DonutCard
           title="Visão geral"
-          description="Como seu tempo se divide entre Imersão, Imersão interativa, Estudo e Produção."
+          description="Como seu tempo se divide entre as categorias."
           groups={categoryBreakdown(sessions)}
         />
-        <ImmersionCard groups={categoryBreakdown(sessions)} />
+        <SkillCard groups={categoryBreakdown(sessions)} />
+        <FormatCard groups={categoryBreakdown(sessions)} />
         <ReceptionCard groups={categoryBreakdown(sessions)} />
         <ProductionCard groups={categoryBreakdown(sessions)} />
         <StudyCard groups={categoryBreakdown(sessions)} />

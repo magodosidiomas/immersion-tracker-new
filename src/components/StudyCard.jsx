@@ -19,7 +19,7 @@ function StudyCard({ groups = [], ...props }) {
   return (
     <DonutCard
       title="Estudo"
-      description="Como seu tempo de Estudo se divide entre Vocabulário, Gramática e Pronúncia."
+      description="Como seu tempo de estudo se divide."
       groups={subcategoryGroups}
       {...props}
     />
