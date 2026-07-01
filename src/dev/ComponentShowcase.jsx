@@ -20,6 +20,7 @@ import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
+import ProductionCard from '../components/ProductionCard'
 import DurationInput from '../components/DurationInput'
 import Alert from '../components/Alert'
 import CalendarItem from '../components/CalendarItem'
@@ -474,6 +475,14 @@ function ComponentShowcase() {
         compares Imersão vs. Imersão interativa at the category level.
       </p>
       <ImmersionCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ProductionCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        Distribuição compares Recepção (Escuta+Leitura from Imersão and
+        Imersão interativa) vs. Produção's full total; Tipo shows Produção's
+        own subcategories shaded from the pink ramp.
+      </p>
+      <ProductionCard groups={DATA_CARD_SAMPLE} />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DurationInput</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

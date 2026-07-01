@@ -5,6 +5,7 @@ import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
 import ImmersionCard from '../components/ImmersionCard'
+import ProductionCard from '../components/ProductionCard'
 import { categoryBreakdown } from '../utils/sessions'
 import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
@@ -36,6 +37,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
         <h1 className="statistics-title">Estatísticas</h1>
         <DonutCard groups={categoryBreakdown(sessions)} />
         <ImmersionCard groups={categoryBreakdown(sessions)} />
+        <ProductionCard groups={categoryBreakdown(sessions)} />
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
