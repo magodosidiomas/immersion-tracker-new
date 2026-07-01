@@ -5,7 +5,7 @@ import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import SelectionChip from '../components/SelectionChip'
 import SessionForm from '../components/SessionForm'
-import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import Alert from '../components/Alert'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession } from '../db'
@@ -61,6 +61,16 @@ function NewSession({ timer, onClose }) {
     setPhase('finish')
   }
 
+  // Registro manual: skips the timer entirely and opens the same
+  // session-details form, seeded with "now" for both ends (duration
+  // 0 — shown neutral, not as an error, until the user edits it; see
+  // SessionForm's `touched` gate).
+  function handleManualEntry() {
+    const now = new Date()
+    setFinishDraft({ startAt: now, durationSeconds: 0 })
+    setPhase('finish')
+  }
+
   function openCategorySheet() {
     setPendingCategory(timer.category ?? CATEGORIES[0].key)
     setPendingSubcategory(timer.subcategory ?? CATEGORIES[0].subcategories[0].key)
@@ -92,7 +102,7 @@ function NewSession({ timer, onClose }) {
         draft={finishDraft}
         category={timer.category}
         subcategory={timer.subcategory}
-        languageId={timer.languageId}
+        languageId={timer.languageId ?? activeLanguageId}
         onBack={() => setPhase('timer')}
         onDiscard={() => {
           timer.clearDraft()
@@ -128,9 +138,14 @@ function NewSession({ timer, onClose }) {
       </div>
       <div className="new-session-footer">
         {timer.status === 'idle' && (
-          <Button leadingIcon={<PlayArrow />} fullWidth disabled={!activeLanguageId} onClick={() => timer.start(activeLanguageId)}>
-            Iniciar
-          </Button>
+          <>
+            <Button leadingIcon={<PlayArrow />} fullWidth disabled={!activeLanguageId} onClick={() => timer.start(activeLanguageId)}>
+              Iniciar
+            </Button>
+            <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={handleManualEntry}>
+              Registro manual
+            </Button>
+          </>
         )}
         {timer.status === 'running' && (
           <>

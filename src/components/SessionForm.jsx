@@ -80,6 +80,12 @@ function SessionForm({
   // Track which date field was last changed to show contextual error copy.
   const [lastChangedDate, setLastChangedDate] = useState(null)
 
+  // Becomes true after the user's first successful edit to
+  // duração/início/fim/data. Before that, an invalid duration (e.g. a
+  // fresh manual entry, or a sub-1-min timer) is shown as neutral, not
+  // an error — nothing was "wrong" yet, the user just hasn't set it.
+  const [touched, setTouched] = useState(false)
+
   const [selectedCategory, setSelectedCategory] = useState(initialCategory ?? CATEGORIES[0].key)
   const [selectedSubcategory, setSelectedSubcategory] = useState(
     initialSubcategory ?? CATEGORIES[0].subcategories[0].key,
@@ -106,13 +112,15 @@ function SessionForm({
   const isValid = durationSeconds >= 60
 
   let formAlert = null
-  if (durationSeconds < 0) {
-    formAlert =
-      lastChangedDate === 'end'
-        ? 'Data final precisa ser depois da data de início. Ajuste as datas para continuar.'
-        : 'Data de início precisa ser antes da data final. Ajuste as datas para continuar.'
-  } else if (durationSeconds < 60) {
-    formAlert = 'Início e término precisam ter pelo menos 1 minuto de diferença.'
+  if (touched) {
+    if (durationSeconds < 0) {
+      formAlert =
+        lastChangedDate === 'end'
+          ? 'Data final precisa ser depois da data de início. Ajuste as datas para continuar.'
+          : 'Data de início precisa ser antes da data final. Ajuste as datas para continuar.'
+    } else if (durationSeconds < 60) {
+      formAlert = 'Início e término precisam ter pelo menos 1 minuto de diferença.'
+    }
   }
 
   useEffect(() => {
@@ -145,6 +153,7 @@ function SessionForm({
     setEndAt(new Date(startAt.getTime() + newDuration * 1000))
     setDurationError(null)
     setEditingDuration(false)
+    setTouched(true)
   }
 
   // --- Start time handlers ---
@@ -165,6 +174,7 @@ function SessionForm({
     setStartAt(newStartAt)
     setStartTimeError(null)
     setEditingStart(false)
+    setTouched(true)
   }
 
   function handleCancelStart() {
@@ -190,6 +200,7 @@ function SessionForm({
     setEndAt(newEndAt)
     setEndTimeError(null)
     setEditingEnd(false)
+    setTouched(true)
   }
 
   function handleCancelEnd() {
@@ -203,12 +214,14 @@ function SessionForm({
     if (!e.target.value) return
     setStartAt(setDatePortion(startAt, e.target.value))
     setLastChangedDate('start')
+    setTouched(true)
   }
 
   function handleEndDateChange(e) {
     if (!e.target.value) return
     setEndAt(setDatePortion(endAt, e.target.value))
     setLastChangedDate('end')
+    setTouched(true)
   }
 
   // --- Category handlers ---
@@ -246,7 +259,7 @@ function SessionForm({
           >
             <span
               className="finish-session-duration-display"
-              data-invalid={!isValid ? 'true' : undefined}
+              data-invalid={touched && !isValid ? 'true' : undefined}
             >
               {isValid ? formatHMS(durationSeconds) : '--:--:--'}
             </span>
