@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SegmentedControl from './SegmentedControl'
 import DonutCard from './DonutCard'
+import CardTitleRow from './CardTitleRow'
 import './ImmersionCard.css'
 
 // "Imersão" stats card — a SegmentedControl switching between two
@@ -43,7 +44,10 @@ function ImmersionCard({ groups = [], ...props }) {
 
   return (
     <div className="immersion-card-group">
-      <p className="immersion-card-title">Imersão</p>
+      <CardTitleRow
+        title="Imersão"
+        description="Habilidade mostra a divisão entre Simultâneo, Escuta e Leitura dentro da Imersão. Tipo compara o tempo de Imersão com o de Imersão interativa."
+      />
       <div className="immersion-card" {...props}>
         <SegmentedControl options={TABS} value={tab} onChange={setTab} />
         <DonutCard bare groups={tab === 'habilidade' ? habilidadeGroups : tipoGroups} />

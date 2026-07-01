@@ -49,13 +49,21 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenNewSession, 
 
   useEffect(() => {
     if (!activeId) return
-    setSessionError(false)
+    let cancelled = false
     getSessionsByLanguage(activeId)
-      .then(setSessions)
+      .then((data) => {
+        if (cancelled) return
+        setSessions(data)
+        setSessionError(false)
+      })
       .catch((err) => {
+        if (cancelled) return
         console.error('Erro ao carregar sessões:', err)
         setSessionError(true)
       })
+    return () => {
+      cancelled = true
+    }
   }, [activeId])
 
   const groups = groupSessionsByDate(sessions)

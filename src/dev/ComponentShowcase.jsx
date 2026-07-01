@@ -467,7 +467,11 @@ function ComponentShowcase() {
         a flat legend, no expand/collapse. Center label shows the largest
         group by default, or pass centerLabel to override.
       </p>
-      <DonutCard groups={DATA_CARD_SAMPLE} />
+      <DonutCard
+        title="Visão geral"
+        description="Como seu tempo se divide entre as categorias."
+        groups={DATA_CARD_SAMPLE}
+      />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ImmersionCard</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

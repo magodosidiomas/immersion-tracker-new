@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SegmentedControl from './SegmentedControl'
 import DonutCard from './DonutCard'
+import CardTitleRow from './CardTitleRow'
 import './ProductionCard.css'
 
 // "Produção" stats card — a SegmentedControl over a bare DonutCard:
@@ -49,7 +50,10 @@ function ProductionCard({ groups = [], ...props }) {
 
   return (
     <div className="production-card-group">
-      <p className="production-card-title">Produção</p>
+      <CardTitleRow
+        title="Produção"
+        description="Distribuição compara o tempo de recepção (Escuta e Leitura, de Imersão e Imersão interativa) com o tempo de Produção. Tipo mostra a divisão entre Fala, Escrita, Conversação e Aula."
+      />
       <div className="production-card" {...props}>
         <SegmentedControl options={TABS} value={tab} onChange={setTab} />
         <DonutCard bare groups={tab === 'distribuicao' ? distribuicaoGroups : tipoGroups} />

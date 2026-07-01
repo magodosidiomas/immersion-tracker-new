@@ -40,7 +40,11 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
         />
-        <DonutCard title="Visão geral" groups={categoryBreakdown(sessions)} />
+        <DonutCard
+          title="Visão geral"
+          description="Como seu tempo se divide entre Imersão, Imersão interativa, Estudo e Produção."
+          groups={categoryBreakdown(sessions)}
+        />
         <ImmersionCard groups={categoryBreakdown(sessions)} />
         <ProductionCard groups={categoryBreakdown(sessions)} />
         <StudyCard groups={categoryBreakdown(sessions)} />
