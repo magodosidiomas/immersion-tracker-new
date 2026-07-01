@@ -24,6 +24,15 @@
   color: var(--color-text-primary);
 }
 
+.statistics-section-title {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
 /* Calendar ships with Figma's fixed export width (343px) since it
    isn't placed in a real layout anywhere else yet — same override
    approach Home.css uses for StreakCard/NumericCard. */
@@ -38,12 +47,7 @@
 .statistics-cards {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
-}
-
-.statistics-cards > * + * {
-  border-top: 1px solid var(--color-border-subtle);
-  padding-top: var(--space-24);
+  gap: var(--space-32);
 }
 
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)

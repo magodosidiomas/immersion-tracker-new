@@ -28,8 +28,7 @@ function SkillCard({ groups = [], ...props }) {
 
   return (
     <DonutCard
-      title="Habilidade"
-      description="Quanto tempo você dedica a cada habilidade, somando imersão e imersão interativa."
+      title="Leitura vs. Escuta"
       groups={skillGroups}
       {...props}
     />

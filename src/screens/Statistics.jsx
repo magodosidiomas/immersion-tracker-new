@@ -38,16 +38,13 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
+        <p className="statistics-section-title">Histórico</p>
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
         />
         <div className="statistics-cards">
-          <DonutCard
-            title="Visão geral"
-            description="Como seu tempo se divide entre as categorias."
-            groups={categoryBreakdown(sessions)}
-          />
+          <DonutCard title="Tempo por categoria" groups={categoryBreakdown(sessions)} />
           <SkillCard groups={categoryBreakdown(sessions)} />
           <FormatCard groups={categoryBreakdown(sessions)} />
           <ReceptionCard groups={categoryBreakdown(sessions)} />
