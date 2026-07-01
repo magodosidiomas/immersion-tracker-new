@@ -28,7 +28,7 @@ function ReceptionCard({ groups = [], ...props }) {
     {
       key: 'producao',
       label: 'Produção',
-      description: 'Fala, escrita, conversação, aula',
+      description: 'Fala, escrita',
       colorRamp: 'data-pink',
       totalSeconds: producao?.totalSeconds ?? 0,
     },
