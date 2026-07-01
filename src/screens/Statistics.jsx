@@ -36,14 +36,14 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <DonutCard title="Visão geral" groups={categoryBreakdown(sessions)} />
-        <ImmersionCard groups={categoryBreakdown(sessions)} />
-        <ProductionCard groups={categoryBreakdown(sessions)} />
-        <StudyCard groups={categoryBreakdown(sessions)} />
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
         />
+        <DonutCard title="Visão geral" groups={categoryBreakdown(sessions)} />
+        <ImmersionCard groups={categoryBreakdown(sessions)} />
+        <ProductionCard groups={categoryBreakdown(sessions)} />
+        <StudyCard groups={categoryBreakdown(sessions)} />
       </div>
       <div className="statistics-bottom-layer">
         <BottomNav
