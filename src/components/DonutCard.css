@@ -10,6 +10,12 @@
   background: var(--bg-surface-default);
 }
 
+.donut-card-bare {
+  width: 100%;
+  padding: 0;
+  background: none;
+}
+
 .donut-card-ring-wrap {
   position: relative;
   width: 220px;

@@ -19,6 +19,7 @@ import StreakItemGroup from '../components/StreakItemGroup'
 import StreakCard from '../components/StreakCard'
 import DataCard from '../components/DataCard'
 import DonutCard from '../components/DonutCard'
+import ImmersionCard from '../components/ImmersionCard'
 import DurationInput from '../components/DurationInput'
 import Alert from '../components/Alert'
 import CalendarItem from '../components/CalendarItem'
@@ -465,6 +466,14 @@ function ComponentShowcase() {
         group by default, or pass centerLabel to override.
       </p>
       <DonutCard groups={DATA_CARD_SAMPLE} />
+
+      <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>ImmersionCard</h1>
+      <p style={{ color: 'var(--color-text-tertiary)' }}>
+        SegmentedControl (Habilidade/Tipo) over a bare DonutCard. Habilidade
+        shows Imersão's own subcategories shaded from the violet ramp; Tipo
+        compares Imersão vs. Imersão interativa at the category level.
+      </p>
+      <ImmersionCard groups={DATA_CARD_SAMPLE} />
 
       <h1 style={{ color: 'var(--color-text-primary)', marginTop: 48 }}>DurationInput</h1>
       <p style={{ color: 'var(--color-text-tertiary)' }}>

@@ -22,17 +22,16 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 // visual; the legend/percent always show the real number.
 const MIN_ARC_FRACTION = 0.025
 
-function DonutCard({ groups = [], centerLabel, ...props }) {
+function DonutCard({ groups = [], centerLabel, bare = false, ...props }) {
   const [activeKey, setActiveKey] = useState(null)
 
-  const grandTotal = groups.reduce((sum, group) => sum + group.totalSeconds, 0)
+  const sortedGroups = [...groups].sort((a, b) => b.totalSeconds - a.totalSeconds)
+
+  const grandTotal = sortedGroups.reduce((sum, group) => sum + group.totalSeconds, 0)
   const pct = (seconds) => (grandTotal ? (seconds / grandTotal) * 100 : 0)
 
-  const top = groups.reduce(
-    (best, group) => (group.totalSeconds > (best?.totalSeconds ?? -1) ? group : best),
-    null,
-  )
-  const active = groups.find((group) => group.key === activeKey)
+  const top = sortedGroups[0] ?? null
+  const active = sortedGroups.find((group) => group.key === activeKey)
   const displayed = centerLabel ?? active ?? top
   const label = displayed?.label ?? '—'
   const time = displayed?.totalSeconds ?? 0
@@ -40,7 +39,7 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
   // Cumulative offsets computed up front (not mutated during the map
   // below) — each arc's dash-offset is the sum of every prior arc's
   // (visual, floor-applied) length, keeping render side-effect-free.
-  const arcs = groups.reduce((acc, group) => {
+  const arcs = sortedGroups.reduce((acc, group) => {
     const fraction = pct(group.totalSeconds) / 100
     const visualFraction = fraction > 0 ? Math.max(fraction, MIN_ARC_FRACTION) : 0
     const length = visualFraction * CIRCUMFERENCE
@@ -49,7 +48,7 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
   }, [])
 
   return (
-    <div className="donut-card" {...props}>
+    <div className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
       <div className="donut-card-ring-wrap">
         <svg
           className="donut-card-ring"
@@ -67,7 +66,7 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
                 cy={SIZE / 2}
                 r={RADIUS}
                 fill="none"
-                stroke={ramp[0]}
+                stroke={ramp[group.rampIndex ?? 0]}
                 strokeWidth={STROKE}
                 strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
                 strokeDashoffset={-offset}
@@ -86,12 +85,15 @@ function DonutCard({ groups = [], centerLabel, ...props }) {
       </div>
 
       <div className="donut-card-legend">
-        {groups.map((group) => {
+        {sortedGroups.map((group) => {
           const ramp = CHART_COLORS[group.colorRamp] ?? []
           return (
             <div className="donut-card-legend-row" key={group.key}>
               <span className="donut-card-legend-label">
-                <span className="donut-card-dot" style={{ backgroundColor: ramp[0] }} />
+                <span
+                  className="donut-card-dot"
+                  style={{ backgroundColor: ramp[group.rampIndex ?? 0] }}
+                />
                 {group.label}
               </span>
               <span className="donut-card-legend-meta">
