@@ -8,7 +8,7 @@ import Button from './Button'
 import Alert from './Alert'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import { CONTENT_TYPES } from '../data/contentTypes'
-import { Add, ChevronRight, Edit, Settings } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Add, ChevronRight, ContentPaste, Edit, Settings } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
 
 // The "Novo/editar conteúdo" form — same fields whether creating or
@@ -125,6 +125,7 @@ function ContentForm({
               placeholder="Cole o link do YouTube"
               value={link}
               onChange={(event) => setLink(event.target.value)}
+              trailingIcon={<ContentPaste />}
             />
             {title && (
               <InputField
@@ -146,6 +147,7 @@ function ContentForm({
               value={link}
               onChange={(event) => setLink(event.target.value)}
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
+              trailingIcon={<ContentPaste />}
             />
             <InputField
               label="Título"
@@ -165,6 +167,7 @@ function ContentForm({
               placeholder="Cole o link do site"
               value={link}
               onChange={(event) => setLink(event.target.value)}
+              trailingIcon={<ContentPaste />}
             />
             <InputField
               label="Título"
@@ -242,15 +245,17 @@ function ContentForm({
           <>
             <InputField
               label="Título"
-              placeholder="Nome do conteúdo"
+              placeholder="Coloque o título"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              trailingIcon={<Edit />}
             />
             <InputField
               label="Link (opcional)"
-              placeholder="Cole um link, se houver"
+              placeholder="Cole o link"
               value={link}
               onChange={(event) => setLink(event.target.value)}
+              trailingIcon={<ContentPaste />}
             />
           </>
         )}
