@@ -1,13 +1,14 @@
-// Content types for the Biblioteca. Icon fallback shown in Thumbnail
-// when a content item has no cover image (e.g. no YouTube/book cover
-// found). Anime/manga map onto Série/Livro — there's no separate
-// sourceType, per design decision.
+// Content types for the "Novo/editar conteúdo" form and the Biblioteca.
+// Keys match the category chips in Figma exactly (not just icon
+// fallback groups — the type also decides which fields the form
+// shows: link+autofill for youtube/podcast, search+create for
+// serie/filme, título+autor for livro, and so on).
 export const CONTENT_TYPES = [
-  { key: 'video', label: 'Vídeo', icon: 'Videocam' },
+  { key: 'youtube', label: 'YouTube', icon: 'Videocam' },
   { key: 'podcast', label: 'Podcast', icon: 'Mic' },
   { key: 'serie', label: 'Série', icon: 'Tv' },
   { key: 'filme', label: 'Filme', icon: 'Movie' },
   { key: 'livro', label: 'Livro', icon: 'Bookmark' },
-  { key: 'artigo', label: 'Artigo', icon: 'Newspaper' },
+  { key: 'website', label: 'Website', icon: 'Newspaper' },
   { key: 'outro', label: 'Outro', icon: 'Apps' },
 ]
