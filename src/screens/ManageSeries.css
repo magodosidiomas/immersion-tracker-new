@@ -1,0 +1,24 @@
+.manage-series {
+  display: flex;
+  flex-direction: column;
+  height: var(--app-height, 100dvh);
+  background: var(--bg-surface-base);
+}
+
+.manage-series-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 16px;
+}
+
+.manage-series-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-card);
+}

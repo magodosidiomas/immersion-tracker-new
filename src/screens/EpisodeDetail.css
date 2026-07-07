@@ -1,0 +1,60 @@
+.episode-detail {
+  display: flex;
+  flex-direction: column;
+  height: var(--app-height, 100dvh);
+  background: var(--bg-surface-base);
+}
+
+.episode-detail-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 16px;
+}
+
+.episode-detail-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
+.episode-detail-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.episode-detail-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+.episode-detail-sessions-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-card);
+}
+
+.episode-detail-sessions-empty {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label-medium);
+  color: var(--color-text-primary);
+}
