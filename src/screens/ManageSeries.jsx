@@ -9,12 +9,14 @@ import { ArrowBack, Add, Edit, Delete } from '@nine-thirty-five/material-symbols
 import './ManageSeries.css'
 
 // Shared "manage catalog" screen for séries and filmes (kind picks the
-// copy and whether rows are navigable). Séries rows open the episodes
-// screen on tap; filmes have no episodes, so their rows are inert
-// outside the edit/delete icons. The same rename BottomSheet is reused
-// for "add new" (renameTarget.id is null in that case) rather than
-// building a second near-identical sheet.
-function ManageSeries({ kind = 'serie', items = [], onBack, onRename, onDelete, onCreate, onOpenEpisodes }) {
+// copy and navigation). Séries rows open the episodes screen — pencil
+// renames, since there's still a name to edit at that layer. Filmes
+// skip the episódios layer entirely: both tap and pencil go straight
+// to the "Sessões" screen for that filme (there's nothing to rename
+// mid-flow, only via "+ Adicionar filme"'s own name entry). The same
+// rename BottomSheet is reused for "add new" (renameTarget.id is null
+// in that case) rather than building a second near-identical sheet.
+function ManageSeries({ kind = 'serie', items = [], onBack, onRename, onDelete, onCreate, onOpenEpisodes, onOpenSessions }) {
   const [query, setQuery] = useState('')
   const [renameTarget, setRenameTarget] = useState(null)
   const [renameValue, setRenameValue] = useState('')
@@ -84,9 +86,9 @@ function ManageSeries({ kind = 'serie', items = [], onBack, onRename, onDelete, 
               key={item.id}
               label={item.label}
               description={item.sessionCount ? `${item.sessionCount} sessões` : null}
-              onClick={isSerie ? () => onOpenEpisodes(item) : null}
+              onClick={isSerie ? () => onOpenEpisodes(item) : () => onOpenSessions(item)}
               editIcon={<Edit />}
-              onEdit={() => openRename(item)}
+              onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
               deleteIcon={<Delete />}
               onDelete={() => setDeleteTarget(item)}
               divider={index < items.length - 1}
