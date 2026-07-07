@@ -8,8 +8,26 @@ import Button from './Button'
 import Alert from './Alert'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import { CONTENT_TYPES } from '../data/contentTypes'
-import { Add, ChevronRight, ContentPaste, Edit, Settings } from '@nine-thirty-five/material-symbols-react/outlined'
+import {
+  Add,
+  ChevronRight,
+  ContentPaste,
+  Edit,
+  Settings,
+  Videocam,
+  Mic,
+  Tv,
+  Movie,
+  Bookmark,
+  Newspaper,
+  Apps,
+} from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
+
+// Icon fallback per content type (see src/data/contentTypes.js) —
+// used whenever there's no thumbnail image yet (autofill hasn't
+// returned one, or the type doesn't fetch one at all).
+const TYPE_ICONS = { Videocam, Mic, Tv, Movie, Bookmark, Newspaper, Apps }
 
 // The "Novo/editar conteúdo" form — same fields whether creating or
 // editing (only the save target differs, same split as SessionForm/
@@ -66,6 +84,7 @@ function ContentForm({
     onTitle: setTitle,
   })
   const displayThumbnail = autofillsFromLink ? autofill.thumbnail || thumbnail : thumbnail
+  const FallbackIcon = TYPE_ICONS[CONTENT_TYPES.find((item) => item.key === type)?.icon]
 
   function handleTypeChange(key) {
     setType(key)
@@ -135,7 +154,7 @@ function ContentForm({
                 trailingIcon={<Edit />}
               />
             )}
-            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
+            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
           </>
         )}
 
@@ -156,7 +175,7 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
+            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
           </>
         )}
 
@@ -176,7 +195,7 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
+            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
           </>
         )}
 
