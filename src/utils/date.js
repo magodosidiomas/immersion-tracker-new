@@ -30,6 +30,19 @@ export function formatFullDate(dateStr) {
   return `${date.getDate()} de ${MONTH_LABELS_FULL[date.getMonth()].toLowerCase()}, ${date.getFullYear()}`
 }
 
+// "Hoje" / "Ontem" / "13/04" — day-group header shared by anything
+// that buckets rows by calendar day (content lists, history). dateStr
+// is always a stored 'YYYY-MM-DD'; compared as strings so there's no
+// timezone drift from going through Date objects for the common cases.
+export function formatGroupLabel(dateStr, todayStr) {
+  if (dateStr === todayStr) return 'Hoje'
+  const yesterday = parseDateInput(todayStr)
+  yesterday.setDate(yesterday.getDate() - 1)
+  if (dateStr === formatDateInput(yesterday)) return 'Ontem'
+  const [, month, day] = dateStr.split('-')
+  return `${day}/${month}`
+}
+
 // "1:32:14" past an hour, "32:14" under it — shared by the timer
 // screen's big readout and TimerWidget's compact one, so both always
 // agree on formatting.
