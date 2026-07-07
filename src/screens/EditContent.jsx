@@ -23,6 +23,7 @@ function EditContent({
   onSelectRelated,
   onCreateRelated,
   onManageRelated,
+  existingContents = [],
   onBack,
   onSave,
   onDelete,
@@ -68,6 +69,8 @@ function EditContent({
         onSelectRelated={onSelectRelated}
         onCreateRelated={onCreateRelated}
         onManageRelated={onManageRelated}
+        existingContents={existingContents}
+        excludeId={content?.id}
         onSave={handleSave}
         saving={saving}
         secondaryButton={

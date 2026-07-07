@@ -1,6 +1,7 @@
-// Link detection helpers, ported from the old app's content-form.js.
-// Kept framework-free (no React) so they're easy to unit-reason-about
-// and reusable outside the hook if needed later.
+// Link detection + metadata-fetch helpers. YouTube/Spotify parsing is
+// ported from the old app's content-form.js; website preview uses
+// Microlink (api.microlink.io), a free, keyless, CORS-enabled metadata
+// API — no cost, no account, matches the R$0 constraint.
 
 export function isYouTubeUrl(url) {
   try {
@@ -19,6 +20,14 @@ export function isSpotifyUrl(url) {
   }
 }
 
+export function isHttpUrl(url) {
+  try {
+    return ['http:', 'https:'].includes(new URL(url.trim()).protocol)
+  } catch {
+    return false
+  }
+}
+
 export function extractYouTubeId(url) {
   try {
     const u = new URL(url.trim())
@@ -32,12 +41,22 @@ export function extractYouTubeId(url) {
   }
 }
 
-// Returns 'youtube' | 'spotify' | null — used to pick the oEmbed
-// endpoint and to auto-select the matching category chip.
-export function detectLinkSource(url) {
+// Given the form's selected category (not sniffed from the URL — the
+// person already picked the chip) and the link typed, decides which
+// metadata source (if any) applies:
+//   - youtube: only a real YouTube URL triggers a fetch
+//   - podcast: Spotify (oEmbed) or YouTube Music (reuses the YouTube
+//     oEmbed endpoint) links trigger a fetch
+//   - website: any http(s) link triggers a Microlink fetch
+export function sourceForType(type, url) {
   if (!url || !url.trim()) return null
-  if (isYouTubeUrl(url)) return 'youtube'
-  if (isSpotifyUrl(url)) return 'spotify'
+  if (type === 'youtube') return isYouTubeUrl(url) ? 'youtube' : null
+  if (type === 'podcast') {
+    if (isSpotifyUrl(url)) return 'spotify'
+    if (isYouTubeUrl(url)) return 'youtube'
+    return null
+  }
+  if (type === 'website') return isHttpUrl(url) ? 'website' : null
   return null
 }
 
@@ -46,10 +65,20 @@ const OEMBED_ENDPOINTS = {
   spotify: (url) => `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`,
 }
 
-// Fetches { title, thumbnail } via oEmbed for a detected source.
-// Throws on network/parse failure or AbortError — caller decides how
-// to handle (the hook swallows AbortError, surfaces the rest as null).
-export async function fetchOEmbed(url, source, signal) {
+// Fetches { title, thumbnail } for a detected source. Throws on
+// network/parse failure or AbortError — the caller (the hook) swallows
+// AbortError and surfaces the rest as "no metadata found".
+export async function fetchLinkMetadata(url, source, signal) {
+  if (source === 'website') {
+    const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, { signal })
+    if (!res.ok) throw new Error('Microlink request failed')
+    const { data } = await res.json()
+    return {
+      title: data?.title || null,
+      thumbnail: data?.image?.url || null,
+    }
+  }
+
   const buildUrl = OEMBED_ENDPOINTS[source]
   if (!buildUrl) return null
   const res = await fetch(buildUrl(url), { signal })

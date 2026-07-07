@@ -5,6 +5,7 @@ import SearchCreateField from './SearchCreateField'
 import ListItem from './ListItem'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
+import Alert from './Alert'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import { Add, ChevronRight, Edit, Settings } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -44,6 +45,8 @@ function ContentForm({
   onSelectRelated,
   onCreateRelated,
   onManageRelated,
+  existingContents = [],
+  excludeId = null,
   onSave,
   saving = false,
   primaryLabel = 'Salvar',
@@ -57,8 +60,8 @@ function ContentForm({
   const [season, setSeason] = useState(initialSeason)
   const [episode, setEpisode] = useState(initialEpisode)
 
-  const autofillsFromLink = type === 'youtube' || type === 'podcast'
-  const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', {
+  const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
+  const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
     hasTitle: title.trim().length > 0,
     onTitle: setTitle,
   })
@@ -68,7 +71,17 @@ function ContentForm({
     setType(key)
   }
 
+  const trimmedTitle = title.trim().toLowerCase()
+  const trimmedLink = link.trim().toLowerCase()
+  const isDuplicate = existingContents.some((item) => {
+    if (item.id === excludeId) return false
+    const sameLink = trimmedLink && item.link?.trim().toLowerCase() === trimmedLink
+    const sameTitle = trimmedTitle && item.title?.trim().toLowerCase() === trimmedTitle
+    return sameLink || sameTitle
+  })
+
   function handleSave() {
+    if (isDuplicate) return
     onSave({
       type,
       link,
@@ -105,25 +118,62 @@ function ContentForm({
           </div>
         </div>
 
-        {(type === 'youtube' || type === 'podcast' || type === 'website') && (
+        {type === 'youtube' && (
           <>
             <InputField
               label="Link"
-              placeholder={type === 'website' ? 'Cole o link do site' : `Cole o link do ${type === 'youtube' ? 'YouTube' : 'podcast'}`}
+              placeholder="Cole o link do YouTube"
               value={link}
               onChange={(event) => setLink(event.target.value)}
-              hint={autofillsFromLink ? 'Links do YouTube ou Spotify preenchem título e capa automaticamente' : null}
+            />
+            {title && (
+              <InputField
+                label="Título"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                trailingIcon={<Edit />}
+              />
+            )}
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
+          </>
+        )}
+
+        {type === 'podcast' && (
+          <>
+            <InputField
+              label="Link"
+              placeholder="Cole o link do podcast"
+              value={link}
+              onChange={(event) => setLink(event.target.value)}
+              hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
             />
             <InputField
               label="Título"
-              placeholder="Nome do conteúdo"
+              placeholder="Título do podcast"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            {displayThumbnail && (
-              <Thumbnail size="lg" src={displayThumbnail} alt={title} />
-            )}
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
+          </>
+        )}
+
+        {type === 'website' && (
+          <>
+            <InputField
+              label="Link"
+              placeholder="Cole o link do site"
+              value={link}
+              onChange={(event) => setLink(event.target.value)}
+            />
+            <InputField
+              label="Título"
+              placeholder="Adicione um título"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              trailingIcon={<Edit />}
+            />
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
         )}
 
@@ -189,12 +239,24 @@ function ContentForm({
         )}
 
         {type === 'outro' && (
-          <InputField
-            label="Título"
-            placeholder="Nome do conteúdo"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
+          <>
+            <InputField
+              label="Título"
+              placeholder="Nome do conteúdo"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+            <InputField
+              label="Link (opcional)"
+              placeholder="Cole um link, se houver"
+              value={link}
+              onChange={(event) => setLink(event.target.value)}
+            />
+          </>
+        )}
+
+        {isDuplicate && (
+          <Alert type="error" description="Já existe um conteúdo com esse título ou link." />
         )}
 
         <div className="content-form-divider" />
@@ -224,7 +286,7 @@ function ContentForm({
       </div>
 
       <div className="content-form-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving}>
+        <Button fullWidth onClick={handleSave} disabled={saving || isDuplicate}>
           {primaryLabel}
         </Button>
         {secondaryButton}
