@@ -80,6 +80,17 @@
   color: var(--color-text-tertiary);
 }
 
+/* Used by fields the app derives itself (e.g. the auto-generated
+   título for Série) rather than something the user can edit. */
+.input-field-control:has(.input-field-input:disabled) {
+  border-color: var(--color-border-subtle);
+}
+
+.input-field-input:disabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
 .input-field-hint {
   width: 100%;
   font-family: var(--font-family-main);

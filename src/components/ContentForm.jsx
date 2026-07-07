@@ -216,7 +216,7 @@ function ContentForm({
                   label="Título"
                   value={derivedTitle}
                   hint="Gerado automaticamente"
-                  readOnly
+                  disabled
                 />
               </>
             )}
