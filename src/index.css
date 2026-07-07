@@ -42,4 +42,18 @@ body {
   min-height: 100dvh;
   margin: 0 auto;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* LinkContent/LinkSession render as an overlay on top of whatever
+   screen opened them (NewSession's finish phase, EditSession) instead
+   of replacing it, so that screen's own state survives the round
+   trip. position: absolute on #root (not position: fixed) since fixed
+   breaks out of the 480px centered column on wide viewports — #root
+   is the positioning context here instead. */
+.picker-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: var(--bg-surface-base);
 }

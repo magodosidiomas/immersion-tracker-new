@@ -43,8 +43,9 @@
 }
 
 .content-form-divider {
-  width: 100%;
+  width: auto;
   height: 1px;
+  margin: 0 -16px;
   background: var(--color-border-subtle);
 }
 

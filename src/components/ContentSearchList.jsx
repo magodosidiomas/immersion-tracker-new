@@ -80,6 +80,8 @@ function ContentSearchList({
         ))}
       </div>
 
+      <div className="content-search-list-divider" />
+
       {groups.length === 0 ? (
         <EmptyState
           icon={<Book />}

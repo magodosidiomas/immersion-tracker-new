@@ -29,9 +29,11 @@ import './EditContent.css'
 // sessions) and owns the actual db writes — ContentForm/SearchCreateField
 // stay dumb, this is where the data lives.
 //
-// Known limitation: linking a session before the very first Salvar
-// isn't wired yet (there's no contentId to link against until then) —
-// Vincular sessão only does something once the content already exists.
+// New content has no contentId yet to link sessions against, so
+// Vincular sessão stages picks in `pendingSessions` (shown immediately
+// via linkedSessions, same as if they were already linked) and the
+// actual sessionContents rows are written once Salvar creates the
+// content and its real id exists.
 function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenManage }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
@@ -39,6 +41,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   const [seriesItems, setSeriesItems] = useState([])
   const [movieItems, setMovieItems] = useState([])
   const [linkedSessions, setLinkedSessions] = useState([])
+  const [pendingSessions, setPendingSessions] = useState([])
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -83,20 +86,28 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     setSaving(true)
     const { type, link, title, author, thumbnail, season, episode, relatedId } = fields
 
+    let savedContentId = contentId
     if (type === 'serie') {
       if (relatedId && season && episode) {
-        await saveSerieContent(relatedId, Number(season), Number(episode))
+        const saved = await saveSerieContent(relatedId, Number(season), Number(episode))
+        savedContentId = saved?.id ?? savedContentId
       }
     } else if (type === 'filme') {
       if (relatedId) {
         // The filme's content row already exists (created alongside
         // its catalog entry) — nothing further to save here.
-        await getFilmeContent(relatedId)
+        const saved = await getFilmeContent(relatedId)
+        savedContentId = saved?.id ?? savedContentId
       }
     } else if (isNew) {
-      await createContent({ languageId, type, link, title, author, thumbnail })
+      const saved = await createContent({ languageId, type, link, title, author, thumbnail })
+      savedContentId = saved.id
     } else {
       await updateContent({ ...content, type, link, title, author, thumbnail })
+    }
+
+    if (isNew && savedContentId && pendingSessions.length > 0) {
+      await Promise.all(pendingSessions.map((session) => linkSessionContent(session.id, savedContentId)))
     }
     onSaved()
   }
@@ -118,11 +129,24 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     onSaved()
   }
 
+  // New content has no id yet — stage the pick locally (shown right
+  // away via linkedSessions) instead of writing to sessionContents;
+  // handleSave links every staged session once the content is created.
   function handleAddSession() {
-    if (!contentId) return
-    onOpenLinkSession(async (session) => {
-      await linkSessionContent(session.id, contentId)
-      refreshLinkedSessions(contentId)
+    onOpenLinkSession((session) => {
+      if (!contentId) {
+        setPendingSessions((current) => (current.some((s) => s.id === session.id) ? current : [...current, session]))
+        setLinkedSessions((current) => [
+          ...current,
+          {
+            id: session.id,
+            label: sessionLabel(session),
+            description: `${formatGroupLabel(session.date, formatDateInput(new Date()))} · ${formatDurationShort(session.durationSeconds)}`,
+          },
+        ])
+        return
+      }
+      linkSessionContent(session.id, contentId).then(() => refreshLinkedSessions(contentId))
     })
   }
 
@@ -137,34 +161,37 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           </button>
         }
       />
-      <ContentForm
-        initialType={content?.type}
-        initialLink={content?.link}
-        initialTitle={content?.title}
-        initialAuthor={content?.author}
-        initialThumbnail={content?.thumbnail}
-        initialSeason={content?.season}
-        initialEpisode={content?.episode}
-        initialRelatedQuery={content?.relatedName ?? ''}
-        initialRelatedId={content?.catalogId ?? null}
-        linkedSessions={linkedSessions}
-        onAddSession={handleAddSession}
-        seriesItems={seriesItems}
-        movieItems={movieItems}
-        onCreateRelated={handleCreateRelated}
-        onManageRelated={onOpenManage}
-        existingContents={existingContents}
-        excludeId={contentId}
-        onSave={handleSave}
-        saving={saving}
-        secondaryButton={
-          !isNew && (
-            <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
-              Excluir conteúdo
-            </Button>
-          )
-        }
+      {(isNew || content) && (
+        <ContentForm
+            key={contentId ?? 'new'}
+            initialType={content?.type}
+          initialLink={content?.link}
+          initialTitle={content?.title}
+          initialAuthor={content?.author}
+          initialThumbnail={content?.thumbnail}
+          initialSeason={content?.season}
+          initialEpisode={content?.episode}
+          initialRelatedQuery={content?.relatedName ?? ''}
+          initialRelatedId={content?.catalogId ?? null}
+          linkedSessions={linkedSessions}
+          onAddSession={handleAddSession}
+          seriesItems={seriesItems}
+          movieItems={movieItems}
+          onCreateRelated={handleCreateRelated}
+          onManageRelated={onOpenManage}
+          existingContents={existingContents}
+          excludeId={contentId}
+          onSave={handleSave}
+          saving={saving}
+          secondaryButton={
+            !isNew && (
+              <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
+                Excluir conteúdo
+              </Button>
+            )
+          }
       />
+      )}
       <BottomSheet
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}

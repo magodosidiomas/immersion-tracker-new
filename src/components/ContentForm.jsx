@@ -154,6 +154,8 @@ function ContentForm({
           </div>
         </div>
 
+        <div className="content-form-divider" />
+
         {type === 'youtube' && (
           <>
             <InputField
@@ -171,7 +173,9 @@ function ContentForm({
                 trailingIcon={<Edit />}
               />
             )}
-            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            {link.trim() && (
+              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            )}
           </>
         )}
 
@@ -192,7 +196,9 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            {link.trim() && (
+              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            )}
           </>
         )}
 
@@ -212,7 +218,9 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            {link.trim() && (
+              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
+            )}
           </>
         )}
 
@@ -303,7 +311,7 @@ function ContentForm({
         <div className="content-form-divider" />
 
         <div className="content-form-field-group">
-          <span className="content-form-label">Sessões vinculadas</span>
+          {linkedSessions.length > 0 && <span className="content-form-label">Sessões vinculadas</span>}
           {linkedSessions.length > 0 ? (
             <div className="content-form-sessions-card">
               {linkedSessions.map((session, index) => (

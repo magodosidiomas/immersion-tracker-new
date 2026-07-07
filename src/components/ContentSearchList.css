@@ -70,6 +70,11 @@
   gap: 8px;
   width: 100%;
   overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.content-search-list-filters::-webkit-scrollbar {
+  display: none;
 }
 
 .content-search-list-filter-chip {
@@ -119,6 +124,13 @@
   padding: 8px 0;
   border-radius: var(--radius-large);
   background: var(--bg-surface-default);
+}
+
+.content-search-list-divider {
+  width: auto;
+  height: 1px;
+  margin: 0 -16px;
+  background: var(--color-border-subtle);
 }
 
 

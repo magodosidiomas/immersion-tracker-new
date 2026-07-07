@@ -52,6 +52,14 @@ function App() {
   // instead of closing the page.
   const [screen, setScreen] = useState('home')
 
+  // LinkContent/LinkSession render as an overlay ON TOP of whatever
+  // `screen` currently is, instead of replacing it — critical for
+  // NewSession's "finish" phase and EditSession, both of which hold
+  // meaningful state (phase, pending content, the session being
+  // edited) that a normal screen swap would unmount and lose. null
+  // means no overlay is open.
+  const [pickerScreen, setPickerScreen] = useState(null)
+
   // Which session EditSession is open for — set right before switching
   // to that screen, from the row tapped in Home's history list.
   const [editingSession, setEditingSession] = useState(null)
@@ -84,12 +92,18 @@ function App() {
 
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
-    navigate('link-content')
+    setPickerScreen('link-content')
+    window.history.pushState({ screen, pickerScreen: 'link-content' }, '')
   }
 
   function openLinkSession(callback) {
     pendingPickCallback.current = callback
-    navigate('link-session')
+    setPickerScreen('link-session')
+    window.history.pushState({ screen, pickerScreen: 'link-session' }, '')
+  }
+
+  function closePicker() {
+    window.history.back()
   }
 
   // Lifted here (not inside NewSession) so Home's TimerWidget can show
@@ -101,15 +115,18 @@ function App() {
   // screen. Going "back" — whether via the device/browser back button or
   // an in-app back/close button calling window.history.back() — fires
   // 'popstate', and the listener below just mirrors history.state into
-  // `screen`. This keeps both back mechanisms identical by construction:
-  // there's no separate hardcoded "go to settings" style back target
-  // anymore, the back button always retraces the actual path taken to
-  // reach the current screen (e.g. opening Manage Languages from Home's
-  // shortcut now goes back to Home, not Settings, since Settings was
-  // never visited in that path).
+  // `screen`/`pickerScreen`. This keeps both back mechanisms identical
+  // by construction: there's no separate hardcoded "go to settings"
+  // style back target anymore, the back button always retraces the
+  // actual path taken to reach the current screen (e.g. opening Manage
+  // Languages from Home's shortcut now goes back to Home, not Settings,
+  // since Settings was never visited in that path). A real `navigate`
+  // always closes any open picker overlay too, since it means the
+  // person moved on to a genuinely different screen.
   const navigate = (nextScreen, session = null) => {
     setEditingSession(session)
     setScreen(nextScreen)
+    setPickerScreen(null)
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -120,6 +137,7 @@ function App() {
     window.history.replaceState({ screen: 'home' }, '')
     const onPopState = (event) => {
       setScreen(event.state?.screen ?? 'home')
+      setPickerScreen(event.state?.pickerScreen ?? null)
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -138,191 +156,200 @@ function App() {
   // timer" FAB for a frame before a recovered draft swaps in TimerWidget.
   if (hasLanguage === null || !timer.loaded) return null
   if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
-  // AddLanguages sits one level below ManageLanguages — both closing
-  // (X) and finishing (Adicionar) return there, since either way the
-  // list it shows may need refetching.
-  if (screen === 'add-languages') {
-    return <AddLanguages onClose={() => window.history.back()} />
-  }
-  if (screen === 'manage-languages') {
+
+  function renderScreen() {
+    // AddLanguages sits one level below ManageLanguages — both closing
+    // (X) and finishing (Adicionar) return there, since either way the
+    // list it shows may need refetching.
+    if (screen === 'add-languages') {
+      return <AddLanguages onClose={() => window.history.back()} />
+    }
+    if (screen === 'manage-languages') {
+      return (
+        <ManageLanguages
+          onBack={() => window.history.back()}
+          onOpenAddLanguages={() => navigate('add-languages')}
+          // Removing the last language drops activeLanguageId to null.
+          // Resetting `screen` here too (not just hasLanguage) matters:
+          // without it, picking a language in onboarding would render
+          // this same screen again, since `screen` would still be stuck
+          // on 'manage-languages' from before the delete. This is a
+          // direct reset, not a back navigation, so it doesn't touch
+          // history — any stale forward entries left behind are
+          // harmless, since hasLanguage === false renders the
+          // onboarding screen regardless of what `screen` says.
+          onAllLanguagesRemoved={() => {
+            setHasLanguage(false)
+            setScreen('home')
+          }}
+        />
+      )
+    }
+    if (screen === 'backup') {
+      return <Backup onBack={() => window.history.back()} />
+    }
+    if (screen === 'settings') {
+      return (
+        <Settings
+          onBack={() => window.history.back()}
+          onOpenManageLanguages={() => navigate('manage-languages')}
+          onOpenBackup={() => navigate('backup')}
+          onOpenManageSeries={() => navigate('manage-series')}
+          onOpenManageMovies={() => navigate('manage-movies')}
+        />
+      )
+    }
+    if (screen === 'new-session') {
+      return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} />
+    }
+    if (screen === 'edit-session') {
+      return (
+        <EditSession
+          session={editingSession}
+          onBack={() => window.history.back()}
+          onSaved={() => window.history.back()}
+          onOpenLinkContent={openLinkContent}
+        />
+      )
+    }
+    if (screen === 'stats') {
+      return (
+        <Statistics
+          onOpenHome={() => window.history.back()}
+          onOpenSettings={() => navigate('settings')}
+          onOpenManageLanguages={() => navigate('manage-languages')}
+          onOpenLibrary={() => navigate('library')}
+          onOpenDay={(dateStr) => {
+            setHistoryDate(dateStr)
+            navigate('day-history')
+          }}
+        />
+      )
+    }
+    if (screen === 'day-history') {
+      return (
+        <DayHistory
+          date={historyDate}
+          onBack={() => window.history.back()}
+          onOpenEditSession={(session) => navigate('edit-session', session)}
+        />
+      )
+    }
+    if (screen === 'library') {
+      return (
+        <Library
+          onOpenHome={() => window.history.back()}
+          onOpenStatistics={() => navigate('stats')}
+          onOpenSettings={() => navigate('settings')}
+          onOpenManageLanguages={() => navigate('manage-languages')}
+          onOpenNewContent={() => {
+            setEditingContentId(null)
+            navigate('edit-content')
+          }}
+          onOpenContent={(item) => {
+            setEditingContentId(item.id)
+            navigate('edit-content')
+          }}
+        />
+      )
+    }
+    if (screen === 'edit-content') {
+      return (
+        <EditContent
+          contentId={editingContentId}
+          onBack={() => window.history.back()}
+          onSaved={() => window.history.back()}
+          onOpenLinkSession={openLinkSession}
+          onOpenManage={(kind) => navigate(kind === 'serie' ? 'manage-series' : 'manage-movies')}
+        />
+      )
+    }
+    if (screen === 'manage-series' || screen === 'manage-movies') {
+      const kind = screen === 'manage-series' ? 'serie' : 'filme'
+      return (
+        <ManageSeries
+          kind={kind}
+          onBack={() => window.history.back()}
+          onOpenEpisodes={(item) => {
+            setActiveCatalog(item)
+            navigate('manage-episodes')
+          }}
+          onOpenSessions={async (item) => {
+            setActiveCatalog(item)
+            const content = await getFilmeContent(item.id)
+            setActiveEpisode({ contentId: content?.id ?? null, season: null, episode: null })
+            navigate('episode-detail')
+          }}
+        />
+      )
+    }
+    if (screen === 'manage-episodes') {
+      return (
+        <ManageEpisodes
+          catalogId={activeCatalog?.id}
+          seriesName={activeCatalog?.label}
+          onBack={() => window.history.back()}
+          onOpenEpisode={(ep) => {
+            setActiveEpisode({ contentId: ep.contentId, season: ep.season, episode: ep.episode })
+            navigate('episode-detail')
+          }}
+        />
+      )
+    }
+    if (screen === 'episode-detail') {
+      return (
+        <EpisodeDetail
+          contentId={activeEpisode?.contentId}
+          seriesName={activeCatalog?.label}
+          episode={activeEpisode?.season != null ? { season: activeEpisode.season, episode: activeEpisode.episode } : null}
+          onAddSession={openLinkSession}
+          onBack={() => window.history.back()}
+        />
+      )
+    }
     return (
-      <ManageLanguages
-        onBack={() => window.history.back()}
-        onOpenAddLanguages={() => navigate('add-languages')}
-        // Removing the last language drops activeLanguageId to null.
-        // Resetting `screen` here too (not just hasLanguage) matters:
-        // without it, picking a language in onboarding would render
-        // this same screen again, since `screen` would still be stuck
-        // on 'manage-languages' from before the delete. This is a direct
-        // reset, not a back navigation, so it doesn't touch history —
-        // any stale forward entries left behind are harmless, since
-        // hasLanguage === false renders the onboarding screen regardless
-        // of what `screen` says.
-        onAllLanguagesRemoved={() => {
-          setHasLanguage(false)
-          setScreen('home')
-        }}
-      />
-    )
-  }
-  if (screen === 'backup') {
-    return <Backup onBack={() => window.history.back()} />
-  }
-  if (screen === 'settings') {
-    return (
-      <Settings
-        onBack={() => window.history.back()}
-        onOpenManageLanguages={() => navigate('manage-languages')}
-        onOpenBackup={() => navigate('backup')}
-        onOpenManageSeries={() => navigate('manage-series')}
-        onOpenManageMovies={() => navigate('manage-movies')}
-      />
-    )
-  }
-  if (screen === 'new-session') {
-    return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} />
-  }
-  if (screen === 'edit-session') {
-    return (
-      <EditSession
-        session={editingSession}
-        onBack={() => window.history.back()}
-        onSaved={() => window.history.back()}
-        onOpenLinkContent={openLinkContent}
-      />
-    )
-  }
-  if (screen === 'stats') {
-    return (
-      <Statistics
-        onOpenHome={() => window.history.back()}
+      <Home
+        timer={timer}
         onOpenSettings={() => navigate('settings')}
         onOpenManageLanguages={() => navigate('manage-languages')}
-        onOpenLibrary={() => navigate('library')}
-        onOpenDay={(dateStr) => {
-          setHistoryDate(dateStr)
-          navigate('day-history')
-        }}
-      />
-    )
-  }
-  if (screen === 'day-history') {
-    return (
-      <DayHistory
-        date={historyDate}
-        onBack={() => window.history.back()}
+        onOpenNewSession={() => navigate('new-session')}
         onOpenEditSession={(session) => navigate('edit-session', session)}
-      />
-    )
-  }
-  if (screen === 'library') {
-    return (
-      <Library
-        onOpenHome={() => window.history.back()}
         onOpenStatistics={() => navigate('stats')}
-        onOpenSettings={() => navigate('settings')}
-        onOpenManageLanguages={() => navigate('manage-languages')}
-        onOpenNewContent={() => {
-          setEditingContentId(null)
-          navigate('edit-content')
-        }}
-        onOpenContent={(item) => {
-          setEditingContentId(item.id)
-          navigate('edit-content')
-        }}
+        onOpenLibrary={() => navigate('library')}
       />
     )
   }
-  if (screen === 'edit-content') {
-    return (
-      <EditContent
-        contentId={editingContentId}
-        onBack={() => window.history.back()}
-        onSaved={() => window.history.back()}
-        onOpenLinkSession={openLinkSession}
-        onOpenManage={(kind) => navigate(kind === 'serie' ? 'manage-series' : 'manage-movies')}
-      />
-    )
-  }
-  if (screen === 'manage-series' || screen === 'manage-movies') {
-    const kind = screen === 'manage-series' ? 'serie' : 'filme'
-    return (
-      <ManageSeries
-        kind={kind}
-        onBack={() => window.history.back()}
-        onOpenEpisodes={(item) => {
-          setActiveCatalog(item)
-          navigate('manage-episodes')
-        }}
-        onOpenSessions={async (item) => {
-          setActiveCatalog(item)
-          const content = await getFilmeContent(item.id)
-          setActiveEpisode({ contentId: content?.id ?? null, season: null, episode: null })
-          navigate('episode-detail')
-        }}
-      />
-    )
-  }
-  if (screen === 'manage-episodes') {
-    return (
-      <ManageEpisodes
-        catalogId={activeCatalog?.id}
-        seriesName={activeCatalog?.label}
-        onBack={() => window.history.back()}
-        onOpenEpisode={(ep) => {
-          setActiveEpisode({ contentId: ep.contentId, season: ep.season, episode: ep.episode })
-          navigate('episode-detail')
-        }}
-      />
-    )
-  }
-  if (screen === 'episode-detail') {
-    return (
-      <EpisodeDetail
-        contentId={activeEpisode?.contentId}
-        seriesName={activeCatalog?.label}
-        episode={activeEpisode?.season != null ? { season: activeEpisode.season, episode: activeEpisode.episode } : null}
-        onAddSession={openLinkSession}
-        onBack={() => window.history.back()}
-      />
-    )
-  }
-  if (screen === 'link-content') {
-    return (
-      <LinkContent
-        onBack={() => window.history.back()}
-        onAddContent={() => {
-          setEditingContentId(null)
-          navigate('edit-content')
-        }}
-        onSelect={(item) => {
-          pendingPickCallback.current?.(item)
-          window.history.back()
-        }}
-      />
-    )
-  }
-  if (screen === 'link-session') {
-    return (
-      <LinkSession
-        onBack={() => window.history.back()}
-        onSelect={(session) => {
-          pendingPickCallback.current?.(session)
-          window.history.back()
-        }}
-      />
-    )
-  }
+
   return (
-    <Home
-      timer={timer}
-      onOpenSettings={() => navigate('settings')}
-      onOpenManageLanguages={() => navigate('manage-languages')}
-      onOpenNewSession={() => navigate('new-session')}
-      onOpenEditSession={(session) => navigate('edit-session', session)}
-      onOpenStatistics={() => navigate('stats')}
-      onOpenLibrary={() => navigate('library')}
-    />
+    <>
+      {renderScreen()}
+      {pickerScreen === 'link-content' && (
+        <div className="picker-overlay">
+          <LinkContent
+            onBack={closePicker}
+            onAddContent={() => {
+              setEditingContentId(null)
+              navigate('edit-content')
+            }}
+            onSelect={(item) => {
+              pendingPickCallback.current?.(item)
+              closePicker()
+            }}
+          />
+        </div>
+      )}
+      {pickerScreen === 'link-session' && (
+        <div className="picker-overlay">
+          <LinkSession
+            onBack={closePicker}
+            onSelect={(session) => {
+              pendingPickCallback.current?.(session)
+              closePicker()
+            }}
+          />
+        </div>
+      )}
+    </>
   )
 }
 
