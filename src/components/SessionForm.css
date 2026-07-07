@@ -35,6 +35,29 @@
   margin-bottom: var(--space-4);
 }
 
+.finish-session-contents-card {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  padding: 0 8px;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-card);
+}
+
+.finish-session-contents-empty {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+.finish-session-field-group .button {
+  margin-top: 12px;
+}
+
 .finish-session-divider {
   height: 1px;
   margin: 0 calc(-1 * var(--space-16));

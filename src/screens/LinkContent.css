@@ -1,11 +1,11 @@
-.library {
+.link-content {
   display: flex;
   flex-direction: column;
   height: var(--app-height, 100dvh);
   background: var(--bg-surface-base);
 }
 
-.library-content {
+.link-content-body {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -15,10 +15,7 @@
   padding: 16px;
 }
 
-.library-bottom-layer {
+.link-content-footer {
   flex-shrink: 0;
-}
-
-.library-bottom-layer .bottom-nav {
-  padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
+  padding: 16px;
 }

@@ -5,7 +5,9 @@ import Button from './Button'
 import BottomSheet from './BottomSheet'
 import DurationInput from './DurationInput'
 import Alert from './Alert'
-import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
+import MediaListItem from './MediaListItem'
+import Thumbnail from './Thumbnail'
+import { Edit, Add, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -72,6 +74,9 @@ function SessionForm({
   primaryLabel = 'Salvar',
   secondaryButton = null,
   autoOpenDuration = false,
+  linkedContents = [],
+  onAddContent,
+  onRemoveContent,
 }) {
   const [startAt, setStartAt] = useState(initialStartAt)
   const [endAt, setEndAt] = useState(
@@ -342,6 +347,33 @@ function SessionForm({
               />
             ))}
           </div>
+        </div>
+
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Conteúdos</span>
+          {linkedContents.length > 0 ? (
+            <div className="finish-session-contents-card">
+              {linkedContents.map((content, index) => (
+                <MediaListItem
+                  key={content.id}
+                  title={content.title}
+                  subtitle={content.subtitle}
+                  divider={index < linkedContents.length - 1}
+                  thumbnail={<Thumbnail size="sm" src={content.thumbnailSrc} alt={content.title} />}
+                  trailingAction={{
+                    icon: <DoNotDisturbOn />,
+                    onClick: () => onRemoveContent?.(content.id),
+                    label: 'Remover conteúdo',
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="finish-session-contents-empty">Sem conteúdos vinculados</p>
+          )}
+          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddContent}>
+            Vincular conteúdo
+          </Button>
         </div>
       </div>
 
