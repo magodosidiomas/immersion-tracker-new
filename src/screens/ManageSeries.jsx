@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getAppSettings, getContentCatalog, addCatalogEntry, renameCatalogEntry, deleteCatalogEntry } from '../db'
 import TopNav from '../components/TopNav'
 import SearchCreateField from '../components/SearchCreateField'
 import EditableListItem from '../components/EditableListItem'
@@ -16,7 +17,13 @@ import './ManageSeries.css'
 // mid-flow, only via "+ Adicionar filme"'s own name entry). The same
 // rename BottomSheet is reused for "add new" (renameTarget.id is null
 // in that case) rather than building a second near-identical sheet.
-function ManageSeries({ kind = 'serie', items = [], onBack, onRename, onDelete, onCreate, onOpenEpisodes, onOpenSessions }) {
+//
+// Self-fetches its own languageId + catalog (same convention as
+// Home/Statistics/Library) — only navigation callbacks come from
+// whoever renders this screen.
+function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }) {
+  const [languageId, setLanguageId] = useState(null)
+  const [items, setItems] = useState([])
   const [query, setQuery] = useState('')
   const [renameTarget, setRenameTarget] = useState(null)
   const [renameValue, setRenameValue] = useState('')
@@ -26,27 +33,43 @@ function ManageSeries({ kind = 'serie', items = [], onBack, onRename, onDelete, 
   const label = isSerie ? 'série' : 'filme'
   const labelCap = isSerie ? 'Série' : 'Filme'
 
+  useEffect(() => {
+    getAppSettings().then((settings) => setLanguageId(settings.activeLanguageId))
+  }, [])
+
+  function refresh() {
+    if (!languageId) return
+    getContentCatalog(languageId, kind).then((entries) =>
+      setItems(entries.map((entry) => ({ id: entry.id, label: entry.name, sessionCount: entry.sessionCount }))),
+    )
+  }
+
+  useEffect(refresh, [languageId, kind])
+
   function openRename(item) {
     setRenameTarget(item)
     setRenameValue(item.label)
   }
 
-  function confirmRenameOrCreate() {
+  async function confirmRenameOrCreate() {
     const value = renameValue.trim()
     if (!value) return
-    if (renameTarget.id) onRename(renameTarget.id, value)
-    else onCreate(value)
+    if (renameTarget.id) await renameCatalogEntry(renameTarget.id, value)
+    else await addCatalogEntry(languageId, kind, value)
     setRenameTarget(null)
+    refresh()
   }
 
-  function confirmDelete() {
-    onDelete(deleteTarget.id)
+  async function confirmDelete() {
+    await deleteCatalogEntry(deleteTarget.id)
     setDeleteTarget(null)
+    refresh()
   }
 
-  function handleQuickCreate(name) {
-    onCreate(name)
+  async function handleQuickCreate(name) {
+    await addCatalogEntry(languageId, kind, name)
     setQuery('')
+    refresh()
   }
 
   const hasLinked = Boolean(deleteTarget?.sessionCount)

@@ -8,7 +8,7 @@ import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import Alert from '../components/Alert'
 import { CATEGORIES } from '../data/categories'
-import { getAppSettings, createSession } from '../db'
+import { getAppSettings, createSession, linkSessionContent } from '../db'
 import { formatElapsed } from '../utils/date'
 import { getCategoryLabel } from '../utils/sessions'
 // Pulls in .category-sheet-* (used by the picker sheet below) and
@@ -32,7 +32,7 @@ import './NewSession.css'
 // intact — so changing your mind about ending just resumes from
 // exactly where Encerrar left it. The draft itself isn't touched by
 // going back — only Salvar/Descartar resolve it.
-function NewSession({ timer, onClose }) {
+function NewSession({ timer, onClose, onOpenLinkContent }) {
   const [phase, setPhase] = useState('timer') // timer | finish
   const [activeLanguageId, setActiveLanguageId] = useState(null)
 
@@ -104,6 +104,7 @@ function NewSession({ timer, onClose }) {
         subcategory={timer.subcategory}
         languageId={timer.languageId ?? activeLanguageId}
         autoOpenDuration={Boolean(finishDraft.manual)}
+        onOpenLinkContent={onOpenLinkContent}
         onBack={() => setPhase('timer')}
         onDiscard={() => {
           timer.clearDraft()
@@ -235,17 +236,32 @@ function NewSession({ timer, onClose }) {
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, onOpenLinkContent, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  // No sessionId exists yet at this point — content picked here is
+  // only linked (via sessionContents) once Salvar actually creates
+  // the session below, using whatever's collected in this list.
+  const [pendingContents, setPendingContents] = useState([])
+
+  function handleAddContent() {
+    onOpenLinkContent((item) => {
+      setPendingContents((current) => (current.some((c) => c.id === item.id) ? current : [...current, item]))
+    })
+  }
+
+  function handleRemoveContent(id) {
+    setPendingContents((current) => current.filter((c) => c.id !== id))
+  }
 
   async function handleSave(fields) {
     if (!languageId || saving) return
     setSaving(true)
     setSaveError(null)
     try {
-      await createSession({ languageId, ...fields })
+      const session = await createSession({ languageId, ...fields })
+      await Promise.all(pendingContents.map((content) => linkSessionContent(session.id, content.id)))
       onSaved()
     } catch (err) {
       console.error('Erro ao salvar sessão:', err)
@@ -272,6 +288,9 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
         initialCategory={category}
         initialSubcategory={subcategory}
         autoOpenDuration={autoOpenDuration}
+        linkedContents={pendingContents}
+        onAddContent={handleAddContent}
+        onRemoveContent={handleRemoveContent}
         onSave={handleSave}
         saving={saving || !languageId}
         secondaryButton={

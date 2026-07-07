@@ -1,4 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import {
+  getAppSettings,
+  getContent,
+  getContentsByLanguage,
+  getContentCatalog,
+  createContent,
+  updateContent,
+  deleteContent,
+  saveSerieContent,
+  getFilmeContent,
+  addCatalogEntry,
+  getSessionsForContent,
+  linkSessionContent,
+} from '../db'
+import { sessionLabel, formatDurationShort } from '../utils/sessions'
+import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
@@ -6,40 +22,108 @@ import ContentForm from '../components/ContentForm'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EditContent.css'
 
-// Opened either from Biblioteca's "+" (new content) or by tapping an
-// existing content item (edit). `content` is null for the new-content
-// case — same isNew-by-presence convention as elsewhere in the app.
-// Séries/filmes search state (relatedItems/relatedQuery/etc.) is
-// lifted to whoever renders this screen, since it needs a live query
-// against the user's saved séries/filmes — this component only wires
-// the props through to ContentForm.
-function EditContent({
-  content = null,
-  linkedSessions = [],
-  onAddSession,
-  relatedItems = [],
-  relatedQuery = '',
-  onRelatedQueryChange,
-  onSelectRelated,
-  onCreateRelated,
-  onManageRelated,
-  existingContents = [],
-  onBack,
-  onSave,
-  onDelete,
-}) {
+// Opened either from Biblioteca's "+" (new content, contentId is
+// null) or by tapping an existing content item (contentId given).
+// Fetches everything ContentForm needs (the content itself, existing
+// contents for duplicate-detection, séries/filmes catalogs, and linked
+// sessions) and owns the actual db writes — ContentForm/SearchCreateField
+// stay dumb, this is where the data lives.
+//
+// Known limitation: linking a session before the very first Salvar
+// isn't wired yet (there's no contentId to link against until then) —
+// Vincular sessão only does something once the content already exists.
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenManage }) {
+  const [languageId, setLanguageId] = useState(null)
+  const [content, setContent] = useState(null)
+  const [existingContents, setExistingContents] = useState([])
+  const [seriesItems, setSeriesItems] = useState([])
+  const [movieItems, setMovieItems] = useState([])
+  const [linkedSessions, setLinkedSessions] = useState([])
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const isNew = !content
+
+  useEffect(() => {
+    getAppSettings().then((settings) => setLanguageId(settings.activeLanguageId))
+  }, [])
+
+  useEffect(() => {
+    if (!languageId) return
+    getContentsByLanguage(languageId).then(setExistingContents)
+    getContentCatalog(languageId, 'serie').then((entries) =>
+      setSeriesItems(entries.map((entry) => ({ id: entry.id, label: entry.name }))),
+    )
+    getContentCatalog(languageId, 'filme').then((entries) =>
+      setMovieItems(entries.map((entry) => ({ id: entry.id, label: entry.name }))),
+    )
+  }, [languageId])
+
+  useEffect(() => {
+    if (!contentId) return
+    getContent(contentId).then(setContent)
+    refreshLinkedSessions(contentId)
+  }, [contentId])
+
+  function refreshLinkedSessions(id) {
+    getSessionsForContent(id).then((sessions) => {
+      const todayStr = formatDateInput(new Date())
+      setLinkedSessions(
+        sessions.map((session) => ({
+          id: session.id,
+          label: sessionLabel(session),
+          description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
+        })),
+      )
+    })
+  }
+
+  const isNew = !contentId
 
   async function handleSave(fields) {
     if (saving) return
     setSaving(true)
-    await onSave(isNew ? fields : { ...content, ...fields })
+    const { type, link, title, author, thumbnail, season, episode, relatedId } = fields
+
+    if (type === 'serie') {
+      if (relatedId && season && episode) {
+        await saveSerieContent(relatedId, Number(season), Number(episode))
+      }
+    } else if (type === 'filme') {
+      if (relatedId) {
+        // The filme's content row already exists (created alongside
+        // its catalog entry) — nothing further to save here.
+        await getFilmeContent(relatedId)
+      }
+    } else if (isNew) {
+      await createContent({ languageId, type, link, title, author, thumbnail })
+    } else {
+      await updateContent({ ...content, type, link, title, author, thumbnail })
+    }
+    onSaved()
+  }
+
+  async function handleCreateRelated(kind, name) {
+    const entry = await addCatalogEntry(languageId, kind, name)
+    if (kind === 'serie') {
+      const updated = await getContentCatalog(languageId, 'serie')
+      setSeriesItems(updated.map((item) => ({ id: item.id, label: item.name })))
+    } else {
+      const updated = await getContentCatalog(languageId, 'filme')
+      setMovieItems(updated.map((item) => ({ id: item.id, label: item.name })))
+    }
+    return { id: entry.id, label: entry.name }
   }
 
   async function handleDelete() {
-    await onDelete(content.id)
+    await deleteContent(contentId)
+    onSaved()
+  }
+
+  function handleAddSession() {
+    if (!contentId) return
+    onOpenLinkSession(async (session) => {
+      await linkSessionContent(session.id, contentId)
+      refreshLinkedSessions(contentId)
+    })
   }
 
   return (
@@ -61,16 +145,16 @@ function EditContent({
         initialThumbnail={content?.thumbnail}
         initialSeason={content?.season}
         initialEpisode={content?.episode}
+        initialRelatedQuery={content?.relatedName ?? ''}
+        initialRelatedId={content?.catalogId ?? null}
         linkedSessions={linkedSessions}
-        onAddSession={onAddSession}
-        relatedItems={relatedItems}
-        relatedQuery={relatedQuery}
-        onRelatedQueryChange={onRelatedQueryChange}
-        onSelectRelated={onSelectRelated}
-        onCreateRelated={onCreateRelated}
-        onManageRelated={onManageRelated}
+        onAddSession={handleAddSession}
+        seriesItems={seriesItems}
+        movieItems={movieItems}
+        onCreateRelated={handleCreateRelated}
+        onManageRelated={onOpenManage}
         existingContents={existingContents}
-        excludeId={content?.id}
+        excludeId={contentId}
         onSave={handleSave}
         saving={saving}
         secondaryButton={

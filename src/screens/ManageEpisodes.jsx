@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getEpisodes, addEpisode, deleteEpisode } from '../db'
 import TopNav from '../components/TopNav'
 import SelectionChip from '../components/SelectionChip'
 import EditableListItem from '../components/EditableListItem'
@@ -13,12 +14,20 @@ import './ManageEpisodes.css'
 // here navigates to the episode's own detail screen (sessões
 // vinculadas) rather than opening a rename sheet — there's no name to
 // rename, just the auto-generated "T# E#" title.
-function ManageEpisodes({ seriesName = '', episodes = [], onBack, onOpenEpisode, onDeleteEpisode, onCreateEpisode }) {
+function ManageEpisodes({ catalogId, seriesName = '', onBack, onOpenEpisode }) {
+  const [episodes, setEpisodes] = useState([])
   const [selectedSeason, setSelectedSeason] = useState('all')
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [createOpen, setCreateOpen] = useState(false)
   const [createSeason, setCreateSeason] = useState('')
   const [createEpisode, setCreateEpisode] = useState('')
+
+  function refresh() {
+    if (!catalogId) return
+    getEpisodes(catalogId).then(setEpisodes)
+  }
+
+  useEffect(refresh, [catalogId])
 
   const seasons = [...new Set(episodes.map((ep) => ep.season))].sort((a, b) => a - b)
   const visible = selectedSeason === 'all' ? episodes : episodes.filter((ep) => ep.season === selectedSeason)
@@ -30,19 +39,21 @@ function ManageEpisodes({ seriesName = '', episodes = [], onBack, onOpenEpisode,
       items: visible.filter((ep) => ep.season === season).sort((a, b) => a.episode - b.episode),
     }))
 
-  function confirmDelete() {
-    onDeleteEpisode(deleteTarget.id)
+  async function confirmDelete() {
+    await deleteEpisode(deleteTarget.id)
     setDeleteTarget(null)
+    refresh()
   }
 
-  function confirmCreate() {
+  async function confirmCreate() {
     const season = Number(createSeason)
     const episode = Number(createEpisode)
     if (!season || !episode) return
-    onCreateEpisode(season, episode)
+    await addEpisode(catalogId, season, episode)
     setCreateOpen(false)
     setCreateSeason('')
     setCreateEpisode('')
+    refresh()
   }
 
   return (

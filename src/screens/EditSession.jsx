@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import SessionForm from '../components/SessionForm'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
-import { updateSession, deleteSession } from '../db'
+import { updateSession, deleteSession, getContentsForSession, linkSessionContent, unlinkSessionContent } from '../db'
 import './EditSession.css'
 
 // Opened by tapping a row in Home's history list. Reuses the exact
@@ -12,9 +12,32 @@ import './EditSession.css'
 // save target differs: this overwrites the existing record instead of
 // creating one, and offers delete instead of discard. The language
 // can't be changed here; sessions don't move between languages.
-function EditSession({ session, onBack, onSaved }) {
+//
+// Unlike NewSession (no sessionId until Salvar), this session already
+// exists — so linking/unlinking content writes to sessionContents
+// immediately instead of staging a pending list.
+function EditSession({ session, onBack, onSaved, onOpenLinkContent }) {
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [linkedContents, setLinkedContents] = useState([])
+
+  function refreshContents() {
+    getContentsForSession(session.id).then(setLinkedContents)
+  }
+
+  useEffect(refreshContents, [session.id])
+
+  function handleAddContent() {
+    onOpenLinkContent(async (item) => {
+      await linkSessionContent(session.id, item.id)
+      refreshContents()
+    })
+  }
+
+  async function handleRemoveContent(contentId) {
+    await unlinkSessionContent(session.id, contentId)
+    refreshContents()
+  }
 
   async function handleSave(fields) {
     if (saving) return
@@ -44,6 +67,9 @@ function EditSession({ session, onBack, onSaved }) {
         initialDurationSeconds={session.durationSeconds}
         initialCategory={session.category}
         initialSubcategory={session.subcategory}
+        linkedContents={linkedContents}
+        onAddContent={handleAddContent}
+        onRemoveContent={handleRemoveContent}
         onSave={handleSave}
         saving={saving}
         secondaryButton={

@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import { getSessionsForContent, linkSessionContent } from '../db'
+import { sessionLabel, formatDurationShort } from '../utils/sessions'
+import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
@@ -13,15 +17,38 @@ import './EpisodeDetail.css'
 //     "Sessões" as nav title — filmes skip the episódios layer
 //     entirely, so this screen is reached directly from Gerenciar
 //     filmes instead of through an intermediate episode list.
-function EpisodeDetail({
-  seriesName = '',
-  episode = null,
-  linkedSessions = [],
-  onAddSession,
-  onBack,
-}) {
+//
+// contentId is always resolved by the caller (the episode's own
+// content row, or the filme's) — this screen just fetches/links
+// sessions against it, same self-fetching convention as everywhere
+// else now.
+function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onBack }) {
+  const [linkedSessions, setLinkedSessions] = useState([])
   const heading = episode ? `${seriesName} · T${episode.season} E${episode.episode}` : seriesName
   const topNavTitle = episode ? `Episódios - ${seriesName}` : 'Sessões'
+
+  function refresh() {
+    if (!contentId) return
+    getSessionsForContent(contentId).then((sessions) => {
+      const todayStr = formatDateInput(new Date())
+      setLinkedSessions(
+        sessions.map((session) => ({
+          id: session.id,
+          label: sessionLabel(session),
+          description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
+        })),
+      )
+    })
+  }
+
+  useEffect(refresh, [contentId])
+
+  function handleAddSession() {
+    onAddSession(async (session) => {
+      await linkSessionContent(session.id, contentId)
+      refresh()
+    })
+  }
 
   return (
     <main className="episode-detail">
@@ -48,14 +75,13 @@ function EpisodeDetail({
                   description={session.description}
                   divider={index < linkedSessions.length - 1}
                   trailingIcon={<ChevronRight />}
-                  onClick={() => session.onClick?.()}
                 />
               ))}
             </div>
           ) : (
             <p className="episode-detail-sessions-empty">Nenhuma sessão ainda</p>
           )}
-          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddSession}>
+          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={handleAddSession}>
             Vincular sessão
           </Button>
         </div>

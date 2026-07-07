@@ -359,7 +359,7 @@ function SessionForm({
                   title={content.title}
                   subtitle={content.subtitle}
                   divider={index < linkedContents.length - 1}
-                  thumbnail={<Thumbnail size="sm" src={content.thumbnailSrc} alt={content.title} />}
+                  thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
                   trailingAction={{
                     icon: <DoNotDisturbOn />,
                     onClick: () => onRemoveContent?.(content.id),

@@ -104,7 +104,7 @@ function ContentSearchList({
                     thumbnail={
                       <Thumbnail
                         size={item.type === 'livro' ? 'book' : 'sm'}
-                        src={item.thumbnailSrc}
+                        src={item.thumbnail}
                         alt={item.title}
                         icon={Icon && <Icon />}
                       />

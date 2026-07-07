@@ -332,7 +332,7 @@ export async function getEpisodes(catalogId) {
       const sessionCount = content
         ? sessionContents.filter((link) => link.contentId === content.id).length
         : 0
-      return { ...episode, sessionCount }
+      return { ...episode, contentId: content?.id ?? null, sessionCount }
     })
     .sort((a, b) => a.season - b.season || a.episode - b.episode)
 }
@@ -442,6 +442,45 @@ export async function getContentsByLanguage(languageId) {
   )
 
   return resolved.sort((a, b) => (b.latestSessionDate ?? '').localeCompare(a.latestSessionDate ?? ''))
+}
+
+// Single resolved content row, for EditContent's prefill — includes
+// the joined título plus raw season/episode/related name for série/
+// filme types, since ContentForm's search field and Temporada/Episódio
+// inputs need those raw values, not just the joined display string.
+export async function getContent(id) {
+  const content = await getOne('contents', id)
+  if (!content) return null
+  const title = await resolveContentTitle(content)
+  let season, episodeNumber, relatedName
+  if (content.type === 'serie' && content.episodeId) {
+    const episode = await getOne('episodes', content.episodeId)
+    season = episode?.season
+    episodeNumber = episode?.episode
+  }
+  if (content.catalogId) {
+    const catalogEntry = await getOne('contentCatalog', content.catalogId)
+    relatedName = catalogEntry?.name
+  }
+  return { ...content, title, season, episode: episodeNumber, relatedName }
+}
+
+// Find-or-create the content row for a given catalogId+season+episode
+// (via addEpisode) and return that content row directly — this is
+// what ContentForm's save path calls for type 'serie', since the
+// episode/content pair is a side effect of picking a season+episode,
+// not something created independently.
+export async function saveSerieContent(catalogId, season, episode) {
+  const episodeRecord = await addEpisode(catalogId, season, episode)
+  const contents = await getAllByIndex('contents', 'episodeId', episodeRecord.id)
+  return contents[0]
+}
+
+// A filme's single content row was already created alongside its
+// catalog entry (see addCatalogEntry) — this just looks it up.
+export async function getFilmeContent(catalogId) {
+  const contents = await getAllByIndex('contents', 'catalogId', catalogId)
+  return contents.find((content) => content.type === 'filme')
 }
 
 // ---------- Session <-> Content links ----------

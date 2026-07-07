@@ -45,8 +45,8 @@ const TYPE_ICONS = { Videocam, Mic, Tv, Movie, Bookmark, Newspaper, Apps }
 //
 // Séries/filmes aren't static taxonomy like CONTENT_TYPES — they're
 // user data, so the list to search/create against comes in as
-// `relatedItems` rather than being owned here (same reasoning as
-// SearchCreateField itself staying "dumb").
+// `seriesItems`/`movieItems` rather than being owned here (same
+// reasoning as SearchCreateField itself staying "dumb").
 function ContentForm({
   initialType = 'youtube',
   initialLink = '',
@@ -55,12 +55,12 @@ function ContentForm({
   initialThumbnail = '',
   initialSeason = '',
   initialEpisode = '',
+  initialRelatedQuery = '',
+  initialRelatedId = null,
   linkedSessions = [],
   onAddSession,
-  relatedItems = [],
-  relatedQuery = '',
-  onRelatedQueryChange,
-  onSelectRelated,
+  seriesItems = [],
+  movieItems = [],
   onCreateRelated,
   onManageRelated,
   existingContents = [],
@@ -77,6 +77,8 @@ function ContentForm({
   const [thumbnail] = useState(initialThumbnail)
   const [season, setSeason] = useState(initialSeason)
   const [episode, setEpisode] = useState(initialEpisode)
+  const [relatedQuery, setRelatedQuery] = useState(initialRelatedQuery)
+  const [relatedId, setRelatedId] = useState(initialRelatedId)
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
@@ -99,6 +101,26 @@ function ContentForm({
     return sameLink || sameTitle
   })
 
+  const isSeries = type === 'serie'
+  const isMovie = type === 'filme'
+  const relatedKind = isSeries ? 'serie' : 'filme'
+  const relatedLabel = isSeries ? 'série' : 'filme'
+  const derivedTitle =
+    isSeries && relatedQuery ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}` : ''
+
+  function handleSelectRelated(item) {
+    setRelatedQuery(item.label)
+    setRelatedId(item.id)
+  }
+
+  async function handleCreateRelated(name) {
+    const created = await onCreateRelated?.(relatedKind, name)
+    if (created) {
+      setRelatedQuery(created.label ?? created.name ?? name)
+      setRelatedId(created.id)
+    }
+  }
+
   function handleSave() {
     if (isDuplicate) return
     onSave({
@@ -109,14 +131,9 @@ function ContentForm({
       thumbnail: displayThumbnail,
       season,
       episode,
+      relatedId,
     })
   }
-
-  const isSeries = type === 'serie'
-  const isMovie = type === 'filme'
-  const relatedLabel = isSeries ? 'série' : 'filme'
-  const derivedTitle =
-    isSeries && relatedQuery ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}` : ''
 
   return (
     <>
@@ -205,13 +222,13 @@ function ContentForm({
               label={isSeries ? 'Série' : 'Filme'}
               placeholder={`Busque ou adicione ${isSeries ? 'uma série' : 'um filme'}`}
               value={relatedQuery}
-              onChange={onRelatedQueryChange}
-              items={relatedItems}
-              onSelect={onSelectRelated}
+              onChange={setRelatedQuery}
+              items={isSeries ? seriesItems : movieItems}
+              onSelect={handleSelectRelated}
               createLabel={relatedLabel}
-              onCreate={onCreateRelated}
+              onCreate={handleCreateRelated}
               settingsIcon={<Settings />}
-              onSettingsClick={onManageRelated}
+              onSettingsClick={() => onManageRelated?.(relatedKind)}
             />
             {isSeries && (
               <>

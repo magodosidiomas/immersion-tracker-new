@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
@@ -10,7 +10,14 @@ import NewSession from './screens/NewSession'
 import EditSession from './screens/EditSession'
 import Statistics from './screens/Statistics'
 import DayHistory from './screens/DayHistory'
-import { getAppSettings } from './db'
+import Library from './screens/Library'
+import EditContent from './screens/EditContent'
+import ManageSeries from './screens/ManageSeries'
+import ManageEpisodes from './screens/ManageEpisodes'
+import EpisodeDetail from './screens/EpisodeDetail'
+import LinkContent from './screens/LinkContent'
+import LinkSession from './screens/LinkSession'
+import { getAppSettings, getFilmeContent } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
 
@@ -53,6 +60,37 @@ function App() {
   // that screen, from the cell tapped in Statistics' Calendar. Kept
   // separate from editingSession (a date string, not a Session row).
   const [historyDate, setHistoryDate] = useState(null)
+
+  // Which content EditContent is open for — null means "new content",
+  // same isNew-by-presence convention as editingSession.
+  const [editingContentId, setEditingContentId] = useState(null)
+
+  // Which série/filme ManageEpisodes/EpisodeDetail are drilled into —
+  // { id, label } from whichever row was tapped in ManageSeries.
+  const [activeCatalog, setActiveCatalog] = useState(null)
+
+  // Which episode EpisodeDetail is showing sessões for. null season
+  // means the filme case — EpisodeDetail reads that as "no episódios
+  // layer", per its own doc comment.
+  const [activeEpisode, setActiveEpisode] = useState(null)
+
+  // LinkContent/LinkSession are generic pickers reused from several
+  // places (NewSession/EditSession's "Vincular conteúdo",
+  // ContentForm/EpisodeDetail's "Vincular sessão") — rather than a
+  // separate navigation state per caller, whoever opens the picker
+  // hands over a callback to run with whatever gets picked, stashed
+  // here since it doesn't need to trigger a render.
+  const pendingPickCallback = useRef(null)
+
+  function openLinkContent(callback) {
+    pendingPickCallback.current = callback
+    navigate('link-content')
+  }
+
+  function openLinkSession(callback) {
+    pendingPickCallback.current = callback
+    navigate('link-session')
+  }
 
   // Lifted here (not inside NewSession) so Home's TimerWidget can show
   // and tick the same live timer without that screen being open — see
@@ -136,14 +174,23 @@ function App() {
         onBack={() => window.history.back()}
         onOpenManageLanguages={() => navigate('manage-languages')}
         onOpenBackup={() => navigate('backup')}
+        onOpenManageSeries={() => navigate('manage-series')}
+        onOpenManageMovies={() => navigate('manage-movies')}
       />
     )
   }
   if (screen === 'new-session') {
-    return <NewSession timer={timer} onClose={() => window.history.back()} />
+    return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} />
   }
   if (screen === 'edit-session') {
-    return <EditSession session={editingSession} onBack={() => window.history.back()} onSaved={() => window.history.back()} />
+    return (
+      <EditSession
+        session={editingSession}
+        onBack={() => window.history.back()}
+        onSaved={() => window.history.back()}
+        onOpenLinkContent={openLinkContent}
+      />
+    )
   }
   if (screen === 'stats') {
     return (
@@ -151,6 +198,7 @@ function App() {
         onOpenHome={() => window.history.back()}
         onOpenSettings={() => navigate('settings')}
         onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenLibrary={() => navigate('library')}
         onOpenDay={(dateStr) => {
           setHistoryDate(dateStr)
           navigate('day-history')
@@ -167,6 +215,104 @@ function App() {
       />
     )
   }
+  if (screen === 'library') {
+    return (
+      <Library
+        onOpenHome={() => window.history.back()}
+        onOpenStatistics={() => navigate('stats')}
+        onOpenSettings={() => navigate('settings')}
+        onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenNewContent={() => {
+          setEditingContentId(null)
+          navigate('edit-content')
+        }}
+        onOpenContent={(item) => {
+          setEditingContentId(item.id)
+          navigate('edit-content')
+        }}
+      />
+    )
+  }
+  if (screen === 'edit-content') {
+    return (
+      <EditContent
+        contentId={editingContentId}
+        onBack={() => window.history.back()}
+        onSaved={() => window.history.back()}
+        onOpenLinkSession={openLinkSession}
+        onOpenManage={(kind) => navigate(kind === 'serie' ? 'manage-series' : 'manage-movies')}
+      />
+    )
+  }
+  if (screen === 'manage-series' || screen === 'manage-movies') {
+    const kind = screen === 'manage-series' ? 'serie' : 'filme'
+    return (
+      <ManageSeries
+        kind={kind}
+        onBack={() => window.history.back()}
+        onOpenEpisodes={(item) => {
+          setActiveCatalog(item)
+          navigate('manage-episodes')
+        }}
+        onOpenSessions={async (item) => {
+          setActiveCatalog(item)
+          const content = await getFilmeContent(item.id)
+          setActiveEpisode({ contentId: content?.id ?? null, season: null, episode: null })
+          navigate('episode-detail')
+        }}
+      />
+    )
+  }
+  if (screen === 'manage-episodes') {
+    return (
+      <ManageEpisodes
+        catalogId={activeCatalog?.id}
+        seriesName={activeCatalog?.label}
+        onBack={() => window.history.back()}
+        onOpenEpisode={(ep) => {
+          setActiveEpisode({ contentId: ep.contentId, season: ep.season, episode: ep.episode })
+          navigate('episode-detail')
+        }}
+      />
+    )
+  }
+  if (screen === 'episode-detail') {
+    return (
+      <EpisodeDetail
+        contentId={activeEpisode?.contentId}
+        seriesName={activeCatalog?.label}
+        episode={activeEpisode?.season != null ? { season: activeEpisode.season, episode: activeEpisode.episode } : null}
+        onAddSession={openLinkSession}
+        onBack={() => window.history.back()}
+      />
+    )
+  }
+  if (screen === 'link-content') {
+    return (
+      <LinkContent
+        onBack={() => window.history.back()}
+        onAddContent={() => {
+          setEditingContentId(null)
+          navigate('edit-content')
+        }}
+        onSelect={(item) => {
+          pendingPickCallback.current?.(item)
+          window.history.back()
+        }}
+      />
+    )
+  }
+  if (screen === 'link-session') {
+    return (
+      <LinkSession
+        onBack={() => window.history.back()}
+        onSelect={(session) => {
+          pendingPickCallback.current?.(session)
+          window.history.back()
+        }}
+      />
+    )
+  }
   return (
     <Home
       timer={timer}
@@ -175,6 +321,7 @@ function App() {
       onOpenNewSession={() => navigate('new-session')}
       onOpenEditSession={(session) => navigate('edit-session', session)}
       onOpenStatistics={() => navigate('stats')}
+      onOpenLibrary={() => navigate('library')}
     />
   )
 }
