@@ -1,0 +1,122 @@
+.search-create-field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.search-create-field-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: 100%;
+}
+
+.search-create-field-input-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+}
+
+.search-create-field-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+.search-create-field-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 44px;
+  padding: 12px 8px;
+  border-radius: var(--radius-medium);
+  border: 1px solid var(--color-border-subtle);
+  --icon-color: var(--color-icon-muted);
+}
+
+.search-create-field-control:hover {
+  background: var(--bg-surface-primary-4);
+}
+
+.search-create-field-control[data-open='true'] {
+  border-color: var(--color-border-accent);
+}
+
+.search-create-field-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.search-create-field-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.search-create-field-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--icon-color);
+}
+
+.search-create-field-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+.search-create-field-settings {
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--bg-surface-input);
+  border-radius: var(--radius-medium);
+  background: transparent;
+  color: var(--color-icon-muted);
+  cursor: pointer;
+}
+
+.search-create-field-settings svg {
+  width: 24px;
+  height: 24px;
+}
+
+.search-create-field-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-card);
+}
+
+/* The "+ Adicionar" row is always last and never followed by a
+   divider — its accent label is scoped to this list so it doesn't
+   leak into SelectableListItem's own default styling elsewhere. */
+.search-create-field-list [data-variant='create'] .selectable-list-item-label {
+  color: var(--color-text-accent);
+}
+
+.search-create-field-list [data-variant='create'] {
+  --icon-color: var(--color-icon-muted);
+}
