@@ -1,0 +1,63 @@
+.link-session {
+  display: flex;
+  flex-direction: column;
+  height: var(--app-height, 100dvh);
+  background: var(--bg-surface-base);
+}
+
+/* Centered Dropdown in its own row, with the same full-viewport-width
+   divider trick TopNav/BottomNav use — #root caps at 480px, so a plain
+   border would only span the column, not the real screen edge to edge. */
+.link-session-date-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-16);
+}
+
+.link-session-date-row::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100vw;
+  height: 1px;
+  background: var(--color-border-subtle);
+  transform: translateX(-50%);
+}
+
+.link-session-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  gap: var(--space-12);
+  padding: var(--space-16);
+}
+
+.link-session-label {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+}
+
+.link-session-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-default);
+}
+
+/* Calendar ships with Figma's fixed export width (343px) since it
+   isn't placed in a real layout anywhere else yet — same override
+   approach Home/Statistics already use for it. */
+.link-session-picker .calendar {
+  width: 100%;
+}
