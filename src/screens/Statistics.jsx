@@ -10,13 +10,13 @@ import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
 import { categoryBreakdown } from '../utils/sessions'
-import { Home as HomeIcon, BarChart } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Home as HomeIcon, BarChart, Book } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
-// Second main tab, alongside Home — reached only via BottomNav. Same
-// LanguageTopNav as Home (active language + switcher + settings), no
-// back arrow since switching tabs isn't a drill-down.
-function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenDay }) {
+// Second main tab, alongside Home and Biblioteca — reached only via
+// BottomNav. Same LanguageTopNav as Home (active language + switcher
+// + settings), no back arrow since switching tabs isn't a drill-down.
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenDay, onOpenLibrary }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
 
@@ -57,6 +57,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenD
           items={[
             { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
             { label: 'Estatísticas', icon: <BarChart />, active: true },
+            { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
           ]}
         />
       </div>
