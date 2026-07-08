@@ -46,7 +46,7 @@ function toRow(session) {
 // via linkedSessions, same as if they were already linked) and the
 // actual sessionContents rows are written once Salvar creates the
 // content and its real id exists.
-function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage }) {
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0 }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
   const [existingContents, setExistingContents] = useState([])
@@ -71,7 +71,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     getContentCatalog(languageId, 'filme').then((entries) =>
       setMovieItems(entries.map((entry) => ({ id: entry.id, label: entry.name }))),
     )
-  }, [languageId])
+  }, [languageId, catalogRefreshTick])
 
   useEffect(() => {
     if (!contentId) return

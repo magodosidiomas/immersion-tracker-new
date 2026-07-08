@@ -119,6 +119,12 @@ function App() {
   // exactly what that entry point is for.
   const [manageOverlay, setManageOverlay] = useState(null)
 
+  // Bumped whenever the Gerenciar Séries/Filmes overlay closes, so
+  // EditContent (which stays mounted underneath and wouldn't otherwise
+  // refetch) picks up any série/filme just created, renamed, or deleted
+  // there — even if the user backed out without tapping a row to select.
+  const [catalogRefreshTick, setCatalogRefreshTick] = useState(0)
+
   function openManageOverlay(kind, onSelectItem) {
     pendingPickCallback.current = onSelectItem ?? null
     const next = { screen: 'manage-series', kind }
@@ -134,6 +140,7 @@ function App() {
   }
 
   function closeManageOverlay() {
+    setCatalogRefreshTick((tick) => tick + 1)
     window.history.back()
   }
 
@@ -328,6 +335,7 @@ function App() {
           onOpenLinkSession={openLinkSession}
           onOpenSession={(session) => navigate('edit-session', session)}
           onOpenManage={(kind, onSelectItem) => openManageOverlay(kind, onSelectItem)}
+          catalogRefreshTick={catalogRefreshTick}
         />
       )
     }
