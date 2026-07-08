@@ -8,6 +8,10 @@
   cursor: pointer;
   text-align: left;
   --icon-color: var(--color-icon-muted-gray);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* Same split as SelectableListItem: the pill (background + radius)

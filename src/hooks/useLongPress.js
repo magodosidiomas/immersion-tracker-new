@@ -53,6 +53,7 @@ export function useLongPress() {
       },
       onPointerUp: clear,
       onPointerLeave: clear,
+      onPointerCancel: clear,
       onContextMenu(event) {
         event.preventDefault()
       },
