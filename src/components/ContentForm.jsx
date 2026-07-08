@@ -7,7 +7,17 @@ import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
-import { isYouTubeUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
+import {
+  isYouTubeUrl,
+  isSpotifyUrl,
+  extractYouTubeId,
+  isHttpUrl,
+  isYouTubeMusicUrl,
+  isYouTubePlaylistUrl,
+  isYouTubeChannelUrl,
+  isSpotifyPlaylistUrl,
+  isSpotifyProfileUrl,
+} from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
@@ -98,6 +108,11 @@ function ContentForm({
     setRelatedId(cached?.relatedId ?? null)
   }
 
+  function handleLinkChange(value) {
+    setLink(value)
+    if (autofillsFromLink) setTitle('')
+  }
+
   async function handlePasteLink() {
     try {
       const text = await navigator.clipboard.readText()
@@ -136,12 +151,22 @@ function ContentForm({
         : null
     }
     if (type === 'podcast') {
+      if (isSpotifyUrl(link)) {
+        if (isSpotifyPlaylistUrl(link)) return 'Esse link é de uma playlist do Spotify. Cole o link de um episódio.'
+        if (isSpotifyProfileUrl(link)) return 'Esse link é de um perfil ou canal do Spotify. Cole o link de um episódio.'
+        return null
+      }
       if (isYouTubeUrl(link)) {
+        if (!isYouTubeMusicUrl(link)) {
+          return 'Esse link é de um vídeo do YouTube. Cole o link de um episódio do Spotify ou YouTube Music.'
+        }
+        if (isYouTubePlaylistUrl(link)) return 'Esse link é de uma playlist do YouTube Music. Cole o link de um episódio.'
+        if (isYouTubeChannelUrl(link)) return 'Esse link é de um perfil ou canal do YouTube Music. Cole o link de um episódio.'
         return !extractYouTubeId(link)
           ? 'Cole o link de um episódio do YouTube Music (não funciona com playlists ou canais).'
           : null
       }
-      return !isHttpUrl(link) ? 'Cole um link válido.' : null
+      return 'Esse link não parece ser do Spotify ou YouTube Music. Cole o link de um episódio.'
     }
     if (type === 'website') {
       return !isHttpUrl(link) ? 'Cole um link válido.' : null
@@ -214,7 +239,7 @@ function ContentForm({
               label="Link"
               placeholder="Cole o link do YouTube"
               value={link}
-              onChange={(event) => setLink(event.target.value)}
+              onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
               error={linkError || duplicateError}
@@ -237,7 +262,7 @@ function ContentForm({
               label="Link"
               placeholder="Cole o link do podcast"
               value={link}
-              onChange={(event) => setLink(event.target.value)}
+              onChange={(event) => handleLinkChange(event.target.value)}
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
@@ -261,7 +286,7 @@ function ContentForm({
               label="Link"
               placeholder="Cole o link do site"
               value={link}
-              onChange={(event) => setLink(event.target.value)}
+              onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
               error={linkError}

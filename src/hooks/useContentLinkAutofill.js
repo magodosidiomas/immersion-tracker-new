@@ -28,7 +28,11 @@ export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle }
 
   useEffect(() => {
     if (controllerRef.current) controllerRef.current.abort()
-    if (!source) return undefined
+    if (!source) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFetchedThumbnail('')
+      return undefined
+    }
 
     const controller = new AbortController()
     controllerRef.current = controller

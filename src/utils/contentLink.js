@@ -41,6 +41,49 @@ export function extractYouTubeId(url) {
   }
 }
 
+export function isYouTubeMusicUrl(url) {
+  try {
+    return new URL(url.trim()).hostname === 'music.youtube.com'
+  } catch {
+    return false
+  }
+}
+
+export function isYouTubePlaylistUrl(url) {
+  try {
+    const u = new URL(url.trim())
+    if (u.pathname.includes('/playlist')) return true
+    return u.searchParams.has('list') && !u.searchParams.get('v')
+  } catch {
+    return false
+  }
+}
+
+export function isYouTubeChannelUrl(url) {
+  try {
+    return new URL(url.trim()).pathname.includes('/channel/')
+  } catch {
+    return false
+  }
+}
+
+export function isSpotifyPlaylistUrl(url) {
+  try {
+    return new URL(url.trim()).pathname.includes('/playlist/')
+  } catch {
+    return false
+  }
+}
+
+export function isSpotifyProfileUrl(url) {
+  try {
+    const path = new URL(url.trim()).pathname
+    return path.includes('/artist/') || path.includes('/show/') || path.includes('/user/')
+  } catch {
+    return false
+  }
+}
+
 // Given the form's selected category (not sniffed from the URL — the
 // person already picked the chip) and the link typed, decides which
 // metadata source (if any) applies:
