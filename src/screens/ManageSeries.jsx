@@ -6,7 +6,8 @@ import EditableListItem from '../components/EditableListItem'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import InputField from '../components/InputField'
-import { ArrowBack, Add, Edit, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import EmptyState from '../components/EmptyState'
+import { ArrowBack, Add, Edit, Delete, Theaters, Movie } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ManageSeries.css'
 
 // Shared "manage catalog" screen for séries and filmes (kind picks the
@@ -92,37 +93,54 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
           </button>
         }
       />
-      <div className="manage-series-content">
-        <SearchCreateField
-          label={labelCap}
-          placeholder={`Busque ou adicione ${isSerie ? 'uma série' : 'um filme'}`}
-          value={query}
-          onChange={setQuery}
-          items={[]}
-          createLabel={label}
-          onCreate={handleQuickCreate}
-        />
-
-        <div className="manage-series-list">
-          {items.map((item, index) => (
-            <EditableListItem
-              key={item.id}
-              label={item.label}
-              description={item.sessionCount ? `${item.sessionCount} sessões` : null}
-              onClick={isSerie ? () => onOpenEpisodes(item) : () => onOpenSessions(item)}
-              editIcon={<Edit />}
-              onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
-              deleteIcon={<Delete />}
-              onDelete={() => setDeleteTarget(item)}
-              divider={index < items.length - 1}
-            />
-          ))}
+      {items.length === 0 ? (
+        <div className="manage-series-empty">
+          <EmptyState
+            icon={isSerie ? <Theaters /> : <Movie />}
+            title={isSerie ? 'Nenhuma série adicionada' : 'Nenhum filme adicionado'}
+            description={`Toque no botão abaixo para adicionar sua primeira ${label}.`}
+            buttonLabel={`Adicionar ${label}`}
+            buttonIcon={<Add />}
+            onButtonClick={() => openRename({ id: null, label: '' })}
+          />
         </div>
+      ) : (
+        <>
+          <div className="manage-series-content">
+            <SearchCreateField
+              label={labelCap}
+              placeholder={`Busque ou adicione ${isSerie ? 'uma série' : 'um filme'}`}
+              value={query}
+              onChange={setQuery}
+              items={[]}
+              createLabel={label}
+              onCreate={handleQuickCreate}
+            />
 
-        <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={() => openRename({ id: null, label: '' })}>
-          {`Adicionar ${label}`}
-        </Button>
-      </div>
+            <div className="manage-series-list">
+              {items.map((item, index) => (
+                <EditableListItem
+                  key={item.id}
+                  label={item.label}
+                  description={item.sessionCount ? `${item.sessionCount} sessões` : null}
+                  onClick={isSerie ? () => onOpenEpisodes(item) : () => onOpenSessions(item)}
+                  editIcon={<Edit />}
+                  onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
+                  deleteIcon={<Delete />}
+                  onDelete={() => setDeleteTarget(item)}
+                  divider={index < items.length - 1}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="manage-series-footer">
+            <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={() => openRename({ id: null, label: '' })}>
+              {`Adicionar ${label}`}
+            </Button>
+          </div>
+        </>
+      )}
 
       <BottomSheet
         open={Boolean(renameTarget)}
