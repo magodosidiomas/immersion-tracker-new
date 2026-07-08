@@ -44,10 +44,20 @@
   width: 100%;
 }
 
+.statistics-content .numeric-card {
+  width: 100%;
+}
+
 .statistics-cards {
   display: flex;
   flex-direction: column;
   gap: var(--space-32);
+}
+
+/* "Por categoria" (the all-categories/"Todos" overview donut) gets more
+   breathing room between its title and the card than the other donuts. */
+.statistics-cards > .donut-card-group:first-child {
+  gap: var(--space-16);
 }
 
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)

@@ -36,8 +36,13 @@ function ReceptionCard({ groups = [], ...props }) {
 
   return (
     <DonutCard
-      title="Recepção vs. Produção"
-      description="Quanto você gasta em escuta e leitura vs. fala e escrita."
+      title="Recepção x Produção"
+      description={
+        <>
+          Quanto você gasta em <strong>escuta e leitura</strong> comparado com{' '}
+          <strong>fala e escrita</strong>.
+        </>
+      }
       groups={distribuicaoGroups}
       {...props}
     />

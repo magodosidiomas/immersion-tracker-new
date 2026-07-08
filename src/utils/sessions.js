@@ -46,6 +46,16 @@ export function formatDurationShort(totalSeconds) {
   return `${m}m`
 }
 
+// "04:15:27" — zero-padded HH:MM:SS, for the Statistics "Tempo total"
+// numeric card (distinct from formatDuration's "4h 15m 27s" reading style).
+export function formatDurationClock(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${pad(h)}:${pad(m)}:${pad(s)}`
+}
+
 // Newest day first, newest session within a day first. Groups by the
 // stored `date` string — 'YYYY-MM-DD' lexicographic order is also
 // chronological, so no Date parsing is needed just to sort.

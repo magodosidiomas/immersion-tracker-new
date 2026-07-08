@@ -28,7 +28,7 @@ function SkillCard({ groups = [], ...props }) {
 
   return (
     <DonutCard
-      title="Leitura vs. Escuta"
+      title="Leitura x Escuta"
       groups={skillGroups}
       {...props}
     />

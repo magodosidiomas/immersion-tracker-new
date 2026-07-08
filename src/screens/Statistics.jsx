@@ -4,12 +4,13 @@ import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
+import NumericCard from '../components/NumericCard'
 import SkillCard from '../components/SkillCard'
 import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
-import { categoryBreakdown } from '../utils/sessions'
+import { categoryBreakdown, formatDurationClock } from '../utils/sessions'
 import { Home as HomeIcon, BarChart, Book } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
@@ -39,13 +40,17 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
       />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <p className="statistics-section-title">Histórico</p>
+        <NumericCard
+          size="large"
+          title="Tempo total"
+          number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
+        />
         <Calendar
           sessionDates={sessions.map((session) => session.date)}
           onSelectDay={onOpenDay}
         />
         <div className="statistics-cards">
-          <DonutCard title="Tempo por categoria" groups={categoryBreakdown(sessions)} />
+          <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
           <SkillCard groups={categoryBreakdown(sessions)} />
           <FormatCard groups={categoryBreakdown(sessions)} />
           <ReceptionCard groups={categoryBreakdown(sessions)} />
