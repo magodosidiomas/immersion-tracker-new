@@ -6,6 +6,14 @@
   font-family: var(--font-family-main);
 }
 
+/* #root normally caps at 480px for the phone-like column every real
+   screen assumes (see index.css) — this is the one screen meant to
+   fill the desktop viewport instead. */
+body.ds-active #root {
+  max-width: none;
+  margin: 0;
+}
+
 .ds-sidebar,
 .ds-main {
   display: none;

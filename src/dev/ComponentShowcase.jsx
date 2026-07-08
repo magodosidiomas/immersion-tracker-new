@@ -21,6 +21,17 @@ function useHashComponentId() {
   return id
 }
 
+// #root is capped at 480px (see index.css) for the phone-like column
+// every real screen assumes. This is the one screen meant to use the
+// full desktop viewport instead, so it opts out for as long as it's
+// mounted rather than changing that global rule.
+function useFullWidthRoot() {
+  useEffect(() => {
+    document.body.classList.add('ds-active')
+    return () => document.body.classList.remove('ds-active')
+  }, [])
+}
+
 function ComponentList({ query, onQueryChange, activeId, onSelect }) {
   // Letter-group headers are computed once per filtered list (not
   // mutated during the render/map below) so this stays a pure render.
@@ -64,6 +75,7 @@ function ComponentBody({ component }) {
 }
 
 function ComponentShowcase() {
+  useFullWidthRoot()
   const hashId = useHashComponentId()
   const [query, setQuery] = useState('')
   const active = registry.find((c) => c.id === hashId) || null

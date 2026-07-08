@@ -37,7 +37,7 @@ import { useViewportHeight } from './hooks/useViewportHeight'
 function App() {
   useViewportHeight()
 
-  const isDesignSystem = window.location.hash === '#design-system'
+  const isDesignSystem = window.location.hash === '#design-system' || window.location.hash.startsWith('#design-system/')
   const isOnboardingPreview = window.location.hash === '#onboarding'
 
   // Whether to show onboarding or Home isn't a route, it's a question
