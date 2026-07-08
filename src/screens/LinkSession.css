@@ -69,9 +69,22 @@
   pointer-events: auto;
 }
 
-/* Calendar ships with Figma's fixed export width (343px) since it
-   isn't placed in a real layout anywhere else yet — same override
-   approach Home/Statistics already use for it. */
-.link-session-picker .calendar {
+/* Wraps the Dropdown pill so a same-size, invisible native date
+   input can sit on top of it — tapping anywhere on the pill opens
+   the OS's own date picker (same input the EditSession date fields
+   use) while the pill keeps its designed label/chevron look. */
+.link-session-date-picker {
+  position: relative;
+  display: inline-flex;
+}
+
+.link-session-date-input {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }

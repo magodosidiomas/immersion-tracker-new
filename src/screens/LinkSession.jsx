@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getAppSettings, getSessionsByLanguage } from '../db'
-import { formatFullDate, formatDateInput, parseDateInput } from '../utils/date'
+import { formatFullDate, formatDateInput } from '../utils/date'
 import { sessionLabel, formatDuration } from '../utils/sessions'
 import TopNav from '../components/TopNav'
 import Dropdown from '../components/Dropdown'
-import BottomSheet from '../components/BottomSheet'
-import Calendar from '../components/Calendar'
 import ListItem from '../components/ListItem'
 import EmptyState from '../components/EmptyState'
 import Button from '../components/Button'
@@ -13,17 +11,17 @@ import { ArrowBack, Schedule, Add } from '@nine-thirty-five/material-symbols-rea
 import './LinkSession.css'
 
 // Opened from ContentForm/EpisodeDetail's "Vincular sessão" button.
-// Same date-dropdown + Calendar pattern as DayHistory (reused
-// deliberately, per the person's note) — the difference is just what
+// Same date-dropdown pattern as DayHistory (reused deliberately, per
+// the person's note): Dropdown shows the formatted label, the actual
+// picker is the OS-native <input type="date"> — same as EditSession —
+// laid transparently on top. Difference from DayHistory is just what
 // tapping a row does: here it selects that session for linking
 // instead of opening EditSession, and it opens on today by default
 // rather than whatever day was tapped in Statistics' calendar.
 function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(formatDateInput(new Date()))
-  const [allSessionDates, setAllSessionDates] = useState([])
   const [daySessions, setDaySessions] = useState([])
-  const [pickerOpen, setPickerOpen] = useState(false)
 
   useEffect(() => {
     getAppSettings().then((settings) => setActiveId(settings.activeLanguageId))
@@ -32,15 +30,9 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
   useEffect(() => {
     if (!activeId) return
     getSessionsByLanguage(activeId).then((sessions) => {
-      setAllSessionDates(sessions.map((session) => session.date))
       setDaySessions(sessions.filter((session) => session.date === selectedDate))
     })
   }, [activeId, selectedDate, refreshTick])
-
-  function handleSelectDay(dateStr) {
-    setSelectedDate(dateStr)
-    setPickerOpen(false)
-  }
 
   return (
     <main className="link-session">
@@ -54,7 +46,16 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
         hasDivider
       />
       <div className="link-session-date-row">
-        <Dropdown label={formatFullDate(selectedDate)} onClick={() => setPickerOpen(true)} />
+        <div className="link-session-date-picker">
+          <Dropdown label={formatFullDate(selectedDate)} />
+          <input
+            type="date"
+            className="link-session-date-input"
+            aria-label="Selecionar data"
+            value={selectedDate}
+            onChange={(event) => setSelectedDate(event.target.value)}
+          />
+        </div>
       </div>
       <div className="link-session-content">
         <p className="link-session-label">Sessões</p>
@@ -88,11 +89,6 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
           </Button>
         </div>
       )}
-      <BottomSheet open={pickerOpen} onClose={() => setPickerOpen(false)} title="Selecionar data" contentCard={false}>
-        <div className="link-session-picker">
-          <Calendar sessionDates={allSessionDates} initialDate={parseDateInput(selectedDate)} onSelectDay={handleSelectDay} />
-        </div>
-      </BottomSheet>
     </main>
   )
 }
