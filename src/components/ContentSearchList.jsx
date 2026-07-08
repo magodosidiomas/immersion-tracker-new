@@ -85,8 +85,11 @@ function ContentSearchList({
       {groups.length === 0 ? (
         <EmptyState
           icon={<Book />}
-          title="Nenhum conteúdo ainda"
-          description="Toque no + pra adicionar seu primeiro conteúdo"
+          title="Sua biblioteca está vazia"
+          description="Comece adicionando o que você está lendo, assistindo ou ouvindo"
+          buttonLabel="Adicionar conteúdo"
+          buttonIcon={<Add />}
+          onButtonClick={onAddContent}
         />
       ) : (
         groups.map((group) => (
