@@ -64,7 +64,12 @@ body {
   .app-content {
     flex: 1;
     max-width: 480px;
-    margin: 0 auto;
+    /* Right-align instead of centering: the scrollbar belongs to each
+       screen's internal scroll container (e.g. .home-history), so its
+       position tracks this column's edge. Right-aligning puts that
+       edge flush against the viewport's right edge instead of
+       floating in the middle of the leftover space. */
+    margin: 0 0 0 auto;
   }
 }
 
