@@ -7,7 +7,7 @@ import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
-import { isYouTubeUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
+import { isYouTubeUrl, isSpotifyUrl, isYouTubeMusicUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
@@ -122,6 +122,8 @@ function ContentForm({
     return sameLink || sameTitle
   })
   const duplicateError = isDuplicate ? 'Já existe um conteúdo com esse título ou link.' : null
+  const titleNotFoundError =
+    autofillsFromLink && autofill.notFound && !title.trim() ? 'Título não encontrado. Coloque um título.' : null
 
   // Each link-based type validates its link differently:
   //   - youtube: must resolve to a real video id (rejects playlists/
@@ -144,6 +146,9 @@ function ContentForm({
       return !isHttpUrl(link) ? 'Cole um link válido.' : null
     }
     if (type === 'website') {
+      if (isYouTubeMusicUrl(link)) return 'Esse link é do YouTube Music. Use o tipo Podcast para adicionar esse conteúdo.'
+      if (isYouTubeUrl(link)) return 'Esse link é do YouTube. Use o tipo YouTube para adicionar esse conteúdo.'
+      if (isSpotifyUrl(link)) return 'Esse link é do Spotify. Use o tipo Podcast para adicionar esse conteúdo.'
       return !isHttpUrl(link) ? 'Cole um link válido.' : null
     }
     return null
@@ -221,7 +226,7 @@ function ContentForm({
               onTrailingIconClick={handlePasteLink}
               error={linkError || duplicateError}
             />
-            {(title || autofill.loading) && (
+            {(title || autofill.loading || autofill.notFound) && (
               <InputField
                 label="Título"
                 value={title}
@@ -229,6 +234,7 @@ function ContentForm({
                 disabled={autofill.loading && !title}
                 onChange={(event) => setTitle(event.target.value)}
                 trailingIcon={<Edit />}
+                error={duplicateError || titleNotFoundError}
               />
             )}
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
@@ -254,7 +260,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError}
+              error={duplicateError || titleNotFoundError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -278,7 +284,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError}
+              error={duplicateError || titleNotFoundError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>

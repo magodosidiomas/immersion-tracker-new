@@ -16,6 +16,7 @@ import { sourceForType, fetchLinkMetadata } from '../utils/contentLink'
 export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle } = {}) {
   const [fetchedThumbnail, setFetchedThumbnail] = useState('')
   const [loading, setLoading] = useState(false)
+  const [notFound, setNotFound] = useState(false)
   const controllerRef = useRef(null)
   const onTitleRef = useRef(onTitle)
 
@@ -31,6 +32,7 @@ export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle }
     if (!source) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFetchedThumbnail('')
+      setNotFound(false)
       return undefined
     }
 
@@ -39,15 +41,23 @@ export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     setFetchedThumbnail('')
+    setNotFound(false)
 
     fetchLinkMetadata(url, source, controller.signal)
       .then((result) => {
-        if (!result) return
+        if (!result) {
+          if (!hasTitle) setNotFound(true)
+          return
+        }
         if (result.title && !hasTitle) onTitleRef.current?.(result.title)
+        else if (!result.title && !hasTitle) setNotFound(true)
         if (result.thumbnail) setFetchedThumbnail(result.thumbnail)
       })
       .catch((err) => {
-        if (err.name !== 'AbortError') setFetchedThumbnail('')
+        if (err.name !== 'AbortError') {
+          setFetchedThumbnail('')
+          if (!hasTitle) setNotFound(true)
+        }
       })
       .finally(() => setLoading(false))
 
@@ -58,5 +68,5 @@ export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle }
   const showManualHint = Boolean(url) && !source
   const thumbnail = source ? fetchedThumbnail : ''
 
-  return { source, thumbnail, loading: source ? loading : false, showManualHint }
+  return { source, thumbnail, loading: source ? loading : false, notFound: source ? notFound : false, showManualHint }
 }
