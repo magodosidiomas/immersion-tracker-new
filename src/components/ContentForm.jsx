@@ -8,6 +8,7 @@ import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import { isYouTubeUrl, isSpotifyUrl, isYouTubeMusicUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
+import { normalizeForCompare } from '../utils/text'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
@@ -160,6 +161,10 @@ function ContentForm({
   const showSessions = !hasLinkField || link.trim().length > 0
   const relatedKind = isSeries ? 'serie' : 'filme'
   const relatedLabel = isSeries ? 'série' : 'filme'
+  const relatedItems = isSeries ? seriesItems : movieItems
+  const filteredRelatedItems = relatedQuery.trim()
+    ? relatedItems.filter((item) => normalizeForCompare(item.label).includes(normalizeForCompare(relatedQuery)))
+    : relatedItems
   const derivedTitle =
     isSeries && relatedQuery && season
       ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}`
@@ -297,7 +302,7 @@ function ContentForm({
               placeholder={`Busque ou adicione ${isSeries ? 'uma série' : 'um filme'}`}
               value={relatedQuery}
               onChange={setRelatedQuery}
-              items={isSeries ? seriesItems : movieItems}
+              items={filteredRelatedItems}
               onSelect={handleSelectRelated}
               createLabel={relatedLabel}
               onCreate={handleCreateRelated}

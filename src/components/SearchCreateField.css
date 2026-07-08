@@ -74,6 +74,7 @@
   width: 16px;
   height: 16px;
   color: var(--icon-color);
+  cursor: pointer;
 }
 
 .search-create-field-chevron svg {

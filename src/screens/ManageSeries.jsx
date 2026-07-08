@@ -7,6 +7,7 @@ import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import InputField from '../components/InputField'
 import EmptyState from '../components/EmptyState'
+import { normalizeForCompare } from '../utils/text'
 import { ArrowBack, Add, Edit, Delete, Theaters, Movie } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ManageSeries.css'
 
@@ -28,6 +29,7 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
   const [query, setQuery] = useState('')
   const [renameTarget, setRenameTarget] = useState(null)
   const [renameValue, setRenameValue] = useState('')
+  const [renameError, setRenameError] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
 
   const isSerie = kind === 'serie'
@@ -50,11 +52,21 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
   function openRename(item) {
     setRenameTarget(item)
     setRenameValue(item.label)
+    setRenameError(null)
+  }
+
+  function isDuplicateName(value, excludeId) {
+    const normalized = normalizeForCompare(value)
+    return items.some((item) => item.id !== excludeId && normalizeForCompare(item.label) === normalized)
   }
 
   async function confirmRenameOrCreate() {
     const value = renameValue.trim()
     if (!value) return
+    if (isDuplicateName(value, renameTarget.id)) {
+      setRenameError(`Já existe ${isSerie ? 'uma série' : 'um filme'} com esse nome.`)
+      return
+    }
     if (renameTarget.id) await renameCatalogEntry(renameTarget.id, value)
     else await addCatalogEntry(languageId, kind, value)
     setRenameTarget(null)
@@ -68,10 +80,15 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
   }
 
   async function handleQuickCreate(name) {
+    if (isDuplicateName(name, null)) return
     await addCatalogEntry(languageId, kind, name)
     setQuery('')
     refresh()
   }
+
+  const filteredItems = query.trim()
+    ? items.filter((item) => normalizeForCompare(item.label).includes(normalizeForCompare(query)))
+    : items
 
   const hasLinked = Boolean(deleteTarget?.sessionCount)
   const deleteDescription = isSerie
@@ -118,19 +135,23 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
             />
 
             <div className="manage-series-list">
-              {items.map((item, index) => (
-                <EditableListItem
-                  key={item.id}
-                  label={item.label}
-                  description={item.sessionCount ? `${item.sessionCount} sessões` : null}
-                  onClick={isSerie ? () => onOpenEpisodes(item) : () => onOpenSessions(item)}
-                  editIcon={<Edit />}
-                  onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
-                  deleteIcon={<Delete />}
-                  onDelete={() => setDeleteTarget(item)}
-                  divider={index < items.length - 1}
-                />
-              ))}
+              {filteredItems.length === 0 ? (
+                <p className="manage-series-no-results">Nenhum resultado encontrado.</p>
+              ) : (
+                filteredItems.map((item, index) => (
+                  <EditableListItem
+                    key={item.id}
+                    label={item.label}
+                    description={item.sessionCount ? `${item.sessionCount} sessões` : null}
+                    onClick={isSerie ? () => onOpenEpisodes(item) : () => onOpenSessions(item)}
+                    editIcon={<Edit />}
+                    onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
+                    deleteIcon={<Delete />}
+                    onDelete={() => setDeleteTarget(item)}
+                    divider={index < filteredItems.length - 1}
+                  />
+                ))
+              )}
             </div>
           </div>
 
@@ -162,8 +183,13 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
         <InputField
           label={`Nome ${isSerie ? 'da série' : 'do filme'}`}
           value={renameValue}
-          onChange={(event) => setRenameValue(event.target.value)}
+          onChange={(event) => {
+            setRenameValue(event.target.value)
+            setRenameError(null)
+          }}
           trailingIcon={<Edit />}
+          error={renameError}
+          autoFocus
         />
       </BottomSheet>
 

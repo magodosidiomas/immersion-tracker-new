@@ -37,3 +37,12 @@
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }
+
+.manage-series-no-results {
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+  font-family: var(--font-family-main);
+  font-size: var(--font-size-body-medium);
+  color: var(--color-text-tertiary);
+}
