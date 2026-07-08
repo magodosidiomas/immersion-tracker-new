@@ -3,6 +3,7 @@ import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
 import EditableListItem from './EditableListItem'
+import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
@@ -13,6 +14,7 @@ import {
   ContentPaste,
   Edit,
   Settings,
+  Schedule,
   DoNotDisturbOn,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
@@ -330,27 +332,37 @@ function ContentForm({
         <div className="content-form-divider" />
 
         <div className="content-form-field-group">
-          {linkedSessions.length > 0 && <span className="content-form-label">Sessões vinculadas</span>}
-          {linkedSessions.length > 0 ? (
-            <div className="content-form-sessions-card">
-              {linkedSessions.map((session, index) => (
-                <EditableListItem
-                  key={session.id}
-                  label={session.label}
-                  description={session.description}
-                  divider={index < linkedSessions.length - 1}
-                  onClick={onOpenSession ? () => onOpenSession(session) : null}
-                  deleteIcon={<DoNotDisturbOn />}
-                  onDelete={() => onRemoveSession?.(session.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="content-form-sessions-empty">Nenhuma sessão ainda</p>
+          {linkedSessions.length > 0 && (
+            <>
+              <span className="content-form-label">Sessões vinculadas</span>
+              <div className="content-form-sessions-card">
+                {linkedSessions.map((session, index) => (
+                  <EditableListItem
+                    key={session.id}
+                    label={session.label}
+                    description={session.description}
+                    divider={index < linkedSessions.length - 1}
+                    onClick={onOpenSession ? () => onOpenSession(session) : null}
+                    deleteIcon={<DoNotDisturbOn />}
+                    onDelete={() => onRemoveSession?.(session.id)}
+                  />
+                ))}
+              </div>
+              <Button variant="outline" leadingIcon={<Add />} onClick={onAddSession}>
+                Vincular sessão
+              </Button>
+            </>
           )}
-          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddSession}>
-            Vincular sessão
-          </Button>
+          {linkedSessions.length === 0 && (
+            <EmptyState
+              icon={<Schedule />}
+              title="Nenhuma sessão vinculada"
+              description="Vincule as sessões em que você usou esse conteúdo pra acompanhar o progresso."
+              buttonLabel="Vincular sessão"
+              buttonIcon={<Add />}
+              onButtonClick={onAddSession}
+            />
+          )}
         </div>
       </div>
 

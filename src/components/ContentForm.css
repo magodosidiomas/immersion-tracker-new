@@ -58,16 +58,6 @@
   background: var(--bg-surface-card);
 }
 
-.content-form-sessions-empty {
-  margin: 0;
-  padding: 24px 0;
-  text-align: center;
-  font-family: var(--font-family-main);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-label-medium);
-  color: var(--color-text-primary);
-}
-
 .content-form-footer {
   display: flex;
   flex-direction: column;

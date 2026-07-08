@@ -4,8 +4,9 @@ import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
 import EditableListItem from '../components/EditableListItem'
+import EmptyState from '../components/EmptyState'
 import Button from '../components/Button'
-import { ArrowBack, Add, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Add, Schedule, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EpisodeDetail.css'
 
 function toRow(session) {
@@ -71,27 +72,37 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
         <h2 className="episode-detail-title">{heading}</h2>
 
         <div className="episode-detail-field-group">
-          {linkedSessions.length > 0 && <span className="episode-detail-label">Sessões vinculadas</span>}
-          {linkedSessions.length > 0 ? (
-            <div className="episode-detail-sessions-card">
-              {linkedSessions.map((row, index) => (
-                <EditableListItem
-                  key={row.id}
-                  label={row.label}
-                  description={row.description}
-                  divider={index < linkedSessions.length - 1}
-                  onClick={onOpenSession ? () => onOpenSession(row.session) : null}
-                  deleteIcon={<DoNotDisturbOn />}
-                  onDelete={() => handleRemoveSession(row.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="episode-detail-sessions-empty">Nenhuma sessão ainda</p>
+          {linkedSessions.length > 0 && (
+            <>
+              <span className="episode-detail-label">Sessões vinculadas</span>
+              <div className="episode-detail-sessions-card">
+                {linkedSessions.map((row, index) => (
+                  <EditableListItem
+                    key={row.id}
+                    label={row.label}
+                    description={row.description}
+                    divider={index < linkedSessions.length - 1}
+                    onClick={onOpenSession ? () => onOpenSession(row.session) : null}
+                    deleteIcon={<DoNotDisturbOn />}
+                    onDelete={() => handleRemoveSession(row.id)}
+                  />
+                ))}
+              </div>
+              <Button variant="outline" leadingIcon={<Add />} onClick={handleAddSession}>
+                Vincular sessão
+              </Button>
+            </>
           )}
-          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={handleAddSession}>
-            Vincular sessão
-          </Button>
+          {linkedSessions.length === 0 && (
+            <EmptyState
+              icon={<Schedule />}
+              title="Nenhuma sessão vinculada"
+              description="Vincule as sessões em que você usou esse conteúdo pra acompanhar o progresso."
+              buttonLabel="Vincular sessão"
+              buttonIcon={<Add />}
+              onButtonClick={handleAddSession}
+            />
+          )}
         </div>
       </div>
     </main>
