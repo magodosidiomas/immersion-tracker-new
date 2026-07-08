@@ -118,11 +118,11 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
         onOpenLinkContent={onOpenLinkContent}
         onBack={manualOnly ? onClose : () => setPhase('timer')}
         onDiscard={() => {
-          timer.clearDraft()
+          if (!manualOnly) timer.clearDraft()
           onClose()
         }}
         onSaved={(session) => {
-          timer.clearDraft()
+          if (!manualOnly) timer.clearDraft()
           if (onSaved) {
             onSaved(session)
           } else {

@@ -90,11 +90,19 @@ function App() {
   // here since it doesn't need to trigger a render.
   const pendingPickCallback = useRef(null)
 
-  // Whether the currently-open 'new-session' screen was reached from
-  // LinkSession's "Nova sessão" (content still possibly unsaved, so
-  // manual entry only, no "vincular conteúdo" inside it) rather than
-  // Home's normal FAB.
-  const [manualOnlyNewSession, setManualOnlyNewSession] = useState(false)
+  // A manual "Nova sessão" opened from inside LinkSession (see
+  // openManualSession below) renders as a THIRD overlay layer, stacked
+  // on top of the link-session picker overlay, rather than going
+  // through `navigate()` — navigate() swaps `screen`, which would
+  // unmount whatever's underneath (EditContent/EpisodeDetail) and lose
+  // its in-progress draft (link/título/thumbnail etc.). Staying an
+  // overlay keeps all of that mounted and untouched.
+  const [manualSessionOverlay, setManualSessionOverlay] = useState(false)
+
+  // Bumped whenever a manual session is saved/discarded so LinkSession
+  // (which stays mounted underneath and wouldn't otherwise refetch)
+  // picks up the newly created session in its day list.
+  const [sessionRefreshTick, setSessionRefreshTick] = useState(0)
 
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
@@ -109,6 +117,19 @@ function App() {
   }
 
   function closePicker() {
+    window.history.back()
+  }
+
+  // Opens the manual-entry NewSession overlay on top of whatever's
+  // currently showing (screen + any picker overlay already open),
+  // without touching either — see manualSessionOverlay above.
+  function openManualSession() {
+    setManualSessionOverlay(true)
+    window.history.pushState({ screen, pickerScreen, manualSessionOverlay: true }, '')
+  }
+
+  function closeManualSession() {
+    setSessionRefreshTick((tick) => tick + 1)
     window.history.back()
   }
 
@@ -133,6 +154,7 @@ function App() {
     setEditingSession(session)
     setScreen(nextScreen)
     setPickerScreen(null)
+    setManualSessionOverlay(false)
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -144,6 +166,7 @@ function App() {
     const onPopState = (event) => {
       setScreen(event.state?.screen ?? 'home')
       setPickerScreen(event.state?.pickerScreen ?? null)
+      setManualSessionOverlay(Boolean(event.state?.manualSessionOverlay))
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -206,21 +229,7 @@ function App() {
       )
     }
     if (screen === 'new-session') {
-      return (
-        <NewSession
-          timer={timer}
-          manualOnly={manualOnlyNewSession}
-          onClose={() => {
-            setManualOnlyNewSession(false)
-            window.history.back()
-          }}
-          onOpenLinkContent={openLinkContent}
-          onSaved={() => {
-            setManualOnlyNewSession(false)
-            window.history.back()
-          }}
-        />
-      )
+      return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} onSaved={() => window.history.back()} />
     }
     if (screen === 'edit-session') {
       return (
@@ -371,11 +380,14 @@ function App() {
               pendingPickCallback.current?.(session)
               closePicker()
             }}
-            onAddSession={() => {
-              setManualOnlyNewSession(true)
-              navigate('new-session')
-            }}
+            onAddSession={openManualSession}
+            refreshTick={sessionRefreshTick}
           />
+        </div>
+      )}
+      {manualSessionOverlay && (
+        <div className="picker-overlay">
+          <NewSession timer={timer} manualOnly onClose={closeManualSession} onSaved={closeManualSession} />
         </div>
       )}
     </>

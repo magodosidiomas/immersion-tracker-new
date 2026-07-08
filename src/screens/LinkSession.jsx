@@ -18,7 +18,7 @@ import './LinkSession.css'
 // tapping a row does: here it selects that session for linking
 // instead of opening EditSession, and it opens on today by default
 // rather than whatever day was tapped in Statistics' calendar.
-function LinkSession({ onSelect, onBack, onAddSession }) {
+function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(formatDateInput(new Date()))
   const [allSessionDates, setAllSessionDates] = useState([])
@@ -35,7 +35,7 @@ function LinkSession({ onSelect, onBack, onAddSession }) {
       setAllSessionDates(sessions.map((session) => session.date))
       setDaySessions(sessions.filter((session) => session.date === selectedDate))
     })
-  }, [activeId, selectedDate])
+  }, [activeId, selectedDate, refreshTick])
 
   function handleSelectDay(dateStr) {
     setSelectedDate(dateStr)
