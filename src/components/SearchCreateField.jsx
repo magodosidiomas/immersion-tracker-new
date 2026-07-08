@@ -37,6 +37,15 @@ function SearchCreateField({
     setOpen(false)
   }
 
+  function handleFocus() {
+    setOpen(true)
+    // Wait for the mobile keyboard to open (and the list below to render)
+    // before scrolling, so the field + results land above the keyboard.
+    setTimeout(() => {
+      containerRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }, 300)
+  }
+
   function handleSelect(item) {
     onSelect?.(item)
     setOpen(false)
@@ -68,7 +77,7 @@ function SearchCreateField({
               placeholder={placeholder}
               value={value}
               onChange={(event) => onChange?.(event.target.value)}
-              onFocus={() => setOpen(true)}
+              onFocus={handleFocus}
               {...props}
             />
             <span className="search-create-field-chevron" aria-hidden="true">
