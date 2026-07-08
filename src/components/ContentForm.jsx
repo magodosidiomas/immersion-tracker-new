@@ -86,6 +86,7 @@ function ContentForm({
   // back (including by accident) restores them instead of losing work.
   const [fieldsByType, setFieldsByType] = useState({})
   const seasonInputRef = useRef(null)
+  const episodeInputRef = useRef(null)
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
@@ -123,11 +124,17 @@ function ContentForm({
     }
   }
 
-  // Temporada/Episódio sit side by side with nothing to submit — Enter
-  // (or a mobile keyboard's "next" action) jumping from one straight
-  // into the other feels like an accidental tab-through. This just
-  // dismisses the keyboard instead, same as tapping outside would.
-  function handleFieldEnter(event) {
+  // Temporada's Enter (or a mobile keyboard's "next" action) moves
+  // straight into Episódio, since filling one after the other is the
+  // expected flow. Episódio has nothing left to jump to, so its Enter
+  // just dismisses the keyboard instead, same as tapping outside would.
+  function handleSeasonEnter(event) {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    episodeInputRef.current?.focus()
+  }
+
+  function handleEpisodeEnter(event) {
     if (event.key !== 'Enter') return
     event.preventDefault()
     event.target.blur()
@@ -348,15 +355,16 @@ function ContentForm({
                     min={1}
                     value={season}
                     onChange={(event) => setSeason(event.target.value)}
-                    onKeyDown={handleFieldEnter}
+                    onKeyDown={handleSeasonEnter}
                   />
                   <InputField
+                    ref={episodeInputRef}
                     label="Episódio"
                     type="number"
                     min={1}
                     value={episode}
                     onChange={(event) => setEpisode(event.target.value)}
-                    onKeyDown={handleFieldEnter}
+                    onKeyDown={handleEpisodeEnter}
                   />
                 </div>
                 {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}
