@@ -39,7 +39,7 @@ body {
    instead of letting every screen's flex layout stretch edge to edge. */
 #root {
   max-width: 480px;
-  min-height: 100dvh;
+  min-height: var(--app-height, 100dvh);
   margin: 0 auto;
   overflow-x: hidden;
   position: relative;
