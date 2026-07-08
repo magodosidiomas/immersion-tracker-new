@@ -330,7 +330,7 @@ function ContentForm({
               createLabel={relatedLabel}
               onCreate={handleCreateRelated}
               settingsIcon={<Settings />}
-              onSettingsClick={() => onManageRelated?.(relatedKind)}
+              onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
             />
             {isSeries && relatedId && (
               <>

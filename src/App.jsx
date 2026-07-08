@@ -119,7 +119,8 @@ function App() {
   // exactly what that entry point is for.
   const [manageOverlay, setManageOverlay] = useState(null)
 
-  function openManageOverlay(kind) {
+  function openManageOverlay(kind, onSelectItem) {
+    pendingPickCallback.current = onSelectItem ?? null
     const next = { screen: 'manage-series', kind }
     setManageOverlay(next)
     window.history.pushState({ screen, pickerScreen, manageOverlay: next }, '')
@@ -326,7 +327,7 @@ function App() {
           onSaved={() => window.history.back()}
           onOpenLinkSession={openLinkSession}
           onOpenSession={(session) => navigate('edit-session', session)}
-          onOpenManage={(kind) => openManageOverlay(kind)}
+          onOpenManage={(kind, onSelectItem) => openManageOverlay(kind, onSelectItem)}
         />
       )
     }
@@ -439,6 +440,14 @@ function App() {
             onBack={closeManageOverlay}
             onOpenSessions={
               manageOverlay.kind === 'filme' ? (item) => openManageOverlaySessions(manageOverlay.kind, item) : undefined
+            }
+            onSelect={
+              manageOverlay.kind === 'serie'
+                ? (item) => {
+                    pendingPickCallback.current?.(item)
+                    closeManageOverlay()
+                  }
+                : undefined
             }
           />
         </div>

@@ -24,17 +24,19 @@ import './ManageSeries.css'
 // onOpenEpisodes is optional: when this screen is opened from inside
 // "Adicionar conteúdo" (picking/creating the série being added), the
 // caller omits it — drilling into that série's other episodes while
-// you're literally in the middle of creating one is confusing, so
-// séries rows there are edit/delete-only (rename still works, tap just
-// doesn't navigate). Only the Configurações entry point wires
-// onOpenEpisodes, where full drilldown makes sense. Filmes'
-// onOpenSessions isn't restricted the same way, since it's the only
-// way to rename a filme in the first place (see the row below).
+// you're literally in the middle of creating one is confusing. Instead,
+// tapping a row there calls onSelect (picks that série for the form
+// being edited, mirroring SearchCreateField's own onSelect). Only the
+// Configurações entry point wires onOpenEpisodes, where full drilldown
+// makes sense — and onSelect is omitted there, since there's no form to
+// select into. Filmes' onOpenSessions isn't restricted the same way,
+// since it's the only way to rename a filme in the first place (see the
+// row below).
 //
 // Self-fetches its own languageId + catalog (same convention as
 // Home/Statistics/Library) — only navigation callbacks come from
 // whoever renders this screen.
-function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }) {
+function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect }) {
   const [languageId, setLanguageId] = useState(null)
   const [items, setItems] = useState([])
   const [query, setQuery] = useState('')
@@ -156,7 +158,15 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
                     key={item.id}
                     label={item.label}
                     description={item.sessionCount ? `${item.sessionCount} sessões` : null}
-                    onClick={isSerie ? (onOpenEpisodes ? () => onOpenEpisodes(item) : undefined) : () => onOpenSessions(item)}
+                    onClick={
+                      isSerie
+                        ? onOpenEpisodes
+                          ? () => onOpenEpisodes(item)
+                          : onSelect
+                            ? () => onSelect(item)
+                            : undefined
+                        : () => onOpenSessions(item)
+                    }
                     editIcon={<Edit />}
                     onEdit={isSerie ? () => openRename(item) : () => onOpenSessions(item)}
                     deleteIcon={<Delete />}
