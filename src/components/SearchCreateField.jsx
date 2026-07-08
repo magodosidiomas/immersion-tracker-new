@@ -5,6 +5,7 @@ import { normalizeForCompare } from '../utils/text'
 import {
   Add,
   ArrowBack,
+  Close,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Search,
@@ -69,9 +70,11 @@ function SearchCreateField({
   const isDesktop = useIsDesktop()
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  const [overlayViewport, setOverlayViewport] = useState(null)
   const containerRef = useRef(null)
   const inputRef = useRef(null)
   const overlayInputRef = useRef(null)
+  const filterInputRef = useRef(null)
 
   const trimmed = value.trim()
   const hasExactMatch = trimmed
@@ -92,6 +95,32 @@ function SearchCreateField({
     if (!open || isDesktop) return
     const timer = setTimeout(() => overlayInputRef.current?.focus(), 0)
     return () => clearTimeout(timer)
+  }, [open, isDesktop])
+
+  // The overlay is `position: fixed`, but the screen behind it can
+  // still be the ancestor the browser decides to scroll when its own
+  // input gets focus (and again when the keyboard opens/closes) —
+  // same class of bug BottomSheet's modal variant already works around.
+  // Locking body scroll and mirroring visualViewport's height/offset
+  // onto the overlay keeps it exactly covering whatever space is
+  // actually visible above the keyboard, so there's nothing left for
+  // an ancestor to scroll.
+  useEffect(() => {
+    if (!open || isDesktop) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const vv = window.visualViewport
+    function updateViewport() {
+      if (vv) setOverlayViewport({ height: vv.height, top: vv.offsetTop })
+    }
+    updateViewport()
+    vv?.addEventListener('resize', updateViewport)
+    vv?.addEventListener('scroll', updateViewport)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      vv?.removeEventListener('resize', updateViewport)
+      vv?.removeEventListener('scroll', updateViewport)
+    }
   }, [open, isDesktop])
 
   function handleBlur(event) {
@@ -116,12 +145,24 @@ function SearchCreateField({
 
   function handleSelect(item) {
     onSelect?.(item)
+    document.activeElement?.blur()
     setOpen(false)
   }
 
   function handleCreate() {
     onCreate?.(trimmed)
+    document.activeElement?.blur()
     setOpen(false)
+  }
+
+  function handleClear(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    handleChange('')
+    // Desktop: keep typing in the same spot. Mobile: don't refocus the
+    // (read-only) main field — that would just reopen the overlay we're
+    // trying to get out of.
+    if (isDesktop) inputRef.current?.focus()
   }
 
   function activateRow(index) {
@@ -190,6 +231,7 @@ function SearchCreateField({
               <Search className="search-create-field-filter-icon" aria-hidden="true" />
               <input
                 id={id}
+                ref={filterInputRef}
                 className="search-create-field-input"
                 type="text"
                 placeholder={placeholder}
@@ -197,6 +239,20 @@ function SearchCreateField({
                 onChange={(event) => onChange?.(event.target.value)}
                 {...props}
               />
+              {value && (
+                <button
+                  type="button"
+                  className="search-create-field-clear"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onChange?.('')
+                    filterInputRef.current?.focus()
+                  }}
+                  aria-label="Limpar"
+                >
+                  <Close />
+                </button>
+              )}
             </span>
           </span>
         </div>
@@ -230,6 +286,17 @@ function SearchCreateField({
               onKeyDown={handleKeyDown}
               {...props}
             />
+            {trimmed && (
+              <button
+                type="button"
+                className="search-create-field-clear"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={handleClear}
+                aria-label="Limpar"
+              >
+                <Close />
+              </button>
+            )}
             <span className="search-create-field-chevron" aria-hidden="true">
               {showList ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </span>
@@ -254,7 +321,7 @@ function SearchCreateField({
       </div>
 
       {!isDesktop && open && (
-        <div className="search-create-field-overlay">
+        <div className="search-create-field-overlay" style={overlayViewport ? { top: overlayViewport.top, height: overlayViewport.height } : undefined}>
           <div className="search-create-field-overlay-header">
             <button
               type="button"
@@ -274,6 +341,20 @@ function SearchCreateField({
                 value={value}
                 onChange={(event) => handleChange(event.target.value)}
               />
+              {value && (
+                <button
+                  type="button"
+                  className="search-create-field-clear"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    handleChange('')
+                    overlayInputRef.current?.focus()
+                  }}
+                  aria-label="Limpar"
+                >
+                  <Close />
+                </button>
+              )}
             </span>
           </div>
           <div className="search-create-field-overlay-list">{renderRows(false)}</div>

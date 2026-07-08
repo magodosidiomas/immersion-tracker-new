@@ -122,6 +122,16 @@ function ContentForm({
     }
   }
 
+  // Temporada/Episódio sit side by side with nothing to submit — Enter
+  // (or a mobile keyboard's "next" action) jumping from one straight
+  // into the other feels like an accidental tab-through. This just
+  // dismisses the keyboard instead, same as tapping outside would.
+  function handleFieldEnter(event) {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    event.target.blur()
+  }
+
   const trimmedTitle = title.trim().toLowerCase()
   const trimmedLink = link.trim().toLowerCase()
   const isDuplicate = existingContents.some((item) => {
@@ -331,6 +341,7 @@ function ContentForm({
                     min={1}
                     value={season}
                     onChange={(event) => setSeason(event.target.value)}
+                    onKeyDown={handleFieldEnter}
                   />
                   <InputField
                     label="Episódio"
@@ -338,6 +349,7 @@ function ContentForm({
                     min={1}
                     value={episode}
                     onChange={(event) => setEpisode(event.target.value)}
+                    onKeyDown={handleFieldEnter}
                   />
                 </div>
                 {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}

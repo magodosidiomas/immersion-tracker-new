@@ -92,6 +92,30 @@
   height: 100%;
 }
 
+.search-create-field-clear {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--icon-color);
+  cursor: pointer;
+}
+
+.search-create-field-clear:hover {
+  background: var(--bg-surface-primary-8);
+}
+
+.search-create-field-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
 .search-create-field-settings {
   box-sizing: border-box;
   display: flex;
