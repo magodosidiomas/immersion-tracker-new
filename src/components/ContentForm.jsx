@@ -181,7 +181,9 @@ function ContentForm({
   const relatedKind = isSeries ? 'serie' : 'filme'
   const relatedLabel = isSeries ? 'série' : 'filme'
   const derivedTitle =
-    isSeries && relatedQuery ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}` : ''
+    isSeries && relatedQuery && season
+      ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}`
+      : ''
 
   function handleSelectRelated(item) {
     setRelatedQuery(item.label)
@@ -317,7 +319,7 @@ function ContentForm({
               settingsIcon={<Settings />}
               onSettingsClick={() => onManageRelated?.(relatedKind)}
             />
-            {isSeries && (
+            {isSeries && relatedId && (
               <>
                 <div className="content-form-row">
                   <InputField
@@ -335,7 +337,7 @@ function ContentForm({
                     onChange={(event) => setEpisode(event.target.value)}
                   />
                 </div>
-                <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />
+                {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}
               </>
             )}
           </>
