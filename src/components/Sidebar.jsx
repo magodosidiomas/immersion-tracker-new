@@ -67,6 +67,7 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
           flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
           onClick={() => setSwitcherOpen(true)}
         />
+        <div className="sidebar-divider" />
         <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
           Nova sessão
         </Button>

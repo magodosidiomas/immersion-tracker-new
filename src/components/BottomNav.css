@@ -16,3 +16,11 @@
 .bottom-nav .nav-item {
   flex: 1;
 }
+
+/* The Sidebar (desktop) replaces this bottom tab bar from the same
+   breakpoint onward. */
+@media (min-width: 1280px) {
+  .bottom-nav {
+    display: none;
+  }
+}

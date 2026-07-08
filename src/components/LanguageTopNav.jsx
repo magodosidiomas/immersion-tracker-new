@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
 import TopNav from './TopNav'
+import './LanguageTopNav.css'
 import BottomSheet from './BottomSheet'
 import SelectableListItem from './SelectableListItem'
 import Button from './Button'
@@ -55,7 +56,7 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLangua
   }
 
   return (
-    <>
+    <div className="language-top-nav">
       <TopNav
         title={activeLanguage?.name}
         flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
@@ -101,7 +102,7 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLangua
           />
         ))}
       </BottomSheet>
-    </>
+    </div>
   )
 }
 
