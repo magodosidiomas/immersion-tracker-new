@@ -128,6 +128,8 @@ function ContentForm({
 
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
+  const hasLinkField = type === 'youtube' || type === 'podcast' || type === 'website' || type === 'outro'
+  const showSessions = !hasLinkField || link.trim().length > 0
   const relatedKind = isSeries ? 'serie' : 'filme'
   const relatedLabel = isSeries ? 'série' : 'filme'
   const derivedTitle =
@@ -329,41 +331,45 @@ function ContentForm({
           </>
         )}
 
-        <div className="content-form-divider" />
+        {showSessions && (
+          <>
+            <div className="content-form-divider" />
 
-        <div className="content-form-field-group">
-          {linkedSessions.length > 0 && (
-            <>
-              <span className="content-form-label">Sessões vinculadas</span>
-              <div className="content-form-sessions-card">
-                {linkedSessions.map((session, index) => (
-                  <EditableListItem
-                    key={session.id}
-                    label={session.label}
-                    description={session.description}
-                    divider={index < linkedSessions.length - 1}
-                    onClick={onOpenSession ? () => onOpenSession(session) : null}
-                    deleteIcon={<DoNotDisturbOn />}
-                    onDelete={() => onRemoveSession?.(session.id)}
-                  />
-                ))}
-              </div>
-              <Button variant="outline" leadingIcon={<Add />} onClick={onAddSession}>
-                Vincular sessão
-              </Button>
-            </>
-          )}
-          {linkedSessions.length === 0 && (
-            <EmptyState
-              icon={<Schedule />}
-              title="Nenhuma sessão vinculada"
-              description="Vincule as sessões em que você usou esse conteúdo pra acompanhar o progresso."
-              buttonLabel="Vincular sessão"
-              buttonIcon={<Add />}
-              onButtonClick={onAddSession}
-            />
-          )}
-        </div>
+            <div className="content-form-field-group">
+              {linkedSessions.length > 0 && (
+                <>
+                  <span className="content-form-label">Sessões vinculadas</span>
+                  <div className="content-form-sessions-card">
+                    {linkedSessions.map((session, index) => (
+                      <EditableListItem
+                        key={session.id}
+                        label={session.label}
+                        description={session.description}
+                        divider={index < linkedSessions.length - 1}
+                        onClick={onOpenSession ? () => onOpenSession(session) : null}
+                        deleteIcon={<DoNotDisturbOn />}
+                        onDelete={() => onRemoveSession?.(session.id)}
+                      />
+                    ))}
+                  </div>
+                  <Button variant="outline" leadingIcon={<Add />} onClick={onAddSession}>
+                    Vincular sessão
+                  </Button>
+                </>
+              )}
+              {linkedSessions.length === 0 && (
+                <EmptyState
+                  icon={<Schedule />}
+                  title="Sem sessões"
+                  description="Vincule as sessões em que você usou esse conteúdo."
+                  buttonLabel="Vincular sessão"
+                  buttonIcon={<Add />}
+                  onButtonClick={onAddSession}
+                />
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="content-form-footer">

@@ -96,8 +96,8 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
           {linkedSessions.length === 0 && (
             <EmptyState
               icon={<Schedule />}
-              title="Nenhuma sessão vinculada"
-              description="Vincule as sessões em que você usou esse conteúdo pra acompanhar o progresso."
+              title="Sem sessões"
+              description="Vincule as sessões em que você usou esse conteúdo."
               buttonLabel="Vincular sessão"
               buttonIcon={<Add />}
               onButtonClick={handleAddSession}
