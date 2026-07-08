@@ -45,6 +45,27 @@ body {
   position: relative;
 }
 
+.app-content {
+  min-width: 0;
+}
+
+/* Desktop breakpoint: Sidebar (see Sidebar.css) sits beside the
+   screen content instead of being centered as a phone column.
+   Matches Sidebar.css's own min-width: 1280px so both flip together. */
+@media (min-width: 1280px) {
+  #root {
+    max-width: none;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .app-content {
+    flex: 1;
+  }
+}
+
 /* LinkContent/LinkSession render as an overlay on top of whatever
    screen opened them (NewSession's finish phase, EditSession) instead
    of replacing it, so that screen's own state survives the round

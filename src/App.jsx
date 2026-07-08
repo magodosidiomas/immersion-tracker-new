@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
+import Sidebar from './components/Sidebar'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
@@ -356,7 +357,15 @@ function App() {
 
   return (
     <>
-      {renderScreen()}
+      <Sidebar
+        activeScreen={screen}
+        onNavigate={navigate}
+        onOpenNewSession={() => navigate('new-session')}
+        onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenAddLanguages={() => navigate('add-languages')}
+        onOpenSettings={() => navigate('settings')}
+      />
+      <div className="app-content">{renderScreen()}</div>
       {pickerScreen === 'link-content' && (
         <div className="picker-overlay">
           <LinkContent
