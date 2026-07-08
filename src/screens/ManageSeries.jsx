@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getAppSettings, getContentCatalog, addCatalogEntry, renameCatalogEntry, deleteCatalogEntry } from '../db'
 import TopNav from '../components/TopNav'
 import SearchCreateField from '../components/SearchCreateField'
+import SelectableListItem from '../components/SelectableListItem'
 import EditableListItem from '../components/EditableListItem'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
@@ -86,9 +87,13 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
     refresh()
   }
 
-  const filteredItems = query.trim()
+  const trimmedQuery = query.trim()
+  const filteredItems = trimmedQuery
     ? items.filter((item) => normalizeForCompare(item.label).includes(normalizeForCompare(query)))
     : items
+  const hasExactMatch = trimmedQuery
+    ? items.some((item) => normalizeForCompare(item.label) === normalizeForCompare(trimmedQuery))
+    : true
 
   const hasLinked = Boolean(deleteTarget?.sessionCount)
   const deleteDescription = isSerie
@@ -125,17 +130,24 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
         <>
           <div className="manage-series-content">
             <SearchCreateField
+              variant="filter"
               label={labelCap}
               placeholder={`Busque ou adicione ${isSerie ? 'uma série' : 'um filme'}`}
               value={query}
               onChange={setQuery}
-              items={[]}
-              createLabel={label}
-              onCreate={handleQuickCreate}
             />
 
             <div className="manage-series-list">
-              {filteredItems.length === 0 ? (
+              {trimmedQuery && !hasExactMatch && (
+                <SelectableListItem
+                  label={`Adicionar ${label}: "${trimmedQuery}"`}
+                  leadingIcon={<Add />}
+                  data-variant="create"
+                  divider={filteredItems.length > 0}
+                  onClick={() => handleQuickCreate(trimmedQuery)}
+                />
+              )}
+              {filteredItems.length === 0 && !trimmedQuery ? (
                 <p className="manage-series-no-results">Nenhum resultado encontrado.</p>
               ) : (
                 filteredItems.map((item, index) => (

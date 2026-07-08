@@ -38,6 +38,17 @@
   background: var(--bg-surface-card);
 }
 
+/* Quick-create row, shown inline at the top of the list when the
+   search text doesn't match an existing entry — same accent treatment
+   SearchCreateField uses for its own "+ Adicionar" row. */
+.manage-series-list [data-variant='create'] .selectable-list-item-label {
+  color: var(--color-text-accent);
+}
+
+.manage-series-list [data-variant='create'] {
+  --icon-color: var(--color-icon-muted);
+}
+
 .manage-series-no-results {
   margin: 0;
   padding: 16px;
