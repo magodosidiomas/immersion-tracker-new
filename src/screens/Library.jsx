@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react'
-import { getContentsByLanguage } from '../db'
+import { getContentsByLanguage, deleteContent, createContent } from '../db'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
+import { useLongPress } from '../hooks/useLongPress'
 import LanguageTopNav from '../components/LanguageTopNav'
+import TopNav from '../components/TopNav'
 import BottomNav from '../components/BottomNav'
 import ContentSearchList from '../components/ContentSearchList'
+import ConfirmDialog from '../components/ConfirmDialog'
 import { useContentFilter } from '../hooks/useContentFilter'
-import { Home as HomeIcon, BarChart, Book } from '@nine-thirty-five/material-symbols-react/outlined'
+import {
+  Home as HomeIcon,
+  BarChart,
+  Book,
+  Close,
+  ContentCopy,
+  Delete,
+} from '@nine-thirty-five/material-symbols-react/outlined'
 import './Library.css'
 
 // "3 sessões" / "1 sessão" — every Biblioteca row's subtitle is just
@@ -21,17 +31,28 @@ function formatSessionCount(count) {
 // returns — that raw-data-in, format-in-the-screen split keeps
 // db/index.js presentation-agnostic. The search/filter/grouped-list
 // body itself is shared with LinkContent (see ContentSearchList).
+//
+// Long-press selection: same contextual TopNav pattern as DayHistory
+// (close left; duplicate — only meaningful for exactly one selected
+// row — and delete right, delete always confirmed). Duplicate copies
+// a content row itself; the session-count/latestSessionDate that
+// content carries starts fresh (0 sessões) since a duplicated content
+// is a new, unlinked entry, not a clone of the original's history.
 function Library({
   onOpenNewContent,
   onOpenContent,
   onOpenSettings,
   onOpenManageLanguages,
-  onOpenAddLanguages,
   onOpenHome,
   onOpenStatistics,
 }) {
   const [activeId, setActiveId] = useState(null)
   const [contents, setContents] = useState([])
+  const [selectedIds, setSelectedIds] = useState([])
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [refreshTick, setRefreshTick] = useState(0)
+  const selectionMode = selectedIds.length > 0
+  const bindLongPress = useLongPress()
 
   useEffect(() => {
     if (!activeId) return
@@ -43,7 +64,53 @@ function Library({
     return () => {
       cancelled = true
     }
-  }, [activeId])
+  }, [activeId, refreshTick])
+
+  function refreshContents() {
+    setRefreshTick((tick) => tick + 1)
+  }
+
+  function toggleSelected(id) {
+    setSelectedIds((current) =>
+      current.includes(id) ? current.filter((existing) => existing !== id) : [...current, id],
+    )
+  }
+
+  function exitSelectionMode() {
+    setSelectedIds([])
+  }
+
+  function handleItemClick(item, isLongPress) {
+    if (isLongPress) {
+      setSelectedIds([item.id])
+    } else if (selectionMode) {
+      toggleSelected(item.id)
+    } else {
+      onOpenContent(item)
+    }
+  }
+
+  async function handleDuplicate() {
+    const [id] = selectedIds
+    const original = contents.find((content) => content.id === id)
+    if (!original) return
+    const rest = { ...original }
+    delete rest.id
+    delete rest.createdAt
+    delete rest.title
+    delete rest.sessionCount
+    delete rest.latestSessionDate
+    await createContent(rest)
+    exitSelectionMode()
+    refreshContents()
+  }
+
+  async function handleDeleteConfirmed() {
+    await Promise.all(selectedIds.map((id) => deleteContent(id)))
+    setConfirmOpen(false)
+    exitSelectionMode()
+    refreshContents()
+  }
 
   const todayStr = formatDateInput(new Date())
   const items = contents.map((content) => ({
@@ -56,12 +123,35 @@ function Library({
 
   return (
     <main className="library">
-      <LanguageTopNav
-        onOpenSettings={onOpenSettings}
-        onOpenManageLanguages={onOpenManageLanguages}
-        onOpenAddLanguages={onOpenAddLanguages}
-        onActiveLanguageChange={setActiveId}
-      />
+      {selectionMode ? (
+        <TopNav
+          title={`${selectedIds.length} selecionado${selectedIds.length === 1 ? '' : 's'}`}
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={exitSelectionMode} aria-label="Fechar seleção">
+              <Close />
+            </button>
+          }
+          trailingLeft={
+            selectedIds.length === 1 && (
+              <button type="button" className="top-nav-icon-reset" onClick={handleDuplicate} aria-label="Duplicar">
+                <ContentCopy />
+              </button>
+            )
+          }
+          trailingRight={
+            <button type="button" className="top-nav-icon-reset" onClick={() => setConfirmOpen(true)} aria-label="Excluir">
+              <Delete />
+            </button>
+          }
+          hasDivider
+        />
+      ) : (
+        <LanguageTopNav
+          onOpenSettings={onOpenSettings}
+          onOpenManageLanguages={onOpenManageLanguages}
+          onActiveLanguageChange={setActiveId}
+        />
+      )}
       <div className="library-content">
         <ContentSearchList
           query={query}
@@ -71,7 +161,10 @@ function Library({
           onClearTypes={() => setSelectedTypes([])}
           groups={groups}
           onAddContent={onOpenNewContent}
-          onItemClick={onOpenContent}
+          onItemClick={handleItemClick}
+          selectionMode={selectionMode}
+          selectedIds={selectedIds}
+          bindLongPress={bindLongPress}
         />
       </div>
       <div className="library-bottom-layer">
@@ -83,6 +176,13 @@ function Library({
           ]}
         />
       </div>
+      <ConfirmDialog
+        open={confirmOpen}
+        title={selectedIds.length === 1 ? 'Excluir conteúdo?' : `Excluir ${selectedIds.length} conteúdos?`}
+        description="Essa ação não pode ser desfeita."
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={handleDeleteConfirmed}
+      />
     </main>
   )
 }

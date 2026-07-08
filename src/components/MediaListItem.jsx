@@ -1,4 +1,5 @@
 import './MediaListItem.css'
+import CheckboxIndicator from './CheckboxIndicator'
 
 // Content row for the Biblioteca and content-picker sheets — a
 // Thumbnail (image or icon fallback) plus title/subtitle. Mirrors
@@ -18,16 +19,18 @@ function MediaListItem({
   disabled = false,
   divider = false,
   trailingAction = null,
+  selectionMode = false,
+  selected = false,
   ...props
 }) {
   const content = (
     <span className="media-list-item-row">
-      {thumbnail}
+      {selectionMode ? <CheckboxIndicator checked={selected} /> : thumbnail}
       <span className="media-list-item-text">
         <span className="media-list-item-title">{title}</span>
         {subtitle && <span className="media-list-item-subtitle">{subtitle}</span>}
       </span>
-      {trailingAction && (
+      {!selectionMode && trailingAction && (
         <button
           type="button"
           className="media-list-item-action"
@@ -40,9 +43,14 @@ function MediaListItem({
     </span>
   )
 
-  if (trailingAction) {
+  // Selection mode and trailingAction both need the row itself to stay
+  // non-interactive (a real per-item action button, or nothing at all
+  // since the whole row's onClick/long-press already toggles the
+  // checkbox) — same "no nested button" reasoning as trailingAction
+  // already used before selection mode existed.
+  if (selectionMode || trailingAction) {
     return (
-      <div className="media-list-item" data-divider={divider}>
+      <div className="media-list-item" data-divider={divider} {...props}>
         {content}
         {divider && <span className="media-list-item-divider" />}
       </div>

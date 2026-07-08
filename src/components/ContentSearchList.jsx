@@ -34,6 +34,9 @@ function ContentSearchList({
   groups,
   onAddContent,
   onItemClick,
+  selectionMode = false,
+  selectedIds = [],
+  bindLongPress = null,
 }) {
   return (
     <>
@@ -99,13 +102,18 @@ function ContentSearchList({
               {group.items.map((item, index) => {
                 const contentType = CONTENT_TYPES.find((type) => type.key === item.type)
                 const Icon = contentType && TYPE_ICONS[contentType.icon]
+                const longPressProps = bindLongPress
+                  ? bindLongPress(item.id, () => onItemClick(item, true), () => onItemClick(item))
+                  : { onClick: () => onItemClick(item) }
                 return (
                   <MediaListItem
                     key={item.id}
                     title={item.title}
                     subtitle={item.subtitle}
                     divider={index < group.items.length - 1}
-                    onClick={() => onItemClick(item)}
+                    selectionMode={selectionMode}
+                    selected={selectedIds.includes(item.id)}
+                    {...longPressProps}
                     thumbnail={
                       <Thumbnail
                         size={item.type === 'livro' ? 'book' : 'sm'}
