@@ -225,6 +225,12 @@ function SearchCreateField({
               {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </span>
           </span>
+
+          {isDesktop && open && (rowCount > 0 || items.length > 0) && (
+            <div className="search-create-field-list" role="listbox">
+              {renderRows(true)}
+            </div>
+          )}
         </span>
         {settingsIcon && (
           <button
@@ -237,12 +243,6 @@ function SearchCreateField({
           </button>
         )}
       </div>
-
-      {isDesktop && open && (rowCount > 0 || items.length > 0) && (
-        <div className="search-create-field-list" role="listbox">
-          {renderRows(true)}
-        </div>
-      )}
 
       {!isDesktop && open && (
         <div className="search-create-field-overlay">
