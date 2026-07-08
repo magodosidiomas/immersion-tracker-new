@@ -141,17 +141,29 @@ function SearchCreateField({
   function handleChange(newValue) {
     onChange?.(newValue)
     setActiveIndex(-1)
+    // Selecting an item closes the dropdown but keeps the field
+    // focused (see handleSelect/handleCreate below) — typing again
+    // right after should resume filtering instead of staying closed
+    // until a separate focus event.
+    if (isDesktop) setOpen(true)
   }
 
   function handleSelect(item) {
     onSelect?.(item)
-    document.activeElement?.blur()
+    // Desktop: standard combobox behavior keeps focus in the field
+    // after picking an option (only the popup closes) — deleting the
+    // selected text and typing again should resume filtering right
+    // away. Mobile: the overlay's input is about to unmount while
+    // still focused, which some mobile browsers "rescue" by shoving
+    // focus into whatever's next in the DOM (e.g. Temporada, right
+    // below) — blur it first so there's nothing focused to rescue.
+    if (!isDesktop) document.activeElement?.blur()
     setOpen(false)
   }
 
   function handleCreate() {
     onCreate?.(trimmed)
-    document.activeElement?.blur()
+    if (!isDesktop) document.activeElement?.blur()
     setOpen(false)
   }
 

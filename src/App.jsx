@@ -105,6 +105,37 @@ function App() {
   // picks up the newly created session in its day list.
   const [sessionRefreshTick, setSessionRefreshTick] = useState(0)
 
+  // ManageSeries/EpisodeDetail, opened from EditContent's SearchCreateField
+  // gear icon (renaming/quick-picking a série or filme mid-draft), render
+  // as an overlay stack for the same reason manualSessionOverlay does:
+  // a real navigate() would unmount EditContent and lose the in-progress
+  // ContentForm draft (link, título, temporada/episódio...). null means
+  // closed; { screen, kind, catalogItem } tracks the (at most two-level)
+  // stack — 'manage-series' or 'episode-detail' (filme only, reached by
+  // tapping a row; séries don't drill further from here, see
+  // ManageSeries' own doc comment on why). Opened from Configurações
+  // instead, this same content is a normal full-screen `navigate()` —
+  // there's no draft to preserve there, and drilling into episódios is
+  // exactly what that entry point is for.
+  const [manageOverlay, setManageOverlay] = useState(null)
+
+  function openManageOverlay(kind) {
+    const next = { screen: 'manage-series', kind }
+    setManageOverlay(next)
+    window.history.pushState({ screen, pickerScreen, manageOverlay: next }, '')
+  }
+
+  async function openManageOverlaySessions(kind, item) {
+    const content = await getFilmeContent(item.id)
+    const next = { screen: 'episode-detail', kind, catalogItem: item, contentId: content?.id ?? null }
+    setManageOverlay(next)
+    window.history.pushState({ screen, pickerScreen, manageOverlay: next }, '')
+  }
+
+  function closeManageOverlay() {
+    window.history.back()
+  }
+
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
     setPickerScreen('link-content')
@@ -156,6 +187,7 @@ function App() {
     setScreen(nextScreen)
     setPickerScreen(null)
     setManualSessionOverlay(false)
+    setManageOverlay(null)
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -168,6 +200,7 @@ function App() {
       setScreen(event.state?.screen ?? 'home')
       setPickerScreen(event.state?.pickerScreen ?? null)
       setManualSessionOverlay(Boolean(event.state?.manualSessionOverlay))
+      setManageOverlay(event.state?.manageOverlay ?? null)
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -293,7 +326,7 @@ function App() {
           onSaved={() => window.history.back()}
           onOpenLinkSession={openLinkSession}
           onOpenSession={(session) => navigate('edit-session', session)}
-          onOpenManage={(kind) => navigate(kind === 'serie' ? 'manage-series' : 'manage-movies')}
+          onOpenManage={(kind) => openManageOverlay(kind)}
         />
       )
     }
@@ -397,6 +430,29 @@ function App() {
       {manualSessionOverlay && (
         <div className="picker-overlay">
           <NewSession timer={timer} manualOnly onClose={closeManualSession} onSaved={closeManualSession} />
+        </div>
+      )}
+      {manageOverlay?.screen === 'manage-series' && (
+        <div className="picker-overlay">
+          <ManageSeries
+            kind={manageOverlay.kind}
+            onBack={closeManageOverlay}
+            onOpenSessions={
+              manageOverlay.kind === 'filme' ? (item) => openManageOverlaySessions(manageOverlay.kind, item) : undefined
+            }
+          />
+        </div>
+      )}
+      {manageOverlay?.screen === 'episode-detail' && (
+        <div className="picker-overlay">
+          <EpisodeDetail
+            contentId={manageOverlay.contentId}
+            seriesName={manageOverlay.catalogItem?.label}
+            episode={null}
+            onAddSession={openLinkSession}
+            onOpenSession={(session) => navigate('edit-session', session)}
+            onBack={closeManageOverlay}
+          />
         </div>
       )}
     </>
