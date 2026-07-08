@@ -132,7 +132,7 @@ function ContentForm({
     if (!trimmedLinkValue) return null
     if (type === 'youtube') {
       return !isYouTubeUrl(link) || !extractYouTubeId(link)
-        ? 'Cole o link de um vídeo do YouTube (não funciona com playlists ou canais).'
+        ? 'Esse link não parece ser do YouTube. Cole o link do vídeo do YouTube (ex: youtube.com/watch?v=...).'
         : null
     }
     if (type === 'podcast') {
