@@ -138,15 +138,6 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
             />
 
             <div className="manage-series-list">
-              {trimmedQuery && !hasExactMatch && (
-                <SelectableListItem
-                  label={`Adicionar ${label}: "${trimmedQuery}"`}
-                  leadingIcon={<Add />}
-                  data-variant="create"
-                  divider={filteredItems.length > 0}
-                  onClick={() => handleQuickCreate(trimmedQuery)}
-                />
-              )}
               {filteredItems.length === 0 && !trimmedQuery ? (
                 <p className="manage-series-no-results">Nenhum resultado encontrado.</p>
               ) : (
@@ -163,6 +154,14 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions }
                     divider={index < filteredItems.length - 1}
                   />
                 ))
+              )}
+              {trimmedQuery && !hasExactMatch && (
+                <SelectableListItem
+                  label={`Adicionar ${label}: "${trimmedQuery}"`}
+                  leadingIcon={<Add />}
+                  data-variant="create"
+                  onClick={() => handleQuickCreate(trimmedQuery)}
+                />
               )}
             </div>
           </div>

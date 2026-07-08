@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import './SearchCreateField.css'
 import SelectableListItem from './SelectableListItem'
+import { normalizeForCompare } from '../utils/text'
 import {
   Add,
   ArrowBack,
@@ -73,8 +74,16 @@ function SearchCreateField({
   const overlayInputRef = useRef(null)
 
   const trimmed = value.trim()
-  const showCreate = Boolean(trimmed) && Boolean(onCreate)
+  const hasExactMatch = trimmed
+    ? items.some((item) => normalizeForCompare(item.label) === normalizeForCompare(trimmed))
+    : false
+  const showCreate = Boolean(trimmed) && Boolean(onCreate) && !hasExactMatch
   const rowCount = items.length + (showCreate ? 1 : 0)
+  // The floating dropdown only "attaches" to the field (squares off its
+  // bottom corners) when there's actually something to show below it —
+  // otherwise the field would look cut open with nothing completing
+  // the shape.
+  const showList = isDesktop && open && rowCount > 0
 
   // Focus lands on the overlay's own input once it mounts — the main
   // field stays read-only on mobile (see below), so this is the only
@@ -131,9 +140,9 @@ function SearchCreateField({
       event.preventDefault()
       setActiveIndex((current) => Math.max(current - 1, 0))
     } else if (event.key === 'Enter') {
-      if (activeIndex >= 0) {
+      if (rowCount > 0) {
         event.preventDefault()
-        activateRow(activeIndex)
+        activateRow(activeIndex >= 0 ? activeIndex : 0)
       }
     } else if (event.key === 'Escape') {
       setOpen(false)
@@ -204,7 +213,7 @@ function SearchCreateField({
               {label}
             </label>
           )}
-          <span className="search-create-field-control" data-open={open}>
+          <span className="search-create-field-control" data-open={showList}>
             <input
               id={id}
               ref={inputRef}
@@ -214,7 +223,7 @@ function SearchCreateField({
               value={value}
               readOnly={!isDesktop}
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={showList}
               aria-autocomplete="list"
               onChange={(event) => handleChange(event.target.value)}
               onFocus={handleFocus}
@@ -222,11 +231,11 @@ function SearchCreateField({
               {...props}
             />
             <span className="search-create-field-chevron" aria-hidden="true">
-              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              {showList ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </span>
           </span>
 
-          {isDesktop && open && (rowCount > 0 || items.length > 0) && (
+          {showList && (
             <div className="search-create-field-list" role="listbox">
               {renderRows(true)}
             </div>
