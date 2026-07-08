@@ -7,17 +7,7 @@ import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
-import {
-  isYouTubeUrl,
-  isSpotifyUrl,
-  extractYouTubeId,
-  isHttpUrl,
-  isYouTubeMusicUrl,
-  isYouTubePlaylistUrl,
-  isYouTubeChannelUrl,
-  isSpotifyPlaylistUrl,
-  isSpotifyProfileUrl,
-} from '../utils/contentLink'
+import { isYouTubeUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
@@ -151,22 +141,7 @@ function ContentForm({
         : null
     }
     if (type === 'podcast') {
-      if (isSpotifyUrl(link)) {
-        if (isSpotifyPlaylistUrl(link)) return 'Esse link é de uma playlist do Spotify. Cole o link de um episódio.'
-        if (isSpotifyProfileUrl(link)) return 'Esse link é de um perfil ou canal do Spotify. Cole o link de um episódio.'
-        return null
-      }
-      if (isYouTubeUrl(link)) {
-        if (!isYouTubeMusicUrl(link)) {
-          return 'Esse link é de um vídeo do YouTube. Cole o link de um episódio do Spotify ou YouTube Music.'
-        }
-        if (isYouTubePlaylistUrl(link)) return 'Esse link é de uma playlist do YouTube Music. Cole o link de um episódio.'
-        if (isYouTubeChannelUrl(link)) return 'Esse link é de um perfil ou canal do YouTube Music. Cole o link de um episódio.'
-        return !extractYouTubeId(link)
-          ? 'Cole o link de um episódio do YouTube Music (não funciona com playlists ou canais).'
-          : null
-      }
-      return 'Esse link não parece ser do Spotify ou YouTube Music. Cole o link de um episódio.'
+      return !isHttpUrl(link) ? 'Cole um link válido.' : null
     }
     if (type === 'website') {
       return !isHttpUrl(link) ? 'Cole um link válido.' : null
