@@ -7,7 +7,7 @@ import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
-import { isYouTubeUrl, extractYouTubeId } from '../utils/contentLink'
+import { isYouTubeUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
@@ -118,13 +118,36 @@ function ContentForm({
   })
   const duplicateError = isDuplicate ? 'Já existe um conteúdo com esse título ou link.' : null
 
-  // YouTube only accepts a single video link — playlists/canais don't
-  // resolve to a video id via extractYouTubeId, so they're rejected
-  // the same way a non-YouTube link is.
-  const youtubeLinkError =
-    type === 'youtube' && link.trim() && (!isYouTubeUrl(link) || !extractYouTubeId(link))
-      ? 'Cole o link de um vídeo do YouTube (não funciona com playlists ou canais).'
-      : null
+  // Each link-based type validates its link differently:
+  //   - youtube: must resolve to a real video id (rejects playlists/
+  //     canais the same way it rejects a non-YouTube link)
+  //   - podcast: any host works (título stays manually editable
+  //     either way), but a YouTube link specifically still needs to
+  //     resolve to a video id, and anything else at least needs to be
+  //     a well-formed link
+  //   - website: just needs to be a well-formed link — Microlink will
+  //     handle whatever it finds there
+  const trimmedLinkValue = link.trim()
+  const linkError = (() => {
+    if (!trimmedLinkValue) return null
+    if (type === 'youtube') {
+      return !isYouTubeUrl(link) || !extractYouTubeId(link)
+        ? 'Cole o link de um vídeo do YouTube (não funciona com playlists ou canais).'
+        : null
+    }
+    if (type === 'podcast') {
+      if (isYouTubeUrl(link)) {
+        return !extractYouTubeId(link)
+          ? 'Cole o link de um episódio do YouTube Music (não funciona com playlists ou canais).'
+          : null
+      }
+      return !isHttpUrl(link) ? 'Cole um link válido.' : null
+    }
+    if (type === 'website') {
+      return !isHttpUrl(link) ? 'Cole um link válido.' : null
+    }
+    return null
+  })()
 
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
@@ -148,7 +171,7 @@ function ContentForm({
     }
   }
 
-  const canSave = !isDuplicate && !youtubeLinkError
+  const canSave = !isDuplicate && !linkError
 
   function handleSave() {
     if (!canSave) return
@@ -194,7 +217,7 @@ function ContentForm({
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={youtubeLinkError || duplicateError}
+              error={linkError || duplicateError}
             />
             {title && (
               <InputField
@@ -218,6 +241,7 @@ function ContentForm({
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
+              error={linkError}
             />
             <InputField
               label="Título"
@@ -240,6 +264,7 @@ function ContentForm({
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
+              error={linkError}
             />
             <InputField
               label="Título"
