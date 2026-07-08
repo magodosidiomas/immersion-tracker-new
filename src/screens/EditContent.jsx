@@ -16,6 +16,7 @@ import {
 } from '../db'
 import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
+import { normalizeForCompare } from '../utils/text'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
@@ -116,6 +117,13 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   }
 
   async function handleCreateRelated(kind, name) {
+    // Same name, different case/accents (e.g. "house of cards" vs
+    // "House of Cards") is treated as the same série/filme — reuse the
+    // existing entry instead of creating a duplicate row in the catalog.
+    const existingItems = kind === 'serie' ? seriesItems : movieItems
+    const match = existingItems.find((item) => normalizeForCompare(item.label) === normalizeForCompare(name))
+    if (match) return match
+
     const entry = await addCatalogEntry(languageId, kind, name)
     if (kind === 'serie') {
       const updated = await getContentCatalog(languageId, 'serie')
