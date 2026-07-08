@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
 import Sidebar from './components/Sidebar'
+import EdgeScrollbar from './components/EdgeScrollbar'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
@@ -90,6 +91,11 @@ function App() {
   // hands over a callback to run with whatever gets picked, stashed
   // here since it doesn't need to trigger a render.
   const pendingPickCallback = useRef(null)
+
+  // Container EdgeScrollbar watches to find whichever screen's
+  // internal scroll host is currently active (see that component's
+  // own comment for why no per-screen wiring is needed).
+  const appContentRef = useRef(null)
 
   // A manual "Nova sessão" opened from inside LinkSession (see
   // openManualSession below) renders as a THIRD overlay layer, stacked
@@ -407,7 +413,8 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
       />
-      <div className="app-content">{renderScreen()}</div>
+      <div className="app-content" ref={appContentRef}>{renderScreen()}</div>
+      <EdgeScrollbar containerRef={appContentRef} />
       {pickerScreen === 'link-content' && (
         <div className="picker-overlay">
           <LinkContent

@@ -1,0 +1,27 @@
+/* Applied by EdgeScrollbar.jsx to whichever element it detects as the
+   current scroll host, so the native scrollbar doesn't double up with
+   the fixed thumb below. */
+.edge-scrollbar-host {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.edge-scrollbar-host::-webkit-scrollbar {
+  display: none;
+}
+
+.edge-scrollbar-thumb {
+  position: fixed;
+  right: 4px;
+  width: 6px;
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-border-default);
+  z-index: 1000;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.edge-scrollbar-thumb:hover,
+.edge-scrollbar-thumb[data-dragging] {
+  background: var(--color-border-strong);
+}
