@@ -181,11 +181,11 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) 
             </SortableContext>
           </DndContext>
         </div>
-        <div className="manage-languages-footer">
-          <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenAddLanguages}>
-            Adicionar idiomas
-          </Button>
-        </div>
+      </div>
+      <div className="manage-languages-footer">
+        <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenAddLanguages}>
+          Adicionar idiomas
+        </Button>
       </div>
       <BottomSheet
         open={Boolean(deleteTarget)}

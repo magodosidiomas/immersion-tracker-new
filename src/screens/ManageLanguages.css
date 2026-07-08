@@ -35,7 +35,9 @@
 }
 
 .manage-languages-footer {
-  margin-top: auto;
+  flex-shrink: 0;
+  padding: 16px;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .manage-languages-row {
