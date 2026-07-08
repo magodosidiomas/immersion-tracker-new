@@ -12,6 +12,7 @@ import {
   addCatalogEntry,
   getSessionsForContent,
   linkSessionContent,
+  unlinkSessionContent,
 } from '../db'
 import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
@@ -21,6 +22,16 @@ import BottomSheet from '../components/BottomSheet'
 import ContentForm from '../components/ContentForm'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EditContent.css'
+
+function toRow(session) {
+  const todayStr = formatDateInput(new Date())
+  return {
+    id: session.id,
+    label: sessionLabel(session),
+    description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
+    session,
+  }
+}
 
 // Opened either from Biblioteca's "+" (new content, contentId is
 // null) or by tapping an existing content item (contentId given).
@@ -34,7 +45,7 @@ import './EditContent.css'
 // via linkedSessions, same as if they were already linked) and the
 // actual sessionContents rows are written once Salvar creates the
 // content and its real id exists.
-function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenManage }) {
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
   const [existingContents, setExistingContents] = useState([])
@@ -67,16 +78,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   }, [contentId])
 
   function refreshLinkedSessions(id) {
-    getSessionsForContent(id).then((sessions) => {
-      const todayStr = formatDateInput(new Date())
-      setLinkedSessions(
-        sessions.map((session) => ({
-          id: session.id,
-          label: sessionLabel(session),
-          description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
-        })),
-      )
-    })
+    getSessionsForContent(id).then((sessions) => setLinkedSessions(sessions.map(toRow)))
   }
 
   const isNew = !contentId
@@ -136,18 +138,20 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     onOpenLinkSession((session) => {
       if (!contentId) {
         setPendingSessions((current) => (current.some((s) => s.id === session.id) ? current : [...current, session]))
-        setLinkedSessions((current) => [
-          ...current,
-          {
-            id: session.id,
-            label: sessionLabel(session),
-            description: `${formatGroupLabel(session.date, formatDateInput(new Date()))} · ${formatDurationShort(session.durationSeconds)}`,
-          },
-        ])
+        setLinkedSessions((current) => [...current, toRow(session)])
         return
       }
       linkSessionContent(session.id, contentId).then(() => refreshLinkedSessions(contentId))
     })
+  }
+
+  function handleRemoveSession(sessionId) {
+    if (!contentId) {
+      setPendingSessions((current) => current.filter((s) => s.id !== sessionId))
+      setLinkedSessions((current) => current.filter((row) => row.id !== sessionId))
+      return
+    }
+    unlinkSessionContent(sessionId, contentId).then(() => refreshLinkedSessions(contentId))
   }
 
   return (
@@ -163,8 +167,8 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
       />
       {(isNew || content) && (
         <ContentForm
-            key={contentId ?? 'new'}
-            initialType={content?.type}
+          key={contentId ?? 'new'}
+          initialType={content?.type}
           initialLink={content?.link}
           initialTitle={content?.title}
           initialAuthor={content?.author}
@@ -174,6 +178,8 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           initialRelatedQuery={content?.relatedName ?? ''}
           initialRelatedId={content?.catalogId ?? null}
           linkedSessions={linkedSessions}
+          onOpenSession={(row) => onOpenSession(row.session)}
+          onRemoveSession={handleRemoveSession}
           onAddSession={handleAddSession}
           seriesItems={seriesItems}
           movieItems={movieItems}
@@ -190,7 +196,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
               </Button>
             )
           }
-      />
+        />
       )}
       <BottomSheet
         open={confirmOpen}

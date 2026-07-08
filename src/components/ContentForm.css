@@ -43,6 +43,7 @@
 }
 
 .content-form-divider {
+  flex-shrink: 0;
   width: auto;
   height: 1px;
   margin: 0 -16px;

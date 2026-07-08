@@ -215,7 +215,7 @@ function App() {
     if (screen === 'stats') {
       return (
         <Statistics
-          onOpenHome={() => window.history.back()}
+          onOpenHome={() => navigate('home')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
           onOpenLibrary={() => navigate('library')}
@@ -238,7 +238,7 @@ function App() {
     if (screen === 'library') {
       return (
         <Library
-          onOpenHome={() => window.history.back()}
+          onOpenHome={() => navigate('home')}
           onOpenStatistics={() => navigate('stats')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
@@ -260,6 +260,7 @@ function App() {
           onBack={() => window.history.back()}
           onSaved={() => window.history.back()}
           onOpenLinkSession={openLinkSession}
+          onOpenSession={(session) => navigate('edit-session', session)}
           onOpenManage={(kind) => navigate(kind === 'serie' ? 'manage-series' : 'manage-movies')}
         />
       )
@@ -303,6 +304,7 @@ function App() {
           seriesName={activeCatalog?.label}
           episode={activeEpisode?.season != null ? { season: activeEpisode.season, episode: activeEpisode.episode } : null}
           onAddSession={openLinkSession}
+          onOpenSession={(session) => navigate('edit-session', session)}
           onBack={() => window.history.back()}
         />
       )

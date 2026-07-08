@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react'
-import { getSessionsForContent, linkSessionContent } from '../db'
+import { getSessionsForContent, linkSessionContent, unlinkSessionContent } from '../db'
 import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
-import ListItem from '../components/ListItem'
+import EditableListItem from '../components/EditableListItem'
 import Button from '../components/Button'
-import { ArrowBack, Add, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Add, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EpisodeDetail.css'
+
+function toRow(session) {
+  const todayStr = formatDateInput(new Date())
+  return {
+    id: session.id,
+    label: sessionLabel(session),
+    description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
+    session,
+  }
+}
 
 // Sessão-linking screen for one piece of "série episode" or "filme"
 // content — reused for both since the shape is identical (a heading
@@ -22,23 +32,14 @@ import './EpisodeDetail.css'
 // content row, or the filme's) — this screen just fetches/links
 // sessions against it, same self-fetching convention as everywhere
 // else now.
-function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onBack }) {
+function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onOpenSession, onBack }) {
   const [linkedSessions, setLinkedSessions] = useState([])
   const heading = episode ? `${seriesName} · T${episode.season} E${episode.episode}` : seriesName
   const topNavTitle = episode ? `Episódios - ${seriesName}` : 'Sessões'
 
   function refresh() {
     if (!contentId) return
-    getSessionsForContent(contentId).then((sessions) => {
-      const todayStr = formatDateInput(new Date())
-      setLinkedSessions(
-        sessions.map((session) => ({
-          id: session.id,
-          label: sessionLabel(session),
-          description: `${formatGroupLabel(session.date, todayStr)} · ${formatDurationShort(session.durationSeconds)}`,
-        })),
-      )
-    })
+    getSessionsForContent(contentId).then((sessions) => setLinkedSessions(sessions.map(toRow)))
   }
 
   useEffect(refresh, [contentId])
@@ -48,6 +49,11 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
       await linkSessionContent(session.id, contentId)
       refresh()
     })
+  }
+
+  async function handleRemoveSession(sessionId) {
+    await unlinkSessionContent(sessionId, contentId)
+    refresh()
   }
 
   return (
@@ -65,16 +71,18 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
         <h2 className="episode-detail-title">{heading}</h2>
 
         <div className="episode-detail-field-group">
-          <span className="episode-detail-label">Sessões vinculadas</span>
+          {linkedSessions.length > 0 && <span className="episode-detail-label">Sessões vinculadas</span>}
           {linkedSessions.length > 0 ? (
             <div className="episode-detail-sessions-card">
-              {linkedSessions.map((session, index) => (
-                <ListItem
-                  key={session.id}
-                  label={session.label}
-                  description={session.description}
+              {linkedSessions.map((row, index) => (
+                <EditableListItem
+                  key={row.id}
+                  label={row.label}
+                  description={row.description}
                   divider={index < linkedSessions.length - 1}
-                  trailingIcon={<ChevronRight />}
+                  onClick={onOpenSession ? () => onOpenSession(row.session) : null}
+                  deleteIcon={<DoNotDisturbOn />}
+                  onDelete={() => handleRemoveSession(row.id)}
                 />
               ))}
             </div>

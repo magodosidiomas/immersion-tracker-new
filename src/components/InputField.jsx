@@ -22,6 +22,7 @@ function InputField({
   hint = null,
   leadingIcon = null,
   trailingIcon = null,
+  onTrailingIconClick,
   ...props
 }) {
   const id = useId()
@@ -36,7 +37,14 @@ function InputField({
         <span className="input-field-control">
           {leadingIcon && <span className="input-field-icon">{leadingIcon}</span>}
           <input id={id} className="input-field-input" type="text" placeholder={placeholder} {...props} />
-          {trailingIcon && <span className="input-field-icon">{trailingIcon}</span>}
+          {trailingIcon &&
+            (onTrailingIconClick ? (
+              <button type="button" className="input-field-icon input-field-icon-button" onClick={onTrailingIconClick}>
+                {trailingIcon}
+              </button>
+            ) : (
+              <span className="input-field-icon">{trailingIcon}</span>
+            ))}
         </span>
         {hint && <span className="input-field-hint">{hint}</span>}
       </span>

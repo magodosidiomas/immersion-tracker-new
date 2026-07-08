@@ -66,15 +66,10 @@
 
 .content-search-list-filters {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.content-search-list-filters::-webkit-scrollbar {
-  display: none;
 }
 
 .content-search-list-filter-chip {

@@ -2,32 +2,21 @@ import { useState } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
-import ListItem from './ListItem'
+import EditableListItem from './EditableListItem'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import Alert from './Alert'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
+import { isYouTubeUrl, extractYouTubeId } from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Add,
-  ChevronRight,
   ContentPaste,
   Edit,
   Settings,
-  Videocam,
-  Mic,
-  Tv,
-  Movie,
-  Bookmark,
-  Newspaper,
-  Apps,
+  DoNotDisturbOn,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
-
-// Icon fallback per content type (see src/data/contentTypes.js) —
-// used whenever there's no thumbnail image yet (autofill hasn't
-// returned one, or the type doesn't fetch one at all).
-const TYPE_ICONS = { Videocam, Mic, Tv, Movie, Bookmark, Newspaper, Apps }
 
 // The "Novo/editar conteúdo" form — same fields whether creating or
 // editing (only the save target differs, same split as SessionForm/
@@ -58,6 +47,8 @@ function ContentForm({
   initialRelatedQuery = '',
   initialRelatedId = null,
   linkedSessions = [],
+  onOpenSession,
+  onRemoveSession,
   onAddSession,
   seriesItems = [],
   movieItems = [],
@@ -79,17 +70,41 @@ function ContentForm({
   const [episode, setEpisode] = useState(initialEpisode)
   const [relatedQuery, setRelatedQuery] = useState(initialRelatedQuery)
   const [relatedId, setRelatedId] = useState(initialRelatedId)
+  // Switching category (e.g. YouTube -> Podcast) resets the visible
+  // fields rather than bleeding one type's link/title into another —
+  // but stashes the outgoing type's values here first, so switching
+  // back (including by accident) restores them instead of losing work.
+  const [fieldsByType, setFieldsByType] = useState({})
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
     hasTitle: title.trim().length > 0,
     onTitle: setTitle,
   })
-  const displayThumbnail = autofillsFromLink ? autofill.thumbnail || thumbnail : thumbnail
-  const FallbackIcon = TYPE_ICONS[CONTENT_TYPES.find((item) => item.key === type)?.icon]
+  const displayThumbnail = autofillsFromLink ? autofill.thumbnail : thumbnail
 
   function handleTypeChange(key) {
+    if (key === type) return
+    setFieldsByType((cache) => ({ ...cache, [type]: { link, title, author, season, episode, relatedQuery, relatedId } }))
+    const cached = fieldsByType[key]
     setType(key)
+    setLink(cached?.link ?? '')
+    setTitle(cached?.title ?? '')
+    setAuthor(cached?.author ?? '')
+    setSeason(cached?.season ?? '')
+    setEpisode(cached?.episode ?? '')
+    setRelatedQuery(cached?.relatedQuery ?? '')
+    setRelatedId(cached?.relatedId ?? null)
+  }
+
+  async function handlePasteLink() {
+    try {
+      const text = await navigator.clipboard.readText()
+      if (text) setLink(text)
+    } catch {
+      // Clipboard permission denied/unavailable — the person can still
+      // paste manually, so this just silently does nothing.
+    }
   }
 
   const trimmedTitle = title.trim().toLowerCase()
@@ -100,6 +115,14 @@ function ContentForm({
     const sameTitle = trimmedTitle && item.title?.trim().toLowerCase() === trimmedTitle
     return sameLink || sameTitle
   })
+
+  // YouTube only accepts a single video link — playlists/canais don't
+  // resolve to a video id via extractYouTubeId, so they're rejected
+  // the same way a non-YouTube link is.
+  const youtubeLinkError =
+    type === 'youtube' && link.trim() && (!isYouTubeUrl(link) || !extractYouTubeId(link))
+      ? 'Cole o link de um vídeo do YouTube (não funciona com playlists ou canais).'
+      : null
 
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
@@ -121,8 +144,10 @@ function ContentForm({
     }
   }
 
+  const canSave = !isDuplicate && !youtubeLinkError
+
   function handleSave() {
-    if (isDuplicate) return
+    if (!canSave) return
     onSave({
       type,
       link,
@@ -164,7 +189,9 @@ function ContentForm({
               value={link}
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
+              onTrailingIconClick={handlePasteLink}
             />
+            {youtubeLinkError && <Alert type="error" description={youtubeLinkError} />}
             {title && (
               <InputField
                 label="Título"
@@ -173,9 +200,7 @@ function ContentForm({
                 trailingIcon={<Edit />}
               />
             )}
-            {link.trim() && (
-              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
-            )}
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
         )}
 
@@ -188,6 +213,7 @@ function ContentForm({
               onChange={(event) => setLink(event.target.value)}
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
               trailingIcon={<ContentPaste />}
+              onTrailingIconClick={handlePasteLink}
             />
             <InputField
               label="Título"
@@ -196,9 +222,7 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            {link.trim() && (
-              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
-            )}
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
         )}
 
@@ -210,6 +234,7 @@ function ContentForm({
               value={link}
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
+              onTrailingIconClick={handlePasteLink}
             />
             <InputField
               label="Título"
@@ -218,9 +243,7 @@ function ContentForm({
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
             />
-            {link.trim() && (
-              <Thumbnail size="lg" src={displayThumbnail} alt={title} icon={FallbackIcon && <FallbackIcon />} />
-            )}
+            {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
         )}
 
@@ -256,12 +279,7 @@ function ContentForm({
                     onChange={(event) => setEpisode(event.target.value)}
                   />
                 </div>
-                <InputField
-                  label="Título"
-                  value={derivedTitle}
-                  hint="Gerado automaticamente"
-                  disabled
-                />
+                <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />
               </>
             )}
           </>
@@ -300,13 +318,12 @@ function ContentForm({
               value={link}
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
+              onTrailingIconClick={handlePasteLink}
             />
           </>
         )}
 
-        {isDuplicate && (
-          <Alert type="error" description="Já existe um conteúdo com esse título ou link." />
-        )}
+        {isDuplicate && <Alert type="error" description="Já existe um conteúdo com esse título ou link." />}
 
         <div className="content-form-divider" />
 
@@ -315,13 +332,14 @@ function ContentForm({
           {linkedSessions.length > 0 ? (
             <div className="content-form-sessions-card">
               {linkedSessions.map((session, index) => (
-                <ListItem
+                <EditableListItem
                   key={session.id}
                   label={session.label}
                   description={session.description}
                   divider={index < linkedSessions.length - 1}
-                  trailingIcon={<ChevronRight />}
-                  onClick={() => session.onClick?.()}
+                  onClick={onOpenSession ? () => onOpenSession(session) : null}
+                  deleteIcon={<DoNotDisturbOn />}
+                  onDelete={() => onRemoveSession?.(session.id)}
                 />
               ))}
             </div>
@@ -335,7 +353,7 @@ function ContentForm({
       </div>
 
       <div className="content-form-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving || isDuplicate}>
+        <Button fullWidth onClick={handleSave} disabled={saving || !canSave}>
           {primaryLabel}
         </Button>
         {secondaryButton}
