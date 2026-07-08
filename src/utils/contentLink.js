@@ -53,7 +53,7 @@ export function isYouTubePlaylistUrl(url) {
   try {
     const u = new URL(url.trim())
     if (u.pathname.includes('/playlist')) return true
-    return u.searchParams.has('list') && !u.searchParams.get('v')
+    return u.searchParams.has('list')
   } catch {
     return false
   }
@@ -61,7 +61,8 @@ export function isYouTubePlaylistUrl(url) {
 
 export function isYouTubeChannelUrl(url) {
   try {
-    return new URL(url.trim()).pathname.includes('/channel/')
+    const path = new URL(url.trim()).pathname
+    return path.startsWith('/@') || path.includes('/channel/') || path.includes('/c/') || path.includes('/user/')
   } catch {
     return false
   }
@@ -94,7 +95,9 @@ export function isSpotifyProfileUrl(url) {
 export function sourceForType(type, url) {
   if (!url || !url.trim()) return null
   if (type === 'youtube') {
-    return isYouTubeUrl(url) && extractYouTubeId(url) ? 'youtube' : null
+    return isYouTubeUrl(url) && !isYouTubePlaylistUrl(url) && !isYouTubeChannelUrl(url) && extractYouTubeId(url)
+      ? 'youtube'
+      : null
   }
   if (type === 'podcast') {
     if (isSpotifyUrl(url)) {

@@ -7,7 +7,15 @@ import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
-import { isYouTubeUrl, isSpotifyUrl, isYouTubeMusicUrl, extractYouTubeId, isHttpUrl } from '../utils/contentLink'
+import {
+  isYouTubeUrl,
+  isSpotifyUrl,
+  isYouTubeMusicUrl,
+  isYouTubePlaylistUrl,
+  isYouTubeChannelUrl,
+  extractYouTubeId,
+  isHttpUrl,
+} from '../utils/contentLink'
 import { normalizeForCompare } from '../utils/text'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
@@ -139,7 +147,12 @@ function ContentForm({
   const linkError = (() => {
     if (!trimmedLinkValue) return null
     if (type === 'youtube') {
-      return !isYouTubeUrl(link) || !extractYouTubeId(link)
+      if (!isYouTubeUrl(link)) {
+        return 'Esse link não parece ser do YouTube. Cole o link do vídeo do YouTube (ex: youtube.com/watch?v=...).'
+      }
+      if (isYouTubePlaylistUrl(link)) return 'Esse link é de uma playlist do YouTube. Cole o link do vídeo.'
+      if (isYouTubeChannelUrl(link)) return 'Esse é um link de um canal do YouTube. Cole o link do vídeo.'
+      return !extractYouTubeId(link)
         ? 'Esse link não parece ser do YouTube. Cole o link do vídeo do YouTube (ex: youtube.com/watch?v=...).'
         : null
     }
