@@ -55,6 +55,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   const [pendingSessions, setPendingSessions] = useState([])
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [sessionToRemove, setSessionToRemove] = useState(null)
 
   useEffect(() => {
     getAppSettings().then((settings) => setLanguageId(settings.activeLanguageId))
@@ -146,6 +147,12 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   }
 
   function handleRemoveSession(sessionId) {
+    setSessionToRemove(sessionId)
+  }
+
+  function confirmRemoveSession() {
+    const sessionId = sessionToRemove
+    setSessionToRemove(null)
     if (!contentId) {
       setPendingSessions((current) => current.filter((s) => s.id !== sessionId))
       setLinkedSessions((current) => current.filter((row) => row.id !== sessionId))
@@ -211,6 +218,23 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
         }
         secondaryButton={
           <Button variant="ghost" fullWidth onClick={() => setConfirmOpen(false)}>
+            Cancelar
+          </Button>
+        }
+      />
+      <BottomSheet
+        open={sessionToRemove !== null}
+        onClose={() => setSessionToRemove(null)}
+        title="Remover sessão?"
+        description="A sessão não será excluída, só deixará de estar vinculada a esse conteúdo."
+        contentCard={false}
+        primaryButton={
+          <Button variant="destructive" fullWidth onClick={confirmRemoveSession}>
+            Remover
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="ghost" fullWidth onClick={() => setSessionToRemove(null)}>
             Cancelar
           </Button>
         }

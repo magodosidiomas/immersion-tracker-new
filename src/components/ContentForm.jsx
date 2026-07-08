@@ -338,7 +338,7 @@ function ContentForm({
             <div className="content-form-field-group">
               {linkedSessions.length > 0 && (
                 <>
-                  <span className="content-form-label">Sessões vinculadas</span>
+                  <span className="content-form-label">Sessões</span>
                   <div className="content-form-sessions-card">
                     {linkedSessions.map((session, index) => (
                       <EditableListItem
