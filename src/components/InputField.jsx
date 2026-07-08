@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, forwardRef } from 'react'
 import './InputField.css'
 
 // Mirrors the Figma "inputField" component set. isFilled isn't a prop —
@@ -16,7 +16,7 @@ import './InputField.css'
 // click on a label-wrapped input to forward focus, and on segmented
 // inputs (type="time"/"date") that double click reads as a click-drag,
 // highlighting the segment like a text selection.
-function InputField({
+const InputField = forwardRef(function InputField({
   label = null,
   placeholder = '',
   hint = null,
@@ -25,7 +25,7 @@ function InputField({
   trailingIcon = null,
   onTrailingIconClick,
   ...props
-}) {
+}, ref) {
   const id = useId()
   return (
     <div className="input-field">
@@ -37,7 +37,7 @@ function InputField({
       <span className="input-field-body">
         <span className="input-field-control" data-error={Boolean(error)}>
           {leadingIcon && <span className="input-field-icon">{leadingIcon}</span>}
-          <input id={id} className="input-field-input" type="text" placeholder={placeholder} {...props} />
+          <input ref={ref} id={id} className="input-field-input" type="text" placeholder={placeholder} {...props} />
           {trailingIcon &&
             (onTrailingIconClick ? (
               <button type="button" className="input-field-icon input-field-icon-button" onClick={onTrailingIconClick}>
@@ -51,6 +51,6 @@ function InputField({
       </span>
     </div>
   )
-}
+})
 
 export default InputField

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
@@ -85,6 +85,7 @@ function ContentForm({
   // but stashes the outgoing type's values here first, so switching
   // back (including by accident) restores them instead of losing work.
   const [fieldsByType, setFieldsByType] = useState({})
+  const seasonInputRef = useRef(null)
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
@@ -196,6 +197,11 @@ function ContentForm({
   function handleSelectRelated(item) {
     setRelatedQuery(item.label)
     setRelatedId(item.id)
+    if (isSeries) {
+      // Temporada field only mounts once relatedId is set, so focus
+      // has to wait a tick for it to appear in the DOM.
+      requestAnimationFrame(() => seasonInputRef.current?.focus())
+    }
   }
 
   async function handleCreateRelated(name) {
@@ -336,6 +342,7 @@ function ContentForm({
               <>
                 <div className="content-form-row">
                   <InputField
+                    ref={seasonInputRef}
                     label="Temporada"
                     type="number"
                     min={1}
