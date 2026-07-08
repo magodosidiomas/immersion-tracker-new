@@ -1,16 +1,17 @@
 import { useState } from 'react'
 
-// Search (title/subtitle substring) + type filter ("Todos" is
-// exclusive: picking it clears specific types, picking a type drops
-// "Todos") + grouping by the already-computed `dateLabel`. Shared by
-// Library and LinkContent since both show the same filtered/grouped
-// content list, just inside different chrome.
+// Search (title/subtitle substring) + type filter (single-select:
+// picking a type replaces any previous selection; picking the same
+// type again clears it back to "Todos") + grouping by the
+// already-computed `dateLabel`. Shared by Library and LinkContent
+// since both show the same filtered/grouped content list, just
+// inside different chrome.
 export function useContentFilter(items) {
   const [query, setQuery] = useState('')
   const [selectedTypes, setSelectedTypes] = useState([])
 
   function toggleType(key) {
-    setSelectedTypes((current) => (current.includes(key) ? current.filter((k) => k !== key) : [...current, key]))
+    setSelectedTypes((current) => (current.includes(key) ? [] : [key]))
   }
 
   const trimmedQuery = query.trim().toLowerCase()
