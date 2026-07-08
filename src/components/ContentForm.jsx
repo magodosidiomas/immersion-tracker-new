@@ -186,6 +186,20 @@ function ContentForm({
     return null
   })()
 
+  // Required-field validation — separate from linkError/duplicateError
+  // above (which validate *format*), this catches empty required
+  // fields per type so a blank/near-blank content item can't be saved.
+  const requiredTitleError =
+    !title.trim() && (type === 'podcast' || type === 'website' || type === 'livro' || type === 'outro')
+      ? 'Coloque um título.'
+      : null
+  const requiredLinkError =
+    !trimmedLinkValue && (type === 'youtube' || type === 'podcast' || type === 'website')
+      ? type === 'youtube'
+        ? 'Cole o link do vídeo do YouTube.'
+        : 'Cole um link.'
+      : null
+
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
   const hasLinkField = type === 'youtube' || type === 'podcast' || type === 'website' || type === 'outro'
@@ -200,6 +214,10 @@ function ContentForm({
     isSeries && relatedQuery && season
       ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}`
       : ''
+  const requiredRelatedError =
+    (isSeries || isMovie) && !relatedId ? `Selecione ${isSeries ? 'uma série' : 'um filme'}.` : null
+  const requiredSeasonEpisodeError =
+    isSeries && relatedId && (!season || !episode) ? 'Preencha temporada e episódio.' : null
 
   function handleSelectRelated(item) {
     setRelatedQuery(item.label)
@@ -219,7 +237,13 @@ function ContentForm({
     }
   }
 
-  const canSave = !isDuplicate && !linkError
+  const canSave =
+    !isDuplicate &&
+    !linkError &&
+    !requiredTitleError &&
+    !requiredLinkError &&
+    !requiredRelatedError &&
+    !requiredSeasonEpisodeError
 
   function handleSave() {
     if (!canSave) return
@@ -265,7 +289,7 @@ function ContentForm({
               onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError || duplicateError}
+              error={linkError || duplicateError || requiredLinkError}
             />
             {(title || autofill.loading || autofill.notFound) && (
               <InputField
@@ -292,7 +316,7 @@ function ContentForm({
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError}
+              error={linkError || requiredLinkError}
             />
             <InputField
               label="Título"
@@ -301,7 +325,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError || titleNotFoundError}
+              error={duplicateError || titleNotFoundError || requiredTitleError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -316,7 +340,7 @@ function ContentForm({
               onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError}
+              error={linkError || requiredLinkError}
             />
             <InputField
               label="Título"
@@ -325,7 +349,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError || titleNotFoundError}
+              error={duplicateError || titleNotFoundError || requiredTitleError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -344,6 +368,7 @@ function ContentForm({
               onCreate={handleCreateRelated}
               settingsIcon={<Settings />}
               onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
+              error={requiredRelatedError}
             />
             {isSeries && relatedId && (
               <>
@@ -356,6 +381,7 @@ function ContentForm({
                     value={season}
                     onChange={(event) => setSeason(event.target.value)}
                     onKeyDown={handleSeasonEnter}
+                    error={!season ? requiredSeasonEpisodeError : null}
                   />
                   <InputField
                     ref={episodeInputRef}
@@ -365,6 +391,7 @@ function ContentForm({
                     value={episode}
                     onChange={(event) => setEpisode(event.target.value)}
                     onKeyDown={handleEpisodeEnter}
+                    error={!episode ? requiredSeasonEpisodeError : null}
                   />
                 </div>
                 {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}
@@ -380,7 +407,7 @@ function ContentForm({
               placeholder="Nome do livro"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              error={duplicateError}
+              error={duplicateError || requiredTitleError}
             />
             <InputField
               label="Autor"
@@ -400,7 +427,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError}
+              error={duplicateError || requiredTitleError}
             />
             <InputField
               label="Link (opcional)"

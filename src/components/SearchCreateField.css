@@ -52,6 +52,19 @@
   border-bottom-right-radius: 0;
 }
 
+.search-create-field-control[data-error='true'] {
+  border-color: var(--color-red-400);
+}
+
+.search-create-field-error {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-on-destructive);
+}
+
 .search-create-field-filter-icon {
   flex-shrink: 0;
   width: 16px;

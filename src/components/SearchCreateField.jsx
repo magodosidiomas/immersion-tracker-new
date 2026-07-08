@@ -64,6 +64,7 @@ function SearchCreateField({
   onCreate,
   settingsIcon = null,
   onSettingsClick,
+  error = null,
   ...props
 }) {
   const id = useId()
@@ -281,7 +282,7 @@ function SearchCreateField({
               {label}
             </label>
           )}
-          <span className="search-create-field-control" data-open={showList}>
+          <span className="search-create-field-control" data-open={showList} data-error={Boolean(error)}>
             <input
               id={id}
               ref={inputRef}
@@ -319,6 +320,7 @@ function SearchCreateField({
               {renderRows(true)}
             </div>
           )}
+          {error && <span className="search-create-field-error">{error}</span>}
         </span>
         {settingsIcon && (
           <button
