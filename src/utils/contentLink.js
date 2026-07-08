@@ -93,10 +93,16 @@ export function isSpotifyProfileUrl(url) {
 //   - website: any http(s) link triggers a Microlink fetch
 export function sourceForType(type, url) {
   if (!url || !url.trim()) return null
-  if (type === 'youtube') return isYouTubeUrl(url) ? 'youtube' : null
+  if (type === 'youtube') {
+    return isYouTubeUrl(url) && extractYouTubeId(url) ? 'youtube' : null
+  }
   if (type === 'podcast') {
-    if (isSpotifyUrl(url)) return 'spotify'
-    if (isYouTubeUrl(url)) return 'youtube'
+    if (isSpotifyUrl(url)) {
+      return !isSpotifyPlaylistUrl(url) && !isSpotifyProfileUrl(url) ? 'spotify' : null
+    }
+    if (isYouTubeMusicUrl(url)) {
+      return !isYouTubePlaylistUrl(url) && !isYouTubeChannelUrl(url) && extractYouTubeId(url) ? 'youtube' : null
+    }
     return null
   }
   if (type === 'website') return isHttpUrl(url) ? 'website' : null

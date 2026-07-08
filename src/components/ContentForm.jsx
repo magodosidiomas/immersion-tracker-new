@@ -246,10 +246,12 @@ function ContentForm({
               onTrailingIconClick={handlePasteLink}
               error={linkError || duplicateError}
             />
-            {title && (
+            {(title || autofill.loading) && (
               <InputField
                 label="Título"
                 value={title}
+                placeholder={autofill.loading ? 'Buscando título...' : ''}
+                disabled={autofill.loading && !title}
                 onChange={(event) => setTitle(event.target.value)}
                 trailingIcon={<Edit />}
               />
@@ -272,7 +274,8 @@ function ContentForm({
             />
             <InputField
               label="Título"
-              placeholder="Título do podcast"
+              placeholder={autofill.loading ? 'Buscando título...' : 'Título do podcast'}
+              disabled={autofill.loading && !title}
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
@@ -295,7 +298,8 @@ function ContentForm({
             />
             <InputField
               label="Título"
-              placeholder="Adicione um título"
+              placeholder={autofill.loading ? 'Buscando título...' : 'Adicione um título'}
+              disabled={autofill.loading && !title}
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
