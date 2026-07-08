@@ -8,7 +8,8 @@ import BottomSheet from '../components/BottomSheet'
 import Calendar from '../components/Calendar'
 import ListItem from '../components/ListItem'
 import EmptyState from '../components/EmptyState'
-import { ArrowBack, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
+import Button from '../components/Button'
+import { ArrowBack, Schedule, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import './LinkSession.css'
 
 // Opened from ContentForm/EpisodeDetail's "Vincular sessão" button.
@@ -17,7 +18,7 @@ import './LinkSession.css'
 // tapping a row does: here it selects that session for linking
 // instead of opening EditSession, and it opens on today by default
 // rather than whatever day was tapped in Statistics' calendar.
-function LinkSession({ onSelect, onBack }) {
+function LinkSession({ onSelect, onBack, onAddSession }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(formatDateInput(new Date()))
   const [allSessionDates, setAllSessionDates] = useState([])
@@ -62,6 +63,9 @@ function LinkSession({ onSelect, onBack }) {
             icon={<Schedule />}
             title="Nenhuma sessão nesse dia"
             description="Escolha outro dia ou comece uma nova sessão."
+            buttonLabel="Nova sessão"
+            buttonIcon={<Add />}
+            onButtonClick={onAddSession}
           />
         ) : (
           <div className="link-session-card">
@@ -77,6 +81,13 @@ function LinkSession({ onSelect, onBack }) {
           </div>
         )}
       </div>
+      {daySessions.length > 0 && (
+        <div className="link-session-fab-row">
+          <Button leadingIcon={<Add />} onClick={onAddSession}>
+            Nova sessão
+          </Button>
+        </div>
+      )}
       <BottomSheet open={pickerOpen} onClose={() => setPickerOpen(false)} title="Selecionar data" contentCard={false}>
         <div className="link-session-picker">
           <Calendar sessionDates={allSessionDates} initialDate={parseDateInput(selectedDate)} onSelectDay={handleSelectDay} />

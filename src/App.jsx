@@ -90,6 +90,12 @@ function App() {
   // here since it doesn't need to trigger a render.
   const pendingPickCallback = useRef(null)
 
+  // Whether the currently-open 'new-session' screen was reached from
+  // LinkSession's "Nova sessão" (content still possibly unsaved, so
+  // manual entry only, no "vincular conteúdo" inside it) rather than
+  // Home's normal FAB.
+  const [manualOnlyNewSession, setManualOnlyNewSession] = useState(false)
+
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
     setPickerScreen('link-content')
@@ -200,7 +206,21 @@ function App() {
       )
     }
     if (screen === 'new-session') {
-      return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} />
+      return (
+        <NewSession
+          timer={timer}
+          manualOnly={manualOnlyNewSession}
+          onClose={() => {
+            setManualOnlyNewSession(false)
+            window.history.back()
+          }}
+          onOpenLinkContent={openLinkContent}
+          onSaved={() => {
+            setManualOnlyNewSession(false)
+            window.history.back()
+          }}
+        />
+      )
     }
     if (screen === 'edit-session') {
       return (
@@ -350,6 +370,10 @@ function App() {
             onSelect={(session) => {
               pendingPickCallback.current?.(session)
               closePicker()
+            }}
+            onAddSession={() => {
+              setManualOnlyNewSession(true)
+              navigate('new-session')
             }}
           />
         </div>

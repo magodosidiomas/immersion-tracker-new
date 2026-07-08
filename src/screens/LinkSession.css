@@ -55,6 +55,20 @@
   background: var(--bg-surface-default);
 }
 
+.link-session-fab-row {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  padding: var(--space-16);
+  margin-top: -88px;
+  background: transparent;
+  pointer-events: none;
+}
+
+.link-session-fab-row .button {
+  pointer-events: auto;
+}
+
 /* Calendar ships with Figma's fixed export width (343px) since it
    isn't placed in a real layout anywhere else yet — same override
    approach Home/Statistics already use for it. */

@@ -32,14 +32,24 @@ import './NewSession.css'
 // intact — so changing your mind about ending just resumes from
 // exactly where Encerrar left it. The draft itself isn't touched by
 // going back — only Salvar/Descartar resolve it.
-function NewSession({ timer, onClose, onOpenLinkContent }) {
-  const [phase, setPhase] = useState('timer') // timer | finish
+// manualOnly: used when opened from inside the "vincular sessão" flow
+// (ContentForm/EpisodeDetail), where the content being linked may not
+// be saved yet — running a live timer against it wouldn't make sense,
+// so this mode skips the timer phase entirely (straight to manual
+// entry) and hides "vincular conteúdo" inside the form, since nested
+// pickers aren't supported by the single pickerScreen stack in
+// App.jsx. onSaved receives the created session so the caller can
+// select it automatically.
+function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved }) {
+  const [phase, setPhase] = useState(manualOnly ? 'finish' : 'timer') // timer | finish
   const [activeLanguageId, setActiveLanguageId] = useState(null)
 
   // Snapshot handed to the finish-phase form the moment Encerrar is
-  // pressed — its own state from there on, edited independently of the
-  // timer above.
-  const [finishDraft, setFinishDraft] = useState(null)
+  // pressed (or immediately, for manualOnly) — its own state from
+  // there on, edited independently of the timer above.
+  const [finishDraft, setFinishDraft] = useState(() =>
+    manualOnly ? { startAt: new Date(), durationSeconds: 0, manual: true } : null,
+  )
 
   // Draft selection while the sheet is open, seeded from the timer's
   // committed values (or the first category/subcategory if nothing's
@@ -104,15 +114,20 @@ function NewSession({ timer, onClose, onOpenLinkContent }) {
         subcategory={timer.subcategory}
         languageId={timer.languageId ?? activeLanguageId}
         autoOpenDuration={Boolean(finishDraft.manual)}
+        hideContentSection={manualOnly}
         onOpenLinkContent={onOpenLinkContent}
-        onBack={() => setPhase('timer')}
+        onBack={manualOnly ? onClose : () => setPhase('timer')}
         onDiscard={() => {
           timer.clearDraft()
           onClose()
         }}
-        onSaved={() => {
+        onSaved={(session) => {
           timer.clearDraft()
-          onClose()
+          if (onSaved) {
+            onSaved(session)
+          } else {
+            onClose()
+          }
         }}
       />
     )
@@ -236,7 +251,7 @@ function NewSession({ timer, onClose, onOpenLinkContent }) {
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, onOpenLinkContent, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, hideContentSection = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -262,7 +277,7 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
     try {
       const session = await createSession({ languageId, ...fields })
       await Promise.all(pendingContents.map((content) => linkSessionContent(session.id, content.id)))
-      onSaved()
+      onSaved(session)
     } catch (err) {
       console.error('Erro ao salvar sessão:', err)
       setSaveError('Não foi possível salvar a sessão. Tente novamente.')
@@ -291,6 +306,7 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
         linkedContents={pendingContents}
         onAddContent={handleAddContent}
         onRemoveContent={handleRemoveContent}
+        hideContentSection={hideContentSection}
         onSave={handleSave}
         saving={saving || !languageId}
         secondaryButton={

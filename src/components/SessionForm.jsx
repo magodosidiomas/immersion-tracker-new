@@ -77,6 +77,7 @@ function SessionForm({
   linkedContents = [],
   onAddContent,
   onRemoveContent,
+  hideContentSection = false,
 }) {
   const [startAt, setStartAt] = useState(initialStartAt)
   const [endAt, setEndAt] = useState(
@@ -349,6 +350,7 @@ function SessionForm({
           </div>
         </div>
 
+        {!hideContentSection && (
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Conteúdos</span>
           {linkedContents.length > 0 ? (
@@ -375,6 +377,7 @@ function SessionForm({
             Vincular conteúdo
           </Button>
         </div>
+        )}
       </div>
 
       <div className="finish-session-footer">
