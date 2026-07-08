@@ -218,6 +218,7 @@ function App() {
           onOpenHome={() => navigate('home')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
+          onOpenAddLanguages={() => navigate('add-languages')}
           onOpenLibrary={() => navigate('library')}
           onOpenDay={(dateStr) => {
             setHistoryDate(dateStr)
@@ -242,6 +243,7 @@ function App() {
           onOpenStatistics={() => navigate('stats')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
+          onOpenAddLanguages={() => navigate('add-languages')}
           onOpenNewContent={() => {
             setEditingContentId(null)
             navigate('edit-content')
@@ -314,6 +316,7 @@ function App() {
         timer={timer}
         onOpenSettings={() => navigate('settings')}
         onOpenManageLanguages={() => navigate('manage-languages')}
+        onOpenAddLanguages={() => navigate('add-languages')}
         onOpenNewSession={() => navigate('new-session')}
         onOpenEditSession={(session) => navigate('edit-session', session)}
         onOpenStatistics={() => navigate('stats')}

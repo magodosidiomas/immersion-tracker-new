@@ -26,6 +26,7 @@ function Library({
   onOpenContent,
   onOpenSettings,
   onOpenManageLanguages,
+  onOpenAddLanguages,
   onOpenHome,
   onOpenStatistics,
 }) {
@@ -58,6 +59,7 @@ function Library({
       <LanguageTopNav
         onOpenSettings={onOpenSettings}
         onOpenManageLanguages={onOpenManageLanguages}
+        onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
       <div className="library-content">

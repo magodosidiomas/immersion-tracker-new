@@ -5,7 +5,7 @@ import BottomSheet from './BottomSheet'
 import SelectableListItem from './SelectableListItem'
 import Button from './Button'
 import Flag from './Flag'
-import { Settings, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Settings, Check, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Shared between the two main tabs (Home, Statistics) — both show the
 // same active-language switcher up top. Owns its own languages/activeId
@@ -19,7 +19,7 @@ import { Settings, Check } from '@nine-thirty-five/material-symbols-react/outlin
 // switches and closes immediately, no Save/Cancel: this is a quick
 // swap of what's already active, not a form. The sheet's primaryButton
 // is a shortcut straight into that same management screen.
-function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onActiveLanguageChange }) {
+function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onActiveLanguageChange }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -49,6 +49,11 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onActiveLanguag
     onOpenManageLanguages()
   }
 
+  function handleAddLanguages() {
+    setSwitcherOpen(false)
+    onOpenAddLanguages()
+  }
+
   return (
     <>
       <TopNav
@@ -74,7 +79,12 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onActiveLanguag
         title="Idioma"
         description="Escolha o idioma ativo."
         primaryButton={
-          <Button variant="outline" leadingIcon={<Settings />} onClick={handleManageLanguages}>
+          <Button variant="outline" leadingIcon={<Add />} onClick={handleAddLanguages}>
+            Adicionar idiomas
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="ghost" leadingIcon={<Settings />} onClick={handleManageLanguages}>
             Gerenciar idiomas
           </Button>
         }
