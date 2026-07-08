@@ -62,28 +62,32 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
   return (
     <nav className="sidebar">
       <div className="sidebar-top">
-        <Dropdown
-          label={activeLanguage?.name}
-          flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
-          onClick={() => setSwitcherOpen(true)}
-        />
+        <div className="sidebar-language">
+          <Dropdown
+            label={activeLanguage?.name}
+            flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
+            onClick={() => setSwitcherOpen(true)}
+          />
+        </div>
         <div className="sidebar-divider" />
-        <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
-          Nova sessão
-        </Button>
-        <div className="sidebar-nav-group">
-          {navItems.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              className="sidebar-item"
-              data-active={activeScreen === item.key}
-              onClick={() => onNavigate(item.key)}
-            >
-              <span className="sidebar-item-icon">{item.icon}</span>
-              <span className="sidebar-item-label">{item.label}</span>
-            </button>
-          ))}
+        <div className="sidebar-actions">
+          <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
+            Nova sessão
+          </Button>
+          <div className="sidebar-nav-group">
+            {navItems.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                className="sidebar-item"
+                data-active={activeScreen === item.key}
+                onClick={() => onNavigate(item.key)}
+              >
+                <span className="sidebar-item-icon">{item.icon}</span>
+                <span className="sidebar-item-label">{item.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <button
