@@ -5,7 +5,6 @@ import SearchCreateField from './SearchCreateField'
 import EditableListItem from './EditableListItem'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
-import Alert from './Alert'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import { isYouTubeUrl, extractYouTubeId } from '../utils/contentLink'
 import { CONTENT_TYPES } from '../data/contentTypes'
@@ -115,6 +114,7 @@ function ContentForm({
     const sameTitle = trimmedTitle && item.title?.trim().toLowerCase() === trimmedTitle
     return sameLink || sameTitle
   })
+  const duplicateError = isDuplicate ? 'Já existe um conteúdo com esse título ou link.' : null
 
   // YouTube only accepts a single video link — playlists/canais don't
   // resolve to a video id via extractYouTubeId, so they're rejected
@@ -190,8 +190,8 @@ function ContentForm({
               onChange={(event) => setLink(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
+              error={youtubeLinkError || duplicateError}
             />
-            {youtubeLinkError && <Alert type="error" description={youtubeLinkError} />}
             {title && (
               <InputField
                 label="Título"
@@ -221,6 +221,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
+              error={duplicateError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -242,6 +243,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
+              error={duplicateError}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -292,6 +294,7 @@ function ContentForm({
               placeholder="Nome do livro"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              error={duplicateError}
             />
             <InputField
               label="Autor"
@@ -311,6 +314,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
+              error={duplicateError}
             />
             <InputField
               label="Link (opcional)"
@@ -322,8 +326,6 @@ function ContentForm({
             />
           </>
         )}
-
-        {isDuplicate && <Alert type="error" description="Já existe um conteúdo com esse título ou link." />}
 
         <div className="content-form-divider" />
 

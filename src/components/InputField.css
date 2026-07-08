@@ -43,6 +43,10 @@
   border-color: var(--color-border-accent);
 }
 
+.input-field-control[data-error='true'] {
+  border-color: var(--color-red-400);
+}
+
 .input-field-icon {
   display: inline-flex;
   flex-shrink: 0;
@@ -105,4 +109,13 @@
   font-size: var(--font-size-body-tiny);
   line-height: var(--line-height-loose);
   color: var(--color-text-secondary);
+}
+
+.input-field-error {
+  width: 100%;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-on-destructive);
 }

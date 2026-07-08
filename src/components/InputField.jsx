@@ -20,6 +20,7 @@ function InputField({
   label = null,
   placeholder = '',
   hint = null,
+  error = null,
   leadingIcon = null,
   trailingIcon = null,
   onTrailingIconClick,
@@ -34,7 +35,7 @@ function InputField({
         </label>
       )}
       <span className="input-field-body">
-        <span className="input-field-control">
+        <span className="input-field-control" data-error={Boolean(error)}>
           {leadingIcon && <span className="input-field-icon">{leadingIcon}</span>}
           <input id={id} className="input-field-input" type="text" placeholder={placeholder} {...props} />
           {trailingIcon &&
@@ -46,7 +47,7 @@ function InputField({
               <span className="input-field-icon">{trailingIcon}</span>
             ))}
         </span>
-        {hint && <span className="input-field-hint">{hint}</span>}
+        {error ? <span className="input-field-error">{error}</span> : hint && <span className="input-field-hint">{hint}</span>}
       </span>
     </div>
   )

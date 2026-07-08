@@ -76,12 +76,14 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  background: transparent;
 }
 
 .home-fab-row {
   display: flex;
   justify-content: flex-end;
   padding: var(--space-16);
+  background: transparent;
 }
 
 .home-fab-row .timer-widget {
