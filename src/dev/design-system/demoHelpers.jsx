@@ -9,6 +9,7 @@ import SegmentedButton from '../../components/SegmentedButton'
 import SegmentedControl from '../../components/SegmentedControl'
 import DurationInput from '../../components/DurationInput'
 import Calendar from '../../components/Calendar'
+import SearchCreateField from '../../components/SearchCreateField'
 import { getAppSettings, getSessionsByLanguage } from '../../db'
 import { AVAILABLE_LANGUAGES } from '../../data/availableLanguages'
 import { Bolt, Check } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -118,6 +119,60 @@ export function CalendarDemo() {
     })
   }, [])
   return <Calendar sessionDates={sessionDates} />
+}
+
+const SEARCH_CREATE_FIELD_SAMPLE = ['Round 6', 'The Bear', 'Loki', 'Dark', 'Fleabag']
+
+export function SearchCreateFieldDemo() {
+  const [comboValue, setComboValue] = useState('')
+  const [comboSelected, setComboSelected] = useState(null)
+  const [filterValue, setFilterValue] = useState('')
+
+  const trimmedCombo = comboValue.trim().toLowerCase()
+  const comboItems = SEARCH_CREATE_FIELD_SAMPLE.filter((name) => name.toLowerCase().includes(trimmedCombo)).map(
+    (name) => ({ id: name, label: name }),
+  )
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, maxWidth: 343 }}>
+      <div>
+        <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
+          variant="combobox" (padrão) — dropdown flutuante no desktop, overlay de busca em tela cheia no mobile
+        </p>
+        <SearchCreateField
+          label="Série"
+          placeholder="Busque ou adicione uma série"
+          value={comboValue}
+          onChange={setComboValue}
+          items={comboItems}
+          createLabel="série"
+          onSelect={(item) => {
+            setComboValue(item.label)
+            setComboSelected(item.label)
+          }}
+          onCreate={(name) => {
+            setComboValue(name)
+            setComboSelected(name)
+          }}
+        />
+        {comboSelected && (
+          <p style={{ color: 'var(--color-text-tertiary)', marginTop: 8, fontSize: 12 }}>Selecionado: {comboSelected}</p>
+        )}
+      </div>
+      <div>
+        <p style={{ color: 'var(--color-text-tertiary)', marginBottom: 12, fontSize: 12 }}>
+          variant="filter" — só filtra, sem popup (Gerenciar séries/filmes, onde a lista já fica visível na página)
+        </p>
+        <SearchCreateField
+          variant="filter"
+          label="Série"
+          placeholder="Busque ou adicione uma série"
+          value={filterValue}
+          onChange={setFilterValue}
+        />
+      </div>
+    </div>
+  )
 }
 
 export function DurationInputDemo() {

@@ -1,4 +1,4 @@
-import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, BottomSheetDemo, CalendarDemo, DurationInputDemo } from './demoHelpers'
+import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, BottomSheetDemo, CalendarDemo, DurationInputDemo, SearchCreateFieldDemo } from './demoHelpers'
 import Button from '../../components/Button'
 import SelectableListItem from '../../components/SelectableListItem'
 import ListItem from '../../components/ListItem'
@@ -397,6 +397,26 @@ const value = ref.current.getValue()`,
   secondaryButton={<Button variant="outline" size="sm">Descartar</Button>}
   primaryButton={<Button variant="primary" size="sm">Continuar</Button>}
 />`,
+  },
+  {
+    id: 'search-create-field',
+    name: 'SearchCreateField',
+    description:
+      'variant="combobox" (padrão): lista flutua grudada no campo no desktop e vira um overlay de busca em tela cheia no mobile; setas/Enter/Esc navegam. variant="filter": só um input de filtro, sem popup — usado quando os resultados já ficam sempre visíveis na página (Gerenciar séries/filmes).',
+    render: () => <SearchCreateFieldDemo />,
+    code: `<SearchCreateField
+  label="Série"
+  placeholder="Busque ou adicione uma série"
+  value={query}
+  onChange={setQuery}
+  items={items}
+  createLabel="série"
+  onSelect={(item) => selectExisting(item)}
+  onCreate={(name) => createNew(name)}
+/>
+
+// variant="filter": campo de filtro simples, sem dropdown/overlay
+<SearchCreateField variant="filter" label="Série" value={query} onChange={setQuery} />`,
   },
   {
     id: 'segmented-button',
