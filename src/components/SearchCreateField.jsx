@@ -320,7 +320,6 @@ function SearchCreateField({
               {renderRows(true)}
             </div>
           )}
-          {error && <span className="search-create-field-error">{error}</span>}
         </span>
         {settingsIcon && (
           <button
@@ -333,6 +332,7 @@ function SearchCreateField({
           </button>
         )}
       </div>
+      {error && <span className="search-create-field-error">{error}</span>}
 
       {!isDesktop && open && (
         <div className="search-create-field-overlay" style={overlayViewport ? { top: overlayViewport.top, height: overlayViewport.height } : undefined}>

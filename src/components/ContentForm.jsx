@@ -72,6 +72,7 @@ function ContentForm({
   secondaryButton = null,
 }) {
   const [type, setType] = useState(initialType)
+  const [attemptedSave, setAttemptedSave] = useState(false)
   const [link, setLink] = useState(initialLink)
   const [title, setTitle] = useState(initialTitle)
   const [author, setAuthor] = useState(initialAuthor)
@@ -246,7 +247,10 @@ function ContentForm({
     !requiredSeasonEpisodeError
 
   function handleSave() {
-    if (!canSave) return
+    if (!canSave) {
+      setAttemptedSave(true)
+      return
+    }
     onSave({
       type,
       link,
@@ -289,7 +293,7 @@ function ContentForm({
               onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError || duplicateError || requiredLinkError}
+              error={linkError || duplicateError || (attemptedSave && requiredLinkError)}
             />
             {(title || autofill.loading || autofill.notFound) && (
               <InputField
@@ -316,7 +320,7 @@ function ContentForm({
               hint="Links do Spotify ou YouTube Music preenchem título e capa automaticamente"
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError || requiredLinkError}
+              error={linkError || (attemptedSave && requiredLinkError)}
             />
             <InputField
               label="Título"
@@ -325,7 +329,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError || titleNotFoundError || requiredTitleError}
+              error={duplicateError || titleNotFoundError || (attemptedSave && requiredTitleError)}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -340,7 +344,7 @@ function ContentForm({
               onChange={(event) => handleLinkChange(event.target.value)}
               trailingIcon={<ContentPaste />}
               onTrailingIconClick={handlePasteLink}
-              error={linkError || requiredLinkError}
+              error={linkError || (attemptedSave && requiredLinkError)}
             />
             <InputField
               label="Título"
@@ -349,7 +353,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError || titleNotFoundError || requiredTitleError}
+              error={duplicateError || titleNotFoundError || (attemptedSave && requiredTitleError)}
             />
             {displayThumbnail && <Thumbnail size="lg" src={displayThumbnail} alt={title} />}
           </>
@@ -368,7 +372,7 @@ function ContentForm({
               onCreate={handleCreateRelated}
               settingsIcon={<Settings />}
               onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
-              error={requiredRelatedError}
+              error={attemptedSave && requiredRelatedError}
             />
             {isSeries && relatedId && (
               <>
@@ -381,7 +385,7 @@ function ContentForm({
                     value={season}
                     onChange={(event) => setSeason(event.target.value)}
                     onKeyDown={handleSeasonEnter}
-                    error={!season ? requiredSeasonEpisodeError : null}
+                    error={attemptedSave && !season ? requiredSeasonEpisodeError : null}
                   />
                   <InputField
                     ref={episodeInputRef}
@@ -391,7 +395,7 @@ function ContentForm({
                     value={episode}
                     onChange={(event) => setEpisode(event.target.value)}
                     onKeyDown={handleEpisodeEnter}
-                    error={!episode ? requiredSeasonEpisodeError : null}
+                    error={attemptedSave && !episode ? requiredSeasonEpisodeError : null}
                   />
                 </div>
                 {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}
@@ -407,7 +411,7 @@ function ContentForm({
               placeholder="Nome do livro"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              error={duplicateError || requiredTitleError}
+              error={duplicateError || (attemptedSave && requiredTitleError)}
             />
             <InputField
               label="Autor"
@@ -427,7 +431,7 @@ function ContentForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               trailingIcon={<Edit />}
-              error={duplicateError || requiredTitleError}
+              error={duplicateError || (attemptedSave && requiredTitleError)}
             />
             <InputField
               label="Link (opcional)"
@@ -482,9 +486,18 @@ function ContentForm({
       </div>
 
       <div className="content-form-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving || !canSave}>
-          {primaryLabel}
-        </Button>
+        <div style={{ position: 'relative', width: '100%' }}>
+          <Button fullWidth onClick={handleSave} disabled={saving || !canSave}>
+            {primaryLabel}
+          </Button>
+          {!saving && !canSave && (
+            <div
+              style={{ position: 'absolute', inset: 0 }}
+              onClick={() => setAttemptedSave(true)}
+              aria-hidden="true"
+            />
+          )}
+        </div>
         {secondaryButton}
       </div>
     </>
