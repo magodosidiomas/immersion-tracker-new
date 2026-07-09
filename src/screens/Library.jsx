@@ -5,10 +5,12 @@ import { useLongPress } from '../hooks/useLongPress'
 import LanguageTopNav from '../components/LanguageTopNav'
 import TopNav from '../components/TopNav'
 import BottomNav from '../components/BottomNav'
+import Button from '../components/Button'
 import ContentSearchList from '../components/ContentSearchList'
 import ConfirmDialog from '../components/ConfirmDialog'
 import { useContentFilter } from '../hooks/useContentFilter'
 import {
+  Add,
   Home as HomeIcon,
   BarChart,
   Book,
@@ -165,9 +167,15 @@ function Library({
           selectionMode={selectionMode}
           selectedIds={selectedIds}
           bindLongPress={bindLongPress}
+          showAddButton={false}
         />
       </div>
       <div className="library-bottom-layer">
+        <div className="library-fab-row">
+          <Button leadingIcon={<Add />} onClick={onOpenNewContent}>
+            Novo conteúdo
+          </Button>
+        </div>
         <BottomNav
           items={[
             { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },

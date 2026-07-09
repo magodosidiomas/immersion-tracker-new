@@ -16,7 +16,29 @@
 }
 
 .library-bottom-layer {
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
+  background: transparent;
+}
+
+.library-fab-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-16);
+  margin-top: -88px;
+  background: transparent;
+  pointer-events: none;
+}
+
+.library-fab-row .button {
+  pointer-events: auto;
+}
+
+@media (min-width: 1280px) {
+  .library-fab-row {
+    display: none;
+  }
 }
 
 .library-bottom-layer .bottom-nav {

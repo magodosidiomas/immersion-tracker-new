@@ -37,6 +37,7 @@ function ContentSearchList({
   selectionMode = false,
   selectedIds = [],
   bindLongPress = null,
+  showAddButton = true,
 }) {
   return (
     <>
@@ -51,14 +52,16 @@ function ContentSearchList({
             onChange={(event) => onQueryChange(event.target.value)}
           />
         </div>
-        <button
-          type="button"
-          className="content-search-list-add-button"
-          onClick={onAddContent}
-          aria-label="Adicionar conteúdo"
-        >
-          <Add />
-        </button>
+        {showAddButton && (
+          <button
+            type="button"
+            className="content-search-list-add-button"
+            onClick={onAddContent}
+            aria-label="Adicionar conteúdo"
+          >
+            <Add />
+          </button>
+        )}
       </div>
 
       <div className="content-search-list-filters">
