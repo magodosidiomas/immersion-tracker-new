@@ -16,6 +16,9 @@
 //   - Latim is the one dead language that *does* get a real, factual
 //     flag: "va" (Vatican City), where Latin is still an official
 //     language today.
+//   - Catalão isn't a country either, but flag-icons ships Catalonia's
+//     own regional flag as "es-ct", so it gets a real flag too instead
+//     of falling back to the generic globe icon.
 //
 // Ordered alphabetically (pt-BR) rather than by popularity: with ~50
 // entries and no search field yet (see AddLanguages.jsx), alphabetical
@@ -28,6 +31,7 @@ export const AVAILABLE_LANGUAGES = [
   { name: 'Árabe', flagCode: 'sa' },
   { name: 'Bengali', flagCode: 'bd' },
   { name: 'Búlgaro', flagCode: 'bg' },
+  { name: 'Catalão', flagCode: 'es-ct' },
   { name: 'Coreano', flagCode: 'kr' },
   { name: 'Croata', flagCode: 'hr' },
   { name: 'Dinamarquês', flagCode: 'dk' },

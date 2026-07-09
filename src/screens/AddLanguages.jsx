@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { addLanguage, getLanguages } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
+import { normalizeForCompare } from '../utils/text'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
+import InputField from '../components/InputField'
 import SelectableListItem from '../components/SelectableListItem'
-import { Close, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Close, Check, Search } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import './AddLanguages.css'
 
@@ -12,15 +14,10 @@ import './AddLanguages.css'
 // current language list itself (same self-sufficient-screen pattern as
 // ManageLanguages/App) so AVAILABLE_LANGUAGES can be filtered down to
 // languages not already added — no point offering to add a duplicate.
-//
-// The Figma spec includes a "Procurar idioma" search field at the top;
-// it's intentionally left out for now. Whether that becomes an
-// InputField or its own component is still an open decision, so this
-// screen ships without search until that's settled, rather than
-// guessing at the wrong abstraction.
 function AddLanguages({ onClose }) {
   const [existingNames, setExistingNames] = useState(null)
   const [selected, setSelected] = useState([])
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     getLanguages().then((languages) => setExistingNames(languages.map((language) => language.name)))
@@ -29,6 +26,9 @@ function AddLanguages({ onClose }) {
   if (existingNames === null) return null
 
   const options = AVAILABLE_LANGUAGES.filter((language) => !existingNames.includes(language.name))
+  const filteredOptions = query.trim()
+    ? options.filter((language) => normalizeForCompare(language.name).includes(normalizeForCompare(query)))
+    : options
 
   function toggle(name) {
     setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]))
@@ -54,8 +54,14 @@ function AddLanguages({ onClose }) {
         }
       />
       <div className="add-languages-scroll">
+        <InputField
+          placeholder="Buscar idioma"
+          leadingIcon={<Search />}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
         <div className="add-languages-card">
-          {options.map((language, index) => {
+          {filteredOptions.map((language, index) => {
             const isSelected = selected.includes(language.name)
             return (
               <SelectableListItem
