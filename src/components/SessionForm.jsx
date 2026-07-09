@@ -351,6 +351,8 @@ function SessionForm({
         </div>
 
         {!hideContentSection && (
+        <>
+        <div className="finish-session-divider" />
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Conteúdos</span>
           {linkedContents.length > 0 ? (
@@ -377,6 +379,7 @@ function SessionForm({
             Vincular conteúdo
           </Button>
         </div>
+        </>
         )}
       </div>
 
