@@ -50,6 +50,7 @@ import za from 'flag-icons/flags/4x3/za.svg'
 // being picked arbitrarily.
 import va from 'flag-icons/flags/4x3/va.svg'
 import esCt from 'flag-icons/flags/4x3/es-ct.svg'
+import hk from 'flag-icons/flags/4x3/hk.svg'
 import { Public } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Importing flag-icons' own stylesheet would pull in every flag it
@@ -61,7 +62,7 @@ import { Public } from '@nine-thirty-five/material-symbols-react/outlined'
 // language is actually added to that list.
 const FLAGS = {
   us, es, it, fr, de, nl, ru, jp, cn, kr, pt, sa, in: inFlag, tr, se, pl, gr, il, vn, id, th, no, dk, fi, ua,
-  cz, ro, hu, bg, hr, sk, si, rs, lv, lt, ee, is, ie, ir, pk, bd, my, ph, ke, za, va, 'es-ct': esCt,
+  cz, ro, hu, bg, hr, sk, si, rs, lv, lt, ee, is, ie, ir, pk, bd, my, ph, ke, za, va, 'es-ct': esCt, hk,
 }
 
 // Renders a country flag from the self-hosted flag-icons SVG set

@@ -19,6 +19,10 @@
 //   - Catalão isn't a country either, but flag-icons ships Catalonia's
 //     own regional flag as "es-ct", so it gets a real flag too instead
 //     of falling back to the generic globe icon.
+//   - Cantonês uses "hk" (Hong Kong) rather than "cn" (already taken
+//     by Mandarim) — Hong Kong is where Cantonese has official status
+//     and the strongest cultural association, even though it's also
+//     widely spoken in Guangdong province on the mainland.
 //
 // Ordered alphabetically (pt-BR) rather than by popularity: with ~50
 // entries and no search field yet (see AddLanguages.jsx), alphabetical
@@ -31,6 +35,7 @@ export const AVAILABLE_LANGUAGES = [
   { name: 'Árabe', flagCode: 'sa' },
   { name: 'Bengali', flagCode: 'bd' },
   { name: 'Búlgaro', flagCode: 'bg' },
+  { name: 'Cantonês', flagCode: 'hk' },
   { name: 'Catalão', flagCode: 'es-ct' },
   { name: 'Coreano', flagCode: 'kr' },
   { name: 'Croata', flagCode: 'hr' },
