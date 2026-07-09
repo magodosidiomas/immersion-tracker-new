@@ -19,37 +19,42 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
         }
       />
       <div className="settings-content">
-        <div className="settings-card">
-          <SelectableListItem
-            label="Idiomas"
-            leadingIcon={<Public />}
-            trailingIcon={<ChevronRight />}
-            onClick={onOpenManageLanguages}
-          />
-          <SelectableListItem
-            label="Backup"
-            leadingIcon={<Backup />}
-            trailingIcon={<ChevronRight />}
-            divider
-            onClick={onOpenBackup}
-          />
+        <div className="settings-group">
+          <span className="settings-section-label">Geral</span>
+          <div className="settings-card">
+            <SelectableListItem
+              label="Idiomas"
+              leadingIcon={<Public />}
+              trailingIcon={<ChevronRight />}
+              onClick={onOpenManageLanguages}
+            />
+            <SelectableListItem
+              label="Backup"
+              leadingIcon={<Backup />}
+              trailingIcon={<ChevronRight />}
+              divider
+              onClick={onOpenBackup}
+            />
+          </div>
         </div>
 
-        <span className="settings-section-label">Conteúdo</span>
-        <div className="settings-card">
-          <SelectableListItem
-            label="Séries"
-            leadingIcon={<VideoLabel />}
-            trailingIcon={<ChevronRight />}
-            onClick={onOpenManageSeries}
-          />
-          <SelectableListItem
-            label="Filmes"
-            leadingIcon={<Movie />}
-            trailingIcon={<ChevronRight />}
-            divider
-            onClick={onOpenManageMovies}
-          />
+        <div className="settings-group">
+          <span className="settings-section-label">Conteúdo</span>
+          <div className="settings-card">
+            <SelectableListItem
+              label="Séries"
+              leadingIcon={<VideoLabel />}
+              trailingIcon={<ChevronRight />}
+              onClick={onOpenManageSeries}
+            />
+            <SelectableListItem
+              label="Filmes"
+              leadingIcon={<Movie />}
+              trailingIcon={<ChevronRight />}
+              divider
+              onClick={onOpenManageMovies}
+            />
+          </div>
         </div>
       </div>
     </main>
