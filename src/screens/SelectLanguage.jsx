@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { addLanguage } from '../db'
 import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
+import { normalizeForCompare } from '../utils/text'
 import SelectableListItem from '../components/SelectableListItem'
+import InputField from '../components/InputField'
 import Flag from '../components/Flag'
+import { Search } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SelectLanguage.css'
 
 // First screen: pick a language to start tracking. Tapping a row both
@@ -19,6 +22,13 @@ import './SelectLanguage.css'
 // repeatedly without creating languages in IndexedDB.
 function SelectLanguage({ onSelect, preview = false }) {
   const [pending, setPending] = useState(false)
+  const [query, setQuery] = useState('')
+
+  const filteredLanguages = query.trim()
+    ? AVAILABLE_LANGUAGES.filter((language) =>
+        normalizeForCompare(language.name).includes(normalizeForCompare(query))
+      )
+    : AVAILABLE_LANGUAGES
 
   async function handleSelect(language) {
     if (pending) return
@@ -39,8 +49,14 @@ function SelectLanguage({ onSelect, preview = false }) {
           <h1 className="select-language-title">Qual idioma você está aprendendo?</h1>
           <p className="select-language-subtitle">Você pode adicionar outros idiomas depois.</p>
         </div>
+        <InputField
+          placeholder="Buscar idioma"
+          leadingIcon={<Search />}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
         <div className="select-language-card">
-          {AVAILABLE_LANGUAGES.map((language, index) => (
+          {filteredLanguages.map((language, index) => (
             <SelectableListItem
               key={language.name}
               label={language.name}
