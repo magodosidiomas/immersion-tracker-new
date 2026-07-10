@@ -106,6 +106,15 @@ function App() {
   // overlay keeps all of that mounted and untouched.
   const [manualSessionOverlay, setManualSessionOverlay] = useState(false)
 
+  // Mirrors manualSessionOverlay, but for "Adicionar conteúdo" tapped
+  // from inside the LinkContent picker (NewSession/EditSession's
+  // "Vincular conteúdo" flow). Must stay an overlay, not navigate() —
+  // navigate() would unmount whatever's underneath (NewSession's
+  // in-progress draft) exactly like manualSessionOverlay's own comment
+  // explains. Saving here feeds the new content back through
+  // pendingPickCallback, same as picking an existing item would.
+  const [manualContentOverlay, setManualContentOverlay] = useState(false)
+
   // Bumped whenever a manual session is saved/discarded so LinkSession
   // (which stays mounted underneath and wouldn't otherwise refetch)
   // picks up the newly created session in its day list.
@@ -179,6 +188,28 @@ function App() {
     window.history.back()
   }
 
+  // Opens the manual-entry EditContent overlay on top of the
+  // link-content picker — see manualContentOverlay above.
+  function openManualContent() {
+    setManualContentOverlay(true)
+    window.history.pushState({ screen, pickerScreen, manualContentOverlay: true }, '')
+  }
+
+  // Cancel path (X/back without saving): just close this overlay
+  // layer, back to the LinkContent list underneath.
+  function closeManualContentOverlay() {
+    window.history.back()
+  }
+
+  // Save path: the new content is the pick — hand it to whoever opened
+  // the picker, then close both this overlay AND the link-content
+  // picker below it (go(-2)) so the person lands back on their session
+  // draft, exactly like tapping an existing item does via closePicker.
+  function saveManualContent(savedContent) {
+    if (savedContent) pendingPickCallback.current?.(savedContent)
+    window.history.go(-2)
+  }
+
   // Lifted here (not inside NewSession) so Home's TimerWidget can show
   // and tick the same live timer without that screen being open — see
   // useTimerDraft for the IndexedDB recovery rules.
@@ -202,6 +233,7 @@ function App() {
     setPickerScreen(null)
     setManualSessionOverlay(false)
     setManageOverlay(null)
+    setManualContentOverlay(false)
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -215,6 +247,7 @@ function App() {
       setPickerScreen(event.state?.pickerScreen ?? null)
       setManualSessionOverlay(Boolean(event.state?.manualSessionOverlay))
       setManageOverlay(event.state?.manageOverlay ?? null)
+      setManualContentOverlay(Boolean(event.state?.manualContentOverlay))
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -419,10 +452,7 @@ function App() {
         <div className="picker-overlay">
           <LinkContent
             onBack={closePicker}
-            onAddContent={() => {
-              setEditingContentId(null)
-              navigate('edit-content')
-            }}
+            onAddContent={openManualContent}
             onSelect={(item) => {
               pendingPickCallback.current?.(item)
               closePicker()
@@ -446,6 +476,24 @@ function App() {
       {manualSessionOverlay && (
         <div className="picker-overlay">
           <NewSession timer={timer} manualOnly onClose={closeManualSession} onSaved={closeManualSession} />
+        </div>
+      )}
+      {manualContentOverlay && (
+        <div className="picker-overlay">
+          <EditContent
+            contentId={null}
+            onBack={closeManualContentOverlay}
+            onSaved={saveManualContent}
+            // "Vincular sessão" and the gear-icon série/filme manager
+            // both reuse pickerScreen/pendingPickCallback, which this
+            // overlay is already borrowing (it's nested inside the
+            // link-content picker's own pick-in-progress). Opening
+            // either here would clobber that shared state, so they're
+            // no-ops in this context — same simplification manualOnly
+            // NewSession makes for its own nested picker actions.
+            onOpenLinkSession={() => {}}
+            catalogRefreshTick={catalogRefreshTick}
+          />
         </div>
       )}
       {manageOverlay?.screen === 'manage-series' && (

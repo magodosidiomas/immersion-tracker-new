@@ -113,7 +113,12 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     if (isNew && savedContentId && pendingSessions.length > 0) {
       await Promise.all(pendingSessions.map((session) => linkSessionContent(session.id, savedContentId)))
     }
-    onSaved()
+    // Callers that open EditContent as a "pick or create" overlay (see
+    // App.jsx's manualContentOverlay) need the freshly created content
+    // back to treat it as the pick, same shape LinkContent's onSelect
+    // hands over. Existing callers that just navigate here (Library)
+    // ignore the argument, so this is additive, not a breaking change.
+    onSaved(isNew ? { id: savedContentId, type, link, title, author, thumbnail } : undefined)
   }
 
   async function handleCreateRelated(kind, name) {
