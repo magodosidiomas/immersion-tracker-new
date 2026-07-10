@@ -116,9 +116,13 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     // Callers that open EditContent as a "pick or create" overlay (see
     // App.jsx's manualContentOverlay) need the freshly created content
     // back to treat it as the pick, same shape LinkContent's onSelect
-    // hands over. Existing callers that just navigate here (Library)
-    // ignore the argument, so this is additive, not a breaking change.
-    onSaved(isNew ? { id: savedContentId, type, link, title, author, thumbnail } : undefined)
+    // hands over. Resolved via getContent (not the raw `fields`)
+    // because série/filme content rows don't carry título/thumbnail
+    // directly — those are derived from the catalog entry, see
+    // resolveContentTitle. Existing callers that just navigate here
+    // (Library) ignore the argument, so this is additive.
+    const savedContent = isNew && savedContentId ? await getContent(savedContentId) : null
+    onSaved(savedContent ? { ...savedContent, subtitle: '0 sessões' } : undefined)
   }
 
   async function handleCreateRelated(kind, name) {
