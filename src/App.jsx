@@ -498,6 +498,10 @@ function App() {
         activeScreen={screen}
         onNavigate={navigate}
         onOpenNewSession={() => navigate('new-session')}
+        onOpenNewContent={() => {
+          setEditingContentId(null)
+          navigate('edit-content')
+        }}
         onOpenManageLanguages={() => navigate('manage-languages')}
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
