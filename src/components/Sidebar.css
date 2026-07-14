@@ -48,6 +48,7 @@
   width: 252px;
   max-height: 70vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0;
   background: var(--bg-surface-default);
   border-radius: var(--radius-large);
