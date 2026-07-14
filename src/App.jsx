@@ -252,6 +252,23 @@ function App() {
     window.history.pushState({ screen: nextScreen }, '')
   }
 
+  // Used for navigating between sections *inside* the desktop
+  // SettingsWindow (Idiomas/Backup/Séries/Filmes). Unlike `navigate`,
+  // this replaces the current history entry instead of pushing a new
+  // one, so switching sections never grows the stack. That keeps the
+  // window's X button (which just calls history.back()) a true "close"
+  // that always exits to whatever screen was open before Configurações,
+  // in a single step, no matter how many sections were visited inside.
+  const navigateSettingsWindow = (nextScreen) => {
+    setEditingSession(null)
+    setScreen(nextScreen)
+    setPickerScreen(null)
+    setManualSessionOverlay(false)
+    setManageOverlay(null)
+    setManualContentOverlay(false)
+    window.history.replaceState({ screen: nextScreen }, '')
+  }
+
   useEffect(() => {
     if (isDesignSystem || isOnboardingPreview) return
     // Base entry for the session: Home, with no forward entries ahead of
@@ -475,7 +492,7 @@ function App() {
       {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies'].includes(screen) && (
         <SettingsWindow
           screen={screen}
-          onNavigate={navigate}
+          onNavigate={navigateSettingsWindow}
           onClose={() => window.history.back()}
           onOpenAddLanguages={() => navigate('add-languages')}
           onAllLanguagesRemoved={() => {
