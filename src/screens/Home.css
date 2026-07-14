@@ -18,6 +18,11 @@
   padding-bottom: 88px;
 }
 
+.home-history-empty {
+  justify-content: center;
+  align-items: center;
+}
+
 .home-stats {
   display: flex;
   flex-direction: column;

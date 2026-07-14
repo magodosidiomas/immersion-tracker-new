@@ -92,7 +92,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
-      <div className="home-history">
+      <div className={`home-history${groups.length === 0 && !sessionError ? ' home-history-empty' : ''}`}>
         {groups.length > 0 && (
           <div className="home-stats">
             <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
@@ -106,6 +106,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           <Alert description="Erro ao carregar sessões. Tente fechar e reabrir o app." />
         ) : groups.length === 0 ? (
           <EmptyState
+            style="outline"
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
             description="Toque no botão abaixo pra registrar sua primeira sessão"
