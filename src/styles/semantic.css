@@ -55,6 +55,7 @@
   --color-text-on-inverse: var(--color-purple-900);
   --color-text-on-inverse-accent: var(--bg-surface-primary);
   --color-border-subtle: var(--color-purple-500);
+  --color-border-extra-subtle: var(--color-purple-700);
   --color-border-default: var(--color-purple-400);
   --color-border-accent: var(--color-brand-500);
   --color-border-muted-accent: var(--color-brand-700-25);
