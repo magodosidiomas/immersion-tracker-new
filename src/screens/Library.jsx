@@ -47,6 +47,10 @@ function Library({
   onOpenManageLanguages,
   onOpenHome,
   onOpenStatistics,
+  // Mirrors Home's onHasSessionsChange. Not wired from App yet — there's
+  // no desktop sidebar action for Library to hide. Ready for when one
+  // exists (same pattern as hideNewSessionButton on Sidebar).
+  onHasContentChange,
 }) {
   const [activeId, setActiveId] = useState(null)
   const [contents, setContents] = useState([])
@@ -122,6 +126,11 @@ function Library({
   }))
 
   const { query, setQuery, selectedTypes, toggleType, setSelectedTypes, groups } = useContentFilter(items)
+  const isEmpty = groups.length === 0
+
+  useEffect(() => {
+    onHasContentChange?.(!isEmpty)
+  }, [isEmpty, onHasContentChange])
 
   return (
     <main className="library">
@@ -168,14 +177,17 @@ function Library({
           selectedIds={selectedIds}
           bindLongPress={bindLongPress}
           showAddButton={false}
+          emptyStateButtonVariant="primary"
         />
       </div>
       <div className="library-bottom-layer">
-        <div className="library-fab-row">
-          <Button leadingIcon={<Add />} onClick={onOpenNewContent}>
-            Novo conteúdo
-          </Button>
-        </div>
+        {!isEmpty && (
+          <div className="library-fab-row">
+            <Button leadingIcon={<Add />} onClick={onOpenNewContent}>
+              Novo conteúdo
+            </Button>
+          </div>
+        )}
         <BottomNav
           items={[
             { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },

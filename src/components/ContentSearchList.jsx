@@ -38,6 +38,7 @@ function ContentSearchList({
   selectedIds = [],
   bindLongPress = null,
   showAddButton = true,
+  emptyStateButtonVariant = 'outline',
 }) {
   return (
     <>
@@ -90,6 +91,8 @@ function ContentSearchList({
 
       {groups.length === 0 ? (
         <EmptyState
+          style="background"
+          buttonVariant={emptyStateButtonVariant}
           icon={<Book />}
           title="Sua biblioteca está vazia"
           description="Comece adicionando o que você está lendo, assistindo ou ouvindo"
