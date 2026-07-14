@@ -108,7 +108,10 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           <EmptyState
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
-            description="Toque em nova sessão pra registrar sua primeira sessão"
+            description="Toque no botão abaixo pra registrar sua primeira sessão"
+            buttonLabel="Nova sessão"
+            buttonIcon={<Add />}
+            onButtonClick={onOpenNewSession}
           />
         ) : (
           groups.map((group) => (
