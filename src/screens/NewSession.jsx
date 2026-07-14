@@ -40,9 +40,10 @@ import './NewSession.css'
 // pickers aren't supported by the single pickerScreen stack in
 // App.jsx. onSaved receives the created session so the caller can
 // select it automatically.
-function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved }) {
+function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved, isDesktop = false }) {
   const [phase, setPhase] = useState(manualOnly ? 'finish' : 'timer') // timer | finish
   const [activeLanguageId, setActiveLanguageId] = useState(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   // Snapshot handed to the finish-phase form the moment Encerrar is
   // pressed (or immediately, for manualOnly) — its own state from
@@ -64,6 +65,15 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
   useEffect(() => {
     getAppSettings().then((settings) => setActiveLanguageId(settings.activeLanguageId))
   }, [])
+
+  // Deletes the in-progress draft outright (no session-details form,
+  // unlike Encerrar) — only reachable once a draft exists (running or
+  // paused), never from idle. Mirrors FinishSession's Descartar
+  // (clearDraft + onClose), just entered from a different point.
+  function handleDeleteSession() {
+    timer.clearDraft()
+    onClose()
+  }
 
   function handleEnd() {
     const snapshot = timer.end()
@@ -133,17 +143,29 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
     )
   }
 
-  return (
-    <main className="new-session">
-      <TopNav
-        title="Nova sessão"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onClose} aria-label="Fechar">
+  const cardTitle = timer.status === 'running' ? 'Sessão em andamento' : 'Nova sessão'
+  const canDelete = timer.status === 'running' || timer.status === 'paused'
+
+  const body = (
+    <>
+      {isDesktop ? (
+        <div className="new-session-card-header">
+          <span className="new-session-card-title">{cardTitle}</span>
+          <button type="button" className="new-session-card-close" onClick={onClose} aria-label="Fechar">
             <Close />
           </button>
-        }
-      />
+        </div>
+      ) : (
+        <TopNav
+          title="Nova sessão"
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onClose} aria-label="Fechar">
+              <Close />
+            </button>
+          }
+        />
+      )}
       <div className="new-session-body">
         <Dropdown
           label={categoryLabel ?? 'Selecionar categoria'}
@@ -184,7 +206,29 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
             </Button>
           </>
         )}
+        {canDelete && (
+          <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={() => setDeleteConfirmOpen(true)}>
+            Deletar sessão
+          </Button>
+        )}
       </div>
+      <BottomSheet
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        title="Deletar sessão?"
+        description="O tempo registrado será perdido e essa sessão não será salva."
+        contentCard={false}
+        primaryButton={
+          <Button variant="destructive" fullWidth onClick={handleDeleteSession}>
+            Deletar
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="ghost" fullWidth onClick={() => setDeleteConfirmOpen(false)}>
+            Cancelar
+          </Button>
+        }
+      />
       <BottomSheet
         open={categorySheetOpen}
         onClose={() => setCategorySheetOpen(false)}
@@ -232,8 +276,18 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
           </div>
         </div>
       </BottomSheet>
-    </main>
+    </>
   )
+
+  if (isDesktop) {
+    return (
+      <div className="new-session-desktop-overlay">
+        <div className="new-session-desktop-card">{body}</div>
+      </div>
+    )
+  }
+
+  return <main className="new-session">{body}</main>
 }
 
 // The session-details form shown after "Encerrar". Owns its own

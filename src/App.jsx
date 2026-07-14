@@ -351,7 +351,15 @@ function App() {
       )
     }
     if (screen === 'new-session') {
-      return <NewSession timer={timer} onClose={() => window.history.back()} onOpenLinkContent={openLinkContent} onSaved={() => window.history.back()} />
+      return (
+        <NewSession
+          timer={timer}
+          isDesktop={isDesktop}
+          onClose={() => window.history.back()}
+          onOpenLinkContent={openLinkContent}
+          onSaved={() => window.history.back()}
+        />
+      )
     }
     if (screen === 'edit-session') {
       return (
