@@ -26,12 +26,14 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               label="Idiomas"
               leadingIcon={<Public />}
               trailingIcon={<ChevronRight />}
+              position="first"
               onClick={onOpenManageLanguages}
             />
             <SelectableListItem
               label="Backup"
               leadingIcon={<Backup />}
               trailingIcon={<ChevronRight />}
+              position="last"
               divider
               onClick={onOpenBackup}
             />
@@ -45,12 +47,14 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               label="Séries"
               leadingIcon={<VideoLabel />}
               trailingIcon={<ChevronRight />}
+              position="first"
               onClick={onOpenManageSeries}
             />
             <SelectableListItem
               label="Filmes"
               leadingIcon={<Movie />}
               trailingIcon={<ChevronRight />}
+              position="last"
               divider
               onClick={onOpenManageMovies}
             />
