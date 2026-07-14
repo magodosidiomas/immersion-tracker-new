@@ -1,4 +1,4 @@
-import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, BottomSheetDemo, CalendarDemo, DurationInputDemo, SearchCreateFieldDemo } from './demoHelpers'
+import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, BottomSheetDemo, ModalDemo, CalendarDemo, DurationInputDemo, SearchCreateFieldDemo } from './demoHelpers'
 import Button from '../../components/Button'
 import SelectableListItem from '../../components/SelectableListItem'
 import ListItem from '../../components/ListItem'
@@ -337,6 +337,28 @@ const value = ref.current.getValue()`,
   extraText="1h 20"
   flag={<Flag code="us" />}
 />`,
+  },
+  {
+    id: 'modal',
+    name: 'Modal',
+    description: 'Desktop-only windowed shell for web versions of screens (edit forms, pickers) so they don\'t float too empty in a full-bleed page. Header: optional leadingIcon/trailingIcon around a centered title. Footer buttons hug the right edge.',
+    render: () => <ModalDemo />,
+    code: `<Modal
+  title="Editar sessão"
+  leadingIcon={<ArrowBack />}
+  onLeadingClick={onClose}
+  trailingIcon={<Close />}
+  onTrailingClick={onClose}
+  onClose={onClose}
+  footer={
+    <>
+      <Button variant="outline" onClick={onClose}>Cancelar</Button>
+      <Button onClick={handleSave}>Salvar</Button>
+    </>
+  }
+>
+  {/* form fields */}
+</Modal>`,
   },
   {
     id: 'nav-item',

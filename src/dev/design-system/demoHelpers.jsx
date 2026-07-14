@@ -3,6 +3,7 @@ import Button from '../../components/Button'
 import SelectableListItem from '../../components/SelectableListItem'
 import Dropdown from '../../components/Dropdown'
 import BottomSheet from '../../components/BottomSheet'
+import Modal from '../../components/Modal'
 import Checkbox from '../../components/Checkbox'
 import SelectionChip from '../../components/SelectionChip'
 import SegmentedButton from '../../components/SegmentedButton'
@@ -12,7 +13,7 @@ import Calendar from '../../components/Calendar'
 import SearchCreateField from '../../components/SearchCreateField'
 import { getAppSettings, getSessionsByLanguage } from '../../db'
 import { AVAILABLE_LANGUAGES } from '../../data/availableLanguages'
-import { Bolt, Check } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Bolt, Check, ArrowBack, Close } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../../components/Flag'
 
 // Small interactive demos for components whose preview needs real
@@ -106,6 +107,33 @@ export function BottomSheetDemo() {
           />
         ))}
       </BottomSheet>
+    </>
+  )
+}
+
+export function ModalDemo() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="primary" onClick={() => setOpen(true)}>Abrir modal</Button>
+      {open && (
+        <Modal
+          title="Editar sessão"
+          leadingIcon={<ArrowBack />}
+          onLeadingClick={() => setOpen(false)}
+          trailingIcon={<Close />}
+          onTrailingClick={() => setOpen(false)}
+          onClose={() => setOpen(false)}
+          footer={
+            <>
+              <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+              <Button onClick={() => setOpen(false)}>Salvar</Button>
+            </>
+          }
+        >
+          <p style={{ color: 'var(--color-text-secondary)' }}>Conteúdo do modal vai aqui.</p>
+        </Modal>
+      )}
     </>
   )
 }
