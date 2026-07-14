@@ -60,7 +60,10 @@
   border-radius: var(--radius-large);
 }
 
-.new-session-desktop-card .new-session-body,
+.new-session-desktop-card .new-session-body {
+  padding: var(--space-48) 0;
+}
+
 .new-session-desktop-card .new-session-footer {
   padding: 0;
 }
@@ -73,8 +76,8 @@
 
 .new-session-card-title {
   font-family: var(--font-family-main);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-heading-5);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-medium);
   line-height: var(--line-height-snug);
   color: var(--color-text-primary);
 }

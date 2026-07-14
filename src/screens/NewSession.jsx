@@ -144,7 +144,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
   }
 
   const cardTitle = timer.status === 'running' ? 'Sessão em andamento' : 'Nova sessão'
-  const canDelete = timer.status === 'running' || timer.status === 'paused'
+  const canDelete = timer.status === 'paused'
 
   const body = (
     <>
@@ -207,7 +207,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
           </>
         )}
         {canDelete && (
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={() => setDeleteConfirmOpen(true)}>
+          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setDeleteConfirmOpen(true)}>
             Deletar sessão
           </Button>
         )}
