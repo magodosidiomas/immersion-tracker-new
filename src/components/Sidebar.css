@@ -56,14 +56,13 @@
 
 .sidebar-language-menu-divider {
   height: 1px;
-  margin: var(--space-8) 0;
+  margin: 0;
   background: var(--color-border-subtle);
 }
 
 .sidebar-language-menu-actions {
   display: flex;
   flex-direction: column;
-  padding-bottom: var(--space-8);
 }
 
 .sidebar-language-menu [data-variant='accent'] .selectable-list-item-label {
