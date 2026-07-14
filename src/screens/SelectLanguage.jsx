@@ -62,6 +62,15 @@ function SelectLanguage({ onSelect, preview = false }) {
               label={language.name}
               flag={<Flag code={language.flagCode} />}
               divider={index > 0}
+              position={
+                filteredLanguages.length === 1
+                  ? 'only'
+                  : index === 0
+                    ? 'first'
+                    : index === filteredLanguages.length - 1
+                      ? 'last'
+                      : 'middle'
+              }
               disabled={pending}
               onClick={() => handleSelect(language)}
             />

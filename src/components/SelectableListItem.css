@@ -65,6 +65,31 @@
   background: var(--color-border-subtle);
 }
 
+/* --- flush/grouped variant (position set) ---
+   Used when the list sits directly inside a card with no card padding
+   and no inset padding of its own — item edges meet the card edges,
+   so the hover/selected pill needs to borrow the card's radius on the
+   corners that touch it instead of using its own smaller radius. */
+.selectable-list-item[data-position] {
+  padding: 0;
+}
+
+.selectable-list-item[data-position] .selectable-list-item-row {
+  border-radius: 0;
+}
+
+.selectable-list-item[data-position='first'] .selectable-list-item-row,
+.selectable-list-item[data-position='only'] .selectable-list-item-row {
+  border-top-left-radius: var(--radius-large);
+  border-top-right-radius: var(--radius-large);
+}
+
+.selectable-list-item[data-position='last'] .selectable-list-item-row,
+.selectable-list-item[data-position='only'] .selectable-list-item-row {
+  border-bottom-left-radius: var(--radius-large);
+  border-bottom-right-radius: var(--radius-large);
+}
+
 /* --- hover --- */
 .selectable-list-item:not(:disabled):hover .selectable-list-item-row {
   background: var(--bg-surface-primary-8);

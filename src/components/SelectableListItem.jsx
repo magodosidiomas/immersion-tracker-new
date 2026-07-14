@@ -20,6 +20,14 @@ import './SelectableListItem.css'
 //     that row also has a divider (no example combines the two)
 // Hover isn't a designed state either, but — like Button — it's added
 // for free via :hover instead of a manual "state" prop.
+//
+// `position` ('first' | 'middle' | 'last' | 'only') is opt-in and only
+// matters for lists rendered flush inside a card (no card padding, no
+// button inset padding): it zeroes the button's own padding and caps
+// the hover/selected pill's radius to the card's corners instead of
+// the item's own smaller radius, so the pill never pokes past the
+// card's rounded edge on the first/last row. Leave it unset for the
+// existing inset usage (card keeps its own padding) — nothing changes.
 function SelectableListItem({
   label = 'Label',
   selected = false,
@@ -28,6 +36,7 @@ function SelectableListItem({
   flag = null,
   leadingIcon = null,
   trailingIcon = null,
+  position,
   ...props
 }) {
   return (
@@ -36,6 +45,7 @@ function SelectableListItem({
       className="selectable-list-item"
       data-selected={selected}
       data-divider={divider}
+      data-position={position}
       disabled={disabled}
       {...props}
     >
