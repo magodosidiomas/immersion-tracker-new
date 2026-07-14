@@ -5,13 +5,15 @@
   background: var(--bg-surface-base);
 }
 
+.add-languages-search {
+  flex-shrink: 0;
+  margin: 16px 16px 0;
+}
+
 .add-languages-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
   padding: 16px;
 }
 

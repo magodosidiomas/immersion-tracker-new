@@ -21,6 +21,10 @@ import './SelectableListItem.css'
 // Hover isn't a designed state either, but — like Button — it's added
 // for free via :hover instead of a manual "state" prop.
 //
+// `density` ('default' | 'compact') is opt-in and only reduces the row's
+// own vertical padding — used for long flush lists (e.g. AddLanguages)
+// where the default row height leaves too much space between dividers.
+//
 // `position` ('first' | 'middle' | 'last' | 'only') is opt-in and only
 // matters for lists rendered flush inside a card (no card padding, no
 // button inset padding): it zeroes the button's own padding and caps
@@ -37,6 +41,7 @@ function SelectableListItem({
   leadingIcon = null,
   trailingIcon = null,
   position,
+  density = 'default',
   ...props
 }) {
   return (
@@ -46,6 +51,7 @@ function SelectableListItem({
       data-selected={selected}
       data-divider={divider}
       data-position={position}
+      data-density={density}
       disabled={disabled}
       {...props}
     >

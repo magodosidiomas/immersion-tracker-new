@@ -90,6 +90,12 @@
   border-bottom-right-radius: var(--radius-large);
 }
 
+/* --- compact density (see SelectableListItem.jsx comment) --- */
+.selectable-list-item[data-density='compact'] .selectable-list-item-row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 /* --- hover --- */
 .selectable-list-item:not(:disabled):hover .selectable-list-item-row {
   background: var(--bg-surface-primary-8);

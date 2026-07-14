@@ -27,13 +27,14 @@ function AddLanguages({ onClose }) {
           </button>
         }
       />
+      <InputField
+        className="add-languages-search"
+        placeholder="Buscar idioma"
+        leadingIcon={<Search />}
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+      />
       <div className="add-languages-scroll">
-        <InputField
-          placeholder="Buscar idioma"
-          leadingIcon={<Search />}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
         <div className="add-languages-card">
           {filteredOptions.map((language, index) => {
             const isSelected = selected.includes(language.name)
@@ -43,6 +44,7 @@ function AddLanguages({ onClose }) {
                 label={language.name}
                 flag={<Flag code={language.flagCode} />}
                 divider={index > 0}
+                density="compact"
                 position={
                   filteredOptions.length === 1
                     ? 'only'
