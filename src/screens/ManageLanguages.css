@@ -44,7 +44,7 @@
   width: 100%;
   padding: 8px 0;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-default);
+  background: var(--bg-surface-elevated);
 }
 
 .manage-languages-footer {

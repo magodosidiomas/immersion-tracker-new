@@ -202,7 +202,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved, em
         </div>
       </div>
       <div className="manage-languages-footer">
-        <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenAddLanguages}>
+        <Button variant="outline" leadingIcon={<Add />} onClick={onOpenAddLanguages}>
           Adicionar idiomas
         </Button>
       </div>
