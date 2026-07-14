@@ -94,81 +94,17 @@
   height: 100%;
 }
 
-/* Desktop session-details drawer (FinishSession): slides in from the
-   right over a dimming overlay, instead of the mobile full-screen
-   TopNav page. Reuses SessionForm as-is; only the surrounding chrome
-   (header/footer layout) differs. */
-.session-drawer-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  justify-content: flex-end;
-  background: rgba(15, 13, 24, 0.6);
-}
-
-.session-drawer-panel {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  width: 433px;
-  max-width: 100vw;
-  height: var(--app-height, 100dvh);
-  background: var(--bg-surface-base);
-  border-left: 1px solid var(--color-border-subtle);
-  animation: session-drawer-slide-in 0.25s ease-out;
-}
-
-@keyframes session-drawer-slide-in {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.session-drawer-header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-16);
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-
-.session-drawer-title {
-  font-family: var(--font-family-main);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-label-medium);
-  color: var(--color-text-primary);
-}
-
-.session-drawer-close {
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.session-drawer-close svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* Footer: right-aligned, auto-width buttons — overrides SessionForm's
-   default fullWidth/stacked mobile footer for this container only. */
-.session-drawer-panel .finish-session-footer {
+/* Desktop session-details (FinishSession): now the shared Modal
+   component (see Modal.jsx) instead of a right-side drawer. Only the
+   footer needs a local override — right-aligned, auto-width buttons,
+   instead of SessionForm's default fullWidth/stacked mobile footer. */
+.finish-session-modal .finish-session-footer {
   flex-direction: row-reverse;
   justify-content: flex-start;
   border-top: 1px solid var(--color-border-subtle);
 }
 
-.session-drawer-panel .finish-session-footer .button[data-full-width='true'] {
+.finish-session-modal .finish-session-footer .button[data-full-width='true'] {
   width: auto;
 }
 

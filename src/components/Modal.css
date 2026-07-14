@@ -67,6 +67,17 @@
   padding: var(--space-24);
 }
 
+/* flushContent: children manage their own scroll region and footer
+   (e.g. SessionForm's .finish-session-body/.finish-session-footer) —
+   Modal just provides the flex column, no padding or independent
+   scroll of its own. */
+.modal-content[data-flush='true'] {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
 .modal-footer {
   display: flex;
   flex-shrink: 0;

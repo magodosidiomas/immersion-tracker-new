@@ -3,6 +3,7 @@ import TopNav from '../components/TopNav'
 import Dropdown from '../components/Dropdown'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
+import Modal from '../components/Modal'
 import SelectionChip from '../components/SelectionChip'
 import SessionForm from '../components/SessionForm'
 import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete, Add } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -449,17 +450,18 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
 
   if (isDesktop) {
     return (
-      <div className="session-drawer-overlay" onClick={(event) => event.target === event.currentTarget && onBack()}>
-        <div className="session-drawer-panel">
-          <div className="session-drawer-header">
-            <span className="session-drawer-title">Nova sessão</span>
-            <button type="button" className="session-drawer-close" onClick={onBack} aria-label="Fechar">
-              <Close />
-            </button>
-          </div>
-          {formAndSheets}
-        </div>
-      </div>
+      <Modal
+        title="Nova sessão"
+        trailingIcon={<Close />}
+        onTrailingClick={onBack}
+        onClose={onBack}
+        flushContent
+        className="finish-session-modal"
+        width={433}
+        height={640}
+      >
+        {formAndSheets}
+      </Modal>
     )
   }
 

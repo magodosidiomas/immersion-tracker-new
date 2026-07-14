@@ -9,7 +9,7 @@ import './Modal.css'
 // Content: scrollable middle area, arbitrary children.
 // Footer: optional, fixed, buttons hug the right edge (flex-end) — pass
 // Button elements as children.
-function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingClick, footer, width = 560, height = 600, onClose, children }) {
+function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingClick, footer, flushContent = false, width = 560, height = 600, onClose, className = '', children }) {
   return (
     <div
       className="modal-overlay"
@@ -17,7 +17,7 @@ function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingCli
         if (event.target === event.currentTarget && onClose) onClose()
       }}
     >
-      <div className="modal-window" style={{ width, height }}>
+      <div className={`modal-window ${className}`.trim()} style={{ width, height }}>
         <div className="modal-header">
           {leadingIcon ? (
             <button type="button" className="modal-header-icon" onClick={onLeadingClick} aria-label="Voltar">
@@ -35,7 +35,7 @@ function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingCli
             <span className="modal-header-icon-spacer" />
           )}
         </div>
-        <div className="modal-content">{children}</div>
+        <div className="modal-content" data-flush={flushContent}>{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
