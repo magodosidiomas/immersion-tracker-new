@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Sidebar.css'
 import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
 import Dropdown from './Dropdown'
-import BottomSheet from './BottomSheet'
 import SelectableListItem from './SelectableListItem'
 import Button from './Button'
 import Flag from './Flag'
@@ -26,6 +25,7 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
+  const languageMenuRef = useRef(null)
 
   useEffect(() => {
     Promise.all([getLanguages(), getAppSettings()]).then(([langs, settings]) => {
@@ -33,6 +33,19 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
       setActiveId(settings.activeLanguageId)
     })
   }, [])
+
+  // Desktop menu closes on outside click, unlike the mobile BottomSheet
+  // this replaces (which had its own scrim). mousedown rather than
+  // click so it beats the dropdown trigger's own click-to-toggle.
+  useEffect(() => {
+    if (!switcherOpen) return
+    function handlePointerDown(event) {
+      if (languageMenuRef.current?.contains(event.target)) return
+      setSwitcherOpen(false)
+    }
+    document.addEventListener('mousedown', handlePointerDown)
+    return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [switcherOpen])
 
   const activeLanguage = languages.find((language) => language.id === activeId)
 
@@ -62,12 +75,43 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
   return (
     <nav className="sidebar">
       <div className="sidebar-top">
-        <div className="sidebar-language">
+        <div className="sidebar-language" ref={languageMenuRef}>
           <Dropdown
             label={activeLanguage?.name}
             flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
-            onClick={() => setSwitcherOpen(true)}
+            outline
+            selected={switcherOpen}
+            onClick={() => setSwitcherOpen((value) => !value)}
           />
+          {switcherOpen && (
+            <div className="sidebar-language-menu">
+              {languages.map((language, index) => (
+                <SelectableListItem
+                  key={language.id}
+                  label={language.name}
+                  flag={<Flag code={language.flagCode} />}
+                  selected={language.id === activeId}
+                  trailingIcon={language.id === activeId ? <Check /> : null}
+                  divider={index > 0}
+                  onClick={() => handlePick(language)}
+                />
+              ))}
+              <div className="sidebar-language-menu-divider" />
+              <div className="sidebar-language-menu-actions">
+                <SelectableListItem
+                  label="Adicionar idiomas"
+                  leadingIcon={<Add />}
+                  data-variant="accent"
+                  onClick={handleAddLanguages}
+                />
+                <SelectableListItem
+                  label="Gerenciar idiomas"
+                  leadingIcon={<Settings />}
+                  onClick={handleManageLanguages}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="sidebar-divider" />
         <div className="sidebar-actions">
@@ -99,34 +143,6 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
         <span className="sidebar-item-icon"><Settings /></span>
         <span className="sidebar-item-label">Configurações</span>
       </button>
-      <BottomSheet
-        open={switcherOpen}
-        onClose={() => setSwitcherOpen(false)}
-        title="Idioma"
-        description="Escolha o idioma ativo."
-        primaryButton={
-          <Button variant="outline" leadingIcon={<Add />} onClick={handleAddLanguages}>
-            Adicionar idiomas
-          </Button>
-        }
-        secondaryButton={
-          <Button variant="ghost" leadingIcon={<Settings />} onClick={handleManageLanguages}>
-            Gerenciar idiomas
-          </Button>
-        }
-      >
-        {languages.map((language, index) => (
-          <SelectableListItem
-            key={language.id}
-            label={language.name}
-            flag={<Flag code={language.flagCode} />}
-            selected={language.id === activeId}
-            trailingIcon={language.id === activeId ? <Check /> : null}
-            divider={index > 0}
-            onClick={() => handlePick(language)}
-          />
-        ))}
-      </BottomSheet>
     </nav>
   )
 }
