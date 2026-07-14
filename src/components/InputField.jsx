@@ -24,11 +24,12 @@ const InputField = forwardRef(function InputField({
   leadingIcon = null,
   trailingIcon = null,
   onTrailingIconClick,
+  className,
   ...props
 }, ref) {
   const id = useId()
   return (
-    <div className="input-field">
+    <div className={className ? `input-field ${className}` : 'input-field'}>
       {label && (
         <label className="input-field-label" htmlFor={id}>
           {label}

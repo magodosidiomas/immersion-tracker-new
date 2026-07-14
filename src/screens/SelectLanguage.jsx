@@ -55,26 +55,28 @@ function SelectLanguage({ onSelect, preview = false }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <div className="select-language-card">
-          {filteredLanguages.map((language, index) => (
-            <SelectableListItem
-              key={language.name}
-              label={language.name}
-              flag={<Flag code={language.flagCode} />}
-              divider={index > 0}
-              position={
-                filteredLanguages.length === 1
-                  ? 'only'
-                  : index === 0
-                    ? 'first'
-                    : index === filteredLanguages.length - 1
-                      ? 'last'
-                      : 'middle'
-              }
-              disabled={pending}
-              onClick={() => handleSelect(language)}
-            />
-          ))}
+        <div className="select-language-scroll">
+          <div className="select-language-card">
+            {filteredLanguages.map((language, index) => (
+              <SelectableListItem
+                key={language.name}
+                label={language.name}
+                flag={<Flag code={language.flagCode} />}
+                divider={index > 0}
+                position={
+                  filteredLanguages.length === 1
+                    ? 'only'
+                    : index === 0
+                      ? 'first'
+                      : index === filteredLanguages.length - 1
+                        ? 'last'
+                        : 'middle'
+                }
+                disabled={pending}
+                onClick={() => handleSelect(language)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </main>

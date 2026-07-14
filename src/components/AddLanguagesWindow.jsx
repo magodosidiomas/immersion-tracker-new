@@ -37,36 +37,38 @@ function AddLanguagesWindow({ onClose }) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
-          <div className="add-languages-window-card">
-            {loaded &&
-              filteredOptions.map((language, index) => {
-                const isSelected = selected.includes(language.name)
-                return (
-                  <SelectableListItem
-                    key={language.name}
-                    label={language.name}
-                    flag={<Flag code={language.flagCode} />}
-                    divider={index > 0}
-                    position={
-                      filteredOptions.length === 1
-                        ? 'only'
-                        : index === 0
-                          ? 'first'
-                          : index === filteredOptions.length - 1
-                            ? 'last'
-                            : 'middle'
-                    }
-                    trailingIcon={
-                      <span className="add-languages-window-checkbox">
-                        <span className="add-languages-window-checkbox-box" data-checked={isSelected}>
-                          {isSelected && <Check />}
+          <div className="add-languages-window-scroll">
+            <div className="add-languages-window-card">
+              {loaded &&
+                filteredOptions.map((language, index) => {
+                  const isSelected = selected.includes(language.name)
+                  return (
+                    <SelectableListItem
+                      key={language.name}
+                      label={language.name}
+                      flag={<Flag code={language.flagCode} />}
+                      divider={index > 0}
+                      position={
+                        filteredOptions.length === 1
+                          ? 'only'
+                          : index === 0
+                            ? 'first'
+                            : index === filteredOptions.length - 1
+                              ? 'last'
+                              : 'middle'
+                      }
+                      trailingIcon={
+                        <span className="add-languages-window-checkbox">
+                          <span className="add-languages-window-checkbox-box" data-checked={isSelected}>
+                            {isSelected && <Check />}
+                          </span>
                         </span>
-                      </span>
-                    }
-                    onClick={() => toggle(language.name)}
-                  />
-                )
-              })}
+                      }
+                      onClick={() => toggle(language.name)}
+                    />
+                  )
+                })}
+            </div>
           </div>
         </div>
         <div className="add-languages-window-footer">
