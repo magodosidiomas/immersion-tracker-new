@@ -28,6 +28,7 @@
 
 .manage-series-footer {
   flex-shrink: 0;
+  display: flex;
   padding: 16px;
   border-top: 1px solid var(--color-border-subtle);
 }
@@ -44,7 +45,6 @@
 .manage-series-list {
   display: flex;
   flex-direction: column;
-  padding: 8px 0;
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }

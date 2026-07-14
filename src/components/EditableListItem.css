@@ -84,8 +84,12 @@ button.editable-list-item-main:hover {
 }
 
 .editable-list-item-divider {
-  width: 100%;
+  /* Full-bleed regardless of the row's own 8px inset padding (see
+     .editable-list-item) — counteract it with a negative margin
+     instead of leaving the divider inset. No vertical margin: the
+     row's own padding is the only spacing above/below the line. */
+  width: calc(100% + 16px);
   height: 1px;
-  margin: 8px 0;
+  margin: 0 -8px;
   background: var(--color-border-subtle);
 }
