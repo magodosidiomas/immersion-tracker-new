@@ -43,7 +43,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onHasSessionsChange }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -68,6 +68,12 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
   }, [activeId])
 
   const groups = groupSessionsByDate(sessions)
+  const isEmpty = groups.length === 0 && !sessionError
+
+  useEffect(() => {
+    onHasSessionsChange?.(!isEmpty)
+  }, [isEmpty, onHasSessionsChange])
+
   const now = new Date()
   const todayStr = formatDateInput(now)
   const weekRange = getWeekRange(now)
@@ -92,7 +98,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
-      <div className={`home-history${groups.length === 0 && !sessionError ? ' home-history-empty' : ''}`}>
+      <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
         {groups.length > 0 && (
           <div className="home-stats">
             <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
@@ -135,7 +141,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         )}
       </div>
       <div className="home-bottom-layer">
-        <div className="home-fab-row">
+        <div className={`home-fab-row${groups.length === 0 && !sessionError && timer.status === 'idle' ? ' home-fab-row-hidden' : ''}`}>
           {timer.status === 'idle' ? (
             <Button leadingIcon={<Add />} onClick={onOpenNewSession}>
               Nova sessão

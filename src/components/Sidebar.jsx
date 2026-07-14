@@ -21,7 +21,7 @@ import {
 // logic as LanguageTopNav (fetch languages/active id, switch on pick)
 // since it's a different trigger shape (Dropdown, not TopNav) — not
 // worth abstracting for one extra caller.
-function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings }) {
+function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings, hideNewSessionButton }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -127,9 +127,11 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
         </div>
         <div className="sidebar-divider" />
         <div className="sidebar-actions">
-          <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
-            Nova sessão
-          </Button>
+          {!hideNewSessionButton && (
+            <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
+              Nova sessão
+            </Button>
+          )}
           <div className="sidebar-nav-group">
             {navItems.map((item) => (
               <button

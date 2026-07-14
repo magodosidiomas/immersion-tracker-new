@@ -113,6 +113,16 @@
   }
 }
 
+/* Mobile only: when the empty state is shown, its own "Nova sessão"
+   button already covers the CTA, so the floating FAB is redundant.
+   Scoped to below the desktop breakpoint since .home-fab-row is
+   already hidden there for the sidebar reason above. */
+@media (max-width: 1279px) {
+  .home-fab-row-hidden {
+    display: none;
+  }
+}
+
 /* BottomNav is now the element actually touching the screen edge, so
    the safe-area handling that used to live on the FAB layer moves
    here. */
