@@ -497,6 +497,7 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
         hideNewSessionButton={screen === 'home' && !homeHasSessions}
+        timer={timer}
       />
       <div className="app-content" ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />

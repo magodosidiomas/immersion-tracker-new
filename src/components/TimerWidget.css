@@ -4,9 +4,14 @@
   gap: var(--space-16);
   padding: var(--space-12);
   border-radius: var(--radius-medium);
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--color-border-accent);
   background: var(--bg-surface-elevated);
   cursor: pointer;
+}
+
+.timer-widget[data-device="desktop"] {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .timer-widget-row {
