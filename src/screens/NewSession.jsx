@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Dropdown from '../components/Dropdown'
 import Button from '../components/Button'
@@ -58,6 +58,22 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
   const [categorySheetOpen, setCategorySheetOpen] = useState(false)
   const [pendingCategory, setPendingCategory] = useState(CATEGORIES[0].key)
   const [pendingSubcategory, setPendingSubcategory] = useState(CATEGORIES[0].subcategories[0].key)
+  const categoryMenuRef = useRef(null)
+
+  // Desktop: the category picker is an inline menu anchored to the
+  // Dropdown, not a modal — so it closes on an outside click instead
+  // of an explicit Cancelar button (mobile keeps the BottomSheet with
+  // Salvar/Cancelar, untouched).
+  useEffect(() => {
+    if (!isDesktop || !categorySheetOpen) return
+    function handleClickOutside(event) {
+      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target)) {
+        setCategorySheetOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isDesktop, categorySheetOpen])
 
   // Only needed for starting a brand new timer (timer.start needs a
   // languageId) — once a draft exists, timer.languageId already holds
@@ -107,6 +123,15 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
 
   function handleSaveCategory() {
     timer.setCategorySelection(pendingCategory, pendingSubcategory)
+    setCategorySheetOpen(false)
+  }
+
+  // Desktop menu: picking a subcategory commits both values right away
+  // and closes the menu — there's no separate Salvar step like the
+  // mobile BottomSheet has.
+  function handlePickSubcategoryDesktop(key) {
+    setPendingSubcategory(key)
+    timer.setCategorySelection(pendingCategory, key)
     setCategorySheetOpen(false)
   }
 
@@ -167,12 +192,49 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
         />
       )}
       <div className="new-session-body">
-        <Dropdown
-          label={categoryLabel ?? 'Selecionar categoria'}
-          secondaryLabel={subcategoryLabel}
-          selected={Boolean(categoryLabel)}
-          onClick={openCategorySheet}
-        />
+        <div className="new-session-category-anchor" ref={categoryMenuRef}>
+          <Dropdown
+            label={categoryLabel ?? 'Selecionar categoria'}
+            secondaryLabel={subcategoryLabel}
+            selected={Boolean(categoryLabel)}
+            data-open={isDesktop && categorySheetOpen}
+            onClick={openCategorySheet}
+          />
+          {isDesktop && categorySheetOpen && (
+            <div className="new-session-category-menu">
+              <div className="category-sheet-group">
+                <span className="category-sheet-label">Categoria</span>
+                <div className="category-sheet-chips">
+                  {CATEGORIES.map((item) => (
+                    <SelectionChip
+                      key={item.key}
+                      label={item.label}
+                      hasLeadingIcon={false}
+                      hasTrailingIcon={false}
+                      selected={pendingCategory === item.key}
+                      onClick={() => handlePickCategory(item.key)}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="category-sheet-group">
+                <span className="category-sheet-label">Subcategoria</span>
+                <div className="category-sheet-chips">
+                  {pendingCategoryData.subcategories.map((item) => (
+                    <SelectionChip
+                      key={item.key}
+                      label={item.label}
+                      hasLeadingIcon={false}
+                      hasTrailingIcon={false}
+                      selected={pendingSubcategory === item.key}
+                      onClick={() => handlePickSubcategoryDesktop(item.key)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         <span className="new-session-timer">{display}</span>
       </div>
       <div className="new-session-footer">
@@ -229,53 +291,55 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
           </Button>
         }
       />
-      <BottomSheet
-        open={categorySheetOpen}
-        onClose={() => setCategorySheetOpen(false)}
-        title="Escolher categoria"
-        contentCard={false}
-        primaryButton={
-          <Button fullWidth onClick={handleSaveCategory}>
-            Salvar
-          </Button>
-        }
-        secondaryButton={
-          <Button variant="ghost" onClick={() => setCategorySheetOpen(false)}>
-            Cancelar
-          </Button>
-        }
-      >
-        <div className="category-sheet-group">
-          <span className="category-sheet-label">Categoria</span>
-          <div className="category-sheet-chips">
-            {CATEGORIES.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={pendingCategory === item.key}
-                onClick={() => handlePickCategory(item.key)}
-              />
-            ))}
+      {!isDesktop && (
+        <BottomSheet
+          open={categorySheetOpen}
+          onClose={() => setCategorySheetOpen(false)}
+          title="Escolher categoria"
+          contentCard={false}
+          primaryButton={
+            <Button fullWidth onClick={handleSaveCategory}>
+              Salvar
+            </Button>
+          }
+          secondaryButton={
+            <Button variant="ghost" onClick={() => setCategorySheetOpen(false)}>
+              Cancelar
+            </Button>
+          }
+        >
+          <div className="category-sheet-group">
+            <span className="category-sheet-label">Categoria</span>
+            <div className="category-sheet-chips">
+              {CATEGORIES.map((item) => (
+                <SelectionChip
+                  key={item.key}
+                  label={item.label}
+                  hasLeadingIcon={false}
+                  hasTrailingIcon={false}
+                  selected={pendingCategory === item.key}
+                  onClick={() => handlePickCategory(item.key)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="category-sheet-group">
-          <span className="category-sheet-label">Subcategoria</span>
-          <div className="category-sheet-chips">
-            {pendingCategoryData.subcategories.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={pendingSubcategory === item.key}
-                onClick={() => setPendingSubcategory(item.key)}
-              />
-            ))}
+          <div className="category-sheet-group">
+            <span className="category-sheet-label">Subcategoria</span>
+            <div className="category-sheet-chips">
+              {pendingCategoryData.subcategories.map((item) => (
+                <SelectionChip
+                  key={item.key}
+                  label={item.label}
+                  hasLeadingIcon={false}
+                  hasTrailingIcon={false}
+                  selected={pendingSubcategory === item.key}
+                  onClick={() => setPendingSubcategory(item.key)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </BottomSheet>
+        </BottomSheet>
+      )}
     </>
   )
 
