@@ -61,7 +61,7 @@
 .selectable-list-item-divider {
   width: 100%;
   height: 1px;
-  margin: 8px 0;
+  margin: 0;
   background: var(--color-border-subtle);
 }
 
