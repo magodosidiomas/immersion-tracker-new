@@ -69,6 +69,15 @@ function AddLanguages({ onClose }) {
                 label={language.name}
                 flag={<Flag code={language.flagCode} />}
                 divider={index > 0}
+                position={
+                  filteredOptions.length === 1
+                    ? 'only'
+                    : index === 0
+                      ? 'first'
+                      : index === filteredOptions.length - 1
+                        ? 'last'
+                        : 'middle'
+                }
                 trailingIcon={
                   <span className="add-languages-checkbox">
                     <span className="add-languages-checkbox-box" data-checked={isSelected}>
