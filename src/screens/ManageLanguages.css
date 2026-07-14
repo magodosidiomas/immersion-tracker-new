@@ -70,7 +70,7 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 12px 16px;
+  padding: 16px;
 }
 
 .manage-languages-row[data-dragging='true'] {
