@@ -32,28 +32,23 @@
   padding: var(--space-16);
 }
 
-/* Desktop: centered card overlay, no TopNav — mirrors the
-   settings-window-overlay pattern. Card sizing/spacing follows the
-   Figma "timerCard" spec (400px, 24px padding, 48px gap). */
-.new-session-desktop-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
+/* Desktop: card centered in the viewport, but living in normal page
+   flow — not a fixed-position overlay/modal (no dimming backdrop). */
+.new-session-desktop-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 13, 24, 0.6);
+  height: 100%;
+  min-height: var(--app-height, 100dvh);
 }
 
 .new-session-desktop-card {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 400px;
   max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
-  overflow-x: hidden;
   padding: var(--space-24);
   gap: var(--space-24);
   background: var(--bg-surface-elevated);
@@ -179,14 +174,11 @@
 
 /* Desktop category picker: inline menu anchored under the Dropdown,
    not a modal overlay — closes on outside click (see the effect in
-   NewSession.jsx), not a Cancelar button. Renders in normal flow (not
-   position: absolute) so it pushes the timer/buttons down instead of
-   overlapping them, and stays within the card's width instead of
-   forcing horizontal scroll. */
+   NewSession.jsx), not a Cancelar button. Positioned absolute so it
+   floats over the rest of the card instead of resizing it, and
+   constrained to the anchor's width so it can't force scroll. */
 .new-session-category-anchor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
   width: 100%;
 }
 
@@ -196,8 +188,11 @@
 
 .new-session-category-menu {
   box-sizing: border-box;
-  width: 100%;
-  margin-top: var(--space-16);
+  position: absolute;
+  top: calc(100% + var(--space-16));
+  left: 0;
+  right: 0;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
@@ -205,8 +200,9 @@
   /* One ramp-step lighter than the card's bg-surface-elevated
      (purple-700) — bg-surface-card (purple-600). */
   background: var(--bg-surface-card);
-  border: 1px solid var(--color-border-accent);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-large);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 

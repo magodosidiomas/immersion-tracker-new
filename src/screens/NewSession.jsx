@@ -346,7 +346,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
 
   if (isDesktop) {
     return (
-      <div className="new-session-desktop-overlay">
+      <div className="new-session-desktop-wrap">
         <div className="new-session-desktop-card">{body}</div>
       </div>
     )
