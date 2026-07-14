@@ -66,6 +66,15 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
     onOpenAddLanguages()
   }
 
+  // Sidebar is mounted once and never remounts on screen navigation
+  // (unlike Home, which would otherwise refetch for free) — so
+  // languages added/removed elsewhere (AddLanguages, ManageLanguages)
+  // go stale here until the menu is reopened.
+  function handleToggleSwitcher() {
+    if (!switcherOpen) getLanguages().then(setLanguages)
+    setSwitcherOpen((value) => !value)
+  }
+
   const navItems = [
     { key: 'home', label: 'Home', icon: <HomeIcon /> },
     { key: 'stats', label: 'Estatísticas', icon: <BarChart /> },
@@ -81,7 +90,7 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
             flag={activeLanguage && <Flag code={activeLanguage.flagCode} />}
             outline
             selected={switcherOpen}
-            onClick={() => setSwitcherOpen((value) => !value)}
+            onClick={handleToggleSwitcher}
           />
           {switcherOpen && (
             <div className="sidebar-language-menu">
