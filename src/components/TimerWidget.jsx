@@ -13,9 +13,9 @@ import './TimerWidget.css'
 //
 // device="desktop" additionally renders labeled Encerrar/Pausar-Continuar
 // buttons (Figma "Frame 93") instead of the icon-only toggle used on
-// mobile. Encerrar doesn't end the session itself — it opens the same
-// full timer screen as onClick, where the finish flow already lives —
-// so the logic isn't duplicated here.
+// mobile. Encerrar calls onEnd (the real timer.end(), same as the
+// full-screen flow's "Encerrar") rather than onClick, so it actually
+// ends the session instead of just opening the timer screen.
 function TimerWidget({
   elapsedLabel,
   category = null,
@@ -23,6 +23,7 @@ function TimerWidget({
   running = false,
   onToggle,
   onClick,
+  onEnd,
   device = 'mobile',
 }) {
   const label = category ? (subcategory ? `${category} · ${subcategory}` : category) : 'Sem categoria'
@@ -44,7 +45,7 @@ function TimerWidget({
               leadingIcon={<Stop />}
               onClick={(event) => {
                 event.stopPropagation()
-                onClick?.()
+                onEnd?.()
               }}
             >
               Encerrar

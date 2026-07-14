@@ -40,16 +40,18 @@ import './NewSession.css'
 // pickers aren't supported by the single pickerScreen stack in
 // App.jsx. onSaved receives the created session so the caller can
 // select it automatically.
-function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved, isDesktop = false }) {
-  const [phase, setPhase] = useState(manualOnly ? 'finish' : 'timer') // timer | finish
+function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved, isDesktop = false, initialFinishDraft = null }) {
+  const [phase, setPhase] = useState(manualOnly || initialFinishDraft ? 'finish' : 'timer') // timer | finish
   const [activeLanguageId, setActiveLanguageId] = useState(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   // Snapshot handed to the finish-phase form the moment Encerrar is
-  // pressed (or immediately, for manualOnly) — its own state from
-  // there on, edited independently of the timer above.
+  // pressed (or immediately, for manualOnly, or when opened from the
+  // desktop floating bar's own Encerrar, which already called
+  // timer.end() before navigating here) — its own state from there on,
+  // edited independently of the timer above.
   const [finishDraft, setFinishDraft] = useState(() =>
-    manualOnly ? { startAt: new Date(), durationSeconds: 0, manual: true } : null,
+    initialFinishDraft ?? (manualOnly ? { startAt: new Date(), durationSeconds: 0, manual: true } : null),
   )
 
   // Draft selection while the sheet is open, seeded from the timer's

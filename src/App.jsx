@@ -233,6 +233,7 @@ function App() {
   // and tick the same live timer without that screen being open — see
   // useTimerDraft for the IndexedDB recovery rules.
   const timer = useTimerDraft()
+  const [pendingFinishDraft, setPendingFinishDraft] = useState(null)
 
   // Every forward navigation pushes a history entry carrying the target
   // screen. Going "back" — whether via the device/browser back button or
@@ -358,9 +359,10 @@ function App() {
         <NewSession
           timer={timer}
           isDesktop={isDesktop}
-          onClose={() => window.history.back()}
+          initialFinishDraft={pendingFinishDraft}
+          onClose={() => { setPendingFinishDraft(null); window.history.back() }}
           onOpenLinkContent={openLinkContent}
-          onSaved={() => window.history.back()}
+          onSaved={() => { setPendingFinishDraft(null); window.history.back() }}
         />
       )
     }
@@ -512,6 +514,10 @@ function App() {
             subcategory={getCategoryLabel(timer.category, timer.subcategory).subcategoryLabel}
             running={timer.status === 'running'}
             onClick={() => navigate('new-session')}
+            onEnd={() => {
+              setPendingFinishDraft(timer.end())
+              navigate('new-session')
+            }}
             onToggle={timer.status === 'running' ? timer.pause : timer.resume}
           />
         </div>
