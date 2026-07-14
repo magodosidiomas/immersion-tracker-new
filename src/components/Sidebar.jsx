@@ -98,6 +98,15 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
                 <SelectableListItem
                   key={language.id}
                   label={language.name}
+                  position={
+                    languages.length === 1
+                      ? 'only'
+                      : index === 0
+                        ? 'first'
+                        : index === languages.length - 1
+                          ? 'last'
+                          : 'middle'
+                  }
                   flag={<Flag code={language.flagCode} />}
                   selected={language.id === activeId}
                   trailingIcon={language.id === activeId ? <Check /> : null}
