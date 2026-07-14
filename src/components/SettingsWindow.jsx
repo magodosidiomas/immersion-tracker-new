@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import ManageLanguages from '../screens/ManageLanguages'
 import Backup from '../screens/Backup'
 import ManageSeries from '../screens/ManageSeries'
-import { Public, Backup as BackupIcon, VideoLabel, Movie, Close } from '@nine-thirty-five/material-symbols-react/outlined'
+import ManageEpisodes from '../screens/ManageEpisodes'
+import EpisodeDetail from '../screens/EpisodeDetail'
+import { getFilmeContent } from '../db'
+import { Public, Backup as BackupIcon, VideoLabel, Movie, Close, ArrowBack } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SettingsWindow.css'
 
 // Desktop-only (>=1280px) windowed shell for Configurações — mirrors
@@ -17,8 +21,45 @@ import './SettingsWindow.css'
 // lands here already scoped to the right section. 'settings' itself
 // (no sub-item chosen yet) defaults to Idiomas, matching the Figma
 // default state.
-function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAllLanguagesRemoved, onOpenEpisodes, onOpenFilmeSessions }) {
+function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAllLanguagesRemoved }) {
   const section = screen === 'settings' ? 'manage-languages' : screen
+
+  // Drill-down within Séries/Filmes stays inside the modal instead of
+  // navigating away (which used to unmount SettingsWindow entirely).
+  // null = section's own list; otherwise a small local stack:
+  //   { view: 'episodes', catalogItem } — série's episode list
+  //   { view: 'episode-detail', catalogItem, contentId, episode } — sessões
+  const [drill, setDrill] = useState(null)
+
+  // Leaving Séries/Filmes (or switching section entirely) resets the drill —
+  // adjusted during render (React's recommended pattern) rather than in an
+  // effect, since this is derived from a prop change, not an external system.
+  const [drillSection, setDrillSection] = useState(section)
+  if (section !== drillSection) {
+    setDrillSection(section)
+    setDrill(null)
+  }
+
+  async function openEpisodes(item) {
+    setDrill({ view: 'episodes', catalogItem: item })
+  }
+
+  async function openFilmeSessions(item) {
+    const content = await getFilmeContent(item.id)
+    setDrill({ view: 'episode-detail', catalogItem: item, contentId: content?.id ?? null, episode: null })
+  }
+
+  function openEpisodeDetail(ep) {
+    setDrill({ view: 'episode-detail', catalogItem: drill.catalogItem, contentId: ep.contentId, episode: { season: ep.season, episode: ep.episode } })
+  }
+
+  function drillBack() {
+    if (drill?.view === 'episode-detail' && drill.episode != null) {
+      setDrill({ view: 'episodes', catalogItem: drill.catalogItem })
+    } else {
+      setDrill(null)
+    }
+  }
 
   const navItems = [
     {
@@ -66,6 +107,11 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
         </nav>
         <div className="settings-window-panel">
           <div className="settings-window-panel-topbar">
+            {drill && (
+              <button type="button" className="settings-window-back" onClick={drillBack} aria-label="Voltar">
+                <ArrowBack />
+              </button>
+            )}
             <button type="button" className="settings-window-close" onClick={onClose} aria-label="Fechar">
               <Close />
             </button>
@@ -87,16 +133,56 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
                 <Backup embedded />
               </>
             )}
-            {section === 'manage-series' && (
+            {section === 'manage-series' && !drill && (
               <>
                 <h2 className="settings-window-heading">Séries</h2>
-                <ManageSeries embedded kind="serie" onOpenEpisodes={onOpenEpisodes} />
+                <ManageSeries embedded kind="serie" onOpenEpisodes={openEpisodes} />
               </>
             )}
-            {section === 'manage-movies' && (
+            {section === 'manage-series' && drill?.view === 'episodes' && (
+              <>
+                <h2 className="settings-window-heading">Episódios - {drill.catalogItem?.label}</h2>
+                <ManageEpisodes
+                  embedded
+                  catalogId={drill.catalogItem?.id}
+                  seriesName={drill.catalogItem?.label}
+                  onOpenEpisode={openEpisodeDetail}
+                />
+              </>
+            )}
+            {section === 'manage-series' && drill?.view === 'episode-detail' && (
+              <>
+                <h2 className="settings-window-heading">
+                  {drill.catalogItem?.label}
+                  {drill.episode ? ` · T${drill.episode.season} E${drill.episode.episode}` : ''}
+                </h2>
+                <EpisodeDetail
+                  embedded
+                  contentId={drill.contentId}
+                  seriesName={drill.catalogItem?.label}
+                  episode={drill.episode}
+                  onAddSession={() => {}}
+                  onOpenSession={() => {}}
+                />
+              </>
+            )}
+            {section === 'manage-movies' && !drill && (
               <>
                 <h2 className="settings-window-heading">Filmes</h2>
-                <ManageSeries embedded kind="filme" onOpenSessions={onOpenFilmeSessions} />
+                <ManageSeries embedded kind="filme" onOpenSessions={openFilmeSessions} />
+              </>
+            )}
+            {section === 'manage-movies' && drill?.view === 'episode-detail' && (
+              <>
+                <h2 className="settings-window-heading">{drill.catalogItem?.label}</h2>
+                <EpisodeDetail
+                  embedded
+                  contentId={drill.contentId}
+                  seriesName={drill.catalogItem?.label}
+                  episode={null}
+                  onAddSession={() => {}}
+                  onOpenSession={() => {}}
+                />
               </>
             )}
           </div>

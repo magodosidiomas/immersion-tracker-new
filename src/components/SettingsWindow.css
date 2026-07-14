@@ -106,7 +106,12 @@
   padding: var(--space-16) var(--space-24);
 }
 
-.settings-window-close {
+.settings-window-panel-topbar:has(.settings-window-back) {
+  justify-content: space-between;
+}
+
+.settings-window-close,
+.settings-window-back {
   display: inline-flex;
   width: 24px;
   height: 24px;
@@ -117,7 +122,8 @@
   cursor: pointer;
 }
 
-.settings-window-close svg {
+.settings-window-close svg,
+.settings-window-back svg {
   width: 100%;
   height: 100%;
 }

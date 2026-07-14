@@ -14,7 +14,7 @@ import './ManageEpisodes.css'
 // here navigates to the episode's own detail screen (sessões
 // vinculadas) rather than opening a rename sheet — there's no name to
 // rename, just the auto-generated "T# E#" title.
-function ManageEpisodes({ catalogId, seriesName = '', onBack, onOpenEpisode }) {
+function ManageEpisodes({ catalogId, seriesName = '', onBack, onOpenEpisode, embedded }) {
   const [episodes, setEpisodes] = useState([])
   const [selectedSeason, setSelectedSeason] = useState('all')
   const [deleteTarget, setDeleteTarget] = useState(null)
@@ -57,16 +57,18 @@ function ManageEpisodes({ catalogId, seriesName = '', onBack, onOpenEpisode }) {
   }
 
   return (
-    <main className="manage-episodes">
-      <TopNav
-        title={`Episódios - ${seriesName}`}
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+    <main className="manage-episodes" data-embedded={embedded || undefined}>
+      {!embedded && (
+        <TopNav
+          title={`Episódios - ${seriesName}`}
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          }
+        />
+      )}
       <div className="manage-episodes-content">
         <div className="manage-episodes-field-group">
           <span className="manage-episodes-label">Temporadas</span>

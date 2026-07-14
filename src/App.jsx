@@ -536,16 +536,6 @@ function App() {
             setHasLanguage(false)
             setScreen('home')
           }}
-          onOpenEpisodes={(item) => {
-            setActiveCatalog(item)
-            navigate('manage-episodes')
-          }}
-          onOpenFilmeSessions={async (item) => {
-            setActiveCatalog(item)
-            const content = await getFilmeContent(item.id)
-            setActiveEpisode({ contentId: content?.id ?? null, season: null, episode: null })
-            navigate('episode-detail')
-          }}
         />
       )}
       {isDesktop && screen === 'add-languages' && (

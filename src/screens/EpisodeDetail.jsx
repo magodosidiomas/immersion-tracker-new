@@ -33,7 +33,7 @@ function toRow(session) {
 // content row, or the filme's) — this screen just fetches/links
 // sessions against it, same self-fetching convention as everywhere
 // else now.
-function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onOpenSession, onBack }) {
+function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onOpenSession, onBack, embedded }) {
   const [linkedSessions, setLinkedSessions] = useState([])
   const heading = episode ? `${seriesName} · T${episode.season} E${episode.episode}` : seriesName
   const topNavTitle = episode ? `Episódios - ${seriesName}` : 'Sessões'
@@ -58,16 +58,18 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
   }
 
   return (
-    <main className="episode-detail">
-      <TopNav
-        title={topNavTitle}
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+    <main className="episode-detail" data-embedded={embedded || undefined}>
+      {!embedded && (
+        <TopNav
+          title={topNavTitle}
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          }
+        />
+      )}
       <div className="episode-detail-content">
         <h2 className="episode-detail-title">{heading}</h2>
 
