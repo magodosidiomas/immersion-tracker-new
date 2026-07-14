@@ -73,6 +73,21 @@
   background: var(--bg-surface-default);
 }
 
+/* Web only (desktop sidebar layout, >=1280px): new list-divider
+   standard — no top/bottom padding on the card, and the divider's
+   own vertical margin removed so the row's padding is the only
+   spacing. Scoped here (not in ListItem.css) so mobile and every
+   other ListItem usage stay on their current spacing. */
+@media (min-width: 1280px) {
+  .home-history-card {
+    padding: 0;
+  }
+
+  .home-history-card .list-item-divider {
+    margin: 0 -8px;
+  }
+}
+
 /* `.home` no longer scrolls (height-clamped + overflow: hidden) —
    only `.home-history` scrolls internally now. This layer sits
    outside that scrolling area as a normal flex item, so it's never
