@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
+import Modal from '../components/Modal'
 import SessionForm from '../components/SessionForm'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { updateSession, deleteSession, getContentsForSession, linkSessionContent, unlinkSessionContent } from '../db'
@@ -16,7 +17,7 @@ import './EditSession.css'
 // Unlike NewSession (no sessionId until Salvar), this session already
 // exists — so linking/unlinking content writes to sessionContents
 // immediately instead of staging a pending list.
-function EditSession({ session, onBack, onSaved, onOpenLinkContent }) {
+function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkContent }) {
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [linkedContents, setLinkedContents] = useState([])
@@ -51,17 +52,8 @@ function EditSession({ session, onBack, onSaved, onOpenLinkContent }) {
     onSaved()
   }
 
-  return (
-    <main className="edit-session">
-      <TopNav
-        title="Editar sessão"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+  const formAndSheets = (
+    <>
       <SessionForm
         initialStartAt={new Date(session.startTime)}
         initialDurationSeconds={session.durationSeconds}
@@ -95,6 +87,38 @@ function EditSession({ session, onBack, onSaved, onOpenLinkContent }) {
           </Button>
         }
       />
+    </>
+  )
+
+  if (isDesktop) {
+    return (
+      <Modal
+        title="Editar sessão"
+        leadingIcon={<ArrowBack />}
+        onLeadingClick={onBack}
+        onClose={onBack}
+        flushContent
+        className="finish-session-modal"
+        width={433}
+        height={640}
+      >
+        {formAndSheets}
+      </Modal>
+    )
+  }
+
+  return (
+    <main className="edit-session">
+      <TopNav
+        title="Editar sessão"
+        hasDivider
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+      />
+      {formAndSheets}
     </main>
   )
 }
