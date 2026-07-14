@@ -97,6 +97,7 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLangua
             flag={<Flag code={language.flagCode} />}
             selected={language.id === activeId}
             trailingIcon={language.id === activeId ? <Check /> : null}
+            position={index === 0 ? 'first' : index === languages.length - 1 ? 'last' : 'middle'}
             divider={index > 0}
             onClick={() => handlePick(language)}
           />
