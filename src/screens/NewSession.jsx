@@ -150,6 +150,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
         languageId={timer.languageId ?? activeLanguageId}
         autoOpenDuration={Boolean(finishDraft.manual)}
         hideContentSection={manualOnly}
+        isDesktop={isDesktop}
         onOpenLinkContent={onOpenLinkContent}
         onBack={manualOnly ? onClose : () => setPhase('timer')}
         onDiscard={() => {
@@ -369,7 +370,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, hideContentSection = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, hideContentSection = false, isDesktop = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -403,17 +404,8 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
     }
   }
 
-  return (
-    <main className="new-session">
-      <TopNav
-        title="Nova sessão"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+  const formAndSheets = (
+    <>
       {saveError && <Alert description={saveError} />}
       <SessionForm
         initialStartAt={draft.startAt}
@@ -450,6 +442,37 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
           </Button>
         }
       />
+    </>
+  )
+
+  if (isDesktop) {
+    return (
+      <div className="session-drawer-overlay" onClick={(event) => event.target === event.currentTarget && onBack()}>
+        <div className="session-drawer-panel">
+          <div className="session-drawer-header">
+            <span className="session-drawer-title">Nova sessão</span>
+            <button type="button" className="session-drawer-close" onClick={onBack} aria-label="Fechar">
+              <Close />
+            </button>
+          </div>
+          {formAndSheets}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <main className="new-session">
+      <TopNav
+        title="Nova sessão"
+        hasDivider
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+      />
+      {formAndSheets}
     </main>
   )
 }
