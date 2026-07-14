@@ -98,15 +98,7 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
                 <SelectableListItem
                   key={language.id}
                   label={language.name}
-                  position={
-                    languages.length === 1
-                      ? 'only'
-                      : index === 0
-                        ? 'first'
-                        : index === languages.length - 1
-                          ? 'last'
-                          : 'middle'
-                  }
+                  position={index === 0 ? 'first' : 'middle'}
                   flag={<Flag code={language.flagCode} />}
                   selected={language.id === activeId}
                   trailingIcon={language.id === activeId ? <Check /> : null}
@@ -120,11 +112,13 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenManageLangu
                   label="Adicionar idiomas"
                   leadingIcon={<Add />}
                   data-variant="accent"
+                  position="middle"
                   onClick={handleAddLanguages}
                 />
                 <SelectableListItem
                   label="Gerenciar idiomas"
                   leadingIcon={<Settings />}
+                  position="last"
                   onClick={handleManageLanguages}
                 />
               </div>

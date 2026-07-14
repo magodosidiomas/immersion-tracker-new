@@ -48,7 +48,7 @@
   width: 252px;
   max-height: 70vh;
   overflow-y: auto;
-  padding: var(--space-8) 0;
+  padding: 0;
   background: var(--bg-surface-default);
   border-radius: var(--radius-large);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -56,12 +56,14 @@
 
 .sidebar-language-menu-divider {
   height: 1px;
-  margin: var(--space-8) var(--space-16);
+  margin: var(--space-8) 0;
   background: var(--color-border-subtle);
 }
 
 .sidebar-language-menu-actions {
-  padding: var(--space-8) var(--space-8) 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--space-8);
 }
 
 .sidebar-language-menu [data-variant='accent'] .selectable-list-item-label {
