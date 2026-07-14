@@ -18,6 +18,11 @@
   overflow: visible;
 }
 
+.manage-languages[data-embedded='true'] .manage-languages-footer {
+  padding: 16px 0 0;
+  border-top: none;
+}
+
 .manage-languages-content {
   display: flex;
   flex-direction: column;
