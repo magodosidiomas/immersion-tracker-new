@@ -75,6 +75,10 @@ body {
     right: 0;
     bottom: 0;
   }
+
+  .app-content-has-timer-bar {
+    padding-bottom: 88px;
+  }
 }
 
 /* LinkContent/LinkSession render as an overlay on top of whatever
