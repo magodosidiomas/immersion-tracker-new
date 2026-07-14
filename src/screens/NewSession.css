@@ -180,6 +180,8 @@
 .new-session-category-anchor {
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .new-session-category-anchor .dropdown[data-open='true'] .dropdown-icon svg {
