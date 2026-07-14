@@ -21,9 +21,12 @@ import ManageEpisodes from './screens/ManageEpisodes'
 import EpisodeDetail from './screens/EpisodeDetail'
 import LinkContent from './screens/LinkContent'
 import LinkSession from './screens/LinkSession'
+import TimerWidget from './components/TimerWidget'
 import { getAppSettings, getFilmeContent } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
+import { getCategoryLabel } from './utils/sessions'
+import { formatElapsed } from './utils/date'
 
 // Design system viewer lives at the #design-system hash instead of a
 // real route. No router needed for one hidden page, and a hash never
@@ -497,10 +500,22 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
         hideNewSessionButton={screen === 'home' && !homeHasSessions}
-        timer={timer}
       />
       <div className="app-content" ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
+      {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
+        <div className="app-timer-bar">
+          <TimerWidget
+            device="desktop"
+            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+            category={getCategoryLabel(timer.category, timer.subcategory).categoryLabel}
+            subcategory={getCategoryLabel(timer.category, timer.subcategory).subcategoryLabel}
+            running={timer.status === 'running'}
+            onClick={() => navigate('new-session')}
+            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+          />
+        </div>
+      )}
       {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies'].includes(screen) && (
         <SettingsWindow
           screen={screen}

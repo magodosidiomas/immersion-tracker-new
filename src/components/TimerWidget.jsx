@@ -1,4 +1,5 @@
-import { Pause, PlayArrow } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Pause, PlayArrow, Stop } from '@nine-thirty-five/material-symbols-react/outlined'
+import Button from './Button'
 import './TimerWidget.css'
 
 // Mirrors the Figma "timerCard" component set (hasSelection × state).
@@ -7,8 +8,14 @@ import './TimerWidget.css'
 // component, just rendered in different containers, no separate banner
 // needed for "resume": the paused state of this widget IS the resume UI.
 // Tapping the card opens the full timer screen (where discard also
-// lives); the play/pause button stops propagation so it doesn't also
-// trigger that navigation.
+// lives); the play/pause and Encerrar controls stop propagation so they
+// don't also trigger that navigation.
+//
+// device="desktop" additionally renders labeled Encerrar/Pausar-Continuar
+// buttons (Figma "Frame 93") instead of the icon-only toggle used on
+// mobile. Encerrar doesn't end the session itself — it opens the same
+// full timer screen as onClick, where the finish flow already lives —
+// so the logic isn't duplicated here.
 function TimerWidget({
   elapsedLabel,
   category = null,
@@ -30,17 +37,42 @@ function TimerWidget({
             <span className="timer-widget-time-value">{elapsedLabel}</span>
           </div>
         </div>
-        <button
-          type="button"
-          className="timer-widget-toggle"
-          aria-label={running ? 'Pausar sessão' : 'Continuar sessão'}
-          onClick={(event) => {
-            event.stopPropagation()
-            onToggle?.()
-          }}
-        >
-          {running ? <Pause /> : <PlayArrow />}
-        </button>
+        {device === 'desktop' ? (
+          <div className="timer-widget-actions">
+            <Button
+              variant="outline"
+              leadingIcon={<Stop />}
+              onClick={(event) => {
+                event.stopPropagation()
+                onClick?.()
+              }}
+            >
+              Encerrar
+            </Button>
+            <Button
+              variant={running ? 'warning' : 'primary'}
+              leadingIcon={running ? <Pause /> : <PlayArrow />}
+              onClick={(event) => {
+                event.stopPropagation()
+                onToggle?.()
+              }}
+            >
+              {running ? 'Pausar' : 'Continuar'}
+            </Button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="timer-widget-toggle"
+            aria-label={running ? 'Pausar sessão' : 'Continuar sessão'}
+            onClick={(event) => {
+              event.stopPropagation()
+              onToggle?.()
+            }}
+          >
+            {running ? <Pause /> : <PlayArrow />}
+          </button>
+        )}
       </div>
     </div>
   )

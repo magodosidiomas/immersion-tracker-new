@@ -68,6 +68,22 @@ body {
   }
 }
 
+@media (min-width: 1280px) {
+  .app-timer-bar {
+    position: fixed;
+    left: 240px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .app-timer-bar .timer-widget {
+    pointer-events: auto;
+  }
+}
+
 /* LinkContent/LinkSession render as an overlay on top of whatever
    screen opened them (NewSession's finish phase, EditSession) instead
    of replacing it, so that screen's own state survives the round
