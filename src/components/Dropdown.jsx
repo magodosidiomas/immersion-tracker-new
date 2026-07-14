@@ -26,10 +26,11 @@ function Dropdown({
   secondaryLabel = null,
   flag = null,
   selected = false,
+  outline = false,
   ...props
 }) {
   return (
-    <button type="button" className="dropdown" data-selected={selected} {...props}>
+    <button type="button" className="dropdown" data-selected={selected} data-outline={outline} {...props}>
       <span className="dropdown-content">
         {flag && <span className="dropdown-flag">{flag}</span>}
         <span className="dropdown-categories">

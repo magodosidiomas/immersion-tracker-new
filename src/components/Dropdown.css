@@ -73,6 +73,27 @@
   height: 100%;
 }
 
+/* --- outline (hasOutline=true) --- */
+/* Figma gives this variant its own border+radius on the root, plus
+   real padding on dropdown-content (8px 12px) instead of the
+   negative-margin trick above — that trick exists only so the
+   borderless variant's hover pill can bleed past the navbar's resting
+   edges; the outline variant already has a visible boundary, so
+   content padding can just be real padding. */
+.dropdown[data-outline='true'] {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-medium);
+}
+
+.dropdown[data-outline='true']:hover {
+  border-radius: var(--radius-medium);
+}
+
+.dropdown[data-outline='true'] .dropdown-content {
+  padding: 8px 12px;
+  margin: 0;
+}
+
 /* --- selected (hasSelection=true) --- */
 .dropdown[data-selected='true'] .dropdown-label,
 .dropdown[data-selected='true'] .dropdown-dot,
