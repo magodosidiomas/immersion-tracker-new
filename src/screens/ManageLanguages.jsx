@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getLanguages, getSessionsByLanguage, removeLanguage, reorderLanguages } from '../db'
+import { getLanguages, getSessionsByLanguage, getContentsByLanguage, removeLanguage, reorderLanguages } from '../db'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
@@ -25,20 +25,28 @@ import { CSS } from '@dnd-kit/utilities'
 import './ManageLanguages.css'
 
 // Phrase the user must type to confirm a destructive delete — only
-// required when the language actually has history to lose (see
-// hasSessions below). Matches the Figma copy verbatim.
+// required when the language actually has something to lose (history
+// and/or Biblioteca content — see hasHistory below). Matches the Figma
+// copy verbatim.
 const CONFIRM_PHRASE = 'QUERO REMOVER'
 
-// Builds the delete-sheet description. The hasSessions sentence and the
-// isLastLanguage sentence are independent axes — hasSessions controls
-// whether history is lost (and gates the typed-phrase confirmation),
-// isLastLanguage controls whether the warning about returning to
-// onboarding gets appended. Stacking them as separate sentences keeps
-// each concern self-contained instead of a 4-way string switch.
-function getDeleteDescription({ hasSessions, isLastLanguage }) {
-  const consequence = hasSessions
-    ? 'Todo o histórico desse idioma será apagado. Essa ação não pode ser desfeita.'
-    : 'Esse idioma será removido da sua lista.'
+// Builds the delete-sheet description. The hasHistory sentence and the
+// isLastLanguage sentence are independent axes — hasHistory controls
+// whether sessions/content are lost (and gates the typed-phrase
+// confirmation), isLastLanguage controls whether the warning about
+// returning to onboarding gets appended. Stacking them as separate
+// sentences keeps each concern self-contained instead of a 4-way
+// string switch. hasHistory is true if there are sessions OR content,
+// since losing either one unexpectedly is equally bad.
+function getDeleteDescription({ hasSessions, hasContent, isLastLanguage }) {
+  const consequence =
+    hasSessions && hasContent
+      ? 'Todo o histórico e os conteúdos desse idioma serão apagados. Essa ação não pode ser desfeita.'
+      : hasContent
+        ? 'Todos os conteúdos desse idioma serão apagados. Essa ação não pode ser desfeita.'
+        : hasSessions
+          ? 'Todo o histórico desse idioma será apagado. Essa ação não pode ser desfeita.'
+          : 'Esse idioma será removido da sua lista.'
   const lastLanguageWarning = isLastLanguage
     ? ' Como este é o seu último idioma, você voltará para o início para escolher um novo idioma e recomeçar.'
     : ''
@@ -120,8 +128,16 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) 
   }, [])
 
   async function handleDeleteClick(language) {
-    const sessions = await getSessionsByLanguage(language.id)
-    setDeleteTarget({ language, hasSessions: sessions.length > 0, isLastLanguage: languages.length === 1 })
+    const [sessions, contents] = await Promise.all([
+      getSessionsByLanguage(language.id),
+      getContentsByLanguage(language.id),
+    ])
+    setDeleteTarget({
+      language,
+      hasSessions: sessions.length > 0,
+      hasContent: contents.length > 0,
+      isLastLanguage: languages.length === 1,
+    })
   }
 
   function closeDeleteSheet() {
@@ -152,7 +168,8 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) 
     reorderLanguages(next.map((language) => language.id))
   }
 
-  const canDelete = deleteTarget && (!deleteTarget.hasSessions || confirmText.trim() === CONFIRM_PHRASE)
+  const deleteHasHistory = deleteTarget && (deleteTarget.hasSessions || deleteTarget.hasContent)
+  const canDelete = deleteTarget && (!deleteHasHistory || confirmText.trim() === CONFIRM_PHRASE)
 
   return (
     <main className="manage-languages">
@@ -204,7 +221,7 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) 
           </Button>
         }
       >
-        {deleteTarget?.hasSessions && (
+        {deleteHasHistory && (
           <InputField
             label={
               <>

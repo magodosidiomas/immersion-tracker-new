@@ -173,9 +173,24 @@ export async function addLanguage({ name, flagCode }) {
 // next, or null if none are left. The confirmation screen that should
 // precede this call is a separate, not-yet-built piece.
 export async function removeLanguage(languageId) {
-  const sessions = await getSessionsByLanguage(languageId)
+  const [sessions, contents, catalogEntries, allSessionContents, allEpisodes] = await Promise.all([
+    getSessionsByLanguage(languageId),
+    getAllByIndex('contents', 'languageId', languageId),
+    getAllByIndex('contentCatalog', 'languageId', languageId),
+    getAll('sessionContents'),
+    getAll('episodes'),
+  ])
+  const contentIds = contents.map((content) => content.id)
+  const catalogIds = catalogEntries.map((entry) => entry.id)
+  const episodesToRemove = allEpisodes.filter((episode) => catalogIds.includes(episode.catalogId))
+  const linksToRemove = allSessionContents.filter((link) => contentIds.includes(link.contentId))
+
   await Promise.all([
     ...sessions.map((session) => remove('sessions', session.id)),
+    ...linksToRemove.map((link) => remove('sessionContents', link.id)),
+    ...contents.map((content) => remove('contents', content.id)),
+    ...episodesToRemove.map((episode) => remove('episodes', episode.id)),
+    ...catalogEntries.map((entry) => remove('contentCatalog', entry.id)),
     remove('languages', languageId),
   ])
 
