@@ -44,7 +44,6 @@ function AddLanguages({ onClose }) {
                 label={language.name}
                 flag={<Flag code={language.flagCode} />}
                 divider={index > 0}
-                density="compact"
                 position={
                   filteredOptions.length === 1
                     ? 'only'
