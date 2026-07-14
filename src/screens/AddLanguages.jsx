@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react'
-import { addLanguage, getLanguages } from '../db'
-import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
-import { normalizeForCompare } from '../utils/text'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
 import SelectableListItem from '../components/SelectableListItem'
 import { Close, Check, Search } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
+import { useAddLanguages } from '../hooks/useAddLanguages'
 import './AddLanguages.css'
 
 // Reached from ManageLanguages' "Adicionar idiomas" button. Fetches the
@@ -15,32 +12,9 @@ import './AddLanguages.css'
 // ManageLanguages/App) so AVAILABLE_LANGUAGES can be filtered down to
 // languages not already added — no point offering to add a duplicate.
 function AddLanguages({ onClose }) {
-  const [existingNames, setExistingNames] = useState(null)
-  const [selected, setSelected] = useState([])
-  const [query, setQuery] = useState('')
+  const { loaded, filteredOptions, selected, query, setQuery, toggle, handleAdd } = useAddLanguages(onClose)
 
-  useEffect(() => {
-    getLanguages().then((languages) => setExistingNames(languages.map((language) => language.name)))
-  }, [])
-
-  if (existingNames === null) return null
-
-  const options = AVAILABLE_LANGUAGES.filter((language) => !existingNames.includes(language.name))
-  const filteredOptions = query.trim()
-    ? options.filter((language) => normalizeForCompare(language.name).includes(normalizeForCompare(query)))
-    : options
-
-  function toggle(name) {
-    setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]))
-  }
-
-  async function handleAdd() {
-    const toAdd = options.filter((language) => selected.includes(language.name))
-    for (const language of toAdd) {
-      await addLanguage(language)
-    }
-    onClose()
-  }
+  if (!loaded) return null
 
   return (
     <main className="add-languages">

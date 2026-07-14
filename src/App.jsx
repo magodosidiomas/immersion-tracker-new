@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
 import Sidebar from './components/Sidebar'
 import SettingsWindow from './components/SettingsWindow'
+import AddLanguagesWindow from './components/AddLanguagesWindow'
 import EdgeScrollbar from './components/EdgeScrollbar'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
@@ -286,6 +287,9 @@ function App() {
     // (X) and finishing (Adicionar) return there, since either way the
     // list it shows may need refetching.
     if (screen === 'add-languages') {
+      // Desktop renders this as its own windowed modal instead —
+      // see AddLanguagesWindow render below.
+      if (isDesktop) return null
       return <AddLanguages onClose={() => window.history.back()} />
     }
     if (screen === 'manage-languages') {
@@ -489,6 +493,9 @@ function App() {
             navigate('episode-detail')
           }}
         />
+      )}
+      {isDesktop && screen === 'add-languages' && (
+        <AddLanguagesWindow onClose={() => window.history.back()} />
       )}
       {pickerScreen === 'link-content' && (
         <div className="picker-overlay">
