@@ -16,7 +16,7 @@ import './Backup.css'
 // ManageLanguages uses for removing a language. A successful import
 // reloads the page rather than hand-resyncing every screen's in-memory
 // state (languages list, active language, timer, etc.) individually.
-function Backup({ onBack }) {
+function Backup({ onBack, embedded }) {
   const fileInputRef = useRef(null)
   const [pendingImport, setPendingImport] = useState(null)
   const [importError, setImportError] = useState(null)
@@ -61,16 +61,18 @@ function Backup({ onBack }) {
   }
 
   return (
-    <main className="backup">
-      <TopNav
-        title="Backup"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+    <main className="backup" data-embedded={embedded || undefined}>
+      {!embedded && (
+        <TopNav
+          title="Backup"
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          }
+        />
+      )}
       <div className="backup-content">
         <Banner
           type="secondary"

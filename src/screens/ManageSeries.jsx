@@ -36,7 +36,7 @@ import './ManageSeries.css'
 // Self-fetches its own languageId + catalog (same convention as
 // Home/Statistics/Library) — only navigation callbacks come from
 // whoever renders this screen.
-function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect }) {
+function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect, embedded }) {
   const [languageId, setLanguageId] = useState(null)
   const [items, setItems] = useState([])
   const [query, setQuery] = useState('')
@@ -117,16 +117,18 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
       : 'Esse filme será removido da sua lista.'
 
   return (
-    <main className="manage-series">
-      <TopNav
-        title={isSerie ? 'Gerenciar séries' : 'Gerenciar filmes'}
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+    <main className="manage-series" data-embedded={embedded || undefined}>
+      {!embedded && (
+        <TopNav
+          title={isSerie ? 'Gerenciar séries' : 'Gerenciar filmes'}
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          }
+        />
+      )}
       {items.length === 0 ? (
         <div className="manage-series-empty">
           <EmptyState

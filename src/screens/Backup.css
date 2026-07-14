@@ -5,6 +5,16 @@
   background: var(--bg-surface-base);
 }
 
+.backup[data-embedded='true'] {
+  height: auto;
+  background: transparent;
+}
+
+.backup[data-embedded='true'] .backup-content {
+  padding: 0;
+  overflow: visible;
+}
+
 .backup-content {
   display: flex;
   flex-direction: column;

@@ -5,6 +5,17 @@
   background: var(--bg-surface-base);
 }
 
+.manage-series[data-embedded='true'] {
+  height: auto;
+  background: transparent;
+}
+
+.manage-series[data-embedded='true'] .manage-series-content,
+.manage-series[data-embedded='true'] .manage-series-empty {
+  padding: 0;
+  overflow: visible;
+}
+
 .manage-series-content {
   flex: 1;
   min-height: 0;

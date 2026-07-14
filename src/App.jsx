@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ComponentShowcase from './dev/ComponentShowcase'
 import Sidebar from './components/Sidebar'
+import SettingsWindow from './components/SettingsWindow'
 import EdgeScrollbar from './components/EdgeScrollbar'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
@@ -46,6 +47,19 @@ function App() {
   // about data: is there an active language yet? null means "still
   // checking IndexedDB" so we don't flash the wrong screen on load.
   const [hasLanguage, setHasLanguage] = useState(null)
+
+  // Desktop (>=1280px) shows Configurações as a windowed modal
+  // (SettingsWindow) instead of the plain full-screen flow — matches
+  // Sidebar's own breakpoint so both flip together.
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1280px)').matches,
+  )
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1280px)')
+    const handleChange = (event) => setIsDesktop(event.matches)
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
 
   // Home vs Settings vs ManageLanguages vs AddLanguages is plain state,
   // not a route — still simpler than a router for this size of nav (no
@@ -275,6 +289,9 @@ function App() {
       return <AddLanguages onClose={() => window.history.back()} />
     }
     if (screen === 'manage-languages') {
+      // Desktop renders this section inside SettingsWindow instead —
+      // see the SettingsWindow render below.
+      if (isDesktop) return null
       return (
         <ManageLanguages
           onBack={() => window.history.back()}
@@ -296,9 +313,11 @@ function App() {
       )
     }
     if (screen === 'backup') {
+      if (isDesktop) return null
       return <Backup onBack={() => window.history.back()} />
     }
     if (screen === 'settings') {
+      if (isDesktop) return null
       return (
         <Settings
           onBack={() => window.history.back()}
@@ -379,6 +398,7 @@ function App() {
       )
     }
     if (screen === 'manage-series' || screen === 'manage-movies') {
+      if (isDesktop) return null
       const kind = screen === 'manage-series' ? 'serie' : 'filme'
       return (
         <ManageSeries
@@ -448,6 +468,28 @@ function App() {
       />
       <div className="app-content" ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
+      {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies'].includes(screen) && (
+        <SettingsWindow
+          screen={screen}
+          onNavigate={navigate}
+          onClose={() => window.history.back()}
+          onOpenAddLanguages={() => navigate('add-languages')}
+          onAllLanguagesRemoved={() => {
+            setHasLanguage(false)
+            setScreen('home')
+          }}
+          onOpenEpisodes={(item) => {
+            setActiveCatalog(item)
+            navigate('manage-episodes')
+          }}
+          onOpenFilmeSessions={async (item) => {
+            setActiveCatalog(item)
+            const content = await getFilmeContent(item.id)
+            setActiveEpisode({ contentId: content?.id ?? null, season: null, episode: null })
+            navigate('episode-detail')
+          }}
+        />
+      )}
       {pickerScreen === 'link-content' && (
         <div className="picker-overlay">
           <LinkContent

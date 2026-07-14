@@ -5,6 +5,19 @@
   background: var(--bg-surface-base);
 }
 
+/* Rendered inside SettingsWindow's panel on desktop — the panel
+   already owns height/background/scrolling, so this just becomes a
+   plain content block instead of a full standalone screen. */
+.manage-languages[data-embedded='true'] {
+  height: auto;
+  background: transparent;
+}
+
+.manage-languages[data-embedded='true'] .manage-languages-content {
+  padding: 0;
+  overflow: visible;
+}
+
 .manage-languages-content {
   display: flex;
   flex-direction: column;

@@ -105,7 +105,7 @@ function LanguageRow({ language, divider, onDelete }) {
 // Settings, even when this screen was opened via Home's dropdown
 // shortcut (see Home.jsx's BottomSheet primaryButton). "Adicionar
 // idiomas" opens AddLanguages.
-function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) {
+function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved, embedded }) {
   const [languages, setLanguages] = useState([])
   // The language pending deletion, plus whether it has sessions —
   // decided once, when the trash icon is tapped, rather than re-derived
@@ -172,16 +172,18 @@ function ManageLanguages({ onBack, onOpenAddLanguages, onAllLanguagesRemoved }) 
   const canDelete = deleteTarget && (!deleteHasHistory || confirmText.trim() === CONFIRM_PHRASE)
 
   return (
-    <main className="manage-languages">
-      <TopNav
-        title="Gerenciar idiomas"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+    <main className="manage-languages" data-embedded={embedded || undefined}>
+      {!embedded && (
+        <TopNav
+          title="Gerenciar idiomas"
+          hasDivider
+          leadingIcon={
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          }
+        />
+      )}
       <div className="manage-languages-content">
         <p className="manage-languages-label">Meus idiomas</p>
         <div className="manage-languages-card">
