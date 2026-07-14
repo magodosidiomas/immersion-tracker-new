@@ -59,9 +59,12 @@
 }
 
 .selectable-list-item-divider {
-  width: 100%;
+  /* Full-bleed regardless of the button's own inset padding (see
+     .selectable-list-item) — counteract it with a negative margin
+     instead of leaving the divider inset. */
+  width: calc(100% + 16px);
   height: 1px;
-  margin: 0;
+  margin: 0 -8px;
   background: var(--color-border-subtle);
 }
 
