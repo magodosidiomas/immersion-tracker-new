@@ -45,17 +45,23 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
           title="Tempo total"
           number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
         />
-        <Calendar
-          sessionDates={sessions.map((session) => session.date)}
-          onSelectDay={onOpenDay}
-        />
         <div className="statistics-cards">
-          <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
-          <SkillCard groups={categoryBreakdown(sessions)} />
-          <FormatCard groups={categoryBreakdown(sessions)} />
-          <ReceptionCard groups={categoryBreakdown(sessions)} />
-          <ProductionCard groups={categoryBreakdown(sessions)} />
-          <StudyCard groups={categoryBreakdown(sessions)} />
+          <div className="statistics-row">
+            <Calendar
+              sessionDates={sessions.map((session) => session.date)}
+              onSelectDay={onOpenDay}
+            />
+            <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
+          </div>
+          <div className="statistics-row">
+            <SkillCard groups={categoryBreakdown(sessions)} />
+            <FormatCard groups={categoryBreakdown(sessions)} />
+          </div>
+          <div className="statistics-row statistics-row-triple">
+            <ReceptionCard groups={categoryBreakdown(sessions)} />
+            <ProductionCard groups={categoryBreakdown(sessions)} />
+            <StudyCard groups={categoryBreakdown(sessions)} />
+          </div>
         </div>
       </div>
       <div className="statistics-bottom-layer">

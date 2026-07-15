@@ -54,10 +54,34 @@
   gap: var(--space-32);
 }
 
+.statistics-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
 /* "Por categoria" (the all-categories/"Todos" overview donut) gets more
    breathing room between its title and the card than the other donuts. */
-.statistics-cards > .donut-card-group:first-child {
+.statistics-row:first-child .donut-card-group {
   gap: var(--space-16);
+}
+
+/* Desktop sidebar layout: each row that today stacks its 2-3 cards in
+   a single mobile column instead sits side by side, matching the
+   Figma web layout. Row/card grouping (which cards pair up) is fixed
+   by design, not a reflow breakpoint choice, so this stays a flex row
+   with equal-width children rather than a full CSS grid. */
+@media (min-width: 1280px) {
+  .statistics-row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .statistics-row > .calendar,
+  .statistics-row > .donut-card-group {
+    flex: 1 1 0;
+    min-width: 0;
+  }
 }
 
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)
