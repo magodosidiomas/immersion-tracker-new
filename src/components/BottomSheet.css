@@ -47,8 +47,8 @@
   animation: bottom-sheet-slide-in 0.25s ease forwards;
 }
 
-.bottom-sheet .selectable-list-item[data-position] .selectable-list-item-divider {
-  background: var(--color-purple-600);
+.bottom-sheet-content[data-card='true'] .selectable-list-item[data-position] .selectable-list-item-divider {
+  background: var(--color-purple-500);
 }
 
 .bottom-sheet[data-open='false'] {

@@ -46,6 +46,7 @@
 .manage-languages-card {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-large);
