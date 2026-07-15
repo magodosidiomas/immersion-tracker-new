@@ -6,7 +6,8 @@ import EditableListItem from '../components/EditableListItem'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import InputField from '../components/InputField'
-import { ArrowBack, Add, Edit, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import EmptyState from '../components/EmptyState'
+import { ArrowBack, Add, Edit, Delete, PlaylistPlay } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ManageEpisodes.css'
 
 // Episode directory for one série — season filter chips up top, then
@@ -70,52 +71,67 @@ function ManageEpisodes({ catalogId, seriesName = '', onBack, onOpenEpisode, emb
         />
       )}
       <div className="manage-episodes-content">
-        <div className="manage-episodes-field-group">
-          <span className="manage-episodes-label">Temporadas</span>
-          <div className="manage-episodes-chips">
-            <SelectionChip
-              label="Todas"
-              hasLeadingIcon={false}
-              hasTrailingIcon={false}
-              selected={selectedSeason === 'all'}
-              onClick={() => setSelectedSeason('all')}
+        {episodes.length === 0 ? (
+          <div className="manage-episodes-empty">
+            <EmptyState
+              icon={<PlaylistPlay />}
+              title="Nenhum episódio adicionado"
+              description="Toque no botão abaixo para adicionar o primeiro episódio."
+              buttonLabel="Adicionar episódio"
+              buttonIcon={<Add />}
+              onButtonClick={() => setCreateOpen(true)}
             />
-            {seasons.map((season) => (
-              <SelectionChip
-                key={season}
-                label={`T${season}`}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={selectedSeason === season}
-                onClick={() => setSelectedSeason(season)}
-              />
-            ))}
           </div>
-        </div>
-
-        {grouped.map(({ season, items }) => (
-          <div key={season} className="manage-episodes-field-group">
-            <span className="manage-episodes-label">Temporada {season}</span>
-            <div className="manage-episodes-list">
-              {items.map((ep, index) => (
-                <EditableListItem
-                  key={ep.id}
-                  label={`T${ep.season} · E${ep.episode}`}
-                  description={ep.sessionCount ? `${ep.sessionCount} sessões` : null}
-                  editIcon={<Edit />}
-                  onEdit={() => onOpenEpisode(ep)}
-                  deleteIcon={<Delete />}
-                  onDelete={() => setDeleteTarget(ep)}
-                  divider={index < items.length - 1}
+        ) : (
+          <>
+            <div className="manage-episodes-field-group">
+              <span className="manage-episodes-label">Temporadas</span>
+              <div className="manage-episodes-chips">
+                <SelectionChip
+                  label="Todas"
+                  hasLeadingIcon={false}
+                  hasTrailingIcon={false}
+                  selected={selectedSeason === 'all'}
+                  onClick={() => setSelectedSeason('all')}
                 />
-              ))}
+                {seasons.map((season) => (
+                  <SelectionChip
+                    key={season}
+                    label={`T${season}`}
+                    hasLeadingIcon={false}
+                    hasTrailingIcon={false}
+                    selected={selectedSeason === season}
+                    onClick={() => setSelectedSeason(season)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
 
-        <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={() => setCreateOpen(true)}>
-          Adicionar episódio
-        </Button>
+            {grouped.map(({ season, items }) => (
+              <div key={season} className="manage-episodes-field-group">
+                <span className="manage-episodes-label">Temporada {season}</span>
+                <div className="manage-episodes-list">
+                  {items.map((ep, index) => (
+                    <EditableListItem
+                      key={ep.id}
+                      label={`T${ep.season} · E${ep.episode}`}
+                      description={ep.sessionCount ? `${ep.sessionCount} sessões` : null}
+                      editIcon={<Edit />}
+                      onEdit={() => onOpenEpisode(ep)}
+                      deleteIcon={<Delete />}
+                      onDelete={() => setDeleteTarget(ep)}
+                      divider={index < items.length - 1}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={() => setCreateOpen(true)}>
+              Adicionar episódio
+            </Button>
+          </>
+        )}
       </div>
 
       <BottomSheet

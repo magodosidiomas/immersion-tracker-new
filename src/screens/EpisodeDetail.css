@@ -5,6 +5,16 @@
   background: var(--bg-surface-base);
 }
 
+.episode-detail[data-embedded='true'] {
+  height: auto;
+  background: transparent;
+}
+
+.episode-detail[data-embedded='true'] .episode-detail-content {
+  padding: 0;
+  overflow: visible;
+}
+
 .episode-detail-content {
   flex: 1;
   min-height: 0;

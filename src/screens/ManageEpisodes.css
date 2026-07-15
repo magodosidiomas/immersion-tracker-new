@@ -5,6 +5,29 @@
   background: var(--bg-surface-base);
 }
 
+.manage-episodes[data-embedded='true'] {
+  height: auto;
+  background: transparent;
+}
+
+.manage-episodes[data-embedded='true'] .manage-episodes-content {
+  padding: 0;
+  overflow: visible;
+}
+
+.manage-episodes-empty {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.manage-episodes[data-embedded='true'] .manage-episodes-empty {
+  padding: 0;
+}
+
 .manage-episodes-content {
   flex: 1;
   min-height: 0;
