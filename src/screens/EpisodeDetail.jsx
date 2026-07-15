@@ -33,6 +33,10 @@ function toRow(session) {
 // content row, or the filme's) — this screen just fetches/links
 // sessions against it, same self-fetching convention as everywhere
 // else now.
+//
+// embedded (desktop SettingsWindow): the caller already renders the
+// title as its own settings-window-heading, so this skips its own
+// heading to avoid showing the same name twice.
 function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSession, onOpenSession, onBack, embedded }) {
   const [linkedSessions, setLinkedSessions] = useState([])
   const heading = episode ? `${seriesName} · T${episode.season} E${episode.episode}` : seriesName
@@ -71,7 +75,7 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
         />
       )}
       <div className="episode-detail-content">
-        <h2 className="episode-detail-title">{heading}</h2>
+        {!embedded && <h2 className="episode-detail-title">{heading}</h2>}
 
         <div className="episode-detail-field-group">
           {linkedSessions.length > 0 && (
