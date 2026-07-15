@@ -71,7 +71,6 @@ function App() {
   // this state below, so the OS back button steps through screens
   // instead of closing the page.
   const [screen, setScreen] = useState('home')
-  const [homeHasSessions, setHomeHasSessions] = useState(true)
 
   // LinkContent/LinkSession render as an overlay ON TOP of whatever
   // `screen` currently is, instead of replacing it — critical for
@@ -488,7 +487,6 @@ function App() {
         onOpenEditSession={(session) => navigate('edit-session', session)}
         onOpenStatistics={() => navigate('stats')}
         onOpenLibrary={() => navigate('library')}
-        onHasSessionsChange={setHomeHasSessions}
       />
     )
   }
@@ -506,7 +504,6 @@ function App() {
         onOpenManageLanguages={() => navigate('manage-languages')}
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
-        hideNewSessionButton={screen === 'home' && !homeHasSessions}
       />
       <div className={`app-content${screen === 'stats' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
