@@ -194,9 +194,9 @@ function SearchCreateField({
       event.preventDefault()
       setActiveIndex((current) => Math.max(current - 1, 0))
     } else if (event.key === 'Enter') {
-      if (rowCount > 0) {
+      if (activeIndex >= 0) {
         event.preventDefault()
-        activateRow(activeIndex >= 0 ? activeIndex : 0)
+        activateRow(activeIndex)
       }
     } else if (event.key === 'Escape') {
       setOpen(false)
