@@ -82,6 +82,18 @@
     flex: 1 1 0;
     min-width: 0;
   }
+
+  /* .app-content--full removes the 480px phone-column cap, so
+     statistics-content spans the full remaining width beside the
+     sidebar. Centered max-width + generous side padding keeps it
+     from stretching edge-to-edge while still using the space. */
+  .statistics-content {
+    max-width: 1120px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
 }
 
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)

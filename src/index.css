@@ -66,6 +66,14 @@ body {
     max-width: 480px;
     margin: 0 auto;
   }
+
+  /* Statistics opts out of the phone-column cap — it uses the full
+     remaining width beside the sidebar, with its own side margins
+     (see Statistics.css .statistics-content). */
+  .app-content--full {
+    max-width: none;
+    margin: 0;
+  }
 }
 
 @media (min-width: 1280px) {

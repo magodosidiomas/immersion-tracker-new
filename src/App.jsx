@@ -508,7 +508,7 @@ function App() {
         onOpenSettings={() => navigate('settings')}
         hideNewSessionButton={screen === 'home' && !homeHasSessions}
       />
-      <div className="app-content" ref={appContentRef}>{renderScreen()}</div>
+      <div className={`app-content${screen === 'stats' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
       {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
         <div className="app-timer-bar">
