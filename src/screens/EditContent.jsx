@@ -338,8 +338,6 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           leadingIcon={<ArrowBack />}
           onLeadingClick={closeDesktopManage}
           onClose={onBack}
-          flushContent
-          className="finish-session-modal"
           width={480}
           height={640}
         >
@@ -374,8 +372,6 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           leadingIcon={<ArrowBack />}
           onLeadingClick={() => setView('manage-series')}
           onClose={onBack}
-          flushContent
-          className="finish-session-modal"
           width={480}
           height={640}
         >
