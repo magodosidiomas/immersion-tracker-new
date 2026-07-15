@@ -43,7 +43,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onHasSessionsChange }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -69,10 +69,6 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
 
   const groups = groupSessionsByDate(sessions)
   const isEmpty = groups.length === 0 && !sessionError
-
-  useEffect(() => {
-    onHasSessionsChange?.(!isEmpty)
-  }, [isEmpty, onHasSessionsChange])
 
   const now = new Date()
   const todayStr = formatDateInput(now)
