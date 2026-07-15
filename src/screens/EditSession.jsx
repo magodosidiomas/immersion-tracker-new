@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
 import Modal from '../components/Modal'
 import SessionForm from '../components/SessionForm'
+import LinkContent from './LinkContent'
+import EditContent from './EditContent'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { updateSession, deleteSession, getContentsForSession, linkSessionContent, unlinkSessionContent } from '../db'
 import './EditSession.css'
@@ -22,6 +24,14 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [linkedContents, setLinkedContents] = useState([])
 
+  // Desktop only: which Modal "page" is showing. Mobile never touches
+  // this — it always uses onOpenLinkContent, the app-level full-page
+  // picker. On desktop, "Vincular conteúdo" and "Adicionar conteúdo"
+  // instead swap the Modal's own content/title/back-target in place,
+  // so linking never leaves this window.
+  const [view, setView] = useState('form')
+  const pendingPickCallback = useRef(null)
+
   function refreshContents() {
     getContentsForSession(session.id).then(setLinkedContents)
   }
@@ -29,10 +39,16 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
   useEffect(refreshContents, [session.id])
 
   function handleAddContent() {
-    onOpenLinkContent(async (item) => {
+    const pick = async (item) => {
       await linkSessionContent(session.id, item.id)
       refreshContents()
-    })
+    }
+    if (isDesktop) {
+      pendingPickCallback.current = pick
+      setView('link-content')
+      return
+    }
+    onOpenLinkContent(pick)
   }
 
   async function handleRemoveContent(contentId) {
@@ -91,6 +107,55 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
   )
 
   if (isDesktop) {
+    if (view === 'link-content') {
+      return (
+        <Modal
+          title="Vincular conteúdo"
+          leadingIcon={<ArrowBack />}
+          onLeadingClick={() => setView('form')}
+          onClose={onBack}
+          flushContent
+          className="finish-session-modal"
+          width={433}
+          height={640}
+        >
+          <LinkContent
+            headless
+            onAddContent={() => setView('manual-content')}
+            onSelect={(item) => {
+              pendingPickCallback.current?.(item)
+              setView('form')
+            }}
+          />
+        </Modal>
+      )
+    }
+    if (view === 'manual-content') {
+      return (
+        <Modal
+          title="Novo conteúdo"
+          leadingIcon={<ArrowBack />}
+          onLeadingClick={() => setView('link-content')}
+          onClose={onBack}
+          flushContent
+          className="finish-session-modal"
+          width={433}
+          height={640}
+        >
+          <EditContent
+            headless
+            contentId={null}
+            onSaved={(savedContent) => {
+              if (savedContent) pendingPickCallback.current?.(savedContent)
+              setView('form')
+            }}
+            onOpenLinkSession={() => {}}
+            onOpenSession={() => {}}
+            onOpenManage={() => {}}
+          />
+        </Modal>
+      )
+    }
     return (
       <Modal
         title="Editar sessão"

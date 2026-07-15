@@ -19,7 +19,7 @@ function formatSessionCount(count) {
 // single "+ Adicionar conteúdo" footer button instead of the 3-tab
 // BottomNav — tapping a row selects it for the session rather than
 // opening its own edit screen.
-function LinkContent({ onSelect, onAddContent, onBack }) {
+function LinkContent({ onSelect, onAddContent, onBack, headless = false }) {
   const [languageId, setLanguageId] = useState(null)
   const [contents, setContents] = useState([])
 
@@ -41,17 +41,8 @@ function LinkContent({ onSelect, onAddContent, onBack }) {
 
   const { query, setQuery, selectedTypes, toggleType, setSelectedTypes, groups } = useContentFilter(items)
 
-  return (
-    <main className="link-content">
-      <TopNav
-        title="Vincular conteúdo"
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+  const body = (
+    <>
       <div className="link-content-body">
         <ContentSearchList
           query={query}
@@ -69,6 +60,26 @@ function LinkContent({ onSelect, onAddContent, onBack }) {
           Adicionar conteúdo
         </Button>
       </div>
+    </>
+  )
+
+  // headless: rendered inside a Modal (desktop) that already supplies
+  // its own header/back button — skip this screen's own TopNav/main
+  // wrapper so there isn't a duplicate header.
+  if (headless) return body
+
+  return (
+    <main className="link-content">
+      <TopNav
+        title="Vincular conteúdo"
+        hasDivider
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+      />
+      {body}
     </main>
   )
 }

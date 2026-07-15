@@ -46,7 +46,7 @@ function toRow(session) {
 // via linkedSessions, same as if they were already linked) and the
 // actual sessionContents rows are written once Salvar creates the
 // content and its real id exists.
-function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0 }) {
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0, headless = false }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
   const [existingContents, setExistingContents] = useState([])
@@ -178,17 +178,8 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     unlinkSessionContent(sessionId, contentId).then(() => refreshLinkedSessions(contentId))
   }
 
-  return (
-    <main className="edit-content">
-      <TopNav
-        title={isNew ? 'Novo conteúdo' : 'Editar conteúdo'}
-        hasDivider
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-      />
+  const body = (
+    <>
       {(isNew || content) && (
         <ContentForm
           key={contentId ?? 'new'}
@@ -256,6 +247,26 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           </Button>
         }
       />
+    </>
+  )
+
+  // headless: rendered inside a Modal (desktop) that already supplies
+  // its own header/back button — skip this screen's own TopNav/main
+  // wrapper so there isn't a duplicate header.
+  if (headless) return body
+
+  return (
+    <main className="edit-content">
+      <TopNav
+        title={isNew ? 'Novo conteúdo' : 'Editar conteúdo'}
+        hasDivider
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+      />
+      {body}
     </main>
   )
 }
