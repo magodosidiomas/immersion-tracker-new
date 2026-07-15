@@ -1,34 +1,38 @@
 # Deployment
 
-There are two possible hosts. Check which one is actually current before
-assuming — don't rely on memory of "Netlify was chosen," since that's now
-out of date.
+## Cloudflare Workers — current and only host
 
-## Netlify — not in use
-Auto-deployed from `main` on every push, but the team has moved off it.
-Still live at the old URL, just not the one anyone should be checking.
+Cloudflare Workers is connected directly to this GitHub repo via Cloudflare's
+own git integration (Workers Build). There is no separate deploy branch and
+no GitHub Actions workflow — everything is driven by Cloudflare's dashboard
+config reacting to pushes.
 
-## Cloudflare Workers — current
-Live at the `.workers.dev` URL. Two things make this different from a
-normal "push to deploy" setup:
+- **Build command:** `npm run build`
+- **Deploy command (production branch):** `npx wrangler deploy`
+- **Deploy command (other branches):** `npx wrangler versions upload` — this
+  uploads a preview version without shipping it to production traffic.
+- **Root directory:** `/`
 
-1. **It builds from a separate branch**, `cloudflare/workers-autoconfig`,
-   not `main`. That branch has its own `wrangler.jsonc` and a Cloudflare
-   Vite plugin in `vite.config.js` that don't exist on `main`. Work done
-   on `main` (new components, screens, etc.) does **not** appear on the
-   live site until that branch is brought up to date with `main`.
-2. **Deploying is a manual, local step** — `npm run deploy` (which runs
-   `wrangler deploy`). There's no CI wiring it to git pushes. Whoever has
-   Cloudflare access needs to run it after the branch is synced.
+### Production
+Pushing to `main` triggers a full build + `wrangler deploy`, which goes live
+immediately at:
 
-So shipping a change to the live site is actually two steps, not one:
-sync `cloudflare/workers-autoconfig` with `main` (merge, no conflicts so
-far), then run `npm run deploy` from that branch. The first step can be
-done from anywhere with repo access; the second needs valid Cloudflare
-credentials, which isn't something available in this environment — that
-step always falls to whoever holds those credentials.
+https://immersion-tracker-new.languagelaboratory22.workers.dev
 
-Worth revisiting whether two branches need to keep existing at all, vs.
-moving the Cloudflare config onto `main` and dropping the branch split —
-the divergence is exactly what caused a finished component (TopNav) to
-silently not show up on the live site.
+### Staging
+Pushing to `staging` triggers a build + `wrangler versions upload` (not a
+full deploy), producing a stable preview alias at:
+
+https://staging-immersion-tracker-new.languagelaboratory22.workers.dev
+
+Workflow: push feature work to `staging` → review on the staging URL →
+merge `staging` into `main` → push → prod deploys automatically.
+
+### Netlify — not in use
+Legacy option from early in the project, superseded by Cloudflare. Don't
+touch it; it may still be live at an old URL but nothing points to it.
+
+## Notes
+- No manual deploy step is needed for either branch — Cloudflare's build
+  pipeline handles both build and deploy on every push.
+- `wrangler.jsonc` lives at the repo root and applies to both branches.
