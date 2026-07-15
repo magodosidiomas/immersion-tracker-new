@@ -38,23 +38,20 @@ function ListItem({
       disabled={selectionMode ? undefined : disabled}
       {...props}
     >
-      <span className="list-item-row">
-        {selectionMode ? (
-          <CheckboxIndicator checked={selected} />
-        ) : (
-          <>
-            {leadingIcon && <span className="list-item-icon">{leadingIcon}</span>}
-            {flag && <span className="list-item-flag">{flag}</span>}
-          </>
-        )}
-        <span className="list-item-text">
-          {label && <span className="list-item-label">{label}</span>}
-          {description && <span className="list-item-description">{description}</span>}
-        </span>
-        {extraText && <span className="list-item-extra">{extraText}</span>}
-        {trailingIcon && <span className="list-item-icon">{trailingIcon}</span>}
+      {selectionMode ? (
+        <CheckboxIndicator checked={selected} />
+      ) : (
+        <>
+          {leadingIcon && <span className="list-item-icon">{leadingIcon}</span>}
+          {flag && <span className="list-item-flag">{flag}</span>}
+        </>
+      )}
+      <span className="list-item-text">
+        {label && <span className="list-item-label">{label}</span>}
+        {description && <span className="list-item-description">{description}</span>}
       </span>
-      {divider && <span className="list-item-divider" />}
+      {extraText && <span className="list-item-extra">{extraText}</span>}
+      {trailingIcon && <span className="list-item-icon">{trailingIcon}</span>}
     </Tag>
   )
 }

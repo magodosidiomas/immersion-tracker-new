@@ -76,6 +76,10 @@
   overflow: hidden;
 }
 
+.add-languages-window-card .selectable-list-item-divider {
+  background: var(--color-purple-600);
+}
+
 .add-languages-window-footer {
   display: flex;
   flex-shrink: 0;

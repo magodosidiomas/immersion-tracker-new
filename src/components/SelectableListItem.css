@@ -93,6 +93,18 @@
   border-bottom-right-radius: var(--radius-large);
 }
 
+/* Flush divider: full width, no inset margin (the inset variant's
+   calc(100% + 16px)/-8px math assumes the button's own 8px side
+   padding, which the flush variant zeroes out — left as-is it
+   overflowed past the card edge). Color is one ramp-step lighter than
+   this card's own background (bg-surface-default = purple-800), not
+   the generic --color-border-subtle token. */
+.selectable-list-item[data-position] .selectable-list-item-divider {
+  width: 100%;
+  margin: 0;
+  background: var(--color-purple-700);
+}
+
 /* --- compact density (see SelectableListItem.jsx comment) --- */
 .selectable-list-item[data-density='compact'] .selectable-list-item-row {
   padding-top: 8px;
