@@ -83,6 +83,10 @@ button.editable-list-item-main:hover {
   color: var(--color-icon-on-destructive-accent);
 }
 
+.editable-list-item:last-child .editable-list-item-divider {
+  display: none;
+}
+
 .editable-list-item-divider {
   /* Full-bleed regardless of the row's own 8px inset padding (see
      .editable-list-item) — counteract it with a negative margin
