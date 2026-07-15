@@ -13,6 +13,7 @@
   overflow-y: auto;
   gap: 24px;
   padding: var(--space-16);
+  padding-bottom: var(--space-64, 64px);
 }
 
 .statistics-title {
@@ -48,6 +49,14 @@
   width: 100%;
 }
 
+/* DataCard (SkillCard/FormatCard/ReceptionCard/ProductionCard/StudyCard)
+   ships at Figma's fixed export width (343px) same as Calendar/DonutCard
+   above — override so it fills its row instead of leaving empty space
+   next to it on wider layouts. */
+.statistics-content .data-card {
+  width: 100%;
+}
+
 .statistics-cards {
   display: flex;
   flex-direction: column;
@@ -78,7 +87,8 @@
   }
 
   .statistics-row > .calendar,
-  .statistics-row > .donut-card {
+  .statistics-row > .donut-card,
+  .statistics-row > .data-card {
     flex: 1 1 0;
     min-width: 0;
   }
