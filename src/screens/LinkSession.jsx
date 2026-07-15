@@ -18,7 +18,7 @@ import './LinkSession.css'
 // tapping a row does: here it selects that session for linking
 // instead of opening EditSession, and it opens on today by default
 // rather than whatever day was tapped in Statistics' calendar.
-function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
+function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless = false }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(formatDateInput(new Date()))
   const [daySessions, setDaySessions] = useState([])
@@ -34,17 +34,8 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
     })
   }, [activeId, selectedDate, refreshTick])
 
-  return (
-    <main className="link-session">
-      <TopNav
-        leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        }
-        title="Vincular sessão"
-        hasDivider
-      />
+  const body = (
+    <>
       <div className="link-session-date-row">
         <div className="link-session-date-picker">
           <Dropdown label={formatFullDate(selectedDate)} />
@@ -89,6 +80,26 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0 }) {
           </Button>
         </div>
       )}
+    </>
+  )
+
+  // headless: rendered inside a Modal (desktop) that already supplies
+  // its own header/back button — skip this screen's own TopNav/main
+  // wrapper so there isn't a duplicate header.
+  if (headless) return body
+
+  return (
+    <main className="link-session">
+      <TopNav
+        leadingIcon={
+          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+            <ArrowBack />
+          </button>
+        }
+        title="Vincular sessão"
+        hasDivider
+      />
+      {body}
     </main>
   )
 }
