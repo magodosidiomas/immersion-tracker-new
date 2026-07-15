@@ -189,7 +189,12 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
           </div>
 
           <div className="manage-series-footer">
-            <Button variant="outline" leadingIcon={<Add />} onClick={() => openRename({ id: null, label: '' })}>
+            <Button
+              variant="outline"
+              fullWidth
+              leadingIcon={<Add />}
+              onClick={() => openRename({ id: null, label: '' })}
+            >
               {`Adicionar ${label}`}
             </Button>
           </div>

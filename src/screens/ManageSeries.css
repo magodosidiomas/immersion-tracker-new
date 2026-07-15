@@ -30,7 +30,6 @@
   flex-shrink: 0;
   display: flex;
   padding: 16px;
-  border-top: 1px solid var(--color-border-subtle);
 }
 
 .manage-series-empty {
