@@ -61,8 +61,8 @@
 }
 
 /* "Por categoria" (the all-categories/"Todos" overview donut) gets more
-   breathing room between its title and the card than the other donuts. */
-.statistics-row:first-child .donut-card-group {
+   breathing room between its title and the ring than the other donuts. */
+.statistics-row:first-child .donut-card {
   gap: var(--space-16);
 }
 
@@ -78,7 +78,7 @@
   }
 
   .statistics-row > .calendar,
-  .statistics-row > .donut-card-group {
+  .statistics-row > .donut-card {
     flex: 1 1 0;
     min-width: 0;
   }

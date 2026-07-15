@@ -68,109 +68,107 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
   }, [])
 
   return (
-    <div className="donut-card-group">
+    <div ref={cardRef} className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
       {title && (
         <div className="donut-card-header">
           <p className="donut-card-title">{title}</p>
           {description && <p className="donut-card-description">{description}</p>}
         </div>
       )}
-      <div ref={cardRef} className={`donut-card${bare ? ' donut-card-bare' : ''}`} {...props}>
-        <div className="donut-card-ring-wrap">
-          <svg
-            className="donut-card-ring"
-            width={SIZE}
-            height={SIZE}
-            viewBox={`0 0 ${SIZE} ${SIZE}`}
-          >
-            {grandTotal === 0 ? (
-              <circle
-                className="donut-card-arc donut-card-arc-empty"
-                cx={SIZE / 2}
-                cy={SIZE / 2}
-                r={RADIUS}
-                fill="none"
-                strokeWidth={STROKE}
-              />
-            ) : (
-              arcs.map(({ group, length, offset }) => {
-                const ramp = CHART_COLORS[group.colorRamp] ?? []
-                const dimmed = activeKey && group.key !== activeKey
-                return (
-                  <circle
-                    key={group.key}
-                    className="donut-card-arc"
-                    cx={SIZE / 2}
-                    cy={SIZE / 2}
-                    r={RADIUS}
-                    fill="none"
-                    stroke={ramp[group.rampIndex ?? 0]}
-                    strokeWidth={STROKE}
-                    strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
-                    strokeDashoffset={-offset}
-                    style={{ opacity: dimmed ? 0.35 : 1 }}
-                    transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-                    onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
-                    onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
-                    onClick={() => toggle(group.key)}
-                  />
-                )
-              })
-            )}
-          </svg>
-          <div className="donut-card-center">
-            {active ? (
-              <>
-                <span className="donut-card-center-label">{active.label}</span>
-                <span className="donut-card-center-time">
-                  {formatDurationShort(active.totalSeconds)} · {Math.round(pct(active.totalSeconds))}%
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="donut-card-center-label">{formatDurationShort(grandTotal)}</span>
-                <span className="donut-card-center-time">Total</span>
-              </>
-            )}
-          </div>
+      <div className="donut-card-ring-wrap">
+        <svg
+          className="donut-card-ring"
+          width={SIZE}
+          height={SIZE}
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
+        >
+          {grandTotal === 0 ? (
+            <circle
+              className="donut-card-arc donut-card-arc-empty"
+              cx={SIZE / 2}
+              cy={SIZE / 2}
+              r={RADIUS}
+              fill="none"
+              strokeWidth={STROKE}
+            />
+          ) : (
+            arcs.map(({ group, length, offset }) => {
+              const ramp = CHART_COLORS[group.colorRamp] ?? []
+              const dimmed = activeKey && group.key !== activeKey
+              return (
+                <circle
+                  key={group.key}
+                  className="donut-card-arc"
+                  cx={SIZE / 2}
+                  cy={SIZE / 2}
+                  r={RADIUS}
+                  fill="none"
+                  stroke={ramp[group.rampIndex ?? 0]}
+                  strokeWidth={STROKE}
+                  strokeDasharray={`${length} ${CIRCUMFERENCE - length}`}
+                  strokeDashoffset={-offset}
+                  style={{ opacity: dimmed ? 0.35 : 1 }}
+                  transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
+                  onPointerEnter={(e) => e.pointerType === 'mouse' && setActiveKey(group.key)}
+                  onPointerLeave={(e) => e.pointerType === 'mouse' && setActiveKey(null)}
+                  onClick={() => toggle(group.key)}
+                />
+              )
+            })
+          )}
+        </svg>
+        <div className="donut-card-center">
+          {active ? (
+            <>
+              <span className="donut-card-center-label">{active.label}</span>
+              <span className="donut-card-center-time">
+                {formatDurationShort(active.totalSeconds)} · {Math.round(pct(active.totalSeconds))}%
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="donut-card-center-label">{formatDurationShort(grandTotal)}</span>
+              <span className="donut-card-center-time">Total</span>
+            </>
+          )}
         </div>
+      </div>
 
-        <div className="donut-card-legend">
-          {sortedGroups.map((group) => {
-            const ramp = CHART_COLORS[group.colorRamp] ?? []
-            const isActive = group.key === activeKey
-            return (
-              <button
-                type="button"
-                className="donut-card-legend-row"
-                data-active={isActive}
-                key={group.key}
-                onClick={() => toggle(group.key)}
-              >
-                <span className="donut-card-legend-label">
-                  <span
-                    className="donut-card-dot"
-                    style={{ backgroundColor: ramp[group.rampIndex ?? 0] }}
-                  />
-                  <span className="donut-card-legend-text">
-                    <span className="donut-card-legend-name">{group.label}</span>
-                    {group.description && (
-                      <span className="donut-card-legend-description">{group.description}</span>
-                    )}
-                  </span>
+      <div className="donut-card-legend">
+        {sortedGroups.map((group) => {
+          const ramp = CHART_COLORS[group.colorRamp] ?? []
+          const isActive = group.key === activeKey
+          return (
+            <button
+              type="button"
+              className="donut-card-legend-row"
+              data-active={isActive}
+              key={group.key}
+              onClick={() => toggle(group.key)}
+            >
+              <span className="donut-card-legend-label">
+                <span
+                  className="donut-card-dot"
+                  style={{ backgroundColor: ramp[group.rampIndex ?? 0] }}
+                />
+                <span className="donut-card-legend-text">
+                  <span className="donut-card-legend-name">{group.label}</span>
+                  {group.description && (
+                    <span className="donut-card-legend-description">{group.description}</span>
+                  )}
                 </span>
-                <span className="donut-card-legend-meta">
-                  <span className="donut-card-legend-time">
-                    {formatDurationShort(group.totalSeconds)}
-                  </span>
-                  <span className="donut-card-legend-percent">
-                    {Math.round(pct(group.totalSeconds))}%
-                  </span>
+              </span>
+              <span className="donut-card-legend-meta">
+                <span className="donut-card-legend-time">
+                  {formatDurationShort(group.totalSeconds)}
                 </span>
-              </button>
-            )
-          })}
-        </div>
+                <span className="donut-card-legend-percent">
+                  {Math.round(pct(group.totalSeconds))}%
+                </span>
+              </span>
+            </button>
+          )
+        })}
       </div>
     </div>
   )

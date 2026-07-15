@@ -1,14 +1,9 @@
-.donut-card-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-  width: 100%;
-}
-
 .donut-card-header {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  width: 100%;
+  text-align: left;
 }
 
 .donut-card-title {
@@ -34,7 +29,7 @@
   height: fit-content;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: var(--space-24);
   padding: var(--space-16);
   border-radius: var(--radius-medium);
@@ -52,6 +47,7 @@
   width: 180px;
   height: 180px;
   padding: var(--space-24) 0;
+  align-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
