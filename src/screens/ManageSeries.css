@@ -54,6 +54,7 @@
 .manage-series-list {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   overflow: hidden;
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
