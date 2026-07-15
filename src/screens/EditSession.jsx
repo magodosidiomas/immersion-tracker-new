@@ -116,7 +116,7 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
           onClose={onBack}
           flushContent
           className="finish-session-modal"
-          width={433}
+          width={480}
           height={640}
         >
           <LinkContent
@@ -139,7 +139,7 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
           onClose={onBack}
           flushContent
           className="finish-session-modal"
-          width={433}
+          width={480}
           height={640}
         >
           <EditContent
@@ -164,7 +164,7 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
         onClose={onBack}
         flushContent
         className="finish-session-modal"
-        width={433}
+        width={480}
         height={640}
       >
         {formAndSheets}

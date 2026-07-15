@@ -25,6 +25,7 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-16) var(--space-24);
+  background: var(--bg-surface-default);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
@@ -65,6 +66,7 @@
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-24);
+  background: var(--bg-surface-elevated);
 }
 
 /* flushContent: children manage their own scroll region and footer
@@ -85,5 +87,6 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-16) var(--space-24);
+  background: var(--bg-surface-default);
   border-top: 1px solid var(--color-border-subtle);
 }
