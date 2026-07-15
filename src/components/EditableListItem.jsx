@@ -26,32 +26,29 @@ function EditableListItem({
 
   return (
     <div className="editable-list-item" data-divider={divider}>
-      <div className="editable-list-item-row">
-        {onClick ? (
-          <button type="button" className="editable-list-item-main" onClick={onClick}>
-            {text}
-          </button>
-        ) : (
-          <span className="editable-list-item-main">{text}</span>
-        )}
-        {editIcon && (
-          <button type="button" className="editable-list-item-icon-btn" onClick={onEdit} aria-label="Editar">
-            {editIcon}
-          </button>
-        )}
-        {deleteIcon && (
-          <button
-            type="button"
-            className="editable-list-item-icon-btn"
-            data-danger="true"
-            onClick={onDelete}
-            aria-label="Excluir"
-          >
-            {deleteIcon}
-          </button>
-        )}
-      </div>
-      {divider && <span className="editable-list-item-divider" />}
+      {onClick ? (
+        <button type="button" className="editable-list-item-main" onClick={onClick}>
+          {text}
+        </button>
+      ) : (
+        <span className="editable-list-item-main">{text}</span>
+      )}
+      {editIcon && (
+        <button type="button" className="editable-list-item-icon-btn" onClick={onEdit} aria-label="Editar">
+          {editIcon}
+        </button>
+      )}
+      {deleteIcon && (
+        <button
+          type="button"
+          className="editable-list-item-icon-btn"
+          data-danger="true"
+          onClick={onDelete}
+          aria-label="Excluir"
+        >
+          {deleteIcon}
+        </button>
+      )}
     </div>
   )
 }

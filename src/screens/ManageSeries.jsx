@@ -182,6 +182,8 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
                   label={`Adicionar ${label}: "${trimmedQuery}"`}
                   leadingIcon={<Add />}
                   data-variant="create"
+                  divider={filteredItems.length > 0}
+                  position={filteredItems.length > 0 ? 'last' : 'only'}
                   onClick={() => handleQuickCreate(trimmedQuery)}
                 />
               )}

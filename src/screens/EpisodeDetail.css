@@ -54,7 +54,7 @@
 .episode-detail-sessions-card {
   display: flex;
   flex-direction: column;
-  padding: 0 8px;
+  overflow: hidden;
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }

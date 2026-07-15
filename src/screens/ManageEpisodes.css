@@ -64,7 +64,7 @@
 .manage-episodes-list {
   display: flex;
   flex-direction: column;
-  padding: 8px 0;
+  overflow: hidden;
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }

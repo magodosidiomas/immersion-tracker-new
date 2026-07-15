@@ -1,17 +1,19 @@
 .editable-list-item {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0 8px;
-}
-
-.editable-list-item-row {
-  display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   padding: 16px;
-  border-radius: var(--radius-medium);
+  border-bottom: 1px solid var(--color-purple-500);
+}
+
+.editable-list-item[data-divider='false'],
+.editable-list-item:last-child {
+  border-bottom: none;
+}
+
+.editable-list-item:hover {
+  background: var(--bg-surface-primary-8);
 }
 
 .editable-list-item-main {
@@ -29,10 +31,6 @@
 
 button.editable-list-item-main {
   cursor: pointer;
-}
-
-button.editable-list-item-main:hover {
-  opacity: 0.85;
 }
 
 .editable-list-item-text {
@@ -81,19 +79,4 @@ button.editable-list-item-main:hover {
 
 .editable-list-item-icon-btn[data-danger='true'] {
   color: var(--color-icon-on-destructive-accent);
-}
-
-.editable-list-item:last-child .editable-list-item-divider {
-  display: none;
-}
-
-.editable-list-item-divider {
-  /* Full-bleed regardless of the row's own 8px inset padding (see
-     .editable-list-item) — counteract it with a negative margin
-     instead of leaving the divider inset. No vertical margin: the
-     row's own padding is the only spacing above/below the line. */
-  width: calc(100% + 16px);
-  height: 1px;
-  margin: 0 -8px;
-  background: var(--color-border-subtle);
 }

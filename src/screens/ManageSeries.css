@@ -59,6 +59,10 @@
   background: var(--bg-surface-card);
 }
 
+.manage-series-list .selectable-list-item[data-position] .selectable-list-item-divider {
+  background: var(--color-purple-500);
+}
+
 /* Quick-create row, shown inline at the top of the list when the
    search text doesn't match an existing entry — same accent treatment
    SearchCreateField uses for its own "+ Adicionar" row. */
