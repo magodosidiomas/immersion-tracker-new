@@ -127,14 +127,16 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenNewContent,
         </div>
         <div className="sidebar-divider" />
         <div className="sidebar-actions">
-          {!hideNewSessionButton && (
-            <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
-              Nova sessão
+          <div className="sidebar-buttons">
+            {!hideNewSessionButton && (
+              <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
+                Nova sessão
+              </Button>
+            )}
+            <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenNewContent}>
+              Adicionar conteúdo
             </Button>
-          )}
-          <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenNewContent}>
-            Adicionar conteúdo
-          </Button>
+          </div>
           <div className="sidebar-nav-group">
             {navItems.map((item) => (
               <button

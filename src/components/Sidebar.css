@@ -87,6 +87,12 @@
   padding: 0 var(--space-16);
 }
 
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
 .sidebar-nav-group {
   display: flex;
   flex-direction: column;
