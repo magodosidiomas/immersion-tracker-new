@@ -423,6 +423,7 @@ function App() {
       return (
         <EditContent
           contentId={editingContentId}
+          isDesktop={isDesktop}
           onBack={() => window.history.back()}
           onSaved={() => window.history.back()}
           onOpenLinkSession={openLinkSession}

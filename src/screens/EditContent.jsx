@@ -20,6 +20,7 @@ import { normalizeForCompare } from '../utils/text'
 import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
+import Modal from '../components/Modal'
 import ContentForm from '../components/ContentForm'
 import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EditContent.css'
@@ -46,7 +47,7 @@ function toRow(session) {
 // via linkedSessions, same as if they were already linked) and the
 // actual sessionContents rows are written once Salvar creates the
 // content and its real id exists.
-function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0, headless = false }) {
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0, headless = false, isDesktop = false }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
   const [existingContents, setExistingContents] = useState([])
@@ -254,6 +255,27 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   // its own header/back button — skip this screen's own TopNav/main
   // wrapper so there isn't a duplicate header.
   if (headless) return body
+
+  // isDesktop (top-level Biblioteca entry point only — manualContentOverlay
+  // stays headless-inside-picker-overlay, unrelated to this): windowed
+  // Modal instead of the full-page mobile layout, same pattern EditSession
+  // already uses for "Editar sessão".
+  if (isDesktop) {
+    return (
+      <Modal
+        title={isNew ? 'Novo conteúdo' : 'Editar conteúdo'}
+        leadingIcon={<ArrowBack />}
+        onLeadingClick={onBack}
+        onClose={onBack}
+        flushContent
+        className="finish-session-modal"
+        width={480}
+        height={640}
+      >
+        {body}
+      </Modal>
+    )
+  }
 
   return (
     <main className="edit-content">
