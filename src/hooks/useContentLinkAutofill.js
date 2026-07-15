@@ -38,7 +38,6 @@ export function useContentLinkAutofill(link, type, { hasTitle = false, onTitle }
 
     const controller = new AbortController()
     controllerRef.current = controller
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     setFetchedThumbnail('')
     setNotFound(false)
