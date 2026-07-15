@@ -76,7 +76,7 @@
   overflow: hidden;
 }
 
-.add-languages-window-card .selectable-list-item-divider {
+.add-languages-window-card .selectable-list-item[data-position] .selectable-list-item-divider {
   background: var(--color-purple-600);
 }
 
