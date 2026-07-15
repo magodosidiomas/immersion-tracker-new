@@ -108,7 +108,7 @@
 .button[data-variant='primary']:disabled,
 .button[data-variant='warning']:disabled,
 .button[data-variant='destructive']:disabled {
-  background: var(--bg-surface-disabled);
+  background: var(--bg-surface-input);
   border: none;
   color: var(--color-text-tertiary);
   --icon-color: var(--color-icon-disabled);
