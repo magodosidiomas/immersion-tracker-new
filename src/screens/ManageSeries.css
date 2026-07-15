@@ -29,7 +29,12 @@
 .manage-series-footer {
   flex-shrink: 0;
   display: flex;
+  justify-content: flex-start;
   padding: 16px;
+}
+
+.manage-series-footer .button {
+  width: fit-content;
 }
 
 .manage-series-empty {
