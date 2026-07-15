@@ -129,3 +129,8 @@
 .home-bottom-layer .bottom-nav {
   padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
 }
+
+/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
+.home-history {
+  padding-bottom: 264px;
+}

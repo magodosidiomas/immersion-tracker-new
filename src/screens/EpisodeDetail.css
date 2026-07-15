@@ -58,3 +58,8 @@
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }
+
+/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
+.episode-detail-content {
+  padding-bottom: 264px;
+}

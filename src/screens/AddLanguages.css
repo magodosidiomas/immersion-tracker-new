@@ -67,3 +67,8 @@
   height: 16px;
   color: var(--color-text-primary);
 }
+
+/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
+.add-languages-scroll {
+  padding-bottom: 264px;
+}

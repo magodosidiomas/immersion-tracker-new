@@ -79,3 +79,8 @@
   flex: 1;
   min-width: 0;
 }
+
+/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
+.manage-episodes-content {
+  padding-bottom: 264px;
+}
