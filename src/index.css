@@ -79,11 +79,17 @@ body {
   /* Every screen sizes itself off --app-height and scrolls internally
      (see Home.css etc.) — app-content itself has no fixed height, so
      padding it directly grows past the viewport and scrolls the whole
-     page (sidebar included). Shrinking --app-height for descendants
-     instead makes each screen's own internal scroll area reserve the
-     bar's space, without touching document-level layout at all. */
+     page (sidebar included). Instead, each screen's own height rule is
+     `calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px))`
+     (see Home.css and siblings), and this class just supplies that
+     reserve for its subtree.
+     Note: this can't be done as `--app-height: calc(var(--app-height) -
+     88px)` on this same element — referencing a custom property inside
+     its own declaration on the same element is a cyclic reference,
+     which CSS treats as invalid and simply drops, silently undoing the
+     whole reservation. Hence the separate variable name. */
   .app-content-has-timer-bar {
-    --app-height: calc(var(--app-height, 100dvh) - 88px);
+    --timer-bar-reserve: 88px;
   }
 }
 
