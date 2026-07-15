@@ -157,7 +157,7 @@
 }
 
 .bottom-sheet-content[data-card='true'] {
-  overflow: hidden;
+  overflow: hidden auto;
   border-radius: var(--radius-large);
   background: var(--bg-surface-card);
 }
