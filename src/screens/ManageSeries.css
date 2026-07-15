@@ -16,6 +16,11 @@
   overflow: visible;
 }
 
+.manage-series[data-embedded='true'] .manage-series-footer {
+  padding: 16px 0 0;
+  border-top: none;
+}
+
 .manage-series-content {
   flex: 1;
   min-height: 0;
