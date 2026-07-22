@@ -25,6 +25,13 @@
   border-radius: var(--radius-medium);
 }
 
+/* Default variant sits on its own elevation layer; the flush/grouped
+   variant below (data-position) opts out since it lives inside a card
+   that already supplies the background. */
+.selectable-list-item:not([data-position]) .selectable-list-item-row {
+  background: var(--bg-surface-elevation-1);
+}
+
 .selectable-list-item-label {
   flex: 1;
   min-width: 0;
@@ -113,7 +120,7 @@
 
 /* --- hover --- */
 .selectable-list-item:not(:disabled):hover .selectable-list-item-row {
-  background: var(--bg-surface-primary-8);
+  background: var(--bg-hover-on-elevation-1);
 }
 
 /* --- selected --- */
