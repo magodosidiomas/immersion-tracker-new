@@ -15,7 +15,7 @@
     padding: var(--space-16) 0 var(--space-24);
     gap: var(--space-24);
     box-sizing: border-box;
-    background: var(--bg-surface-base);
+    background: var(--bg-background);
     border-right: 1px solid var(--color-border-subtle);
   }
 }

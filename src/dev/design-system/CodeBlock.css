@@ -27,7 +27,7 @@
   height: 28px;
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-small);
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevation-1);
   color: var(--color-icon-muted-gray);
   cursor: pointer;
 }

@@ -72,7 +72,7 @@
   flex-direction: column;
   width: 100%;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevation-1);
   overflow: hidden;
 }
 

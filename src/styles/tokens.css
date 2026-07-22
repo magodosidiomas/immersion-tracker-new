@@ -4,12 +4,15 @@
 
 :root {
   /* color */
-  --color-purple-900: #0f0d18;
-  --color-purple-800: #151222;
+  --color-purple-1000: #0f0d18;
+  --color-purple-900: #151222;
+  --color-purple-800: #191627;
   --color-purple-700: #1c1830;
   --color-purple-600: #252038;
-  --color-purple-500: #2e2848;
-  --color-purple-400: #3d3560;
+  --color-purple-500: #2d2744;
+  --color-purple-400: #2e2848;
+  --color-purple-300: #3d3560;
+  --color-purple-200: #4b4271;
   --color-brand-900: #3b0f99;
   --color-brand-700: #6d28d9;
   --color-brand-700-4: #6d28d90a;

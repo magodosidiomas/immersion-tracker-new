@@ -5,7 +5,7 @@
   flex: 1;
   height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
   padding: 24px 16px 40px;
-  background: var(--bg-surface-base);
+  background: var(--bg-background);
 }
 
 .select-language-content {

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
-  background: var(--bg-surface-base);
+  background: var(--bg-background);
 }
 
 .manage-series[data-embedded='true'] {
@@ -61,7 +61,7 @@
 }
 
 .manage-series-list .selectable-list-item[data-position] .selectable-list-item-divider {
-  background: var(--color-purple-500);
+  background: var(--color-purple-400);
 }
 
 /* Quick-create row, shown inline at the top of the list when the

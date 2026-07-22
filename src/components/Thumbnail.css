@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevation-1);
   border-radius: var(--radius-medium);
   overflow: hidden;
 }

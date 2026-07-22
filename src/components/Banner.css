@@ -9,7 +9,7 @@
 }
 
 .banner[data-type='secondary'] {
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevation-1);
   border: none;
 }
 

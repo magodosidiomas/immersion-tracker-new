@@ -8,12 +8,18 @@
 
 :root {
   /* bg */
-  --bg-surface-base: var(--color-purple-900);
-  --bg-surface-default: var(--color-purple-800);
-  --bg-surface-elevated: var(--color-purple-700);
+  --bg-background: var(--color-purple-800);
+  --bg-surface-default: var(--color-purple-900);
+  --bg-surface-elevation-1: var(--color-purple-600);
   --bg-surface-card: var(--color-purple-600);
-  --bg-surface-input: var(--color-purple-500);
-  --bg-surface-selected: var(--color-purple-400);
+  --bg-surface-input: var(--color-purple-400);
+  --bg-surface-selected: var(--color-purple-300);
+  --bg-surface-depth-1: var(--color-purple-900);
+  --bg-hover-on-surface-depth-1: var(--color-purple-800);
+  --bg-hover-on-elevation-1: var(--bg-surface-primary-4);
+  --bg-card: var(--color-purple-400);
+  --bg-input: var(--color-purple-300);
+  --bg-selected: var(--color-purple-200);
   --bg-surface-primary: var(--color-brand-700);
   --bg-surface-primary-15: var(--color-brand-700-15);
   --bg-surface-primary-8: var(--color-brand-700-8);
@@ -52,12 +58,12 @@
   --color-text-on-success: var(--color-green-400);
   --color-text-on-alert: var(--color-amber-400);
   --color-text-on-destructive: var(--color-red-400);
-  --color-text-on-inverse: var(--color-purple-900);
+  --color-text-on-inverse: var(--color-purple-1000);
   --color-text-on-inverse-accent: var(--bg-surface-primary);
-  --color-border-subtle: var(--color-purple-500);
+  --color-border-subtle: var(--color-purple-400);
   --color-border-extra-subtle: var(--color-purple-700);
   --color-border-on-elevated: var(--color-purple-600);
-  --color-border-default: var(--color-purple-400);
+  --color-border-default: var(--color-purple-300);
   --color-border-accent: var(--color-brand-500);
   --color-border-muted-accent: var(--color-brand-700-25);
   --color-border-strong: var(--color-brand-700);

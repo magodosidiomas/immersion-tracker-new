@@ -38,7 +38,7 @@
   flex-direction: column;
   width: 100%;
   max-height: 85vh;
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevation-1);
   border-radius: var(--radius-large) var(--radius-large) 0 0;
   overflow: hidden;
 }
@@ -48,7 +48,7 @@
 }
 
 .bottom-sheet-content[data-card='true'] .selectable-list-item[data-position] .selectable-list-item-divider {
-  background: var(--color-purple-500);
+  background: var(--color-purple-400);
 }
 
 .bottom-sheet[data-open='false'] {

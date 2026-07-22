@@ -31,7 +31,7 @@ html, body {
 body {
   margin: 0;
   font-family: var(--font-family-main);
-  background: var(--bg-surface-base);
+  background: var(--bg-background);
 }
 
 /* App is designed mobile-first (see BottomSheet.css's breakpoint
@@ -111,5 +111,5 @@ body {
   position: absolute;
   inset: 0;
   z-index: 10;
-  background: var(--bg-surface-base);
+  background: var(--bg-background);
 }
