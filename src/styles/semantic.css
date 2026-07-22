@@ -60,7 +60,7 @@
   --color-text-on-destructive: var(--color-red-400);
   --color-text-on-inverse: var(--color-purple-1000);
   --color-text-on-inverse-accent: var(--bg-surface-primary);
-  --color-border-subtle: var(--color-purple-400);
+  --color-border-subtle: var(--color-purple-500);
   --color-border-extra-subtle: var(--color-purple-700);
   --color-border-on-elevated: var(--color-purple-600);
   --color-border-default: var(--color-purple-300);

@@ -33,6 +33,7 @@
   padding: 12px 8px;
   border-radius: var(--radius-medium);
   border: 1px solid var(--bg-surface-input);
+  background: var(--bg-surface-depth-1);
   --icon-color: var(--color-icon-muted-gray);
 }
 
