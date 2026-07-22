@@ -13,7 +13,7 @@
   flex-direction: column;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 48px);
-  background: var(--bg-surface-default);
+  background: var(--bg-background);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-large);
   overflow: hidden;
@@ -25,7 +25,7 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-16) var(--space-24);
-  background: var(--bg-surface-default);
+  background: var(--bg-background);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
@@ -66,7 +66,7 @@
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-24);
-  background: var(--bg-surface-elevation-1);
+  background: var(--bg-background);
 }
 
 /* flushContent: children manage their own scroll region and footer
@@ -87,6 +87,6 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-16) var(--space-24);
-  background: var(--bg-surface-default);
+  background: var(--bg-background);
   border-top: 1px solid var(--color-border-subtle);
 }
