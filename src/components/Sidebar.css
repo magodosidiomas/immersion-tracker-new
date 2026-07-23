@@ -80,23 +80,11 @@
   border-top: 1px solid var(--color-border-subtle);
 }
 
-.sidebar-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-32);
-  padding: 0 var(--space-16);
-}
-
-.sidebar-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
 .sidebar-nav-group {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
+  padding: 0 var(--space-16);
 }
 
 .sidebar-item {

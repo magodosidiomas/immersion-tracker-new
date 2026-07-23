@@ -3,7 +3,6 @@ import './Sidebar.css'
 import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
 import Dropdown from './Dropdown'
 import SelectableListItem from './SelectableListItem'
-import Button from './Button'
 import Flag from './Flag'
 import {
   Add,
@@ -21,7 +20,7 @@ import {
 // logic as LanguageTopNav (fetch languages/active id, switch on pick)
 // since it's a different trigger shape (Dropdown, not TopNav) — not
 // worth abstracting for one extra caller.
-function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenNewContent, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings }) {
+function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -126,29 +125,19 @@ function Sidebar({ activeScreen, onNavigate, onOpenNewSession, onOpenNewContent,
           )}
         </div>
         <div className="sidebar-divider" />
-        <div className="sidebar-actions">
-          <div className="sidebar-buttons">
-            <Button leadingIcon={<Add />} fullWidth onClick={onOpenNewSession}>
-              Nova sessão
-            </Button>
-            <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={onOpenNewContent}>
-              Adicionar conteúdo
-            </Button>
-          </div>
-          <div className="sidebar-nav-group">
-            {navItems.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                className="sidebar-item"
-                data-active={activeScreen === item.key}
-                onClick={() => onNavigate(item.key)}
-              >
-                <span className="sidebar-item-icon">{item.icon}</span>
-                <span className="sidebar-item-label">{item.label}</span>
-              </button>
-            ))}
-          </div>
+        <div className="sidebar-nav-group">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className="sidebar-item"
+              data-active={activeScreen === item.key}
+              onClick={() => onNavigate(item.key)}
+            >
+              <span className="sidebar-item-icon">{item.icon}</span>
+              <span className="sidebar-item-label">{item.label}</span>
+            </button>
+          ))}
         </div>
       </div>
       <button
