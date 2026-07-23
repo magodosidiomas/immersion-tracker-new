@@ -92,7 +92,6 @@ function ContentSearchList({
             ))}
           </div>
 
-          <div className="content-search-list-divider" />
         </>
       )}
 

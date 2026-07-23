@@ -151,11 +151,3 @@
   background: var(--bg-surface-elevation-1);
 }
 
-.content-search-list-divider {
-  width: auto;
-  height: 1px;
-  margin: 0 -16px;
-  background: var(--color-border-subtle);
-}
-
-
