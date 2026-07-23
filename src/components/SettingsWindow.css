@@ -28,7 +28,7 @@
   width: 240px;
   padding: var(--space-24) 0;
   box-sizing: border-box;
-  background: var(--bg-background);
+  background: var(--bg-surface-depth-1);
   border-right: 1px solid var(--color-border-subtle);
 }
 
