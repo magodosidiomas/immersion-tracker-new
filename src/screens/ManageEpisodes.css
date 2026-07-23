@@ -66,7 +66,7 @@
   flex-direction: column;
   overflow: hidden;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-card);
+  background: var(--bg-surface-elevation-1);
 }
 
 .manage-episodes-row {

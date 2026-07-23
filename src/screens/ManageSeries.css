@@ -57,7 +57,7 @@
   flex-shrink: 0;
   overflow: hidden;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-card);
+  background: var(--bg-surface-elevation-1);
 }
 
 .manage-series-list .selectable-list-item[data-position] .selectable-list-item-divider {

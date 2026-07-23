@@ -131,7 +131,7 @@
   width: 100%;
   padding: 8px 0;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-default);
+  background: var(--bg-surface-elevation-1);
 }
 
 .content-search-list-divider {

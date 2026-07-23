@@ -36,7 +36,7 @@
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-default);
+  background: var(--bg-surface-elevation-1);
 }
 
 /* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */

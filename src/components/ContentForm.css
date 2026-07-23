@@ -55,7 +55,7 @@
   flex-direction: column;
   padding: 0 8px;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-card);
+  background: var(--bg-surface-elevation-1);
 }
 
 .content-form-footer {
