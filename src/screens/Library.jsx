@@ -187,7 +187,7 @@ function Library({
           bindLongPress={bindLongPress}
           showAddButton={false}
           emptyStateButtonVariant="primary"
-          emptyStateStyle="responsive"
+          emptyStateStyle="plain"
           showEmptyStateButton={false}
           hasContent={items.length > 0}
         />
