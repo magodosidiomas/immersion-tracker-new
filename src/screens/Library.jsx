@@ -4,6 +4,7 @@ import { formatDateInput, formatGroupLabel } from '../utils/date'
 import { useLongPress } from '../hooks/useLongPress'
 import LanguageTopNav from '../components/LanguageTopNav'
 import TopNav from '../components/TopNav'
+import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
 import Button from '../components/Button'
 import ContentSearchList from '../components/ContentSearchList'
@@ -163,6 +164,14 @@ function Library({
           onActiveLanguageChange={setActiveId}
         />
       )}
+      <TopNavDesktop
+        searchValue={query}
+        onSearchChange={setQuery}
+        searchPlaceholder="Buscar conteúdo"
+        actionLabel="Adicionar conteúdo"
+        actionIcon={<Add />}
+        onActionClick={onOpenNewContent}
+      />
       <div className="library-content">
         <ContentSearchList
           query={query}

@@ -1,0 +1,107 @@
+.top-nav-desktop {
+  display: none;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+  padding: var(--space-16) var(--space-32);
+  border-bottom: 1px solid var(--color-border-subtle);
+  box-sizing: border-box;
+}
+
+@media (min-width: 1280px) {
+  .top-nav-desktop {
+    display: flex;
+  }
+}
+
+.top-nav-desktop[data-type='modal'] {
+  padding: var(--space-16) var(--space-24);
+}
+
+.top-nav-desktop-title {
+  flex-shrink: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-title-small);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.top-nav-desktop[data-type='modal'] .top-nav-desktop-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-nav-desktop-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-16);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-nav-desktop-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 12px var(--space-8);
+  background: var(--bg-surface-default);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-medium);
+  box-sizing: border-box;
+}
+
+.top-nav-desktop-search-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-muted);
+}
+
+.top-nav-desktop-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+.top-nav-desktop-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.top-nav-desktop-icon-reset {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  color: var(--color-icon-muted-gray);
+  cursor: pointer;
+}
+
+.top-nav-desktop-icon-reset svg {
+  width: 100%;
+  height: 100%;
+}
+
+.top-nav-desktop-icon-reset:focus-visible {
+  outline: 2px solid var(--color-border-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}

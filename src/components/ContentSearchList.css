@@ -7,6 +7,12 @@
   width: 100%;
 }
 
+@media (min-width: 1280px) {
+  .content-search-list-row {
+    display: none;
+  }
+}
+
 .content-search-list-field {
   display: flex;
   align-items: center;
