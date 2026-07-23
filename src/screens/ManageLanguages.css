@@ -144,7 +144,7 @@
   width: 100%;
   height: 1px;
   margin: 0;
-  background: var(--color-border-on-elevated);
+  background: var(--color-border-subtle);
 }
 
 /* --- hover --- */

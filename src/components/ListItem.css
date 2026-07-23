@@ -6,7 +6,7 @@
   padding: 12px 16px;
   border: none;
   border-radius: 0;
-  border-bottom: 1px solid var(--color-purple-700);
+  border-bottom: 1px solid var(--color-border-subtle);
   background: var(--bg-surface-elevation-1);
   cursor: pointer;
   text-align: left;
