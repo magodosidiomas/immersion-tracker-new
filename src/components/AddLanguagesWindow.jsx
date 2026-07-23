@@ -1,51 +1,58 @@
 import { useAddLanguages } from '../hooks/useAddLanguages'
+import Modal from './Modal'
 import Button from './Button'
 import InputField from './InputField'
 import SelectableListItem from './SelectableListItem'
 import EmptyState from './EmptyState'
 import Flag from './Flag'
-import { ArrowBack, Check, Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Close, Check, Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
 import './AddLanguagesWindow.css'
 
 // Desktop-only (>=1280px) counterpart to AddLanguages — mirrors the
-// Figma "Modal" frame's sideNav-hidden subpage variant: a standalone
-// 560x600 window (narrower than SettingsWindow's 800px, since there's
-// no sideNav here) with a back arrow instead of a close icon, and a
-// Cancelar/Adicionar button pair in the footer instead of a single
-// full-width action. Reuses AddLanguages' data/selection logic via
+// Figma "Modal" frame's sideNav-hidden subpage variant. Built on the
+// shared Modal component so it gets the standard topNav (title +
+// voltar/fechar) and single surface/background token for free. There's
+// no nested subpage here, so voltar and fechar both just close the
+// window. Reuses AddLanguages' data/selection logic via
 // useAddLanguages so both shells stay behaviorally identical.
 function AddLanguagesWindow({ onClose }) {
   const { loaded, filteredOptions, selected, query, setQuery, toggle, handleAdd } = useAddLanguages(onClose)
 
   return (
-    <div
-      className="add-languages-window-overlay"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
+    <Modal
+      title="Adicionar idiomas"
+      leadingIcon={<ArrowBack />}
+      onLeadingClick={onClose}
+      trailingIcon={<Close />}
+      onTrailingClick={onClose}
+      onClose={onClose}
+      flushContent
+      footer={
+        <>
+          <Button variant="outline" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button leadingIcon={<Check />} disabled={selected.length === 0} onClick={handleAdd}>
+            Adicionar ({selected.length})
+          </Button>
+        </>
+      }
     >
-      <div className="add-languages-window">
-        <div className="add-languages-window-topbar">
-          <button type="button" className="add-languages-window-back" onClick={onClose} aria-label="Voltar">
-            <ArrowBack />
-          </button>
-        </div>
-        <div className="add-languages-window-content">
-          <h2 className="add-languages-window-heading">Adicionar idiomas</h2>
-          <InputField
-            placeholder="Procurar idioma"
-            leadingIcon={<Search />}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          <div className="add-languages-window-scroll">
-            {loaded && filteredOptions.length === 0 ? (
-              <EmptyState
-                icon={<SearchOff />}
-                title="Nenhum resultado encontrado"
-                description="Tente pesquisar por outro termo."
-              />
-            ) : (
+      <div className="add-languages-window-body">
+        <InputField
+          placeholder="Procurar idioma"
+          leadingIcon={<Search />}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        <div className="add-languages-window-scroll">
+          {loaded && filteredOptions.length === 0 ? (
+            <EmptyState
+              icon={<SearchOff />}
+              title="Nenhum resultado encontrado"
+              description="Tente pesquisar por outro termo."
+            />
+          ) : (
             <div className="add-languages-window-card">
               {loaded &&
                 filteredOptions.map((language, index) => {
@@ -78,19 +85,10 @@ function AddLanguagesWindow({ onClose }) {
                   )
                 })}
             </div>
-            )}
-          </div>
-        </div>
-        <div className="add-languages-window-footer">
-          <Button variant="outline" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button leadingIcon={<Check />} disabled={selected.length === 0} onClick={handleAdd}>
-            Adicionar ({selected.length})
-          </Button>
+          )}
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 
