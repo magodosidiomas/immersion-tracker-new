@@ -6,8 +6,8 @@
   gap: 10px;
   padding: 8px 12px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-border-default);
-  background: transparent;
+  border: 1px solid transparent;
+  background: var(--bg-surface-card);
   color: var(--color-text-secondary);
   cursor: pointer;
 }
@@ -43,11 +43,18 @@
 
 /* --- selected --- */
 .selection-chip[data-selected='true'] {
-  border: 1px solid var(--color-border-accent);
-  background: var(--bg-surface-primary-8);
+  background: var(--bg-surface-primary);
   color: var(--color-text-primary);
 }
 
+.selection-chip[data-selected='true'] .selection-chip-icon {
+  color: var(--color-text-muted-accent);
+}
+
+.selection-chip[data-selected='true'] .selection-chip-label {
+  font-weight: var(--font-weight-medium);
+}
+
 .selection-chip[data-selected='true']:hover {
-  background: var(--bg-surface-primary-15);
+  background: var(--bg-surface-primary-hover);
 }
