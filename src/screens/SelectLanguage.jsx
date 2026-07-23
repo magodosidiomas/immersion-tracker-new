@@ -6,7 +6,7 @@ import SelectableListItem from '../components/SelectableListItem'
 import InputField from '../components/InputField'
 import EmptyState from '../components/EmptyState'
 import Flag from '../components/Flag'
-import { Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Search, SearchOff, Close } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SelectLanguage.css'
 
 // First screen: pick a language to start tracking. Tapping a row both
@@ -26,9 +26,13 @@ function SelectLanguage({ onSelect, preview = false }) {
   const [query, setQuery] = useState('')
 
   const filteredLanguages = query.trim()
-    ? AVAILABLE_LANGUAGES.filter((language) =>
-        normalizeForCompare(language.name).includes(normalizeForCompare(query))
-      )
+    ? AVAILABLE_LANGUAGES.filter((language) => {
+        const needle = normalizeForCompare(query)
+        return (
+          normalizeForCompare(language.name).includes(needle) ||
+          normalizeForCompare(language.nativeName).includes(needle)
+        )
+      })
     : AVAILABLE_LANGUAGES
 
   async function handleSelect(language) {
@@ -53,6 +57,8 @@ function SelectLanguage({ onSelect, preview = false }) {
         <InputField
           placeholder="Buscar idioma"
           leadingIcon={<Search />}
+          trailingIcon={query ? <Close /> : null}
+          onTrailingIconClick={query ? () => setQuery('') : undefined}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
