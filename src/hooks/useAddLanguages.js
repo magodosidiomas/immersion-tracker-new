@@ -17,7 +17,13 @@ export function useAddLanguages(onClose) {
 
   const options = existingNames === null ? [] : AVAILABLE_LANGUAGES.filter((language) => !existingNames.includes(language.name))
   const filteredOptions = query.trim()
-    ? options.filter((language) => normalizeForCompare(language.name).includes(normalizeForCompare(query)))
+    ? options.filter((language) => {
+        const needle = normalizeForCompare(query)
+        return (
+          normalizeForCompare(language.name).includes(needle) ||
+          normalizeForCompare(language.nativeName).includes(needle)
+        )
+      })
     : options
 
   function toggle(name) {
