@@ -1,4 +1,4 @@
-import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, BottomSheetDemo, ModalDemo, CalendarDemo, DurationInputDemo, SearchCreateFieldDemo } from './demoHelpers'
+import { ButtonRow, SelectionChipDemo, SegmentedButtonDemo, SegmentedControlDemo, CheckboxDemo, RadioButtonDemo, BottomSheetDemo, ModalDemo, CalendarDemo, DurationInputDemo, SearchCreateFieldDemo } from './demoHelpers'
 import Button from '../../components/Button'
 import SelectableListItem from '../../components/SelectableListItem'
 import ListItem from '../../components/ListItem'
@@ -6,6 +6,7 @@ import Dropdown from '../../components/Dropdown'
 import TopNav from '../../components/TopNav'
 import InputField from '../../components/InputField'
 import Checkbox from '../../components/Checkbox'
+import RadioButton from '../../components/RadioButton'
 import ResumeSessionBanner from '../../components/ResumeSessionBanner'
 import Banner from '../../components/Banner'
 import TimerWidget from '../../components/TimerWidget'
@@ -252,6 +253,25 @@ const registry = [
   description="Description"
   checked={checked}
   onClick={() => setChecked((c) => !c)}
+/>`,
+  },
+  {
+    id: 'radio-button',
+    name: 'RadioButton',
+    description: 'Single-select control. RadioButtonIndicator is the bare icon for rows that are already the tap target.',
+    render: () => (
+      <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <RadioButtonDemo />
+        <RadioButton label="Checked" checked />
+        <RadioButton label="Unchecked" />
+        <RadioButton label="Disabled" disabled />
+        <RadioButton label="Disabled checked" checked disabled />
+      </div>
+    ),
+    code: `<RadioButton
+  label="Option A"
+  checked={selected === 'a'}
+  onClick={() => setSelected('a')}
 />`,
   },
   {
@@ -533,7 +553,7 @@ const value = ref.current.getValue()`,
   {
     id: 'timer-widget',
     name: 'TimerWidget',
-    description: 'Collapsed pill by default; tap to expand in place and reveal Pausar/Continuar, Finalizar and discard.',
+    description: 'Same component for Home\u2019s in-place card and the floating mini-player. onToggle stops propagation so it doesn\u2019t also fire onClick.',
     render: () => (
       <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <TimerWidget elapsedLabel="00:01" running />
@@ -541,7 +561,7 @@ const value = ref.current.getValue()`,
         <TimerWidget elapsedLabel="00:01" running={false} />
       </div>
     ),
-    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onToggle={...} onFinish={...} onDelete={...} />`,
+    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onToggle={...} onClick={...} />`,
   },
   {
     id: 'top-nav',

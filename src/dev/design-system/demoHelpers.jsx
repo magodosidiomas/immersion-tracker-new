@@ -5,6 +5,7 @@ import Dropdown from '../../components/Dropdown'
 import BottomSheet from '../../components/BottomSheet'
 import Modal from '../../components/Modal'
 import Checkbox from '../../components/Checkbox'
+import RadioButton from '../../components/RadioButton'
 import SelectionChip from '../../components/SelectionChip'
 import SegmentedButton from '../../components/SegmentedButton'
 import SegmentedControl from '../../components/SegmentedControl'
@@ -76,6 +77,16 @@ export function SegmentedControlDemo() {
 export function CheckboxDemo() {
   const [checked, setChecked] = useState(false)
   return <Checkbox label="Label" description="Description" checked={checked} onClick={() => setChecked((c) => !c)} />
+}
+
+export function RadioButtonDemo() {
+  const [selected, setSelected] = useState('a')
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <RadioButton label="Option A" checked={selected === 'a'} onClick={() => setSelected('a')} />
+      <RadioButton label="Option B" checked={selected === 'b'} onClick={() => setSelected('b')} />
+    </div>
+  )
 }
 
 export function BottomSheetDemo() {

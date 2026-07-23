@@ -1,0 +1,57 @@
+.radio-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.radio-button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+}
+
+.radio-button-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-brand-200);
+}
+
+.radio-button-icon[data-checked='true'] svg {
+  color: var(--color-brand-500);
+}
+
+.radio-button:hover:not(:disabled) .radio-button-icon {
+  background: var(--bg-surface-light-hover);
+}
+
+.radio-button-label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-primary);
+}
+
+.radio-button:disabled {
+  cursor: not-allowed;
+}
+
+.radio-button:disabled .radio-button-icon svg {
+  color: var(--color-icon-disabled);
+}
+
+.radio-button:disabled .radio-button-label {
+  color: var(--color-text-tertiary);
+}
