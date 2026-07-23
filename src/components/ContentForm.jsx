@@ -478,6 +478,7 @@ function ContentForm({
                   buttonLabel="Vincular sessão"
                   buttonIcon={<Add />}
                   onButtonClick={onAddSession}
+                  style="plain"
                 />
               )}
             </div>
