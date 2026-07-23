@@ -4,8 +4,9 @@ import { AVAILABLE_LANGUAGES } from '../data/availableLanguages'
 import { normalizeForCompare } from '../utils/text'
 import SelectableListItem from '../components/SelectableListItem'
 import InputField from '../components/InputField'
+import EmptyState from '../components/EmptyState'
 import Flag from '../components/Flag'
-import { Search } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SelectLanguage.css'
 
 // First screen: pick a language to start tracking. Tapping a row both
@@ -56,6 +57,13 @@ function SelectLanguage({ onSelect, preview = false }) {
           onChange={(event) => setQuery(event.target.value)}
         />
         <div className="select-language-scroll">
+          {filteredLanguages.length === 0 ? (
+            <EmptyState
+              icon={<SearchOff />}
+              title="Nenhum resultado encontrado"
+              description="Tente pesquisar por outro termo."
+            />
+          ) : (
           <div className="select-language-card">
             {filteredLanguages.map((language, index) => (
               <SelectableListItem
@@ -78,6 +86,7 @@ function SelectLanguage({ onSelect, preview = false }) {
               />
             ))}
           </div>
+          )}
         </div>
       </div>
     </main>

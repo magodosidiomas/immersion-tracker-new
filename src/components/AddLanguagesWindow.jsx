@@ -2,8 +2,9 @@ import { useAddLanguages } from '../hooks/useAddLanguages'
 import Button from './Button'
 import InputField from './InputField'
 import SelectableListItem from './SelectableListItem'
+import EmptyState from './EmptyState'
 import Flag from './Flag'
-import { ArrowBack, Check, Search } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Check, Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
 import './AddLanguagesWindow.css'
 
 // Desktop-only (>=1280px) counterpart to AddLanguages — mirrors the
@@ -38,6 +39,13 @@ function AddLanguagesWindow({ onClose }) {
             onChange={(event) => setQuery(event.target.value)}
           />
           <div className="add-languages-window-scroll">
+            {loaded && filteredOptions.length === 0 ? (
+              <EmptyState
+                icon={<SearchOff />}
+                title="Nenhum resultado encontrado"
+                description="Tente pesquisar por outro termo."
+              />
+            ) : (
             <div className="add-languages-window-card">
               {loaded &&
                 filteredOptions.map((language, index) => {
@@ -70,6 +78,7 @@ function AddLanguagesWindow({ onClose }) {
                   )
                 })}
             </div>
+            )}
           </div>
         </div>
         <div className="add-languages-window-footer">

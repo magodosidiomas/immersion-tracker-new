@@ -5,11 +5,11 @@ import { normalizeForCompare } from '../utils/text'
 import {
   Add,
   ArrowBack,
-  Close,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Search,
 } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Cancel } from '@nine-thirty-five/material-symbols-react/outlined/filled'
 
 // The app is always a phone-width column, even on wide viewports (see
 // #root's max-width in index.css) — "desktop" here just means mouse +
@@ -263,7 +263,7 @@ function SearchCreateField({
                   }}
                   aria-label="Limpar"
                 >
-                  <Close />
+                  <Cancel />
                 </button>
               )}
             </span>
@@ -307,7 +307,7 @@ function SearchCreateField({
                 onClick={handleClear}
                 aria-label="Limpar"
               >
-                <Close />
+                <Cancel />
               </button>
             )}
             <span className="search-create-field-chevron" aria-hidden="true">
@@ -366,7 +366,7 @@ function SearchCreateField({
                   }}
                   aria-label="Limpar"
                 >
-                  <Close />
+                  <Cancel />
                 </button>
               )}
             </span>

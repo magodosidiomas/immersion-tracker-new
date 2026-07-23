@@ -2,7 +2,8 @@ import TopNav from '../components/TopNav'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
 import SelectableListItem from '../components/SelectableListItem'
-import { Close, Check, Search } from '@nine-thirty-five/material-symbols-react/outlined'
+import EmptyState from '../components/EmptyState'
+import { Close, Check, Search, SearchOff } from '@nine-thirty-five/material-symbols-react/outlined'
 import Flag from '../components/Flag'
 import { useAddLanguages } from '../hooks/useAddLanguages'
 import './AddLanguages.css'
@@ -35,6 +36,13 @@ function AddLanguages({ onClose }) {
         onChange={(event) => setQuery(event.target.value)}
       />
       <div className="add-languages-scroll">
+        {filteredOptions.length === 0 ? (
+          <EmptyState
+            icon={<SearchOff />}
+            title="Nenhum resultado encontrado"
+            description="Tente pesquisar por outro termo."
+          />
+        ) : (
         <div className="add-languages-card">
           {filteredOptions.map((language, index) => {
             const isSelected = selected.includes(language.name)
@@ -66,6 +74,7 @@ function AddLanguages({ onClose }) {
             )
           })}
         </div>
+        )}
       </div>
       <div className="add-languages-footer">
         <Button leadingIcon={<Check />} disabled={selected.length === 0} fullWidth onClick={handleAdd}>
