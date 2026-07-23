@@ -187,6 +187,7 @@ function Library({
           bindLongPress={bindLongPress}
           showAddButton={false}
           emptyStateButtonVariant="primary"
+          emptyStateStyle="responsive"
         />
       </div>
       <div className="library-bottom-layer">

@@ -108,7 +108,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           <Alert description="Erro ao carregar sessões. Tente fechar e reabrir o app." />
         ) : groups.length === 0 ? (
           <EmptyState
-            style="background"
+            style="responsive"
             buttonVariant="primary"
             icon={<Schedule />}
             title="Nenhuma sessão ainda"

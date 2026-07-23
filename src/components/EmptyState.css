@@ -24,6 +24,21 @@
    a separate card). Base .empty-state padding/gap above already
    covers it; data-style="plain" just opts out of the other variants. */
 
+/* Mobile: no background (plain). Desktop: outline card. Used where a
+   filled card would look too heavy against the mobile page background
+   but reads fine as a bounded card in the wider desktop layout. */
+.empty-state[data-style="responsive"] {
+  padding: var(--space-24) 0;
+}
+
+@media (min-width: 1280px) {
+  .empty-state[data-style="responsive"] {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    padding: var(--space-24);
+  }
+}
+
 .empty-state-icon {
   display: flex;
   align-items: center;
