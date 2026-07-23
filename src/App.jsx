@@ -510,7 +510,7 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
       />
-      <div className={`app-content${screen === 'stats' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
+      <div className={`app-content${screen === 'stats' || screen === 'library' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
       {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
         <div className="app-timer-corner">
