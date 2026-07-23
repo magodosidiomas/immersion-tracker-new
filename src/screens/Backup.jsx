@@ -83,7 +83,6 @@ function Backup({ onBack, embedded }) {
               leadingIcon={<Download />}
               trailingIcon={<ChevronRight />}
               position="first"
-              divider
               onClick={handleExport}
             />
             <SelectableListItem
@@ -92,6 +91,7 @@ function Backup({ onBack, embedded }) {
               leadingIcon={<UploadFile />}
               trailingIcon={<ChevronRight />}
               position="last"
+              divider
               onClick={handleImportClick}
             />
           </div>
