@@ -40,6 +40,7 @@ function ContentSearchList({
   showAddButton = true,
   emptyStateButtonVariant = 'outline',
   emptyStateStyle = 'background',
+  showEmptyStateButton = true,
 }) {
   return (
     <>
@@ -97,7 +98,7 @@ function ContentSearchList({
           icon={<Book />}
           title="Sua biblioteca está vazia"
           description="Comece adicionando o que você está lendo, assistindo ou ouvindo"
-          buttonLabel="Adicionar conteúdo"
+          buttonLabel={showEmptyStateButton ? 'Adicionar conteúdo' : undefined}
           buttonIcon={<Add />}
           onButtonClick={onAddContent}
         />

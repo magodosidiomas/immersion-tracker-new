@@ -188,16 +188,15 @@ function Library({
           showAddButton={false}
           emptyStateButtonVariant="primary"
           emptyStateStyle="responsive"
+          showEmptyStateButton={false}
         />
       </div>
       <div className="library-bottom-layer">
-        {!isEmpty && (
-          <div className="library-fab-row">
-            <Button leadingIcon={<Add />} onClick={onOpenNewContent}>
-              Novo conteúdo
-            </Button>
-          </div>
-        )}
+        <div className="library-fab-row">
+          <Button leadingIcon={<Add />} onClick={onOpenNewContent}>
+            Adicionar conteúdo
+          </Button>
+        </div>
         <BottomNav
           items={[
             { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
