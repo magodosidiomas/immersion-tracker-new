@@ -25,6 +25,30 @@
   padding: 16px;
 }
 
+.backup-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backup-section-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+.backup-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+}
+
 /* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
 .backup-content {
   padding-bottom: 264px;

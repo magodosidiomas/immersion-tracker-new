@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react'
 import { exportData, importData } from '../db'
 import TopNav from '../components/TopNav'
-import Banner from '../components/Banner'
+import SelectableListItem from '../components/SelectableListItem'
 import Button from '../components/Button'
 import BottomSheet from '../components/BottomSheet'
-import { ArrowBack, Download, UploadFile } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Download, UploadFile, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Backup.css'
 
 // Export downloads everything as a JSON file via a throwaway <a download>
@@ -74,26 +74,28 @@ function Backup({ onBack, embedded }) {
         />
       )}
       <div className="backup-content">
-        <Banner
-          type="secondary"
-          title="Exportar dados"
-          description="Baixa um arquivo no formato JSON com todos os seus dados."
-          primaryButton={
-            <Button variant="outline" size="sm" leadingIcon={<Download />} onClick={handleExport}>
-              Exportar
-            </Button>
-          }
-        />
-        <Banner
-          type="secondary"
-          title="Importar dados"
-          description="Substitui seus dados atuais pelo arquivo importado. Só aceita arquivos JSON."
-          primaryButton={
-            <Button variant="outline" size="sm" leadingIcon={<UploadFile />} onClick={handleImportClick}>
-              Importar
-            </Button>
-          }
-        />
+        <div className="backup-group">
+          <span className="backup-section-label">Backup manual</span>
+          <div className="backup-card">
+            <SelectableListItem
+              label="Exportar dados"
+              description="Baixa um arquivo no formato JSON com todos os seus dados."
+              leadingIcon={<Download />}
+              trailingIcon={<ChevronRight />}
+              position="first"
+              divider
+              onClick={handleExport}
+            />
+            <SelectableListItem
+              label="Importar dados"
+              description="Substitui seus dados atuais pelo arquivo importado. Só aceita arquivos JSON."
+              leadingIcon={<UploadFile />}
+              trailingIcon={<ChevronRight />}
+              position="last"
+              onClick={handleImportClick}
+            />
+          </div>
+        </div>
       </div>
 
       <input
