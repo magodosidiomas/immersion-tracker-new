@@ -53,6 +53,7 @@ function LinkContent({ onSelect, onAddContent, onBack, headless = false }) {
           groups={groups}
           onAddContent={onAddContent}
           onItemClick={onSelect}
+          hasContent={items.length > 0}
         />
       </div>
       <div className="link-content-footer">

@@ -41,55 +41,60 @@ function ContentSearchList({
   emptyStateButtonVariant = 'outline',
   emptyStateStyle = 'background',
   showEmptyStateButton = true,
+  hasContent = true,
 }) {
   return (
     <>
-      <div className="content-search-list-row">
-        <div className="content-search-list-field">
-          <Search className="content-search-list-icon" aria-hidden="true" />
-          <input
-            className="content-search-list-input"
-            type="text"
-            placeholder="Buscar conteúdo"
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-          />
-        </div>
-        {showAddButton && (
-          <button
-            type="button"
-            className="content-search-list-add-button"
-            onClick={onAddContent}
-            aria-label="Adicionar conteúdo"
-          >
-            <Add />
-          </button>
-        )}
-      </div>
+      {hasContent && (
+        <>
+          <div className="content-search-list-row">
+            <div className="content-search-list-field">
+              <Search className="content-search-list-icon" aria-hidden="true" />
+              <input
+                className="content-search-list-input"
+                type="text"
+                placeholder="Buscar conteúdo"
+                value={query}
+                onChange={(event) => onQueryChange(event.target.value)}
+              />
+            </div>
+            {showAddButton && (
+              <button
+                type="button"
+                className="content-search-list-add-button"
+                onClick={onAddContent}
+                aria-label="Adicionar conteúdo"
+              >
+                <Add />
+              </button>
+            )}
+          </div>
 
-      <div className="content-search-list-filters">
-        <button
-          type="button"
-          className="content-search-list-filter-chip"
-          data-selected={selectedTypes.length === 0}
-          onClick={onClearTypes}
-        >
-          Todos
-        </button>
-        {CONTENT_TYPES.map((type) => (
-          <button
-            key={type.key}
-            type="button"
-            className="content-search-list-filter-chip"
-            data-selected={selectedTypes.includes(type.key)}
-            onClick={() => onToggleType(type.key)}
-          >
-            {type.label}
-          </button>
-        ))}
-      </div>
+          <div className="content-search-list-filters">
+            <button
+              type="button"
+              className="content-search-list-filter-chip"
+              data-selected={selectedTypes.length === 0}
+              onClick={onClearTypes}
+            >
+              Todos
+            </button>
+            {CONTENT_TYPES.map((type) => (
+              <button
+                key={type.key}
+                type="button"
+                className="content-search-list-filter-chip"
+                data-selected={selectedTypes.includes(type.key)}
+                onClick={() => onToggleType(type.key)}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
 
-      <div className="content-search-list-divider" />
+          <div className="content-search-list-divider" />
+        </>
+      )}
 
       {groups.length === 0 ? (
         <EmptyState

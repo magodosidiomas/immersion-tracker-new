@@ -189,6 +189,7 @@ function Library({
           emptyStateButtonVariant="primary"
           emptyStateStyle="responsive"
           showEmptyStateButton={false}
+          hasContent={items.length > 0}
         />
       </div>
       <div className="library-bottom-layer">
