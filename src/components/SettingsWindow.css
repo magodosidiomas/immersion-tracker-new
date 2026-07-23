@@ -110,13 +110,6 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.settings-window-icon-spacer {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
 .settings-window-close,
 .settings-window-back {
   display: inline-flex;

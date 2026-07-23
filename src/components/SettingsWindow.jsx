@@ -143,12 +143,10 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
         </nav>
         <div className="settings-window-panel">
           <div className="settings-window-panel-topbar">
-            {drill ? (
+            {drill && (
               <button type="button" className="settings-window-back" onClick={drillBack} aria-label="Voltar">
                 <ArrowBack />
               </button>
-            ) : (
-              <span className="settings-window-icon-spacer" />
             )}
             <h2 className="settings-window-title">{panelTitle}</h2>
             {panelAction}
