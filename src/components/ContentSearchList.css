@@ -73,9 +73,11 @@
 .content-search-list-filters {
   display: flex;
   flex-wrap: nowrap;
+  flex-shrink: 0;
   align-items: center;
   gap: 8px;
   width: 100%;
+  min-height: 34px;
   overflow-x: auto;
   scrollbar-width: none;
 }
