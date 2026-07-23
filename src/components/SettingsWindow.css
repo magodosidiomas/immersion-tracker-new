@@ -96,7 +96,7 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  background: var(--bg-surface-default);
+  background: var(--bg-background);
 }
 
 .settings-window-panel-topbar {
