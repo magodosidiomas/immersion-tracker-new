@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ManageLanguages from '../screens/ManageLanguages'
 import Backup from '../screens/Backup'
 import ManageSeries from '../screens/ManageSeries'
 import ManageEpisodes from '../screens/ManageEpisodes'
 import EpisodeDetail from '../screens/EpisodeDetail'
+import Button from './Button'
 import { getFilmeContent } from '../db'
-import { Public, Backup as BackupIcon, VideoLabel, Movie, Close, ArrowBack } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Public, Backup as BackupIcon, VideoLabel, Movie, Close, ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SettingsWindow.css'
 
 // Desktop-only (>=1280px) windowed shell for Configurações — mirrors
@@ -30,6 +31,8 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
   //   { view: 'episodes', catalogItem } — série's episode list
   //   { view: 'episode-detail', catalogItem, contentId, episode } — sessões
   const [drill, setDrill] = useState(null)
+  const seriesRef = useRef(null)
+  const moviesRef = useRef(null)
 
   // Leaving Séries/Filmes (or switching section entirely) resets the drill —
   // adjusted during render (React's recommended pattern) rather than in an
@@ -58,6 +61,39 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
       setDrill({ view: 'episodes', catalogItem: drill.catalogItem })
     } else {
       setDrill(null)
+    }
+  }
+
+  let panelTitle = ''
+  let panelAction = null
+  if (section === 'manage-languages') {
+    panelTitle = 'Idiomas'
+  } else if (section === 'backup') {
+    panelTitle = 'Backup'
+  } else if (section === 'manage-series') {
+    if (!drill) {
+      panelTitle = 'Séries'
+      panelAction = (
+        <Button size="sm" leadingIcon={<Add />} onClick={() => seriesRef.current?.openCreate()}>
+          Adicionar série
+        </Button>
+      )
+    } else if (drill.view === 'episodes') {
+      panelTitle = `Episódios - ${drill.catalogItem?.label ?? ''}`
+    } else {
+      panelTitle = drill.catalogItem?.label ?? ''
+      if (drill.episode) panelTitle += ` · T${drill.episode.season} E${drill.episode.episode}`
+    }
+  } else if (section === 'manage-movies') {
+    if (!drill) {
+      panelTitle = 'Filmes'
+      panelAction = (
+        <Button size="sm" leadingIcon={<Add />} onClick={() => moviesRef.current?.openCreate()}>
+          Adicionar filme
+        </Button>
+      )
+    } else {
+      panelTitle = drill.catalogItem?.label ?? ''
     }
   }
 
@@ -107,83 +143,61 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
         </nav>
         <div className="settings-window-panel">
           <div className="settings-window-panel-topbar">
-            {drill && (
+            {drill ? (
               <button type="button" className="settings-window-back" onClick={drillBack} aria-label="Voltar">
                 <ArrowBack />
               </button>
+            ) : (
+              <span className="settings-window-icon-spacer" />
             )}
+            <h2 className="settings-window-title">{panelTitle}</h2>
+            {panelAction}
             <button type="button" className="settings-window-close" onClick={onClose} aria-label="Fechar">
               <Close />
             </button>
           </div>
           <div className="settings-window-panel-content">
             {section === 'manage-languages' && (
-              <>
-                <h2 className="settings-window-heading">Idiomas</h2>
-                <ManageLanguages
-                  embedded
-                  onOpenAddLanguages={onOpenAddLanguages}
-                  onAllLanguagesRemoved={onAllLanguagesRemoved}
-                />
-              </>
+              <ManageLanguages
+                embedded
+                onOpenAddLanguages={onOpenAddLanguages}
+                onAllLanguagesRemoved={onAllLanguagesRemoved}
+              />
             )}
-            {section === 'backup' && (
-              <>
-                <h2 className="settings-window-heading">Backup</h2>
-                <Backup embedded />
-              </>
-            )}
+            {section === 'backup' && <Backup embedded />}
             {section === 'manage-series' && !drill && (
-              <>
-                <h2 className="settings-window-heading">Séries</h2>
-                <ManageSeries embedded kind="serie" onOpenEpisodes={openEpisodes} />
-              </>
+              <ManageSeries ref={seriesRef} embedded hideFooter kind="serie" onOpenEpisodes={openEpisodes} />
             )}
             {section === 'manage-series' && drill?.view === 'episodes' && (
-              <>
-                <h2 className="settings-window-heading">Episódios - {drill.catalogItem?.label}</h2>
-                <ManageEpisodes
-                  embedded
-                  catalogId={drill.catalogItem?.id}
-                  seriesName={drill.catalogItem?.label}
-                  onOpenEpisode={openEpisodeDetail}
-                />
-              </>
+              <ManageEpisodes
+                embedded
+                catalogId={drill.catalogItem?.id}
+                seriesName={drill.catalogItem?.label}
+                onOpenEpisode={openEpisodeDetail}
+              />
             )}
             {section === 'manage-series' && drill?.view === 'episode-detail' && (
-              <>
-                <h2 className="settings-window-heading">
-                  {drill.catalogItem?.label}
-                  {drill.episode ? ` · T${drill.episode.season} E${drill.episode.episode}` : ''}
-                </h2>
-                <EpisodeDetail
-                  embedded
-                  contentId={drill.contentId}
-                  seriesName={drill.catalogItem?.label}
-                  episode={drill.episode}
-                  onAddSession={() => {}}
-                  onOpenSession={() => {}}
-                />
-              </>
+              <EpisodeDetail
+                embedded
+                contentId={drill.contentId}
+                seriesName={drill.catalogItem?.label}
+                episode={drill.episode}
+                onAddSession={() => {}}
+                onOpenSession={() => {}}
+              />
             )}
             {section === 'manage-movies' && !drill && (
-              <>
-                <h2 className="settings-window-heading">Filmes</h2>
-                <ManageSeries embedded kind="filme" onOpenSessions={openFilmeSessions} />
-              </>
+              <ManageSeries ref={moviesRef} embedded hideFooter kind="filme" onOpenSessions={openFilmeSessions} />
             )}
             {section === 'manage-movies' && drill?.view === 'episode-detail' && (
-              <>
-                <h2 className="settings-window-heading">{drill.catalogItem?.label}</h2>
-                <EpisodeDetail
-                  embedded
-                  contentId={drill.contentId}
-                  seriesName={drill.catalogItem?.label}
-                  episode={null}
-                  onAddSession={() => {}}
-                  onOpenSession={() => {}}
-                />
-              </>
+              <EpisodeDetail
+                embedded
+                contentId={drill.contentId}
+                seriesName={drill.catalogItem?.label}
+                episode={null}
+                onAddSession={() => {}}
+                onOpenSession={() => {}}
+              />
             )}
           </div>
         </div>

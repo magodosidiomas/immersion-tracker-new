@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { getAppSettings, getContentCatalog, addCatalogEntry, renameCatalogEntry, deleteCatalogEntry } from '../db'
 import TopNav from '../components/TopNav'
 import SearchCreateField from '../components/SearchCreateField'
@@ -36,7 +36,10 @@ import './ManageSeries.css'
 // Self-fetches its own languageId + catalog (same convention as
 // Home/Statistics/Library) — only navigation callbacks come from
 // whoever renders this screen.
-function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect, embedded }) {
+const ManageSeries = forwardRef(function ManageSeries(
+  { kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect, embedded, hideFooter },
+  ref,
+) {
   const [languageId, setLanguageId] = useState(null)
   const [items, setItems] = useState([])
   const [query, setQuery] = useState('')
@@ -67,6 +70,10 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
     setRenameValue(item.label)
     setRenameError(null)
   }
+
+  useImperativeHandle(ref, () => ({
+    openCreate: () => openRename({ id: null, label: '' }),
+  }))
 
   function isDuplicateName(value, excludeId) {
     const normalized = normalizeForCompare(value)
@@ -190,16 +197,18 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
             </div>
           </div>
 
-          <div className="manage-series-footer">
-            <Button
-              variant="outline"
-              fullWidth
-              leadingIcon={<Add />}
-              onClick={() => openRename({ id: null, label: '' })}
-            >
-              {`Adicionar ${label}`}
-            </Button>
-          </div>
+          {!hideFooter && (
+            <div className="manage-series-footer">
+              <Button
+                variant="outline"
+                fullWidth
+                leadingIcon={<Add />}
+                onClick={() => openRename({ id: null, label: '' })}
+              >
+                {`Adicionar ${label}`}
+              </Button>
+            </div>
+          )}
         </>
       )}
 
@@ -252,6 +261,6 @@ function ManageSeries({ kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, 
       />
     </main>
   )
-}
+})
 
 export default ManageSeries
