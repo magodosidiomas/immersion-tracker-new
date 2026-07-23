@@ -61,7 +61,7 @@
 }
 
 .manage-series-list .selectable-list-item[data-position] .selectable-list-item-divider {
-  background: var(--color-purple-400);
+  background: var(--color-border-subtle);
 }
 
 /* Quick-create row, shown inline at the top of the list when the
