@@ -488,6 +488,10 @@ function App() {
         onOpenEditSession={(session) => navigate('edit-session', session)}
         onOpenStatistics={() => navigate('stats')}
         onOpenLibrary={() => navigate('library')}
+        onFinishTimer={() => {
+          setPendingFinishDraft(timer.end())
+          navigate('new-session')
+        }}
       />
     )
   }
@@ -509,19 +513,18 @@ function App() {
       <div className={`app-content${screen === 'stats' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
       {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
-        <div className="app-timer-bar">
+        <div className="app-timer-corner">
           <TimerWidget
-            device="desktop"
             elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
             category={getCategoryLabel(timer.category, timer.subcategory).categoryLabel}
             subcategory={getCategoryLabel(timer.category, timer.subcategory).subcategoryLabel}
             running={timer.status === 'running'}
-            onClick={() => navigate('new-session')}
-            onEnd={() => {
+            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+            onFinish={() => {
               setPendingFinishDraft(timer.end())
               navigate('new-session')
             }}
-            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+            onDelete={timer.clearDraft}
           />
         </div>
       )}

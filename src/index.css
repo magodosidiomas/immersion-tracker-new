@@ -77,27 +77,16 @@ body {
 }
 
 @media (min-width: 1280px) {
-  .app-timer-bar {
+  /* Floating mini-player, anchored to the corner instead of a
+     full-width bar — it overlays app-content rather than reserving
+     space for itself, so expanding (pill -> card) just grows upward
+     from the fixed bottom/right anchor. */
+  .app-timer-corner {
     position: fixed;
-    left: 240px;
-    right: 0;
-    bottom: 0;
-  }
-
-  /* Every screen sizes itself off --app-height and scrolls internally
-     (see Home.css etc.) — app-content itself has no fixed height, so
-     padding it directly grows past the viewport and scrolls the whole
-     page (sidebar included). Instead, each screen's own height rule is
-     `calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px))`
-     (see Home.css and siblings), and this class just supplies that
-     reserve for its subtree.
-     Note: this can't be done as `--app-height: calc(var(--app-height) -
-     88px)` on this same element — referencing a custom property inside
-     its own declaration on the same element is a cyclic reference,
-     which CSS treats as invalid and simply drops, silently undoing the
-     whole reservation. Hence the separate variable name. */
-  .app-content-has-timer-bar {
-    --timer-bar-reserve: 88px;
+    right: var(--space-24);
+    bottom: var(--space-24);
+    width: 320px;
+    z-index: 10;
   }
 }
 

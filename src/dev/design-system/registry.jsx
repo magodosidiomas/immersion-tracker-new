@@ -533,7 +533,7 @@ const value = ref.current.getValue()`,
   {
     id: 'timer-widget',
     name: 'TimerWidget',
-    description: 'Same component for Home\u2019s in-place card and the floating mini-player. onToggle stops propagation so it doesn\u2019t also fire onClick.',
+    description: 'Collapsed pill by default; tap to expand in place and reveal Pausar/Continuar, Finalizar and discard.',
     render: () => (
       <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <TimerWidget elapsedLabel="00:01" running />
@@ -541,7 +541,7 @@ const value = ref.current.getValue()`,
         <TimerWidget elapsedLabel="00:01" running={false} />
       </div>
     ),
-    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onToggle={...} onClick={...} />`,
+    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onToggle={...} onFinish={...} onDelete={...} />`,
   },
   {
     id: 'top-nav',

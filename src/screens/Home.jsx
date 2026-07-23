@@ -43,7 +43,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onFinishTimer }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -148,8 +148,9 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
               category={timerCategoryLabel}
               subcategory={timerSubcategoryLabel}
               running={timer.status === 'running'}
-              onClick={onOpenNewSession}
               onToggle={timer.status === 'running' ? timer.pause : timer.resume}
+              onFinish={onFinishTimer}
+              onDelete={timer.clearDraft}
             />
           )}
         </div>
