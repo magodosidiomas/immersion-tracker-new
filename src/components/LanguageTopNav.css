@@ -1,3 +1,7 @@
+.language-top-nav-radio-checked {
+  color: var(--color-icon-accent);
+}
+
 /* The Sidebar (desktop) already shows the language switcher — this
    top bar becomes redundant from the same breakpoint onward. */
 @media (min-width: 1280px) {

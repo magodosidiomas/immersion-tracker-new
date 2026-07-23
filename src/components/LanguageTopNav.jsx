@@ -7,7 +7,7 @@ import BottomSheet from './BottomSheet'
 import SelectableListItem from './SelectableListItem'
 import Button from './Button'
 import Flag from './Flag'
-import { Settings, Check, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Settings, Add, RadioButtonChecked, RadioButtonUnchecked } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Shared between the two main tabs (Home, Statistics) — both show the
 // same active-language switcher up top. Owns its own languages/activeId
@@ -98,7 +98,13 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLangua
             description={language.name}
             flag={<Flag code={language.flagCode} />}
             selected={language.id === activeId}
-            trailingIcon={language.id === activeId ? <Check /> : null}
+            trailingIcon={
+              language.id === activeId ? (
+                <RadioButtonChecked className="language-top-nav-radio-checked" />
+              ) : (
+                <RadioButtonUnchecked className="language-top-nav-radio-unchecked" />
+              )
+            }
             position={index === 0 ? 'first' : index === languages.length - 1 ? 'last' : 'middle'}
             divider={index > 0}
             onClick={() => handlePick(language)}
