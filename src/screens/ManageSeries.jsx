@@ -139,6 +139,7 @@ const ManageSeries = forwardRef(function ManageSeries(
       {items.length === 0 ? (
         <div className="manage-series-empty">
           <EmptyState
+            style="plain"
             icon={isSerie ? <Theaters /> : <Movie />}
             title={isSerie ? 'Nenhuma série adicionada' : 'Nenhum filme adicionado'}
             description={`Toque no botão abaixo para adicionar sua primeira ${label}.`}
