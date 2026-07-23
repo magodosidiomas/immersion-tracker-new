@@ -81,8 +81,10 @@
    edges; the outline variant already has a visible boundary, so
    content padding can just be real padding. */
 .dropdown[data-outline='true'] {
+  height: 44px;
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-medium);
+  box-sizing: border-box;
 }
 
 .dropdown[data-outline='true']:hover {
