@@ -143,9 +143,6 @@ const ManageSeries = forwardRef(function ManageSeries(
             icon={isSerie ? <Theaters /> : <Movie />}
             title={isSerie ? 'Nenhuma série adicionada' : 'Nenhum filme adicionado'}
             description={`Toque no botão abaixo para adicionar sua primeira ${label}.`}
-            buttonLabel={`Adicionar ${label}`}
-            buttonIcon={<Add />}
-            onButtonClick={() => openRename({ id: null, label: '' })}
           />
         </div>
       ) : (
