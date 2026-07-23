@@ -154,6 +154,25 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+.bottom-sheet-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bottom-sheet-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bottom-sheet-content::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full, 999px);
+}
+
+.bottom-sheet-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
 }
 
 .bottom-sheet-content[data-card='true'] {
