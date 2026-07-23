@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
+import { getNativeName } from '../data/availableLanguages'
 import TopNav from './TopNav'
 import './LanguageTopNav.css'
 import BottomSheet from './BottomSheet'
@@ -93,7 +94,8 @@ function LanguageTopNav({ onOpenSettings, onOpenManageLanguages, onOpenAddLangua
         {languages.map((language, index) => (
           <SelectableListItem
             key={language.id}
-            label={language.name}
+            label={getNativeName(language.name)}
+            description={language.name}
             flag={<Flag code={language.flagCode} />}
             selected={language.id === activeId}
             trailingIcon={language.id === activeId ? <Check /> : null}

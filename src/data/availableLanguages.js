@@ -3,6 +3,13 @@
 // catalog, not user data — same idea as the session category/subcategory
 // taxonomy: a stable list maintained in code, not stored per-user.
 //
+// nativeName is the language's own name for itself (e.g. 'Deutsch' for
+// Alemão) — used as the primary label in language pickers, with `name`
+// (the pt-BR name) shown as the description underneath. Already-added
+// Language records in IndexedDB only store the pt-BR `name`, so
+// getNativeName() below re-derives nativeName from this catalog rather
+// than duplicating it onto every stored Language.
+//
 // flagCode is an ISO 3166-1 alpha-2 country code, rendered via the
 // flag-icons SVG set (see components/Flag.jsx) instead of an emoji.
 // A few entries aren't tied to a country at all:
@@ -30,54 +37,62 @@
 // it needs zero upkeep as entries are added — popularity would have to
 // be re-judged and re-justified forever.
 export const AVAILABLE_LANGUAGES = [
-  { name: 'Africâner', flagCode: 'za' },
-  { name: 'Alemão', flagCode: 'de' },
-  { name: 'Árabe', flagCode: 'sa' },
-  { name: 'Bengali', flagCode: 'bd' },
-  { name: 'Búlgaro', flagCode: 'bg' },
-  { name: 'Cantonês', flagCode: 'hk' },
-  { name: 'Catalão', flagCode: 'es-ct' },
-  { name: 'Coreano', flagCode: 'kr' },
-  { name: 'Croata', flagCode: 'hr' },
-  { name: 'Dinamarquês', flagCode: 'dk' },
-  { name: 'Eslovaco', flagCode: 'sk' },
-  { name: 'Esloveno', flagCode: 'si' },
-  { name: 'Espanhol', flagCode: 'es' },
-  { name: 'Esperanto', flagCode: 'eo' },
-  { name: 'Estoniano', flagCode: 'ee' },
-  { name: 'Filipino', flagCode: 'ph' },
-  { name: 'Finlandês', flagCode: 'fi' },
-  { name: 'Francês', flagCode: 'fr' },
-  { name: 'Grego', flagCode: 'gr' },
-  { name: 'Grego Koiné', flagCode: 'gr' },
-  { name: 'Hebraico', flagCode: 'il' },
-  { name: 'Hindi', flagCode: 'in' },
-  { name: 'Holandês', flagCode: 'nl' },
-  { name: 'Húngaro', flagCode: 'hu' },
-  { name: 'Indonésio', flagCode: 'id' },
-  { name: 'Inglês', flagCode: 'us' },
-  { name: 'Irlandês', flagCode: 'ie' },
-  { name: 'Islandês', flagCode: 'is' },
-  { name: 'Italiano', flagCode: 'it' },
-  { name: 'Japonês', flagCode: 'jp' },
-  { name: 'Latim', flagCode: 'va' },
-  { name: 'Letão', flagCode: 'lv' },
-  { name: 'Lituano', flagCode: 'lt' },
-  { name: 'Malaio', flagCode: 'my' },
-  { name: 'Mandarim', flagCode: 'cn' },
-  { name: 'Norueguês', flagCode: 'no' },
-  { name: 'Persa', flagCode: 'ir' },
-  { name: 'Polonês', flagCode: 'pl' },
-  { name: 'Português', flagCode: 'pt' },
-  { name: 'Romeno', flagCode: 'ro' },
-  { name: 'Russo', flagCode: 'ru' },
-  { name: 'Sérvio', flagCode: 'rs' },
-  { name: 'Suaíli', flagCode: 'ke' },
-  { name: 'Sueco', flagCode: 'se' },
-  { name: 'Tailandês', flagCode: 'th' },
-  { name: 'Tcheco', flagCode: 'cz' },
-  { name: 'Turco', flagCode: 'tr' },
-  { name: 'Ucraniano', flagCode: 'ua' },
-  { name: 'Urdu', flagCode: 'pk' },
-  { name: 'Vietnamita', flagCode: 'vn' },
+  { name: 'Africâner', nativeName: 'Afrikaans', flagCode: 'za' },
+  { name: 'Alemão', nativeName: 'Deutsch', flagCode: 'de' },
+  { name: 'Árabe', nativeName: 'العربية', flagCode: 'sa' },
+  { name: 'Bengali', nativeName: 'বাংলা', flagCode: 'bd' },
+  { name: 'Búlgaro', nativeName: 'Български', flagCode: 'bg' },
+  { name: 'Cantonês', nativeName: '廣東話', flagCode: 'hk' },
+  { name: 'Catalão', nativeName: 'Català', flagCode: 'es-ct' },
+  { name: 'Coreano', nativeName: '한국어', flagCode: 'kr' },
+  { name: 'Croata', nativeName: 'Hrvatski', flagCode: 'hr' },
+  { name: 'Dinamarquês', nativeName: 'Dansk', flagCode: 'dk' },
+  { name: 'Eslovaco', nativeName: 'Slovenčina', flagCode: 'sk' },
+  { name: 'Esloveno', nativeName: 'Slovenščina', flagCode: 'si' },
+  { name: 'Espanhol', nativeName: 'Español', flagCode: 'es' },
+  { name: 'Esperanto', nativeName: 'Esperanto', flagCode: 'eo' },
+  { name: 'Estoniano', nativeName: 'Eesti', flagCode: 'ee' },
+  { name: 'Filipino', nativeName: 'Filipino', flagCode: 'ph' },
+  { name: 'Finlandês', nativeName: 'Suomi', flagCode: 'fi' },
+  { name: 'Francês', nativeName: 'Français', flagCode: 'fr' },
+  { name: 'Grego', nativeName: 'Ελληνικά', flagCode: 'gr' },
+  { name: 'Grego Koiné', nativeName: 'Κοινή Ελληνική', flagCode: 'gr' },
+  { name: 'Hebraico', nativeName: 'עברית', flagCode: 'il' },
+  { name: 'Hindi', nativeName: 'हिन्दी', flagCode: 'in' },
+  { name: 'Holandês', nativeName: 'Nederlands', flagCode: 'nl' },
+  { name: 'Húngaro', nativeName: 'Magyar', flagCode: 'hu' },
+  { name: 'Indonésio', nativeName: 'Bahasa Indonesia', flagCode: 'id' },
+  { name: 'Inglês', nativeName: 'English', flagCode: 'us' },
+  { name: 'Irlandês', nativeName: 'Gaeilge', flagCode: 'ie' },
+  { name: 'Islandês', nativeName: 'Íslenska', flagCode: 'is' },
+  { name: 'Italiano', nativeName: 'Italiano', flagCode: 'it' },
+  { name: 'Japonês', nativeName: '日本語', flagCode: 'jp' },
+  { name: 'Latim', nativeName: 'Latina', flagCode: 'va' },
+  { name: 'Letão', nativeName: 'Latviešu', flagCode: 'lv' },
+  { name: 'Lituano', nativeName: 'Lietuvių', flagCode: 'lt' },
+  { name: 'Malaio', nativeName: 'Bahasa Melayu', flagCode: 'my' },
+  { name: 'Mandarim', nativeName: '中文', flagCode: 'cn' },
+  { name: 'Norueguês', nativeName: 'Norsk', flagCode: 'no' },
+  { name: 'Persa', nativeName: 'فارسی', flagCode: 'ir' },
+  { name: 'Polonês', nativeName: 'Polski', flagCode: 'pl' },
+  { name: 'Português', nativeName: 'Português', flagCode: 'pt' },
+  { name: 'Romeno', nativeName: 'Română', flagCode: 'ro' },
+  { name: 'Russo', nativeName: 'Русский', flagCode: 'ru' },
+  { name: 'Sérvio', nativeName: 'Српски', flagCode: 'rs' },
+  { name: 'Suaíli', nativeName: 'Kiswahili', flagCode: 'ke' },
+  { name: 'Sueco', nativeName: 'Svenska', flagCode: 'se' },
+  { name: 'Tailandês', nativeName: 'ไทย', flagCode: 'th' },
+  { name: 'Tcheco', nativeName: 'Čeština', flagCode: 'cz' },
+  { name: 'Turco', nativeName: 'Türkçe', flagCode: 'tr' },
+  { name: 'Ucraniano', nativeName: 'Українська', flagCode: 'ua' },
+  { name: 'Urdu', nativeName: 'اردو', flagCode: 'pk' },
+  { name: 'Vietnamita', nativeName: 'Tiếng Việt', flagCode: 'vn' },
 ]
+
+// Looks up the nativeName for an already-added Language record (which
+// only has pt-BR `name`), matching on name since it's unique in the
+// catalog. Falls back to the stored name if a language somehow isn't
+// in the catalog, so a lookup miss never blanks out the row.
+export function getNativeName(name) {
+  return AVAILABLE_LANGUAGES.find((language) => language.name === name)?.nativeName ?? name
+}

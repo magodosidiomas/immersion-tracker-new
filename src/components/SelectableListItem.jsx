@@ -34,6 +34,7 @@ import './SelectableListItem.css'
 // existing inset usage (card keeps its own padding) — nothing changes.
 function SelectableListItem({
   label = 'Label',
+  description = null,
   selected = false,
   disabled = false,
   divider = false,
@@ -59,7 +60,12 @@ function SelectableListItem({
       <span className="selectable-list-item-row">
         {leadingIcon && <span className="selectable-list-item-icon">{leadingIcon}</span>}
         {flag && <span className="selectable-list-item-flag">{flag}</span>}
-        {label && <span className="selectable-list-item-label">{label}</span>}
+        {label && (
+          <span className="selectable-list-item-text">
+            <span className="selectable-list-item-label">{label}</span>
+            {description && <span className="selectable-list-item-description">{description}</span>}
+          </span>
+        )}
         {trailingIcon && <span className="selectable-list-item-icon">{trailingIcon}</span>}
       </span>
     </button>

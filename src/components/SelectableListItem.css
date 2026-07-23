@@ -32,14 +32,30 @@
   background: var(--bg-surface-elevation-1);
 }
 
-.selectable-list-item-label {
+.selectable-list-item-text {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.selectable-list-item-label {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-label-medium);
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
+  overflow-wrap: break-word;
+}
+
+.selectable-list-item-description {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
   overflow-wrap: break-word;
 }
 

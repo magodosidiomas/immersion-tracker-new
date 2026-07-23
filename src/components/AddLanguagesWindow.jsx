@@ -45,7 +45,8 @@ function AddLanguagesWindow({ onClose }) {
                   return (
                     <SelectableListItem
                       key={language.name}
-                      label={language.name}
+                      label={language.nativeName}
+                      description={language.name}
                       flag={<Flag code={language.flagCode} />}
                       divider={index > 0}
                       position={
