@@ -119,13 +119,14 @@
 /* Flush divider: full width, no inset margin (the inset variant's
    calc(100% + 16px)/-8px math assumes the button's own 8px side
    padding, which the flush variant zeroes out — left as-is it
-   overflowed past the card edge). Color is one ramp-step lighter than
-   this card's own background (bg-surface-default = purple-800), not
-   the generic --color-border-subtle token. */
+   overflowed past the card edge). Global standard: card background is
+   bg-surface-elevation-1, divider is --color-border-subtle (one ramp
+   step lighter) — don't hardcode a literal color here, since that
+   only holds for whatever the container's actual background token is. */
 .selectable-list-item[data-position] .selectable-list-item-divider {
   width: 100%;
   margin: 0;
-  background: var(--color-purple-700);
+  background: var(--color-border-subtle);
 }
 
 /* --- compact density (see SelectableListItem.jsx comment) --- */

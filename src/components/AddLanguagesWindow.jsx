@@ -48,6 +48,7 @@ function AddLanguagesWindow({ onClose }) {
         <div className="add-languages-window-scroll">
           {loaded && filteredOptions.length === 0 ? (
             <EmptyState
+              style="plain"
               icon={<SearchOff />}
               title="Nenhum resultado encontrado"
               description="Tente pesquisar por outro termo."

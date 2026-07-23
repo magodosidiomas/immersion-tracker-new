@@ -19,6 +19,11 @@
   padding: var(--space-24);
 }
 
+/* No fill, no border — sits directly on whatever background it's
+   placed in (e.g. search-no-results states, which shouldn't read as
+   a separate card). Base .empty-state padding/gap above already
+   covers it; data-style="plain" just opts out of the other variants. */
+
 .empty-state-icon {
   display: flex;
   align-items: center;

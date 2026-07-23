@@ -59,6 +59,7 @@ function SelectLanguage({ onSelect, preview = false }) {
         <div className="select-language-scroll">
           {filteredLanguages.length === 0 ? (
             <EmptyState
+              style="plain"
               icon={<SearchOff />}
               title="Nenhum resultado encontrado"
               description="Tente pesquisar por outro termo."
