@@ -15,14 +15,12 @@
   padding: 16px;
 }
 
-/* Matches Statistics.css: TopNavDesktop uses --space-32 side padding,
-   so library-content needs the same to keep the search bar and card
-   edges aligned once .app-content--full removes the 480px cap. */
+/* TopNavDesktop uses --space-32 side padding, so library-content
+   needs the same to keep the search bar and card edges aligned once
+   .app-content--full removes the 480px cap. Full width, no centered
+   reading-column cap — the list should fill the container. */
 @media (min-width: 1280px) {
   .library-content {
-    max-width: 1120px;
-    width: 100%;
-    margin: 0 auto;
     padding-left: var(--space-32);
     padding-right: var(--space-32);
   }
