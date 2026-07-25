@@ -49,6 +49,10 @@
 /* --- month (boundary days from adjacent months) --- */
 .calendar-item[data-state='month'] {
   border-radius: var(--radius-full);
+  /* Figma gives this as a flat hex with no backing variable, unlike
+     every other color here — kept literal rather than inventing a
+     token for a single undocumented value. */
+  color: #68676a;
 }
 
 /* --- white-version/month --- */
