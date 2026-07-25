@@ -52,12 +52,19 @@
 .link-session-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
-  padding: var(--space-16);
+}
+
+/* EmptyState is the only child that isn't a full-bleed row — it keeps
+   its own vertical padding, this just adds the horizontal breathing
+   room the row-based branch below gets from each row's own padding. */
+.link-session-content .empty-state {
+  padding-left: var(--space-16);
+  padding-right: var(--space-16);
 }
 
 .link-session-label {
   margin: 0;
+  padding: var(--space-16) var(--space-16) var(--space-8);
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-label-small);
@@ -70,8 +77,20 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-radius: var(--radius-large);
-  overflow: hidden;
+}
+
+/* "Adicionar sessão nesse dia" reads as the last row of the same
+   list, not a separate floating pill — full-bleed, square corners,
+   left-aligned, divider above instead of a gap. */
+.link-session-card .button[data-full-width='true'] {
+  border-radius: 0;
+  justify-content: flex-start;
+  padding: var(--space-16);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.link-session-card .button[data-full-width='true']:hover:not(:disabled) {
+  background: var(--bg-hover-on-elevation-1);
 }
 
 /* Wraps the Dropdown pill so a same-size, invisible native date
