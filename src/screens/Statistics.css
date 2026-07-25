@@ -98,7 +98,7 @@
      sidebar. Centered max-width + generous side padding keeps it
      from stretching edge-to-edge while still using the space. */
   .statistics-content {
-    max-width: 1120px;
+    max-width: 960px;
     width: 100%;
     margin: 0 auto;
     padding-left: var(--space-32);
