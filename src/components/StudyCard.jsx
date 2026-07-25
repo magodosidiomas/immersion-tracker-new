@@ -5,14 +5,20 @@ import DonutCard from './DonutCard'
 // subcategories (Vocabulário/Gramática/Pronúncia), shaded from the
 // amber ramp. Simpler than Immersion/ProductionCard since there's no
 // second comparison view for this category yet.
+const STUDY_COLORS = {
+  vocabulario: 'data-teal',
+  gramatica: 'data-amber',
+  pronuncia: 'data-pink',
+}
+
 function StudyCard({ groups = [], ...props }) {
   const estudo = groups.find((group) => group.key === 'estudo')
 
-  const subcategoryGroups = (estudo?.items ?? []).map((item, index) => ({
+  const subcategoryGroups = (estudo?.items ?? []).map((item) => ({
     key: item.key,
     label: item.label,
-    colorRamp: 'data-amber',
-    rampIndex: index,
+    colorRamp: STUDY_COLORS[item.key] ?? 'data-amber',
+    rampIndex: 0,
     totalSeconds: item.totalSeconds,
   }))
 

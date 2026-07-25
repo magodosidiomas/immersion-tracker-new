@@ -11,7 +11,7 @@ function ProductionCard({ groups = [], ...props }) {
   const subcategoryGroups = (producao?.items ?? []).map((item, index) => ({
     key: item.key,
     label: item.label,
-    colorRamp: 'data-pink',
+    colorRamp: 'data-violet',
     rampIndex: index,
     totalSeconds: item.totalSeconds,
   }))

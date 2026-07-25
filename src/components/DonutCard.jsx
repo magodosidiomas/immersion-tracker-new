@@ -166,6 +166,9 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
                 />
                 <span className="donut-card-legend-text">
                   <span className="donut-card-legend-name">{group.label}</span>
+                  {group.description && (
+                    <span className="donut-card-legend-description">{group.description}</span>
+                  )}
                 </span>
               </span>
               <span className="donut-card-legend-meta">

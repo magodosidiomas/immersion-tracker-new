@@ -173,6 +173,13 @@
   gap: var(--space-4);
 }
 
+.donut-card-legend-description {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
 .donut-card-legend-meta {
   display: flex;
   align-items: center;
