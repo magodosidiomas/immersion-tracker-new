@@ -21,7 +21,7 @@
    own language-row divider (see Sidebar.css) — the two headers read as
    one continuous line across the sidebar and content column. */
 .top-nav-desktop[data-type='main'] {
-  height: 64px;
+  height: 72px;
 }
 
 /* Shared box model with the screen's own content column (e.g.
