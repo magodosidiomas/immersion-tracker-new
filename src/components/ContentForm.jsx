@@ -6,6 +6,7 @@ import LinkedSessionListItem from './LinkedSessionListItem'
 import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
+import BottomSheet from './BottomSheet'
 import { useContentLinkAutofill } from '../hooks/useContentLinkAutofill'
 import {
   isYouTubeUrl,
@@ -24,6 +25,8 @@ import {
   Edit,
   Settings,
   Schedule,
+  Movie,
+  Theaters,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
 
@@ -94,6 +97,12 @@ const ContentForm = forwardRef(function ContentForm({
   const [fieldsByType, setFieldsByType] = useState({})
   const seasonInputRef = useRef(null)
   const episodeInputRef = useRef(null)
+  // Quick-create sheet: shown instead of SearchCreateField when there
+  // are no séries/filmes yet to search through (nothing to search
+  // makes the combobox pointless) — same pattern as ManageSeries'
+  // own "add new" sheet, just reached from inside the form instead.
+  const [showCreateRelated, setShowCreateRelated] = useState(false)
+  const [createRelatedName, setCreateRelatedName] = useState('')
 
   useEffect(() => {
     onDirtyChange?.(
@@ -250,6 +259,14 @@ const ContentForm = forwardRef(function ContentForm({
     }
   }
 
+  async function handleQuickCreateRelated() {
+    const name = createRelatedName.trim()
+    if (!name) return
+    await handleCreateRelated(name)
+    setCreateRelatedName('')
+    setShowCreateRelated(false)
+  }
+
   const canSave =
     !isDuplicate &&
     !linkError &&
@@ -381,19 +398,33 @@ const ContentForm = forwardRef(function ContentForm({
 
         {(isSeries || isMovie) && (
           <>
-            <SearchCreateField
-              label={isSeries ? 'Série' : 'Filme'}
-              placeholder={`Busque ou adicione ${isSeries ? 'uma série' : 'um filme'}`}
-              value={relatedQuery}
-              onChange={setRelatedQuery}
-              items={filteredRelatedItems}
-              onSelect={handleSelectRelated}
-              createLabel={relatedLabel}
-              onCreate={handleCreateRelated}
-              settingsIcon={<Settings />}
-              onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
-              error={attemptedSave && requiredRelatedError}
-            />
+            {relatedItems.length === 0 ? (
+              <EmptyState
+                style="plain"
+                icon={isSeries ? <Theaters /> : <Movie />}
+                title={isSeries ? 'Nenhuma série cadastrada ainda' : 'Nenhum filme cadastrado ainda'}
+                description={
+                  isSeries ? 'Séries que você adicionar vão aparecer aqui.' : 'Filmes que você adicionar vão aparecer aqui.'
+                }
+                buttonLabel={`Adicionar ${relatedLabel}`}
+                buttonIcon={<Add />}
+                onButtonClick={() => setShowCreateRelated(true)}
+              />
+            ) : (
+              <SearchCreateField
+                label={isSeries ? 'Série' : 'Filme'}
+                placeholder={`Busque ou adicione ${isSeries ? 'uma série' : 'um filme'}`}
+                value={relatedQuery}
+                onChange={setRelatedQuery}
+                items={filteredRelatedItems}
+                onSelect={handleSelectRelated}
+                createLabel={relatedLabel}
+                onCreate={handleCreateRelated}
+                settingsIcon={<Settings />}
+                onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
+                error={attemptedSave && requiredRelatedError}
+              />
+            )}
             {isSeries && relatedId && (
               <>
                 <div className="content-form-row">
@@ -522,6 +553,42 @@ const ContentForm = forwardRef(function ContentForm({
           {secondaryButton}
         </div>
       )}
+
+      <BottomSheet
+        open={showCreateRelated}
+        onClose={() => {
+          setShowCreateRelated(false)
+          setCreateRelatedName('')
+        }}
+        title={`Adicionar ${relatedLabel}`}
+        contentCard={false}
+        variant="modal"
+        primaryButton={
+          <Button fullWidth onClick={handleQuickCreateRelated} disabled={!createRelatedName.trim()}>
+            Salvar
+          </Button>
+        }
+        secondaryButton={
+          <Button
+            variant="outline"
+            fullWidth
+            onClick={() => {
+              setShowCreateRelated(false)
+              setCreateRelatedName('')
+            }}
+          >
+            Cancelar
+          </Button>
+        }
+      >
+        <InputField
+          label={isSeries ? 'Série' : 'Filme'}
+          placeholder="Digite o título"
+          value={createRelatedName}
+          onChange={(event) => setCreateRelatedName(event.target.value)}
+          autoFocus
+        />
+      </BottomSheet>
     </>
   )
 })
