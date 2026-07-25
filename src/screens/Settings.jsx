@@ -55,6 +55,7 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               label="Filmes"
               leadingIcon={<Movie />}
               trailingIcon={<ChevronRight />}
+              position="middle"
               onClick={onOpenManageMovies}
             />
             <SelectableListItem
