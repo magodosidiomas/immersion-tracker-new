@@ -579,6 +579,12 @@ const ContentForm = forwardRef(function ContentForm({
           placeholder="Digite o título"
           value={createRelatedName}
           onChange={(event) => setCreateRelatedName(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              handleQuickCreateRelated()
+            }
+          }}
           autoFocus
         />
       </BottomSheet>
