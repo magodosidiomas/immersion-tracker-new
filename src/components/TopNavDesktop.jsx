@@ -62,10 +62,12 @@ function TopNavDesktop({
 
   return (
     <header className="top-nav-desktop" data-type="main">
-      {title && <span className="top-nav-desktop-title">{title}</span>}
-      <div className="top-nav-desktop-content">
-        {searchField}
-        {actionButton}
+      <div className="top-nav-desktop-inner">
+        {title && <span className="top-nav-desktop-title">{title}</span>}
+        <div className="top-nav-desktop-content">
+          {searchField}
+          {actionButton}
+        </div>
       </div>
     </header>
   )

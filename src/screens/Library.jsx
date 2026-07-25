@@ -165,6 +165,7 @@ function Library({
         />
       )}
       <TopNavDesktop
+        title="Biblioteca"
         searchValue={query}
         onSearchChange={setQuery}
         searchPlaceholder="Buscar conteúdo"

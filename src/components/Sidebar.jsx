@@ -124,7 +124,6 @@ function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLan
             </div>
           )}
         </div>
-        <div className="sidebar-divider" />
         <div className="sidebar-nav-group">
           {navItems.map((item) => (
             <button

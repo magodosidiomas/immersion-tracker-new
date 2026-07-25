@@ -3,7 +3,6 @@
   align-items: center;
   gap: var(--space-16);
   width: 100%;
-  padding: var(--space-16) var(--space-32);
   border-bottom: 1px solid var(--color-border-subtle);
   box-sizing: border-box;
 }
@@ -16,6 +15,29 @@
 
 .top-nav-desktop[data-type='modal'] {
   padding: var(--space-16) var(--space-24);
+}
+
+/* main: fixed height so its border-bottom lands level with Sidebar's
+   own language-row divider (see Sidebar.css) — the two headers read as
+   one continuous line across the sidebar and content column. */
+.top-nav-desktop[data-type='main'] {
+  height: 64px;
+}
+
+/* Shared box model with the screen's own content column (e.g.
+   Library.css .library-content: same max-width + --space-32 padding)
+   so the title/search/button sit directly above that content instead
+   of independently hugging the page edge. Modal doesn't use this —
+   its content isn't width-capped. */
+.top-nav-desktop-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-32);
+  box-sizing: border-box;
 }
 
 .top-nav-desktop-title {

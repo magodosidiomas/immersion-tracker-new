@@ -12,7 +12,7 @@
     flex-shrink: 0;
     width: 240px;
     height: var(--app-height, 100dvh);
-    padding: var(--space-16) 0 var(--space-24);
+    padding: 0 0 var(--space-24);
     gap: var(--space-24);
     box-sizing: border-box;
     background: var(--bg-surface-depth-1);
@@ -28,7 +28,12 @@
 
 .sidebar-language {
   position: relative;
+  display: flex;
+  align-items: center;
+  height: 64px;
   padding: 0 var(--space-16);
+  border-bottom: 1px solid var(--color-border-subtle);
+  box-sizing: border-box;
 }
 
 .sidebar-language .dropdown {
@@ -72,12 +77,6 @@
 
 .sidebar-language-menu [data-variant='accent'] {
   --icon-color: var(--color-icon-accent);
-}
-
-.sidebar-divider {
-  width: 100%;
-  height: 0;
-  border-top: 1px solid var(--color-border-subtle);
 }
 
 .sidebar-nav-group {
