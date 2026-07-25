@@ -150,8 +150,8 @@
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 0;
   border-radius: var(--radius-large);
   background: var(--bg-surface-elevation-1);
+  overflow: hidden;
 }
 

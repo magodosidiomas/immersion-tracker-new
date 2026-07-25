@@ -24,7 +24,7 @@ function MediaListItem({
   ...props
 }) {
   const content = (
-    <span className="media-list-item-row">
+    <>
       {selectionMode ? <CheckboxIndicator checked={selected} /> : thumbnail}
       <span className="media-list-item-text">
         <span className="media-list-item-title">{title}</span>
@@ -40,7 +40,7 @@ function MediaListItem({
           {trailingAction.icon}
         </button>
       )}
-    </span>
+    </>
   )
 
   // Selection mode and trailingAction both need the row itself to stay
@@ -52,7 +52,6 @@ function MediaListItem({
     return (
       <div className="media-list-item" data-divider={divider} {...props}>
         {content}
-        {divider && <span className="media-list-item-divider" />}
       </div>
     )
   }
@@ -60,7 +59,6 @@ function MediaListItem({
   return (
     <button type="button" className="media-list-item" data-divider={divider} disabled={disabled} {...props}>
       {content}
-      {divider && <span className="media-list-item-divider" />}
     </button>
   )
 }
