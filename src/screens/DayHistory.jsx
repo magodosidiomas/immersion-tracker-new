@@ -10,6 +10,7 @@ import EmptyState from '../components/EmptyState'
 import ConfirmDialog from '../components/ConfirmDialog'
 import {
   ArrowBack,
+  Add,
   Schedule,
   Close,
   ContentCopy,
@@ -30,7 +31,7 @@ import './DayHistory.css'
 // left; duplicate — only meaningful for exactly one selected row —
 // and delete right), and turns every row's tap into a toggle instead
 // of opening it. Delete always confirms, even for a single row.
-function DayHistory({ date, onBack, onOpenEditSession }) {
+function DayHistory({ date, onBack, onOpenEditSession, onOpenNewSession }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(date)
   const [daySessions, setDaySessions] = useState([])
@@ -138,6 +139,9 @@ function DayHistory({ date, onBack, onOpenEditSession }) {
             icon={<Schedule />}
             title="Nenhuma sessão nesse dia"
             description="Escolha outro dia ou comece uma nova sessão."
+            buttonLabel="Adicionar sessão nesse dia"
+            buttonIcon={<Add />}
+            onButtonClick={onOpenNewSession}
           />
         ) : (
           <div className="day-history-card">

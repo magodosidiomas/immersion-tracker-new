@@ -102,6 +102,9 @@ function Historico({
               icon={<Schedule />}
               title="Nenhuma sessão nesse dia"
               description="Escolha outro dia ou comece uma nova sessão."
+              buttonLabel="Adicionar sessão nesse dia"
+              buttonIcon={<Add />}
+              onButtonClick={onOpenNewSession}
             />
           ) : (
             <div className="historico-history-card">

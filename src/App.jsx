@@ -399,6 +399,7 @@ function App() {
           date={historyDate}
           onBack={() => window.history.back()}
           onOpenEditSession={(session) => navigate('edit-session', session)}
+          onOpenNewSession={() => navigate('new-session')}
         />
       )
     }
