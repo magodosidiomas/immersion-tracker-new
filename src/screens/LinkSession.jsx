@@ -50,18 +50,19 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
         </div>
       </div>
       <div className="link-session-content">
-        <p className="link-session-label">Sessões</p>
         {daySessions.length === 0 ? (
           <EmptyState
             icon={<Schedule />}
             title="Nenhuma sessão nesse dia"
-            description="Escolha outro dia ou comece uma nova sessão."
-            buttonLabel="Nova sessão"
+            description="Suas sessões desse dia vão aparecer aqui."
+            buttonLabel="Adicionar sessão"
             buttonIcon={<Add />}
             onButtonClick={onAddSession}
             style="plain"
           />
         ) : (
+          <>
+          <p className="link-session-label">Sessões</p>
           <div className="link-session-card">
             {daySessions.map((session, index) => (
               <ListItem
@@ -73,6 +74,7 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
               />
             ))}
           </div>
+          </>
         )}
       </div>
       {daySessions.length > 0 && (

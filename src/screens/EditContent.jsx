@@ -23,6 +23,7 @@ import BottomSheet from '../components/BottomSheet'
 import Modal from '../components/Modal'
 import ContentForm from '../components/ContentForm'
 import LinkSession from './LinkSession'
+import NewSession from './NewSession'
 import ManageSeries from './ManageSeries'
 import EpisodeDetail from './EpisodeDetail'
 import { ArrowBack, Close, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -50,7 +51,7 @@ function toRow(session) {
 // via linkedSessions, same as if they were already linked) and the
 // actual sessionContents rows are written once Salvar creates the
 // content and its real id exists.
-function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0, headless = false, isDesktop = false }) {
+function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onOpenSession, onOpenManage, catalogRefreshTick = 0, headless = false, isDesktop = false, timer = null }) {
   const [languageId, setLanguageId] = useState(null)
   const [content, setContent] = useState(null)
   const [existingContents, setExistingContents] = useState([])
@@ -358,12 +359,30 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
               pendingPickCallback.current?.(session)
               setView('form')
             }}
-            // "Nova sessão" would need its own nested Modal layer inside
-            // this one — same simplification manualContentOverlay's
-            // onOpenLinkSession already makes elsewhere; not built here.
-            onAddSession={() => {}}
+            onAddSession={() => setView('manual-session')}
           />
         </Modal>
+      )
+    }
+    // Nested Modal layer on top of the Vincular sessão one — mirrors
+    // EditSession's own manual-content nested view. NewSession already
+    // renders its own Modal shell when isDesktop (see FinishSession),
+    // so it isn't wrapped in one here. The real shared `timer` is safe
+    // to pass through in manualOnly mode: manualOnly skips every call
+    // that would touch/clear its draft, same as the mobile picker
+    // overlay in App.jsx already relies on.
+    if (view === 'manual-session') {
+      return (
+        <NewSession
+          timer={timer}
+          manualOnly
+          isDesktop
+          onClose={() => setView('link-session')}
+          onSaved={(session) => {
+            pendingPickCallback.current?.(session)
+            setView('form')
+          }}
+        />
       )
     }
     if (view === 'manage-series') {
