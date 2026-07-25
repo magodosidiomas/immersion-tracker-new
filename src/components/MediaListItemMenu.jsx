@@ -80,7 +80,7 @@ function MediaListItemMenu({ items }) {
           label={item.label}
           leadingIcon={item.icon}
           position={index === 0 ? 'first' : index === items.length - 1 ? 'last' : 'middle'}
-          divider={index < items.length - 1}
+          divider={index > 0}
           danger={item.danger}
           onClick={(event) => handleItemClick(event, item.onClick)}
         />
