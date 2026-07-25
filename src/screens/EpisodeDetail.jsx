@@ -53,7 +53,7 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
     onAddSession(async (session) => {
       await linkSessionContent(session.id, contentId)
       refresh()
-    })
+    }, heading)
   }
 
   async function handleRemoveSession(sessionId) {
