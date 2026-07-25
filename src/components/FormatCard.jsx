@@ -22,6 +22,7 @@ function FormatCard({ groups = [], ...props }) {
     <DonutCard
       title="Imersão x Imersão Interativa"
       groups={formatGroups}
+      horizontal
       {...props}
     />
   )

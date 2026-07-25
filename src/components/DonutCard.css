@@ -47,6 +47,13 @@
   background: none;
 }
 
+.donut-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
 .donut-card-ring-wrap {
   position: relative;
   width: 180px;
@@ -56,6 +63,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Horizontal variant (SkillCard/FormatCard comparison pairs): ring on
+   the left, legend on the right, matching the Figma web layout —
+   desktop-only, mobile keeps the stacked/centered layout since there
+   isn't room for both side by side at phone widths. */
+@media (min-width: 1280px) {
+  .donut-card-horizontal .donut-card-body {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-24);
+  }
+
+  .donut-card-horizontal .donut-card-ring-wrap {
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .donut-card-horizontal .donut-card-legend {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .donut-card-arc {
