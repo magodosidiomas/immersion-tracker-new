@@ -88,6 +88,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   // management-only, not a pick).
   const [view, setView] = useState('form')
   const [manageDrill, setManageDrill] = useState(null)
+  const [linkSessionContentTitle, setLinkSessionContentTitle] = useState(null)
   const pendingPickCallback = useRef(null)
 
   useEffect(() => {
@@ -198,12 +199,14 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
       }
       linkSessionContent(session.id, contentId).then(() => refreshLinkedSessions(contentId))
     }
+    const draftTitle = content?.title || contentFormRef.current?.title || null
     if (isDesktop) {
       pendingPickCallback.current = pick
+      setLinkSessionContentTitle(draftTitle)
       setView('link-session')
       return
     }
-    onOpenLinkSession(pick, content?.title)
+    onOpenLinkSession(pick, draftTitle)
   }
 
   // Desktop only: gear icon on the série/filme SearchCreateField opens
@@ -344,145 +347,50 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   // stays headless-inside-picker-overlay, unrelated to this): windowed
   // Modal instead of the full-page mobile layout, same pattern EditSession
   // already uses for "Editar sessão"/"Vincular conteúdo".
+  //
+  // IMPORTANT: the form Modal (with `body`/ContentForm inside) is always
+  // rendered here, never swapped out. Sub-views used to `return` a
+  // completely different Modal tree that excluded `body`, which unmounted
+  // ContentForm — losing any unsaved draft the moment "Vincular sessão"/
+  // "Gerenciar séries"/etc was opened, then again on the way back. This
+  // was the recurring "draft reset" bug. Now every sub-view is a Modal
+  // stacked on top (same sibling-overlay pattern App.jsx's mobile pickers
+  // already use), so the form underneath simply never unmounts.
   if (isDesktop) {
-    if (view === 'link-session') {
-      return (
-        <Modal
-          title="Vincular sessão"
-          leadingIcon={<ArrowBack />}
-          onLeadingClick={() => setView('form')}
-          onClose={onBack}
-          flushContent
-          className="finish-session-modal"
-          width={480}
-          height={640}
-        >
-          <LinkSession
-            headless
-            contentTitle={content?.title}
-            onSelect={(session) => {
-              pendingPickCallback.current?.(session)
-              setView('form')
-            }}
-            onAddSession={() => setView('manual-session')}
-          />
-        </Modal>
-      )
-    }
-    // Nested Modal layer on top of the Vincular sessão one — mirrors
-    // EditSession's own manual-content nested view. NewSession already
-    // renders its own Modal shell when isDesktop (see FinishSession),
-    // so it isn't wrapped in one here. The real shared `timer` is safe
-    // to pass through in manualOnly mode: manualOnly skips every call
-    // that would touch/clear its draft, same as the mobile picker
-    // overlay in App.jsx already relies on.
-    if (view === 'manual-session') {
-      return (
-        <NewSession
-          timer={timer}
-          manualOnly
-          isDesktop
-          onClose={() => setView('link-session')}
-          onSaved={(session) => {
-            pendingPickCallback.current?.(session)
-            setView('form')
-          }}
-        />
-      )
-    }
-    if (view === 'manage-series') {
-      const kindLabels = { serie: 'Gerenciar séries', filme: 'Gerenciar filmes', livro: 'Gerenciar livros' }
-      return (
-        <Modal
-          title={kindLabels[manageDrill?.kind] ?? 'Gerenciar filmes'}
-          leadingIcon={<ArrowBack />}
-          onLeadingClick={closeDesktopManage}
-          onClose={onBack}
-          width={480}
-          height={640}
-        >
-          <ManageSeries
-            embedded
-            kind={manageDrill?.kind}
-            onOpenSessions={
-              manageDrill?.kind === 'filme' || manageDrill?.kind === 'livro'
-                ? async (item) => {
-                    const catalogContent = await getFilmeContent(item.id)
-                    setManageDrill({ kind: manageDrill.kind, catalogItem: item, contentId: catalogContent?.id ?? null })
-                    setView('episode-detail')
-                  }
-                : undefined
-            }
-            onSelect={
-              manageDrill?.kind === 'serie'
-                ? (item) => {
-                    pendingPickCallback.current?.(item)
-                    closeDesktopManage()
-                  }
-                : undefined
-            }
-          />
-        </Modal>
-      )
-    }
-    if (view === 'episode-detail') {
-      return (
-        <Modal
-          title={manageDrill?.catalogItem?.label ?? 'Sessões'}
-          leadingIcon={<ArrowBack />}
-          onLeadingClick={() => setView('manage-series')}
-          onClose={onBack}
-          width={480}
-          height={640}
-        >
-          <EpisodeDetail
-            embedded
-            contentId={manageDrill?.contentId}
-            seriesName={manageDrill?.catalogItem?.label}
-            episode={null}
-            onAddSession={onOpenLinkSession}
-            onOpenSession={onOpenSession}
-          />
-        </Modal>
-      )
-    }
-    if (isNew) {
-      return (
-        <Modal
-          title="Novo conteúdo"
-          titleAlign="left"
-          trailingIcon={<Close />}
-          onTrailingClick={handleRequestClose}
-          onClose={handleRequestClose}
-          flushContent
-          className="finish-session-modal"
-          width={560}
-          height={640}
-          footer={
-            <>
-              <Button variant="outline" onClick={handleRequestClose}>
-                Cancelar
+    const formModal = isNew ? (
+      <Modal
+        title="Novo conteúdo"
+        titleAlign="left"
+        trailingIcon={<Close />}
+        onTrailingClick={handleRequestClose}
+        onClose={handleRequestClose}
+        flushContent
+        className="finish-session-modal"
+        width={560}
+        height={640}
+        footer={
+          <>
+            <Button variant="outline" onClick={handleRequestClose}>
+              Cancelar
+            </Button>
+            <div style={{ position: 'relative' }}>
+              <Button disabled={saving || !canSave} onClick={() => contentFormRef.current?.submit()}>
+                Salvar
               </Button>
-              <div style={{ position: 'relative' }}>
-                <Button disabled={saving || !canSave} onClick={() => contentFormRef.current?.submit()}>
-                  Salvar
-                </Button>
-                {!saving && !canSave && (
-                  <div
-                    style={{ position: 'absolute', inset: 0 }}
-                    onClick={() => contentFormRef.current?.submit()}
-                    aria-hidden="true"
-                  />
-                )}
-              </div>
-            </>
-          }
-        >
-          {body}
-        </Modal>
-      )
-    }
-    return (
+              {!saving && !canSave && (
+                <div
+                  style={{ position: 'absolute', inset: 0 }}
+                  onClick={() => contentFormRef.current?.submit()}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          </>
+        }
+      >
+        {body}
+      </Modal>
+    ) : (
       <Modal
         title="Editar conteúdo"
         leadingIcon={<ArrowBack />}
@@ -495,6 +403,106 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
       >
         {body}
       </Modal>
+    )
+
+    const kindLabels = { serie: 'Gerenciar séries', filme: 'Gerenciar filmes', livro: 'Gerenciar livros' }
+
+    return (
+      <>
+        {formModal}
+        {view === 'link-session' && (
+          <Modal
+            title="Vincular sessão"
+            leadingIcon={<ArrowBack />}
+            onLeadingClick={() => setView('form')}
+            onClose={onBack}
+            flushContent
+            className="finish-session-modal"
+            width={480}
+            height={640}
+          >
+            <LinkSession
+              headless
+              contentTitle={linkSessionContentTitle}
+              onSelect={(session) => {
+                pendingPickCallback.current?.(session)
+                setView('form')
+              }}
+              onAddSession={() => setView('manual-session')}
+            />
+          </Modal>
+        )}
+        {/* Nested Modal layer on top of the Vincular sessão one — mirrors
+            EditSession's own manual-content nested view. NewSession already
+            renders its own Modal shell when isDesktop (see FinishSession),
+            so it isn't wrapped in one here. The real shared `timer` is safe
+            to pass through in manualOnly mode: manualOnly skips every call
+            that would touch/clear its draft, same as the mobile picker
+            overlay in App.jsx already relies on. */}
+        {view === 'manual-session' && (
+          <NewSession
+            timer={timer}
+            manualOnly
+            isDesktop
+            onClose={() => setView('link-session')}
+            onSaved={(session) => {
+              pendingPickCallback.current?.(session)
+              setView('form')
+            }}
+          />
+        )}
+        {view === 'manage-series' && (
+          <Modal
+            title={kindLabels[manageDrill?.kind] ?? 'Gerenciar filmes'}
+            leadingIcon={<ArrowBack />}
+            onLeadingClick={closeDesktopManage}
+            onClose={onBack}
+            width={480}
+            height={640}
+          >
+            <ManageSeries
+              embedded
+              kind={manageDrill?.kind}
+              onOpenSessions={
+                manageDrill?.kind === 'filme' || manageDrill?.kind === 'livro'
+                  ? async (item) => {
+                      const catalogContent = await getFilmeContent(item.id)
+                      setManageDrill({ kind: manageDrill.kind, catalogItem: item, contentId: catalogContent?.id ?? null })
+                      setView('episode-detail')
+                    }
+                  : undefined
+              }
+              onSelect={
+                manageDrill?.kind === 'serie'
+                  ? (item) => {
+                      pendingPickCallback.current?.(item)
+                      closeDesktopManage()
+                    }
+                  : undefined
+              }
+            />
+          </Modal>
+        )}
+        {view === 'episode-detail' && (
+          <Modal
+            title={manageDrill?.catalogItem?.label ?? 'Sessões'}
+            leadingIcon={<ArrowBack />}
+            onLeadingClick={() => setView('manage-series')}
+            onClose={onBack}
+            width={480}
+            height={640}
+          >
+            <EpisodeDetail
+              embedded
+              contentId={manageDrill?.contentId}
+              seriesName={manageDrill?.catalogItem?.label}
+              episode={null}
+              onAddSession={onOpenLinkSession}
+              onOpenSession={onOpenSession}
+            />
+          </Modal>
+        )}
+      </>
     )
   }
 
