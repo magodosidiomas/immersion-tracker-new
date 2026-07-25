@@ -7,7 +7,7 @@ import Dropdown from '../components/Dropdown'
 import ListItem from '../components/ListItem'
 import EmptyState from '../components/EmptyState'
 import Button from '../components/Button'
-import { ArrowBack, Schedule, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Schedule, Add, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 import './LinkSession.css'
 
 // Opened from ContentForm/EpisodeDetail's "Vincular sessão" button.
@@ -70,20 +70,17 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
                 label={sessionLabel(session)}
                 description={formatDuration(session.durationSeconds)}
                 divider={index < daySessions.length - 1}
+                trailingIcon={<ChevronRight />}
                 onClick={() => onSelect(session)}
               />
             ))}
           </div>
+          <Button variant="ghost" fullWidth leadingIcon={<Add />} onClick={onAddSession}>
+            Adicionar sessão nesse dia
+          </Button>
           </>
         )}
       </div>
-      {daySessions.length > 0 && (
-        <div className="link-session-fab-row">
-          <Button leadingIcon={<Add />} onClick={onAddSession}>
-            Nova sessão
-          </Button>
-        </div>
-      )}
     </>
   )
 

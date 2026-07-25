@@ -55,20 +55,6 @@
   overflow: hidden;
 }
 
-.link-session-fab-row {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: flex-end;
-  padding: var(--space-16);
-  margin-top: -88px;
-  background: transparent;
-  pointer-events: none;
-}
-
-.link-session-fab-row .button {
-  pointer-events: auto;
-}
-
 /* Wraps the Dropdown pill so a same-size, invisible native date
    input can sit on top of it — tapping anywhere on the pill opens
    the OS's own date picker (same input the EditSession date fields
@@ -89,7 +75,3 @@
   cursor: pointer;
 }
 
-/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. */
-.link-session-content {
-  padding-bottom: 264px;
-}
