@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { Info } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CHART_COLORS } from '../data/chartColors'
 import { formatDurationShort } from '../utils/sessions'
+import BottomSheet from './BottomSheet'
+import Button from './Button'
 import './DonutCard.css'
 
 // Mirrors the Figma "Visão geral" donut — a ring built from one arc per
@@ -24,6 +27,7 @@ const MIN_ARC_FRACTION = 0.025
 
 function DonutCard({ groups = [], centerLabel, title, description, bare = false, ...props }) {
   const [activeKey, setActiveKey] = useState(null)
+  const [infoOpen, setInfoOpen] = useState(false)
   const cardRef = useRef(null)
 
   // Tapping/clicking anywhere outside the card clears the selection —
@@ -72,7 +76,16 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
       {title && (
         <div className="donut-card-header">
           <p className="donut-card-title">{title}</p>
-          {description && <p className="donut-card-description">{description}</p>}
+          {description && (
+            <button
+              type="button"
+              className="donut-card-info-button"
+              onClick={() => setInfoOpen(true)}
+              aria-label="Mais informações"
+            >
+              <Info />
+            </button>
+          )}
         </div>
       )}
       <div className="donut-card-ring-wrap">
@@ -153,9 +166,6 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
                 />
                 <span className="donut-card-legend-text">
                   <span className="donut-card-legend-name">{group.label}</span>
-                  {group.description && (
-                    <span className="donut-card-legend-description">{group.description}</span>
-                  )}
                 </span>
               </span>
               <span className="donut-card-legend-meta">
@@ -170,6 +180,20 @@ function DonutCard({ groups = [], centerLabel, title, description, bare = false,
           )
         })}
       </div>
+
+      {description && (
+        <BottomSheet
+          open={infoOpen}
+          onClose={() => setInfoOpen(false)}
+          title={title}
+          description={description}
+          primaryButton={
+            <Button fullWidth onClick={() => setInfoOpen(false)}>
+              Entendi
+            </Button>
+          }
+        />
+      )}
     </div>
   )
 }
