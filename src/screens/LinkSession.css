@@ -83,6 +83,7 @@
    list, not a separate floating pill — full-bleed, square corners,
    left-aligned, divider above instead of a gap. */
 .link-session-card .button[data-full-width='true'] {
+  height: auto;
   border-radius: 0;
   justify-content: flex-start;
   padding: var(--space-16);
