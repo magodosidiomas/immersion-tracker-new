@@ -225,7 +225,10 @@ const ContentForm = forwardRef(function ContentForm({
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
   const hasLinkField = type === 'youtube' || type === 'podcast' || type === 'website' || type === 'outro'
-  const showSessions = !hasLinkField || link.trim().length > 0
+  // série/filme: sessões only make sense once a título is actually
+  // selected (or there's nothing to select yet) — gated on relatedId
+  // instead of the link-based check the other types use.
+  const showSessions = isSeries || isMovie ? Boolean(relatedId) : !hasLinkField || link.trim().length > 0
   const relatedKind = isSeries ? 'serie' : 'filme'
   const relatedLabel = isSeries ? 'série' : 'filme'
   const relatedItems = isSeries ? seriesItems : movieItems
