@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 're
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
-import EditableListItem from './EditableListItem'
+import LinkedSessionListItem from './LinkedSessionListItem'
 import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
@@ -24,7 +24,6 @@ import {
   Edit,
   Settings,
   Schedule,
-  DoNotDisturbOn,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
 
@@ -475,14 +474,13 @@ const ContentForm = forwardRef(function ContentForm({
                   <span className="content-form-label">Sessões</span>
                   <div className="content-form-sessions-card">
                     {linkedSessions.map((session, index) => (
-                      <EditableListItem
+                      <LinkedSessionListItem
                         key={session.id}
                         label={session.label}
                         description={session.description}
                         divider={index < linkedSessions.length - 1}
-                        onClick={onOpenSession ? () => onOpenSession(session) : null}
-                        deleteIcon={<DoNotDisturbOn />}
-                        onDelete={() => onRemoveSession?.(session.id)}
+                        onView={onOpenSession ? () => onOpenSession(session) : null}
+                        onUnlink={() => onRemoveSession?.(session.id)}
                       />
                     ))}
                   </div>

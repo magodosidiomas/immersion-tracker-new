@@ -154,6 +154,15 @@
   background: var(--bg-surface-primary-15);
 }
 
+/* --- danger (destructive actions, e.g. "Desvincular") --- */
+.selectable-list-item[data-danger='true']:not(:disabled) .selectable-list-item-label {
+  color: var(--color-text-on-destructive);
+}
+
+.selectable-list-item[data-danger='true']:not(:disabled) {
+  --icon-color: var(--color-text-on-destructive);
+}
+
 /* --- disabled --- */
 .selectable-list-item:disabled {
   cursor: not-allowed;

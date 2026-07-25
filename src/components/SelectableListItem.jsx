@@ -43,6 +43,7 @@ function SelectableListItem({
   trailingIcon = null,
   position,
   density = 'default',
+  danger = false,
   ...props
 }) {
   return (
@@ -53,6 +54,7 @@ function SelectableListItem({
       data-divider={divider}
       data-position={position}
       data-density={density}
+      data-danger={danger}
       disabled={disabled}
       {...props}
     >

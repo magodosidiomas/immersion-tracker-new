@@ -3,10 +3,10 @@ import { getSessionsForContent, linkSessionContent, unlinkSessionContent } from 
 import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
-import EditableListItem from '../components/EditableListItem'
+import LinkedSessionListItem from '../components/LinkedSessionListItem'
 import EmptyState from '../components/EmptyState'
 import Button from '../components/Button'
-import { ArrowBack, Add, Schedule, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Add, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EpisodeDetail.css'
 
 function toRow(session) {
@@ -83,14 +83,13 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
               <span className="episode-detail-label">Sessões vinculadas</span>
               <div className="episode-detail-sessions-card">
                 {linkedSessions.map((row, index) => (
-                  <EditableListItem
+                  <LinkedSessionListItem
                     key={row.id}
                     label={row.label}
                     description={row.description}
                     divider={index < linkedSessions.length - 1}
-                    onClick={onOpenSession ? () => onOpenSession(row.session) : null}
-                    deleteIcon={<DoNotDisturbOn />}
-                    onDelete={() => handleRemoveSession(row.id)}
+                    onView={onOpenSession ? () => onOpenSession(row.session) : null}
+                    onUnlink={() => handleRemoveSession(row.id)}
                   />
                 ))}
               </div>

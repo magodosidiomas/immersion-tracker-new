@@ -1,0 +1,112 @@
+.linked-session-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--bg-surface-elevation-1);
+}
+
+.linked-session-item[data-divider='false'] {
+  border-bottom: none;
+}
+
+.linked-session-item:hover {
+  background: var(--bg-hover-on-elevation-1);
+}
+
+.linked-session-item-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: default;
+}
+
+button.linked-session-item-main {
+  cursor: pointer;
+}
+
+.linked-session-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.linked-session-item-label {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  overflow-wrap: break-word;
+}
+
+.linked-session-item-description {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary);
+}
+
+/* --- mobile chevron affordance --- */
+.linked-session-item-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-icon-muted-gray);
+}
+
+.linked-session-item-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- desktop "more" trigger + anchored dropdown --- */
+.linked-session-item-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.linked-session-item-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-muted-gray);
+  cursor: pointer;
+}
+
+.linked-session-item-trigger svg {
+  width: 100%;
+  height: 100%;
+}
+
+.linked-session-item-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  width: 252px;
+  background: var(--bg-surface-elevation-1);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-large);
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
