@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import './MediaListItemMenu.css'
 import SelectableListItem from './SelectableListItem'
 import BottomSheet from './BottomSheet'
@@ -29,16 +30,41 @@ function useIsDesktop() {
 function MediaListItemMenu({ items }) {
   const isDesktop = useIsDesktop()
   const [open, setOpen] = useState(false)
+  const [position, setPosition] = useState(null)
   const menuRef = useRef(null)
+  const triggerRef = useRef(null)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     if (!open || !isDesktop) return
     function handlePointerDown(event) {
       if (menuRef.current?.contains(event.target)) return
+      if (dropdownRef.current?.contains(event.target)) return
       setOpen(false)
     }
     document.addEventListener('mousedown', handlePointerDown)
     return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [open, isDesktop])
+
+  // Dropdown is portaled to <body> so it can escape the list card's
+  // overflow:hidden (needed for rounded corners). Position is computed
+  // once from the trigger's rect; rather than tracking live scroll
+  // repositioning, the menu just closes on scroll/resize.
+  useEffect(() => {
+    if (!open || !isDesktop) return
+    const rect = triggerRef.current?.getBoundingClientRect()
+    if (rect) {
+      setPosition({ top: rect.bottom + 4, right: window.innerWidth - rect.right })
+    }
+    function handleScrollOrResize() {
+      setOpen(false)
+    }
+    window.addEventListener('scroll', handleScrollOrResize, true)
+    window.addEventListener('resize', handleScrollOrResize)
+    return () => {
+      window.removeEventListener('scroll', handleScrollOrResize, true)
+      window.removeEventListener('resize', handleScrollOrResize)
+    }
   }, [open, isDesktop])
 
   function handleItemClick(event, onClick) {
@@ -65,6 +91,7 @@ function MediaListItemMenu({ items }) {
   return (
     <div className="media-list-item-menu" ref={menuRef} onClick={(event) => event.stopPropagation()}>
       <button
+        ref={triggerRef}
         type="button"
         className="media-list-item-menu-trigger"
         onClick={() => setOpen((value) => !value)}
@@ -73,7 +100,18 @@ function MediaListItemMenu({ items }) {
         <MoreVert />
       </button>
       {isDesktop ? (
-        open && <div className="media-list-item-menu-dropdown">{list()}</div>
+        open &&
+        position &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            className="media-list-item-menu-dropdown media-list-item-menu-dropdown-portal"
+            style={{ top: position.top, right: position.right }}
+          >
+            {list()}
+          </div>,
+          document.body,
+        )
       ) : (
         <BottomSheet open={open} onClose={() => setOpen(false)}>
           {list()}
