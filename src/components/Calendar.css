@@ -71,6 +71,19 @@
    picking a year. SelectionChip already wraps naturally (flex-wrap),
    so this is just the label + a wrapping row, no new chip styling
    needed. --- */
+.calendar-today-link {
+  align-self: flex-start;
+  margin-top: var(--space-4);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-accent);
+  font-family: var(--font-family-main);
+  font-size: var(--font-size-label-small);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
 .calendar-year-picker {
   display: flex;
   flex-direction: column;

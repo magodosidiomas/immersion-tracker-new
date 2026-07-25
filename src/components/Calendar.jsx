@@ -130,6 +130,15 @@ function Calendar({ sessionDates = [], initialDate, selectedDate = null, onSelec
               })}
             </div>
           ))}
+          {(month !== today.getMonth() || year !== today.getFullYear()) && (
+            <button
+              type="button"
+              className="calendar-today-link"
+              onClick={() => setViewDate(new Date(today.getFullYear(), today.getMonth(), 1))}
+            >
+              Voltar para hoje
+            </button>
+          )}
         </div>
       ) : (
         <div className="calendar-year-picker">
