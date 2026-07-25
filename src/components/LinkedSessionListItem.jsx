@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import './LinkedSessionListItem.css'
 import SelectableListItem from './SelectableListItem'
 import BottomSheet from './BottomSheet'
@@ -33,16 +34,41 @@ function useIsDesktop() {
 function LinkedSessionListItem({ label, description, onView, onUnlink, divider = false }) {
   const isDesktop = useIsDesktop()
   const [open, setOpen] = useState(false)
+  const [position, setPosition] = useState(null)
   const menuRef = useRef(null)
+  const triggerRef = useRef(null)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     if (!open || !isDesktop) return
     function handlePointerDown(event) {
       if (menuRef.current?.contains(event.target)) return
+      if (dropdownRef.current?.contains(event.target)) return
       setOpen(false)
     }
     document.addEventListener('mousedown', handlePointerDown)
     return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [open, isDesktop])
+
+  // Dropdown is portaled to <body> so it can escape the modal content's
+  // overflow-y:auto clipping (same reasoning as MediaListItemMenu).
+  // Position is computed once from the trigger's rect; the menu just
+  // closes on scroll/resize rather than tracking live repositioning.
+  useEffect(() => {
+    if (!open || !isDesktop) return
+    const rect = triggerRef.current?.getBoundingClientRect()
+    if (rect) {
+      setPosition({ top: rect.bottom + 4, right: window.innerWidth - rect.right })
+    }
+    function handleScrollOrResize() {
+      setOpen(false)
+    }
+    window.addEventListener('scroll', handleScrollOrResize, true)
+    window.addEventListener('resize', handleScrollOrResize)
+    return () => {
+      window.removeEventListener('scroll', handleScrollOrResize, true)
+      window.removeEventListener('resize', handleScrollOrResize)
+    }
   }, [open, isDesktop])
 
   function handleView() {
@@ -69,6 +95,7 @@ function LinkedSessionListItem({ label, description, onView, onUnlink, divider =
           <span className="linked-session-item-main">{text}</span>
           <div className="linked-session-item-menu" ref={menuRef}>
             <button
+              ref={triggerRef}
               type="button"
               className="linked-session-item-trigger"
               onClick={() => setOpen((value) => !value)}
@@ -76,24 +103,31 @@ function LinkedSessionListItem({ label, description, onView, onUnlink, divider =
             >
               <MoreVert />
             </button>
-            {open && (
-              <div className="linked-session-item-dropdown">
-                <SelectableListItem
-                  label="Ver sessão"
-                  leadingIcon={<Visibility />}
-                  position="first"
-                  onClick={handleView}
-                />
-                <SelectableListItem
-                  label="Desvincular"
-                  leadingIcon={<LinkOff />}
-                  position="last"
-                  divider
-                  danger
-                  onClick={handleUnlink}
-                />
-              </div>
-            )}
+            {open &&
+              position &&
+              createPortal(
+                <div
+                  ref={dropdownRef}
+                  className="linked-session-item-dropdown linked-session-item-dropdown-portal"
+                  style={{ top: position.top, right: position.right }}
+                >
+                  <SelectableListItem
+                    label="Ver sessão"
+                    leadingIcon={<Visibility />}
+                    position="first"
+                    onClick={handleView}
+                  />
+                  <SelectableListItem
+                    label="Desvincular"
+                    leadingIcon={<LinkOff />}
+                    position="last"
+                    divider
+                    danger
+                    onClick={handleUnlink}
+                  />
+                </div>,
+                document.body,
+              )}
           </div>
         </>
       ) : (

@@ -53,9 +53,9 @@
 .content-form-sessions-card {
   display: flex;
   flex-direction: column;
-  padding: 0 8px;
   border-radius: var(--radius-large);
   background: var(--bg-surface-elevation-1);
+  overflow: hidden;
 }
 
 .content-form-footer {

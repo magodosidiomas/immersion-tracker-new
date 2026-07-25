@@ -99,14 +99,18 @@ button.linked-session-item-main {
 }
 
 .linked-session-item-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 10;
   width: 252px;
   background: var(--bg-surface-elevation-1);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-large);
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.35);
   overflow: hidden;
+}
+
+/* Portaled to <body>: escapes the modal content's overflow-y:auto
+   clipping. top/right are set inline from the trigger's
+   getBoundingClientRect. */
+.linked-session-item-dropdown-portal {
+  position: fixed;
+  z-index: 50;
 }
