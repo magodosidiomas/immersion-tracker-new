@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getSessionsByLanguage } from '../db'
 import LanguageTopNav from '../components/LanguageTopNav'
+import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
 import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
@@ -38,6 +39,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
+      <TopNavDesktop title="Estatísticas" showSearch={false} />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
         <NumericCard

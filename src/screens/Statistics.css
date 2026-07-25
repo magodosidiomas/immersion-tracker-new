@@ -104,6 +104,10 @@
     padding-left: var(--space-32);
     padding-right: var(--space-32);
   }
+
+  .statistics-title {
+    display: none;
+  }
 }
 
 /* `.statistics` no longer scrolls (height-clamped + overflow: hidden)

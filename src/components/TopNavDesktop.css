@@ -44,7 +44,7 @@
   flex-shrink: 0;
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-title-small);
+  font-size: var(--font-size-heading-6);
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
 }
