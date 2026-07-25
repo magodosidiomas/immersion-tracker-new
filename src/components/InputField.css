@@ -83,6 +83,14 @@
   color: var(--color-text-primary);
 }
 
+/* Firefox draws the native date/time picker icon (and other native
+   chrome) based on color-scheme, defaulting to light/black. Force
+   dark so the icon matches the app's dark UI. */
+.input-field-input[type='date'],
+.input-field-input[type='time'] {
+  color-scheme: dark;
+}
+
 /* The Figma "isFilled" variant, without an isFilled prop: the
    placeholder gets the lighter, unbolded text style straight from
    ::placeholder, and the typed value falls back to the bold style
