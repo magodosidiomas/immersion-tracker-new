@@ -6,8 +6,9 @@ import BottomSheet from './BottomSheet'
 import DurationInput from './DurationInput'
 import Alert from './Alert'
 import MediaListItem from './MediaListItem'
+import ListItem from './ListItem'
 import Thumbnail from './Thumbnail'
-import { Edit, Add, DoNotDisturbOn } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Edit, Add, DoNotDisturbOn, DateRange, ChevronRight, Schedule, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -29,6 +30,11 @@ function formatHM(date) {
 // YYYY-MM-DD — value for <input type="date">.
 function toDateString(date) {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+}
+
+// DD/MM/YYYY — the "Data" summary row's display value.
+function formatDateBR(date) {
+  return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}/${date.getFullYear()}`
 }
 
 // Returns a new Date with the date portion replaced by dateStr ("YYYY-MM-DD"),
@@ -72,7 +78,18 @@ function SessionForm({
   onSave,
   saving = false,
   primaryLabel = 'Salvar',
-  secondaryButton = null,
+  // Desktop-only footer: presence of onCancel switches the footer to the
+  // modalActionPanel layout (Excluir/Descartar left, Cancelar + Salvar
+  // right). Mobile never passes these — its delete trigger lives in the
+  // TopNav trailing icon instead, and there's no Cancelar there.
+  onDelete = null,
+  deleteLabel = 'Excluir',
+  onCancel = null,
+  // Which "page" this instance is showing. Lifted to the parent (not
+  // owned here) so the parent's TopNav/Modal header can react to it —
+  // this component just renders whichever body matches the current value.
+  subScreen = 'main', // 'main' | 'datetime'
+  onOpenDateTime,
   autoOpenDuration = false,
   linkedContents = [],
   onAddContent,
@@ -259,137 +276,10 @@ function SessionForm({
 
   const selectedCategoryData = CATEGORIES.find((item) => item.key === selectedCategory)
 
-  return (
+  // Shared between both pages this component can show — defined once so
+  // neither branch below has to repeat the bottom sheet markup.
+  const sheets = (
     <>
-      <div className="finish-session-body">
-        {/* Duration */}
-        <div className="finish-session-field-group finish-session-duration-group">
-          <span className="category-sheet-label">Duração</span>
-          <button
-            type="button"
-            className="finish-session-duration-row"
-            aria-label="Editar duração"
-            onClick={openDurationEdit}
-          >
-            <span
-              className="finish-session-duration-display"
-              data-invalid={touched && !isValid ? 'true' : undefined}
-            >
-              {isValid ? formatHMS(durationSeconds) : '--:--:--'}
-            </span>
-            <Edit className="finish-session-duration-icon" aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* Início row */}
-        <div className="finish-session-time-grid">
-          <InputField
-            label="Início"
-            value={formatHM(startAt)}
-            readOnly
-            onClick={openStartEdit}
-          />
-          <InputField
-            label="Data de início"
-            type="date"
-            value={toDateString(startAt)}
-            onChange={handleStartDateChange}
-          />
-        </div>
-
-        {/* Inline form alert */}
-        {formAlert && <Alert type="error" description={formAlert} />}
-
-        {/* Fim row */}
-        <div className="finish-session-time-grid">
-          <InputField
-            label="Fim"
-            value={formatHM(endAt)}
-            readOnly
-            onClick={openEndEdit}
-          />
-          <InputField
-            label="Data final"
-            type="date"
-            value={toDateString(endAt)}
-            onChange={handleEndDateChange}
-          />
-        </div>
-
-        <div className="finish-session-divider" />
-
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Categoria</span>
-          <div className="category-sheet-chips">
-            {CATEGORIES.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={selectedCategory === item.key}
-                onClick={() => handlePickCategory(item.key)}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Subcategoria</span>
-          <div className="category-sheet-chips">
-            {selectedCategoryData.subcategories.map((item) => (
-              <SelectionChip
-                key={item.key}
-                label={item.label}
-                hasLeadingIcon={false}
-                hasTrailingIcon={false}
-                selected={selectedSubcategory === item.key}
-                onClick={() => setSelectedSubcategory(item.key)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {!hideContentSection && (
-        <>
-        <div className="finish-session-divider" />
-        <div className="finish-session-field-group">
-          <span className="category-sheet-label">Conteúdos</span>
-          {linkedContents.length > 0 ? (
-            <div className="finish-session-contents-card">
-              {linkedContents.map((content, index) => (
-                <MediaListItem
-                  key={content.id}
-                  title={content.title}
-                  subtitle={content.subtitle}
-                  divider={index < linkedContents.length - 1}
-                  thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
-                  trailingAction={{
-                    icon: <DoNotDisturbOn />,
-                    onClick: () => onRemoveContent?.(content.id),
-                    label: 'Remover conteúdo',
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="finish-session-contents-empty">Sem conteúdos vinculados</p>
-          )}
-          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddContent}>
-            Vincular conteúdo
-          </Button>
-        </div>
-        </>
-        )}
-      </div>
-
-      <div className="finish-session-footer">
-        <Button fullWidth onClick={handleSave} disabled={saving || !isValid}>
-          {primaryLabel}
-        </Button>
-        {secondaryButton}
-      </div>
-
       {/* Duração */}
       <BottomSheet
         open={editingDuration}
@@ -492,6 +382,192 @@ function SessionForm({
           errorMessage={endTimeError}
         />
       </BottomSheet>
+    </>
+  )
+
+  // "Editar horário e data" — Início/Fim (time + date) plus a read-only-
+  // looking (but still clickable) Duração summary. Reached from the
+  // Quando rows below; back navigation is owned by the parent screen.
+  if (subScreen === 'datetime') {
+    return (
+      <>
+        <div className="finish-session-body">
+          <div className="finish-session-time-grid">
+            <InputField label="Início" value={formatHM(startAt)} readOnly onClick={openStartEdit} />
+            <InputField
+              label="Data de início"
+              type="date"
+              value={toDateString(startAt)}
+              onChange={handleStartDateChange}
+            />
+          </div>
+
+          {formAlert && <Alert type="error" description={formAlert} />}
+
+          <div className="finish-session-time-grid">
+            <InputField label="Fim" value={formatHM(endAt)} readOnly onClick={openEndEdit} />
+            <InputField
+              label="Data final"
+              type="date"
+              value={toDateString(endAt)}
+              onChange={handleEndDateChange}
+            />
+          </div>
+
+          <div className="finish-session-when-card">
+            <ListItem
+              label="Duração"
+              leadingIcon={<Schedule />}
+              extraText={isValid ? formatHMS(durationSeconds) : '--:--:--'}
+              onClick={openDurationEdit}
+            />
+          </div>
+        </div>
+        {sheets}
+      </>
+    )
+  }
+
+  return (
+    <>
+      <div className="finish-session-body">
+        {/* Duration */}
+        <div className="finish-session-field-group finish-session-duration-group">
+          <span className="category-sheet-label">Duração</span>
+          <button
+            type="button"
+            className="finish-session-duration-row"
+            aria-label="Editar duração"
+            onClick={openDurationEdit}
+          >
+            <span
+              className="finish-session-duration-display"
+              data-invalid={touched && !isValid ? 'true' : undefined}
+            >
+              {isValid ? formatHMS(durationSeconds) : '--:--:--'}
+            </span>
+            <Edit className="finish-session-duration-icon" aria-hidden="true" />
+          </button>
+        </div>
+
+        {/* Quando */}
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Quando</span>
+          <div className="finish-session-when-card">
+            <ListItem
+              label="Horário"
+              leadingIcon={<DateRange />}
+              trailingIcon={<ChevronRight />}
+              extraText={`${formatHM(startAt)} - ${formatHM(endAt)}`}
+              divider
+              onClick={onOpenDateTime}
+            />
+            <ListItem
+              label="Data"
+              leadingIcon={<DateRange />}
+              trailingIcon={<ChevronRight />}
+              extraText={formatDateBR(startAt)}
+              onClick={onOpenDateTime}
+            />
+          </div>
+        </div>
+
+        <div className="finish-session-divider" />
+
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Categoria</span>
+          <div className="category-sheet-chips">
+            {CATEGORIES.map((item) => (
+              <SelectionChip
+                key={item.key}
+                label={item.label}
+                hasLeadingIcon={false}
+                hasTrailingIcon={false}
+                selected={selectedCategory === item.key}
+                onClick={() => handlePickCategory(item.key)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Subcategoria</span>
+          <div className="category-sheet-chips">
+            {selectedCategoryData.subcategories.map((item) => (
+              <SelectionChip
+                key={item.key}
+                label={item.label}
+                hasLeadingIcon={false}
+                hasTrailingIcon={false}
+                selected={selectedSubcategory === item.key}
+                onClick={() => setSelectedSubcategory(item.key)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {!hideContentSection && (
+        <>
+        <div className="finish-session-divider" />
+        <div className="finish-session-field-group">
+          <span className="category-sheet-label">Conteúdos</span>
+          {linkedContents.length > 0 ? (
+            <div className="finish-session-contents-card">
+              {linkedContents.map((content, index) => (
+                <MediaListItem
+                  key={content.id}
+                  title={content.title}
+                  subtitle={content.subtitle}
+                  divider={index < linkedContents.length - 1}
+                  thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
+                  trailingAction={{
+                    icon: <DoNotDisturbOn />,
+                    onClick: () => onRemoveContent?.(content.id),
+                    label: 'Remover conteúdo',
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="finish-session-contents-empty">Sem conteúdos vinculados</p>
+          )}
+          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddContent}>
+            Vincular conteúdo
+          </Button>
+        </div>
+        </>
+        )}
+      </div>
+
+      {/* Mobile: single fullWidth Salvar — delete lives in the parent's
+         TopNav trailing icon instead. Desktop (onCancel present):
+         modalActionPanel layout — Excluir/Descartar left, Cancelar +
+         Salvar grouped right. */}
+      {onCancel ? (
+        <div className="finish-session-footer finish-session-footer--desktop">
+          {onDelete && (
+            <Button variant="destructive-ghost" leadingIcon={<Delete />} onClick={onDelete}>
+              {deleteLabel}
+            </Button>
+          )}
+          <div className="finish-session-footer-actions">
+            <Button variant="outline" onClick={onCancel}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSave} disabled={saving || !isValid}>
+              {primaryLabel}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="finish-session-footer">
+          <Button fullWidth onClick={handleSave} disabled={saving || !isValid}>
+            {primaryLabel}
+          </Button>
+        </div>
+      )}
+
+      {sheets}
     </>
   )
 }

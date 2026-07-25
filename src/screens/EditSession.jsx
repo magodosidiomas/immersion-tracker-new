@@ -6,7 +6,7 @@ import Modal from '../components/Modal'
 import SessionForm from '../components/SessionForm'
 import LinkContent from './LinkContent'
 import EditContent from './EditContent'
-import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Close, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { updateSession, deleteSession, getContentsForSession, linkSessionContent, unlinkSessionContent } from '../db'
 import './EditSession.css'
 
@@ -24,11 +24,13 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [linkedContents, setLinkedContents] = useState([])
 
-  // Desktop only: which Modal "page" is showing. Mobile never touches
-  // this — it always uses onOpenLinkContent, the app-level full-page
-  // picker. On desktop, "Vincular conteúdo" and "Adicionar conteúdo"
-  // instead swap the Modal's own content/title/back-target in place,
-  // so linking never leaves this window.
+  // Which "page" is showing. 'datetime' (Editar horário e data) works
+  // the same way on both mobile and desktop — swaps the header
+  // title/back-target and shows a different SessionForm sub-page, while
+  // keeping the same SessionForm instance mounted so its draft state
+  // (startAt/endAt/category/etc.) survives the trip. 'link-content' and
+  // 'manual-content' are desktop-only: mobile never touches those, it
+  // always uses onOpenLinkContent, the app-level full-page picker.
   const [view, setView] = useState('form')
   const pendingPickCallback = useRef(null)
 
@@ -80,11 +82,11 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
         onRemoveContent={handleRemoveContent}
         onSave={handleSave}
         saving={saving}
-        secondaryButton={
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
-            Excluir sessão
-          </Button>
-        }
+        subScreen={view === 'datetime' ? 'datetime' : 'main'}
+        onOpenDateTime={() => setView('datetime')}
+        onDelete={isDesktop ? () => setConfirmOpen(true) : undefined}
+        deleteLabel="Excluir"
+        onCancel={isDesktop ? onBack : undefined}
       />
       <BottomSheet
         open={confirmOpen}
@@ -158,9 +160,11 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
     }
     return (
       <Modal
-        title="Editar sessão"
-        leadingIcon={<ArrowBack />}
-        onLeadingClick={onBack}
+        title={view === 'datetime' ? 'Editar horário e data' : 'Editar sessão'}
+        leadingIcon={view === 'datetime' ? <ArrowBack /> : undefined}
+        onLeadingClick={view === 'datetime' ? () => setView('form') : undefined}
+        trailingIcon={view === 'datetime' ? undefined : <Close />}
+        onTrailingClick={onBack}
         onClose={onBack}
         flushContent
         className="finish-session-modal"
@@ -175,12 +179,29 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
   return (
     <main className="edit-session">
       <TopNav
-        title="Editar sessão"
+        title={view === 'datetime' ? 'Editar horário e data' : 'Editar sessão'}
         hasDivider
         leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+          <button
+            type="button"
+            className="top-nav-icon-reset"
+            onClick={view === 'datetime' ? () => setView('form') : onBack}
+            aria-label="Voltar"
+          >
             <ArrowBack />
           </button>
+        }
+        trailingRight={
+          view === 'form' ? (
+            <button
+              type="button"
+              className="top-nav-icon-reset top-nav-icon-destructive"
+              onClick={() => setConfirmOpen(true)}
+              aria-label="Excluir sessão"
+            >
+              <Delete />
+            </button>
+          ) : null
         }
       />
       {formAndSheets}

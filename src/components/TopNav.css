@@ -76,6 +76,10 @@
   border-radius: var(--radius-small);
 }
 
+.top-nav-icon-destructive {
+  color: var(--color-icon-on-destructive-accent);
+}
+
 .top-nav-flag {
   display: inline-flex;
   align-items: center;

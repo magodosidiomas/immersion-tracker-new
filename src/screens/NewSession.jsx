@@ -377,6 +377,11 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  // 'datetime' (Editar horário e data) swaps the header title/back-target
+  // and shows a different SessionForm sub-page, keeping the same
+  // SessionForm instance mounted so its draft state survives the trip —
+  // same pattern as EditSession.
+  const [view, setView] = useState('form')
   // No sessionId exists yet at this point — content picked here is
   // only linked (via sessionContents) once Salvar actually creates
   // the session below, using whatever's collected in this list.
@@ -422,11 +427,11 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
         hideContentSection={hideContentSection}
         onSave={handleSave}
         saving={saving || !languageId}
-        secondaryButton={
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
-            Descartar sessão
-          </Button>
-        }
+        subScreen={view === 'datetime' ? 'datetime' : 'main'}
+        onOpenDateTime={() => setView('datetime')}
+        onDelete={isDesktop ? () => setConfirmOpen(true) : undefined}
+        deleteLabel="Descartar"
+        onCancel={isDesktop ? onBack : undefined}
       />
       <BottomSheet
         open={confirmOpen}
@@ -451,8 +456,10 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
   if (isDesktop) {
     return (
       <Modal
-        title="Nova sessão"
-        trailingIcon={<Close />}
+        title={view === 'datetime' ? 'Editar horário e data' : 'Nova sessão'}
+        leadingIcon={view === 'datetime' ? <ArrowBack /> : undefined}
+        onLeadingClick={view === 'datetime' ? () => setView('form') : undefined}
+        trailingIcon={view === 'datetime' ? undefined : <Close />}
         onTrailingClick={onBack}
         onClose={onBack}
         flushContent
@@ -468,12 +475,29 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
   return (
     <main className="new-session">
       <TopNav
-        title="Nova sessão"
+        title={view === 'datetime' ? 'Editar horário e data' : 'Nova sessão'}
         hasDivider
         leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+          <button
+            type="button"
+            className="top-nav-icon-reset"
+            onClick={view === 'datetime' ? () => setView('form') : onBack}
+            aria-label="Voltar"
+          >
             <ArrowBack />
           </button>
+        }
+        trailingRight={
+          view === 'form' ? (
+            <button
+              type="button"
+              className="top-nav-icon-reset top-nav-icon-destructive"
+              onClick={() => setConfirmOpen(true)}
+              aria-label="Descartar sessão"
+            >
+              <Delete />
+            </button>
+          ) : null
         }
       />
       {formAndSheets}

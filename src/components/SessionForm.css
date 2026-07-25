@@ -153,6 +153,7 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-16);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .finish-session-time-grid {
@@ -171,4 +172,35 @@
 
 .duration-shortcut-chips {
   margin-top: var(--space-16);
+}
+
+/* Quando (Horário/Data) and the datetime sub-page's Duração summary —
+   same rounded-card-of-ListItems pattern as Home's history list
+   (.home-history-card). */
+.finish-session-when-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+  overflow: hidden;
+}
+
+.finish-session-when-card .list-item {
+  width: 100%;
+}
+
+/* Desktop modalActionPanel footer: Excluir/Descartar hugs the left edge,
+   Cancelar + Salvar are grouped on the right. */
+.finish-session-footer--desktop {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.finish-session-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
 }
