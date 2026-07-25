@@ -174,17 +174,20 @@ function SearchCreateField({
 
   // Mobile overlay's own settings/add shortcuts: same actions as the
   // gear button beside the field, just reachable without backing out
-  // of the full-screen search first. Both close the overlay before
-  // handing off — Settings opens Gerenciar séries/filmes as its own
-  // app-level overlay (context-preserving, see EditContent/App.jsx),
-  // and Add opens ContentForm's quick-create sheet on top of the form.
+  // of the full-screen search first. Unlike handleSelect/handleCreate,
+  // these deliberately do NOT setOpen(false) — Settings (Gerenciar
+  // séries/filmes) and Add (ContentForm's quick-create sheet) both
+  // render as their own overlay stacked on top (see .picker-overlay's
+  // z-index, kept above this overlay's for exactly this reason).
+  // Leaving `open` untouched means this search overlay is still here,
+  // unchanged, underneath once that overlay closes — so back/close
+  // lands back on the search screen instead of skipping past it to
+  // whatever screen opened the search in the first place.
   function handleOverlaySettingsClick() {
-    setOpen(false)
     onSettingsClick?.()
   }
 
   function handleOverlayQuickAddClick() {
-    setOpen(false)
     onQuickAddClick?.()
   }
 

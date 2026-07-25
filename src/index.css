@@ -95,10 +95,15 @@ body {
    of replacing it, so that screen's own state survives the round
    trip. position: absolute on #root (not position: fixed) since fixed
    breaks out of the 480px centered column on wide viewports — #root
-   is the positioning context here instead. */
+   is the positioning context here instead.
+   z-index sits above SearchCreateField's own mobile search overlay
+   (z-index: 30) on purpose: Gerenciar séries/filmes and other app-level
+   overlays can be reached from inside that search overlay (its own
+   settings/add shortcuts) without it ever closing — it just stays
+   mounted underneath, covered, so back/close reveals it again. */
 .picker-overlay {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: 35;
   background: var(--bg-background);
 }
