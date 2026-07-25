@@ -234,7 +234,14 @@ const ContentForm = forwardRef(function ContentForm({
   // série/filme/livro: sessões only make sense once a título is
   // actually selected (or there's nothing to select yet) — gated on
   // relatedId instead of the link-based check the other types use.
-  const showSessions = hasRelated ? Boolean(relatedId) : !hasLinkField || link.trim().length > 0
+  // outro: link is optional here, título is the field that actually
+  // matters, so it gates on título instead of link like youtube/
+  // podcast/website do.
+  const showSessions = hasRelated
+    ? Boolean(relatedId)
+    : type === 'outro'
+      ? title.trim().length > 0
+      : !hasLinkField || link.trim().length > 0
   const relatedMeta = RELATED_KIND_META[type]
   const relatedKind = type
   const relatedLabel = relatedMeta?.label
