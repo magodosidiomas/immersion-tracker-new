@@ -56,6 +56,7 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               leadingIcon={<Movie />}
               trailingIcon={<ChevronRight />}
               position="middle"
+              divider
               onClick={onOpenManageMovies}
             />
             <SelectableListItem

@@ -57,7 +57,7 @@ const ManageSeries = forwardRef(function ManageSeries(
 
   const isSerie = kind === 'serie'
   const meta = KIND_META[kind] ?? KIND_META.filme
-  const { label, labelCap, article } = meta
+  const { label, article } = meta
   const itemPhrase = `${article} ${label}`
 
   useEffect(() => {
@@ -158,7 +158,6 @@ const ManageSeries = forwardRef(function ManageSeries(
           <div className="manage-series-content">
             <SearchCreateField
               variant="filter"
-              label={labelCap}
               placeholder={`Busque ou adicione ${itemPhrase}`}
               value={query}
               onChange={setQuery}
@@ -204,10 +203,10 @@ const ManageSeries = forwardRef(function ManageSeries(
           </div>
 
           {!hideFooter && (
-            <div className="manage-series-footer">
+            <div className={embedded ? 'manage-series-footer' : 'manage-series-fab-row'}>
               <Button
                 variant="outline"
-                fullWidth
+                fullWidth={embedded}
                 leadingIcon={<Add />}
                 onClick={() => openRename({ id: null, label: '' })}
               >

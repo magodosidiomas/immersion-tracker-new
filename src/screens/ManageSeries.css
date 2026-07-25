@@ -1,8 +1,26 @@
 .manage-series {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
   background: var(--bg-background);
+}
+
+.manage-series-fab-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-16);
+  padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.manage-series-fab-row .button {
+  pointer-events: auto;
+  width: fit-content;
 }
 
 .manage-series[data-embedded='true'] {
