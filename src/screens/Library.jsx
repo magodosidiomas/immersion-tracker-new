@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getContentsByLanguage, deleteContent, createContent } from '../db'
+import { getContentsByLanguage, deleteContent } from '../db'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
 import { useLongPress } from '../hooks/useLongPress'
 import LanguageTopNav from '../components/LanguageTopNav'
@@ -16,7 +16,6 @@ import {
   BarChart,
   Book,
   Close,
-  ContentCopy,
   Delete,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Library.css'
@@ -35,12 +34,9 @@ function formatSessionCount(count) {
 // db/index.js presentation-agnostic. The search/filter/grouped-list
 // body itself is shared with LinkContent (see ContentSearchList).
 //
-// Long-press selection: same contextual TopNav pattern as DayHistory
-// (close left; duplicate — only meaningful for exactly one selected
-// row — and delete right, delete always confirmed). Duplicate copies
-// a content row itself; the session-count/latestSessionDate that
-// content carries starts fresh (0 sessões) since a duplicated content
-// is a new, unlinked entry, not a clone of the original's history.
+// Long-press selection: same contextual TopNav pattern as DayHistory,
+// minus duplicate — each content should only ever exist once, so
+// selection here only offers delete (right).
 function Library({
   onOpenNewContent,
   onOpenContent,
@@ -101,21 +97,6 @@ function Library({
     }
   }
 
-  async function handleDuplicate() {
-    const [id] = selectedIds
-    const original = contents.find((content) => content.id === id)
-    if (!original) return
-    const rest = { ...original }
-    delete rest.id
-    delete rest.createdAt
-    delete rest.title
-    delete rest.sessionCount
-    delete rest.latestSessionDate
-    await createContent(rest)
-    exitSelectionMode()
-    refreshContents()
-  }
-
   async function handleDeleteConfirmed() {
     await Promise.all(selectedIds.map((id) => deleteContent(id)))
     setConfirmOpen(false)
@@ -152,13 +133,6 @@ function Library({
             <button type="button" className="top-nav-icon-reset" onClick={exitSelectionMode} aria-label="Fechar seleção">
               <Close />
             </button>
-          }
-          trailingLeft={
-            selectedIds.length === 1 && (
-              <button type="button" className="top-nav-icon-reset" onClick={handleDuplicate} aria-label="Duplicar">
-                <ContentCopy />
-              </button>
-            )
           }
           trailingRight={
             <button type="button" className="top-nav-icon-reset" onClick={() => setConfirmOpen(true)} aria-label="Excluir">

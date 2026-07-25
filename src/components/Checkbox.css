@@ -35,7 +35,8 @@
   color: var(--color-text-primary);
 }
 
-.checkbox[data-checked='true'] .checkbox-box {
+.checkbox[data-checked='true'] .checkbox-box,
+.checkbox-box[data-checked='true'] {
   background: var(--bg-surface-primary);
 }
 
