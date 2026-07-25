@@ -14,6 +14,8 @@ import {
   Bookmark,
   Newspaper,
   Apps,
+  Edit,
+  Delete,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentSearchList.css'
 
@@ -56,6 +58,8 @@ function ContentSearchList({
   emptyStateStyle = 'background',
   showEmptyStateButton = true,
   hasContent = true,
+  onEditItem = null,
+  onDeleteItem = null,
 }) {
   const hasQuery = query.trim().length > 0
   const activeType = selectedTypes.length === 1 ? selectedTypes[0] : null
@@ -161,6 +165,18 @@ function ContentSearchList({
                 const longPressProps = bindLongPress
                   ? bindLongPress(item.id, () => onItemClick(item, true), () => onItemClick(item))
                   : { onClick: () => onItemClick(item) }
+                const menu =
+                  !selectionMode && (onEditItem || onDeleteItem)
+                    ? [
+                        onEditItem && { label: 'Editar', icon: <Edit />, onClick: () => onEditItem(item) },
+                        onDeleteItem && {
+                          label: 'Excluir',
+                          icon: <Delete />,
+                          danger: true,
+                          onClick: () => onDeleteItem(item),
+                        },
+                      ].filter(Boolean)
+                    : null
                 return (
                   <MediaListItem
                     key={item.id}
@@ -169,6 +185,7 @@ function ContentSearchList({
                     divider={index < group.items.length - 1}
                     selectionMode={selectionMode}
                     selected={selectedIds.includes(item.id)}
+                    menu={menu}
                     {...longPressProps}
                     thumbnail={
                       <Thumbnail

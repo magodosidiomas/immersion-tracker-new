@@ -1,5 +1,6 @@
 import './MediaListItem.css'
 import CheckboxIndicator from './CheckboxIndicator'
+import MediaListItemMenu from './MediaListItemMenu'
 
 // Content row for the Biblioteca and content-picker sheets — a
 // Thumbnail (image or icon fallback) plus title/subtitle. Mirrors
@@ -9,9 +10,15 @@ import CheckboxIndicator from './CheckboxIndicator'
 // trailingAction (icon + onClick, e.g. "remove_circle_outline" in
 // SessionForm's Conteúdos vinculados list) turns the row itself
 // non-interactive — only that action is clickable — since nesting a
-// real button inside the row's own <button> isn't valid HTML. Rows
-// that don't need per-item actions (Biblioteca, content picker) keep
-// the whole row as one clickable button via onClick, same as before.
+// real button inside the row's own <button> isn't valid HTML. `menu`
+// (array of {icon,label,onClick,danger}, e.g. Biblioteca's editar/
+// excluir) does the same but behind a "more" trigger — see
+// MediaListItemMenu for the desktop-dropdown/mobile-bottom-sheet split.
+// Unlike trailingAction, the row keeps its own onClick (passed through
+// props) so tapping the card still opens it; only the menu trigger
+// itself stops that click via stopPropagation. Rows that don't need
+// per-item actions (Biblioteca's selection mode, content picker) keep
+// the whole row as one clickable button, same as before.
 function MediaListItem({
   thumbnail = null,
   title = 'Content title',
@@ -19,6 +26,7 @@ function MediaListItem({
   disabled = false,
   divider = false,
   trailingAction = null,
+  menu = null,
   selectionMode = false,
   selected = false,
   ...props
@@ -40,15 +48,16 @@ function MediaListItem({
           {trailingAction.icon}
         </button>
       )}
+      {!selectionMode && !trailingAction && menu && <MediaListItemMenu items={menu} />}
     </>
   )
 
-  // Selection mode and trailingAction both need the row itself to stay
-  // non-interactive (a real per-item action button, or nothing at all
-  // since the whole row's onClick/long-press already toggles the
-  // checkbox) — same "no nested button" reasoning as trailingAction
-  // already used before selection mode existed.
-  if (selectionMode || trailingAction) {
+  // Selection mode, trailingAction, and menu all need the row itself to
+  // stay non-interactive as a <button> (a real per-item action lives
+  // inside instead) — same "no nested button" reasoning as
+  // trailingAction already used before selection mode existed. menu's
+  // row still responds to the click passed in via props (see above).
+  if (selectionMode || trailingAction || menu) {
     return (
       <div className="media-list-item" data-divider={divider} {...props}>
         {content}

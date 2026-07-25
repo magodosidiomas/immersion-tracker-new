@@ -57,6 +57,10 @@ function Library({
   const [contents, setContents] = useState([])
   const [selectedIds, setSelectedIds] = useState([])
   const [confirmOpen, setConfirmOpen] = useState(false)
+  // Single-card delete (menu's "Excluir"), separate from the
+  // long-press selectedIds/confirmOpen pair above so opening a card's
+  // menu never flips the TopNav into selection mode.
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const [refreshTick, setRefreshTick] = useState(0)
   const selectionMode = selectedIds.length > 0
   const bindLongPress = useLongPress()
@@ -116,6 +120,12 @@ function Library({
     await Promise.all(selectedIds.map((id) => deleteContent(id)))
     setConfirmOpen(false)
     exitSelectionMode()
+    refreshContents()
+  }
+
+  async function handleDeleteTargetConfirmed() {
+    await deleteContent(deleteTarget.id)
+    setDeleteTarget(null)
     refreshContents()
   }
 
@@ -186,6 +196,8 @@ function Library({
           selectionMode={selectionMode}
           selectedIds={selectedIds}
           bindLongPress={bindLongPress}
+          onEditItem={onOpenContent}
+          onDeleteItem={setDeleteTarget}
           showAddButton={false}
           emptyStateButtonVariant="primary"
           emptyStateStyle="plain"
@@ -213,6 +225,13 @@ function Library({
         description="Essa ação não pode ser desfeita."
         onCancel={() => setConfirmOpen(false)}
         onConfirm={handleDeleteConfirmed}
+      />
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Excluir conteúdo?"
+        description="Essa ação não pode ser desfeita."
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={handleDeleteTargetConfirmed}
       />
     </main>
   )
