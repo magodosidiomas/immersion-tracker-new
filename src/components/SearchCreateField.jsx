@@ -6,6 +6,7 @@ import { normalizeForCompare } from '../utils/text'
 import {
   Add,
   ArrowBack,
+  ChevronRight,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Search,
@@ -66,6 +67,7 @@ function SearchCreateField({
   onCreate,
   settingsIcon = null,
   onSettingsClick,
+  onQuickAddClick,
   error = null,
   ...props
 }) {
@@ -170,6 +172,22 @@ function SearchCreateField({
     setOpen(false)
   }
 
+  // Mobile overlay's own settings/add shortcuts: same actions as the
+  // gear button beside the field, just reachable without backing out
+  // of the full-screen search first. Both close the overlay before
+  // handing off — Settings opens Gerenciar séries/filmes as its own
+  // app-level overlay (context-preserving, see EditContent/App.jsx),
+  // and Add opens ContentForm's quick-create sheet on top of the form.
+  function handleOverlaySettingsClick() {
+    setOpen(false)
+    onSettingsClick?.()
+  }
+
+  function handleOverlayQuickAddClick() {
+    setOpen(false)
+    onQuickAddClick?.()
+  }
+
   function handleClear(event) {
     event.preventDefault()
     event.stopPropagation()
@@ -233,6 +251,7 @@ function SearchCreateField({
               selected={highlight && index === activeIndex}
               position={isFirst && isLast ? 'only' : isFirst ? 'first' : isLast ? 'last' : 'middle'}
               divider={index > 0}
+              trailingIcon={<ChevronRight />}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => handleSelect(item)}
             />
@@ -394,6 +413,26 @@ function SearchCreateField({
                 </button>
               )}
             </span>
+            {settingsIcon && onSettingsClick && (
+              <button
+                type="button"
+                className="search-create-field-overlay-action"
+                onClick={handleOverlaySettingsClick}
+                aria-label="Gerenciar"
+              >
+                {settingsIcon}
+              </button>
+            )}
+            {onQuickAddClick && (
+              <button
+                type="button"
+                className="search-create-field-overlay-action"
+                onClick={handleOverlayQuickAddClick}
+                aria-label={`Adicionar ${createLabel}`}
+              >
+                <Add />
+              </button>
+            )}
           </div>
           <div className="search-create-field-overlay-list">
             {rowCount > 0 ? (

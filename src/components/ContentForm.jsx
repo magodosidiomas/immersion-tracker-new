@@ -430,6 +430,10 @@ const ContentForm = forwardRef(function ContentForm({
                 onCreate={handleCreateRelated}
                 settingsIcon={<Settings />}
                 onSettingsClick={() => onManageRelated?.(relatedKind, handleSelectRelated)}
+                onQuickAddClick={() => {
+                  setCreateRelatedName(relatedQuery.trim())
+                  setShowCreateRelated(true)
+                }}
                 error={attemptedSave && requiredRelatedError}
               />
             )}
