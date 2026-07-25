@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import './SearchCreateField.css'
 import SelectableListItem from './SelectableListItem'
+import EmptyState from './EmptyState'
 import { normalizeForCompare } from '../utils/text'
 import {
   Add,
@@ -8,6 +9,7 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Search,
+  SearchOff,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import { Cancel } from '@nine-thirty-five/material-symbols-react/outlined/filled'
 
@@ -204,23 +206,44 @@ function SearchCreateField({
     }
   }
 
+  // Standard "container padrão" list: rows sit flush inside a rounded,
+  // elevated card (see ManageSeries' own list) — divider between rows,
+  // never after the last one, with first/last corners borrowing the
+  // card's own radius via SelectableListItem's `position` prop.
   function renderRows(highlight) {
+    if (rowCount === 0) {
+      return (
+        <EmptyState
+          style="plain"
+          icon={<SearchOff />}
+          title="Nenhum resultado encontrado"
+          description="Tente pesquisar por outro termo."
+        />
+      )
+    }
     return (
       <>
-        {items.map((item, index) => (
-          <SelectableListItem
-            key={item.id}
-            label={item.label}
-            selected={highlight && index === activeIndex}
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => handleSelect(item)}
-          />
-        ))}
+        {items.map((item, index) => {
+          const isFirst = index === 0
+          const isLast = index === items.length - 1 && !showCreate
+          return (
+            <SelectableListItem
+              key={item.id}
+              label={item.label}
+              selected={highlight && index === activeIndex}
+              position={isFirst && isLast ? 'only' : isFirst ? 'first' : isLast ? 'last' : 'middle'}
+              divider={index < rowCount - 1}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => handleSelect(item)}
+            />
+          )
+        })}
         {showCreate && (
           <SelectableListItem
             label={`Adicionar ${createLabel}: "${trimmed}"`}
             leadingIcon={<Add />}
             data-variant="create"
+            position={items.length === 0 ? 'only' : 'last'}
             selected={highlight && activeIndex === items.length}
             onMouseDown={(event) => event.preventDefault()}
             onClick={handleCreate}
@@ -371,7 +394,13 @@ function SearchCreateField({
               )}
             </span>
           </div>
-          <div className="search-create-field-overlay-list">{renderRows(false)}</div>
+          <div className="search-create-field-overlay-list">
+            {rowCount > 0 ? (
+              <div className="search-create-field-overlay-card">{renderRows(false)}</div>
+            ) : (
+              renderRows(false)
+            )}
+          </div>
         </div>
       )}
     </div>
