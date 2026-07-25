@@ -73,13 +73,43 @@ function App() {
   // instead of closing the page.
   const [screen, setScreen] = useState('home')
 
-  // LinkContent/LinkSession render as an overlay ON TOP of whatever
-  // `screen` currently is, instead of replacing it — critical for
-  // NewSession's "finish" phase and EditSession, both of which hold
-  // meaningful state (phase, pending content, the session being
-  // edited) that a normal screen swap would unmount and lose. null
-  // means no overlay is open.
-  const [pickerScreen, setPickerScreen] = useState(null)
+  // Generic stack of overlays rendered ON TOP of whatever `screen`
+  // currently is, instead of replacing it — critical for NewSession's
+  // "finish" phase, EditSession, and EditContent, all of which hold
+  // meaningful in-progress state that a normal screen swap (navigate())
+  // would unmount and lose. Every layer ever opened here — link-content,
+  // link-session, manual-session, manual-content, manage, session — is
+  // just `{ type, ...payload }` pushed onto this one array; see
+  // docs/navigation-pattern.md for the rule this replaces 5 separate
+  // ad-hoc state vars in order to enforce structurally. Adding a new
+  // overlay type going forward means calling pushOverlay() from wherever
+  // it opens and adding one render clause below — navigate() and the
+  // popstate listener never need to change again.
+  const [overlayStack, setOverlayStack] = useState([])
+
+  function pushOverlay(layer) {
+    const next = [...overlayStack, layer]
+    setOverlayStack(next)
+    window.history.pushState({ screen, overlayStack: next }, '')
+  }
+
+  // Only used by openManageOverlaySessions: drilling from Gerenciar
+  // séries/filmes into a row's sessões replaces that layer (ManageSeries
+  // has no draft worth preserving, see its own doc comment) rather than
+  // stacking a second layer on top of it — still a new history entry,
+  // so back-button behavior is identical to a push.
+  function replaceTopOverlay(layer) {
+    const next = [...overlayStack.slice(0, -1), layer]
+    setOverlayStack(next)
+    window.history.pushState({ screen, overlayStack: next }, '')
+  }
+
+  // Every overlay closes the same way: pop one history entry. The
+  // popstate listener below mirrors history.state.overlayStack back
+  // into state, so this is the only close mechanism ever needed.
+  function closeOverlay() {
+    window.history.back()
+  }
 
   // Which session EditSession is open for — set right before switching
   // to that screen, from the row tapped in Home's history list.
@@ -116,49 +146,10 @@ function App() {
   // own comment for why no per-screen wiring is needed).
   const appContentRef = useRef(null)
 
-  // A manual "Nova sessão" opened from inside LinkSession (see
-  // openManualSession below) renders as a THIRD overlay layer, stacked
-  // on top of the link-session picker overlay, rather than going
-  // through `navigate()` — navigate() swaps `screen`, which would
-  // unmount whatever's underneath (EditContent/EpisodeDetail) and lose
-  // its in-progress draft (link/título/thumbnail etc.). Staying an
-  // overlay keeps all of that mounted and untouched.
-  const [manualSessionOverlay, setManualSessionOverlay] = useState(false)
-
-  // Mirrors manualSessionOverlay, but for "Adicionar conteúdo" tapped
-  // from inside the LinkContent picker (NewSession/EditSession's
-  // "Vincular conteúdo" flow). Must stay an overlay, not navigate() —
-  // navigate() would unmount whatever's underneath (NewSession's
-  // in-progress draft) exactly like manualSessionOverlay's own comment
-  // explains. Saving here feeds the new content back through
-  // pendingPickCallback, same as picking an existing item would.
-  const [manualContentOverlay, setManualContentOverlay] = useState(false)
-
   // Bumped whenever a manual session is saved/discarded so LinkSession
   // (which stays mounted underneath and wouldn't otherwise refetch)
   // picks up the newly created session in its day list.
   const [sessionRefreshTick, setSessionRefreshTick] = useState(0)
-
-  // ManageSeries/EpisodeDetail, opened from EditContent's SearchCreateField
-  // gear icon (renaming/quick-picking a série or filme mid-draft), render
-  // as an overlay stack for the same reason manualSessionOverlay does:
-  // a real navigate() would unmount EditContent and lose the in-progress
-  // ContentForm draft (link, título, temporada/episódio...). null means
-  // closed; { screen, kind, catalogItem } tracks the (at most two-level)
-  // stack — 'manage-series' or 'episode-detail' (filme only, reached by
-  // tapping a row; séries don't drill further from here, see
-  // ManageSeries' own doc comment on why). Opened from Configurações
-  // instead, this same content is a normal full-screen `navigate()` —
-  // there's no draft to preserve there, and drilling into episódios is
-  // exactly what that entry point is for.
-  const [manageOverlay, setManageOverlay] = useState(null)
-
-  // "Ver sessão" tapped from a Sessões vinculadas list (EditContent or
-  // EpisodeDetail's linked-sessions section). Stays an overlay for the
-  // same reason manageOverlay does: a real navigate() to 'edit-session'
-  // would unmount EditContent/EpisodeDetail underneath and lose their
-  // in-progress draft. Holds the tapped session row, or null when closed.
-  const [sessionOverlay, setSessionOverlay] = useState(null)
 
   // Bumped whenever the Gerenciar Séries/Filmes overlay closes, so
   // EditContent (which stays mounted underneath and wouldn't otherwise
@@ -166,74 +157,75 @@ function App() {
   // there — even if the user backed out without tapping a row to select.
   const [catalogRefreshTick, setCatalogRefreshTick] = useState(0)
 
+  // 'manage' layer opened from EditContent's SearchCreateField gear icon
+  // (renaming/quick-picking a série or filme mid-draft). `view` tracks
+  // 'manage-series' or 'episode-detail' (filme/livro only, reached by
+  // tapping a row; séries don't drill further from here, see
+  // ManageSeries' own doc comment on why). Opened from Configurações
+  // instead, this same content is a normal full-screen `navigate()` —
+  // there's no draft to preserve there, and drilling into episódios is
+  // exactly what that entry point is for.
   function openManageOverlay(kind, onSelectItem) {
     pendingPickCallback.current = onSelectItem ?? null
-    const next = { screen: 'manage-series', kind }
-    setManageOverlay(next)
-    window.history.pushState({ screen, pickerScreen, manageOverlay: next }, '')
+    pushOverlay({ type: 'manage', view: 'manage-series', kind })
   }
 
   async function openManageOverlaySessions(kind, item) {
     const content = await getFilmeContent(item.id)
-    const next = { screen: 'episode-detail', kind, catalogItem: item, contentId: content?.id ?? null }
-    setManageOverlay(next)
-    window.history.pushState({ screen, pickerScreen, manageOverlay: next }, '')
+    replaceTopOverlay({ type: 'manage', view: 'episode-detail', kind, catalogItem: item, contentId: content?.id ?? null })
   }
 
   function closeManageOverlay() {
     setCatalogRefreshTick((tick) => tick + 1)
-    window.history.back()
+    closeOverlay()
   }
 
+  // "Ver sessão" tapped from a Sessões vinculadas list (EditContent or
+  // EpisodeDetail's linked-sessions section).
   function openSessionOverlay(session) {
-    setSessionOverlay(session)
-    window.history.pushState({ screen, pickerScreen, manageOverlay, sessionOverlay: session }, '')
+    pushOverlay({ type: 'session', session })
   }
 
   function closeSessionOverlay() {
-    window.history.back()
+    closeOverlay()
   }
 
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
-    setPickerScreen('link-content')
-    window.history.pushState({ screen, pickerScreen: 'link-content' }, '')
+    pushOverlay({ type: 'link-content' })
   }
 
   function openLinkSession(callback) {
     pendingPickCallback.current = callback
-    setPickerScreen('link-session')
-    window.history.pushState({ screen, pickerScreen: 'link-session' }, '')
+    pushOverlay({ type: 'link-session' })
   }
 
   function closePicker() {
-    window.history.back()
+    closeOverlay()
   }
 
   // Opens the manual-entry NewSession overlay on top of whatever's
-  // currently showing (screen + any picker overlay already open),
-  // without touching either — see manualSessionOverlay above.
+  // currently showing (screen + any overlay already open), without
+  // touching either.
   function openManualSession() {
-    setManualSessionOverlay(true)
-    window.history.pushState({ screen, pickerScreen, manualSessionOverlay: true }, '')
+    pushOverlay({ type: 'manual-session' })
   }
 
   function closeManualSession() {
     setSessionRefreshTick((tick) => tick + 1)
-    window.history.back()
+    closeOverlay()
   }
 
   // Opens the manual-entry EditContent overlay on top of the
-  // link-content picker — see manualContentOverlay above.
+  // link-content picker.
   function openManualContent() {
-    setManualContentOverlay(true)
-    window.history.pushState({ screen, pickerScreen, manualContentOverlay: true }, '')
+    pushOverlay({ type: 'manual-content' })
   }
 
   // Cancel path (X/back without saving): just close this overlay
   // layer, back to the LinkContent list underneath.
   function closeManualContentOverlay() {
-    window.history.back()
+    closeOverlay()
   }
 
   // Save path: the new content is the pick — hand it to whoever opened
@@ -255,7 +247,7 @@ function App() {
   // screen. Going "back" — whether via the device/browser back button or
   // an in-app back/close button calling window.history.back() — fires
   // 'popstate', and the listener below just mirrors history.state into
-  // `screen`/`pickerScreen`. This keeps both back mechanisms identical
+  // `screen`/`overlayStack`. This keeps both back mechanisms identical
   // by construction: there's no separate hardcoded "go to settings"
   // style back target anymore, the back button always retraces the
   // actual path taken to reach the current screen (e.g. opening Manage
@@ -266,11 +258,7 @@ function App() {
   const navigate = (nextScreen, session = null) => {
     setEditingSession(session)
     setScreen(nextScreen)
-    setPickerScreen(null)
-    setManualSessionOverlay(false)
-    setManageOverlay(null)
-    setManualContentOverlay(false)
-    setSessionOverlay(null)
+    setOverlayStack([])
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -284,11 +272,7 @@ function App() {
   const navigateSettingsWindow = (nextScreen) => {
     setEditingSession(null)
     setScreen(nextScreen)
-    setPickerScreen(null)
-    setManualSessionOverlay(false)
-    setManageOverlay(null)
-    setManualContentOverlay(false)
-    setSessionOverlay(null)
+    setOverlayStack([])
     window.history.replaceState({ screen: nextScreen }, '')
   }
 
@@ -299,11 +283,7 @@ function App() {
     window.history.replaceState({ screen: 'home' }, '')
     const onPopState = (event) => {
       setScreen(event.state?.screen ?? 'home')
-      setPickerScreen(event.state?.pickerScreen ?? null)
-      setManualSessionOverlay(Boolean(event.state?.manualSessionOverlay))
-      setManageOverlay(event.state?.manageOverlay ?? null)
-      setManualContentOverlay(Boolean(event.state?.manualContentOverlay))
-      setSessionOverlay(event.state?.sessionOverlay ?? null)
+      setOverlayStack(event.state?.overlayStack ?? [])
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -580,7 +560,7 @@ function App() {
       {isDesktop && screen === 'add-languages' && (
         <AddLanguagesWindow onClose={() => window.history.back()} />
       )}
-      {pickerScreen === 'link-content' && (
+      {overlayStack.find((l) => l.type === 'link-content') && (
         <div className="picker-overlay">
           <LinkContent
             onBack={closePicker}
@@ -592,7 +572,7 @@ function App() {
           />
         </div>
       )}
-      {pickerScreen === 'link-session' && (
+      {overlayStack.find((l) => l.type === 'link-session') && (
         <div className="picker-overlay">
           <LinkSession
             onBack={closePicker}
@@ -605,73 +585,83 @@ function App() {
           />
         </div>
       )}
-      {manualSessionOverlay && (
+      {overlayStack.find((l) => l.type === 'manual-session') && (
         <div className="picker-overlay">
           <NewSession timer={timer} manualOnly onClose={closeManualSession} onSaved={closeManualSession} />
         </div>
       )}
-      {manualContentOverlay && (
+      {overlayStack.find((l) => l.type === 'manual-content') && (
         <div className="picker-overlay">
           <EditContent
             contentId={null}
             onBack={closeManualContentOverlay}
             onSaved={saveManualContent}
             // "Vincular sessão" and the gear-icon série/filme manager
-            // both reuse pickerScreen/pendingPickCallback, which this
-            // overlay is already borrowing (it's nested inside the
-            // link-content picker's own pick-in-progress). Opening
-            // either here would clobber that shared state, so they're
-            // no-ops in this context — same simplification manualOnly
-            // NewSession makes for its own nested picker actions.
+            // both reuse pendingPickCallback, which this overlay is
+            // already borrowing (it's nested inside the link-content
+            // picker's own pick-in-progress). Opening either here would
+            // clobber that shared state, so they're no-ops in this
+            // context — same simplification manualOnly NewSession makes
+            // for its own nested picker actions.
             onOpenLinkSession={() => {}}
             catalogRefreshTick={catalogRefreshTick}
           />
         </div>
       )}
-      {manageOverlay?.screen === 'manage-series' && (
-        <div className="picker-overlay">
-          <ManageSeries
-            kind={manageOverlay.kind}
-            onBack={closeManageOverlay}
-            onOpenSessions={
-              manageOverlay.kind === 'filme' || manageOverlay.kind === 'livro'
-                ? (item) => openManageOverlaySessions(manageOverlay.kind, item)
-                : undefined
-            }
-            onSelect={
-              manageOverlay.kind === 'serie'
-                ? (item) => {
-                    pendingPickCallback.current?.(item)
-                    closeManageOverlay()
-                  }
-                : undefined
-            }
-          />
-        </div>
-      )}
-      {manageOverlay?.screen === 'episode-detail' && (
-        <div className="picker-overlay">
-          <EpisodeDetail
-            contentId={manageOverlay.contentId}
-            seriesName={manageOverlay.catalogItem?.label}
-            episode={null}
-            onAddSession={openLinkSession}
-            onOpenSession={openSessionOverlay}
-            onBack={closeManageOverlay}
-          />
-        </div>
-      )}
-      {sessionOverlay && (
-        <div className="picker-overlay">
-          <EditSession
-            session={sessionOverlay}
-            isDesktop={isDesktop}
-            onBack={closeSessionOverlay}
-            onSaved={closeSessionOverlay}
-            onOpenLinkContent={openLinkContent}
-          />
-        </div>
-      )}
+      {(() => {
+        const manageLayer = overlayStack.find((l) => l.type === 'manage')
+        if (!manageLayer) return null
+        if (manageLayer.view === 'manage-series') {
+          return (
+            <div className="picker-overlay">
+              <ManageSeries
+                kind={manageLayer.kind}
+                onBack={closeManageOverlay}
+                onOpenSessions={
+                  manageLayer.kind === 'filme' || manageLayer.kind === 'livro'
+                    ? (item) => openManageOverlaySessions(manageLayer.kind, item)
+                    : undefined
+                }
+                onSelect={
+                  manageLayer.kind === 'serie'
+                    ? (item) => {
+                        pendingPickCallback.current?.(item)
+                        closeManageOverlay()
+                      }
+                    : undefined
+                }
+              />
+            </div>
+          )
+        }
+        return (
+          <div className="picker-overlay">
+            <EpisodeDetail
+              contentId={manageLayer.contentId}
+              seriesName={manageLayer.catalogItem?.label}
+              episode={null}
+              onAddSession={openLinkSession}
+              onOpenSession={openSessionOverlay}
+              onBack={closeManageOverlay}
+            />
+          </div>
+        )
+      })()}
+      {(() => {
+        const sessionLayer = overlayStack.find((l) => l.type === 'session')
+        if (!sessionLayer) return null
+        return (
+          <div className="picker-overlay">
+            <EditSession
+              session={sessionLayer.session}
+              isDesktop={isDesktop}
+              onBack={closeSessionOverlay}
+              onSaved={closeSessionOverlay}
+              onOpenLinkContent={openLinkContent}
+            />
+          </div>
+        )
+      })()}
     </>
   )
 }
