@@ -1,0 +1,30 @@
+.link-session-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-14) var(--space-16);
+  border: 1.5px dashed var(--color-border-subtle);
+  border-radius: var(--radius-medium);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-family-main);
+}
+
+.link-session-row:hover {
+  background: var(--bg-hover-on-elevation-1);
+}
+
+.link-session-row-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-secondary);
+}
+
+.link-session-row-label {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body-medium);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-secondary);
+}

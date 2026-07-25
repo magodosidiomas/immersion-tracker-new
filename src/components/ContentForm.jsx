@@ -3,6 +3,7 @@ import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
 import LinkedSessionListItem from './LinkedSessionListItem'
+import LinkSessionRow from './LinkSessionRow'
 import EmptyState from './EmptyState'
 import Thumbnail from './Thumbnail'
 import Button from './Button'
@@ -24,7 +25,6 @@ import {
   ContentPaste,
   Edit,
   Settings,
-  Schedule,
   Movie,
   Theaters,
   Bookmark,
@@ -521,15 +521,10 @@ const ContentForm = forwardRef(function ContentForm({
                 </>
               )}
               {linkedSessions.length === 0 && (
-                <EmptyState
-                  icon={<Schedule />}
-                  title="Sem sessões"
-                  description="Vincule as sessões em que você usou esse conteúdo."
-                  buttonLabel="Vincular sessão"
-                  buttonIcon={<Add />}
-                  onButtonClick={onAddSession}
-                  style="plain"
-                />
+                <>
+                  <span className="content-form-label">Sessões vinculadas</span>
+                  <LinkSessionRow onClick={onAddSession} />
+                </>
               )}
             </div>
           </>

@@ -4,9 +4,9 @@ import { sessionLabel, formatDurationShort } from '../utils/sessions'
 import { formatDateInput, formatGroupLabel } from '../utils/date'
 import TopNav from '../components/TopNav'
 import LinkedSessionListItem from '../components/LinkedSessionListItem'
-import EmptyState from '../components/EmptyState'
+import LinkSessionRow from '../components/LinkSessionRow'
 import Button from '../components/Button'
-import { ArrowBack, Add, Schedule } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EpisodeDetail.css'
 
 function toRow(session) {
@@ -99,14 +99,10 @@ function EpisodeDetail({ contentId, seriesName = '', episode = null, onAddSessio
             </>
           )}
           {linkedSessions.length === 0 && (
-            <EmptyState
-              icon={<Schedule />}
-              title="Sem sessões"
-              description="Vincule as sessões em que você usou esse conteúdo."
-              buttonLabel="Vincular sessão"
-              buttonIcon={<Add />}
-              onButtonClick={handleAddSession}
-            />
+            <>
+              <span className="episode-detail-label">Sessões vinculadas</span>
+              <LinkSessionRow onClick={handleAddSession} />
+            </>
           )}
         </div>
       </div>
