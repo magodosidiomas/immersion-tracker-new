@@ -232,7 +232,7 @@ function SearchCreateField({
               label={item.label}
               selected={highlight && index === activeIndex}
               position={isFirst && isLast ? 'only' : isFirst ? 'first' : isLast ? 'last' : 'middle'}
-              divider={index < rowCount - 1}
+              divider={index > 0}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => handleSelect(item)}
             />
@@ -244,6 +244,7 @@ function SearchCreateField({
             leadingIcon={<Add />}
             data-variant="create"
             position={items.length === 0 ? 'only' : 'last'}
+            divider={items.length > 0}
             selected={highlight && activeIndex === items.length}
             onMouseDown={(event) => event.preventDefault()}
             onClick={handleCreate}
