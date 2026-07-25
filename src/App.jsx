@@ -195,9 +195,9 @@ function App() {
     pushOverlay({ type: 'link-content' })
   }
 
-  function openLinkSession(callback) {
+  function openLinkSession(callback, contentTitle = null) {
     pendingPickCallback.current = callback
-    pushOverlay({ type: 'link-session' })
+    pushOverlay({ type: 'link-session', contentTitle })
   }
 
   function closePicker() {
@@ -582,6 +582,7 @@ function App() {
             }}
             onAddSession={openManualSession}
             refreshTick={sessionRefreshTick}
+            contentTitle={overlayStack.find((l) => l.type === 'link-session')?.contentTitle}
           />
         </div>
       )}

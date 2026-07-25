@@ -203,7 +203,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
       setView('link-session')
       return
     }
-    onOpenLinkSession(pick)
+    onOpenLinkSession(pick, content?.title)
   }
 
   // Desktop only: gear icon on the série/filme SearchCreateField opens
@@ -359,6 +359,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
         >
           <LinkSession
             headless
+            contentTitle={content?.title}
             onSelect={(session) => {
               pendingPickCallback.current?.(session)
               setView('form')

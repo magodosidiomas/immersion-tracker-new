@@ -5,33 +5,53 @@
   background: var(--bg-background);
 }
 
-/* Centered Dropdown in its own row, with the same full-viewport-width
-   divider trick TopNav/BottomNav use — #root caps at 480px, so a plain
-   border would only span the column, not the real screen edge to edge. */
-.link-session-date-row {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  padding: var(--space-16);
-}
-
-.link-session-date-row::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 100vw;
-  height: 1px;
-  background: var(--color-border-subtle);
-  transform: translateX(-50%);
-}
-
-.link-session-content {
+.link-session-wrap {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  padding: var(--space-16);
+  gap: var(--space-8);
+}
+
+/* Context line — which conteúdo this picker was opened from. Sits
+   outside the card below, grouped with the header instead: it's
+   screen metadata, not a row of content. */
+.link-session-subtitle {
+  margin: 0;
+  padding: 0 var(--space-4);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Single card containing the date picker and the day's sessions (or
+   empty state) — contained divider between them, not the old
+   full-viewport-width trick, since this no longer spans edge to edge. */
+.link-session-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+  overflow: hidden;
+}
+
+.link-session-date-row {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-16);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.link-session-content {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-12);
   padding: var(--space-16);
 }
@@ -46,12 +66,11 @@
   color: var(--color-text-tertiary);
 }
 
-.link-session-card {
+.link-session-list {
   display: flex;
   flex-direction: column;
   width: 100%;
   border-radius: var(--radius-large);
-  background: var(--bg-surface-elevation-1);
   overflow: hidden;
 }
 

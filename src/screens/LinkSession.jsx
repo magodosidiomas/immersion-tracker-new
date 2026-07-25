@@ -18,7 +18,7 @@ import './LinkSession.css'
 // tapping a row does: here it selects that session for linking
 // instead of opening EditSession, and it opens on today by default
 // rather than whatever day was tapped in Statistics' calendar.
-function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless = false }) {
+function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless = false, contentTitle = null }) {
   const [activeId, setActiveId] = useState(null)
   const [selectedDate, setSelectedDate] = useState(formatDateInput(new Date()))
   const [daySessions, setDaySessions] = useState([])
@@ -34,54 +34,62 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
     })
   }, [activeId, selectedDate, refreshTick])
 
+  // contentTitle (the conteúdo this picker was opened from, e.g. from
+  // ContentForm/EpisodeDetail's "Vincular sessão") renders as a plain
+  // subtitle under the header — it's context about the screen itself,
+  // not a row of content, so it deliberately sits outside the card
+  // below and carries no divider of its own.
   const body = (
-    <>
-      <div className="link-session-date-row">
-        <div className="link-session-date-picker">
-          <Dropdown label={formatFullDate(selectedDate)} />
-          <input
-            type="date"
-            className="link-session-date-input"
-            aria-label="Selecionar data"
-            value={selectedDate}
-            onChange={(event) => setSelectedDate(event.target.value)}
-            onClick={(event) => event.target.showPicker?.()}
-          />
+    <div className="link-session-wrap">
+      {contentTitle && <p className="link-session-subtitle">{contentTitle}</p>}
+      <div className="link-session-card">
+        <div className="link-session-date-row">
+          <div className="link-session-date-picker">
+            <Dropdown label={formatFullDate(selectedDate)} />
+            <input
+              type="date"
+              className="link-session-date-input"
+              aria-label="Selecionar data"
+              value={selectedDate}
+              onChange={(event) => setSelectedDate(event.target.value)}
+              onClick={(event) => event.target.showPicker?.()}
+            />
+          </div>
+        </div>
+        <div className="link-session-content">
+          {daySessions.length === 0 ? (
+            <EmptyState
+              icon={<Schedule />}
+              title="Nenhuma sessão nesse dia"
+              description="Suas sessões desse dia vão aparecer aqui."
+              buttonLabel="Adicionar sessão"
+              buttonIcon={<Add />}
+              onButtonClick={onAddSession}
+              style="plain"
+            />
+          ) : (
+            <>
+            <p className="link-session-label">Sessões</p>
+            <div className="link-session-list">
+              {daySessions.map((session, index) => (
+                <ListItem
+                  key={session.id}
+                  label={sessionLabel(session)}
+                  description={formatDuration(session.durationSeconds)}
+                  divider={index < daySessions.length - 1}
+                  trailingIcon={<ChevronRight />}
+                  onClick={() => onSelect(session)}
+                />
+              ))}
+            </div>
+            <Button variant="ghost" fullWidth leadingIcon={<Add />} onClick={onAddSession}>
+              Adicionar sessão nesse dia
+            </Button>
+            </>
+          )}
         </div>
       </div>
-      <div className="link-session-content">
-        {daySessions.length === 0 ? (
-          <EmptyState
-            icon={<Schedule />}
-            title="Nenhuma sessão nesse dia"
-            description="Suas sessões desse dia vão aparecer aqui."
-            buttonLabel="Adicionar sessão"
-            buttonIcon={<Add />}
-            onButtonClick={onAddSession}
-            style="plain"
-          />
-        ) : (
-          <>
-          <p className="link-session-label">Sessões</p>
-          <div className="link-session-card">
-            {daySessions.map((session, index) => (
-              <ListItem
-                key={session.id}
-                label={sessionLabel(session)}
-                description={formatDuration(session.durationSeconds)}
-                divider={index < daySessions.length - 1}
-                trailingIcon={<ChevronRight />}
-                onClick={() => onSelect(session)}
-              />
-            ))}
-          </div>
-          <Button variant="ghost" fullWidth leadingIcon={<Add />} onClick={onAddSession}>
-            Adicionar sessão nesse dia
-          </Button>
-          </>
-        )}
-      </div>
-    </>
+    </div>
   )
 
   // headless: rendered inside a Modal (desktop) that already supplies
@@ -98,7 +106,6 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
           </button>
         }
         title="Vincular sessão"
-        hasDivider
       />
       {body}
     </main>
