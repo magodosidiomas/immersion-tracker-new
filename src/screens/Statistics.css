@@ -93,6 +93,20 @@
     min-width: 0;
   }
 
+  /* The triple row (Recepção x Produção / Produção / Estudo) always
+     has different row counts per card (2 two-line rows vs 3-4
+     single-line rows), so content height never coincidentally
+     matches. Figma keeps all 3 the same height regardless — stretch
+     the cards and let the shorter ones absorb the leftover space
+     below their legend instead of relying on content to line up. */
+  .statistics-row-triple {
+    align-items: stretch;
+  }
+
+  .statistics-row-triple > .donut-card {
+    height: auto;
+  }
+
   /* .app-content--full removes the 480px phone-column cap, so
      statistics-content spans the full remaining width beside the
      sidebar. Centered max-width + generous side padding keeps it
