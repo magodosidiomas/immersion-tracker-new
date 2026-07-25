@@ -59,6 +59,7 @@
 }
 
 .finish-session-divider {
+  flex-shrink: 0;
   height: 1px;
   margin: 0 calc(-1 * var(--space-16));
   background: var(--color-border-subtle);
