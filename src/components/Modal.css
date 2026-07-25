@@ -58,6 +58,9 @@
 
 .modal-title--left {
   text-align: left;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  color: var(--color-text-primary);
 }
 
 .modal-content {
