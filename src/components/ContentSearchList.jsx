@@ -4,6 +4,7 @@ import EmptyState from './EmptyState'
 import { CONTENT_TYPES } from '../data/contentTypes'
 import {
   Search,
+  SearchOff,
   Add,
   Book,
   Videocam,
@@ -20,6 +21,19 @@ import './ContentSearchList.css'
 // as a lookup here rather than storing components in that data file,
 // since that file is also imported by non-UI code paths.
 const TYPE_ICONS = { Videocam, Mic, Tv, Movie, Bookmark, Newspaper, Apps }
+
+// Empty-state copy per content type, shown when a type filter is active
+// and no items match it (library has content, just none of that type).
+const EMPTY_STATE_COPY = {
+  youtube: { title: 'Nenhum vídeo do YouTube ainda', description: 'Adicione um vídeo pra começar.' },
+  podcast: { title: 'Nenhum podcast ainda', description: 'Adicione um episódio pra começar.' },
+  serie: { title: 'Nenhuma série ainda', description: 'Adicione uma série pra começar.' },
+  filme: { title: 'Nenhum filme ainda', description: 'Adicione um filme pra começar.' },
+  livro: { title: 'Nenhum livro ainda', description: 'Adicione um livro pra começar.' },
+  website: { title: 'Nenhum site ainda', description: 'Adicione um site pra começar.' },
+  outro: { title: 'Nada por aqui ainda', description: 'Adicione um conteúdo pra começar.' },
+}
+
 
 // The search+add row, type filter chips, and day-grouped content list
 // shared by Library and LinkContent — same body, different chrome
@@ -43,7 +57,37 @@ function ContentSearchList({
   showEmptyStateButton = true,
   hasContent = true,
 }) {
+  const hasQuery = query.trim().length > 0
+  const activeType = selectedTypes.length === 1 ? selectedTypes[0] : null
+
+  function renderEmptyIcon() {
+    if (emptyVariant === 'search') return <SearchOff />
+    if (emptyVariant === 'type') {
+      const typeMeta = CONTENT_TYPES.find((type) => type.key === activeType)
+      const TypeIcon = typeMeta && TYPE_ICONS[typeMeta.icon]
+      if (TypeIcon) return <TypeIcon />
+    }
+    return <Book />
+  }
+
+  let emptyTitle = 'Nenhum conteúdo ainda'
+  let emptyDescription = 'Seus conteúdos vão aparecer aqui quando você adicionar.'
+  let emptyShowButton = showEmptyStateButton
+  let emptyVariant = 'default'
+
+  if (hasContent && hasQuery) {
+    emptyTitle = 'Nenhum resultado encontrado'
+    emptyDescription = 'Tente pesquisar por outro termo.'
+    emptyShowButton = false
+    emptyVariant = 'search'
+  } else if (hasContent && activeType && EMPTY_STATE_COPY[activeType]) {
+    emptyTitle = EMPTY_STATE_COPY[activeType].title
+    emptyDescription = EMPTY_STATE_COPY[activeType].description
+    emptyVariant = 'type'
+  }
+
   return (
+
     <>
       {hasContent && (
         <>
@@ -99,10 +143,10 @@ function ContentSearchList({
         <EmptyState
           style={emptyStateStyle}
           buttonVariant={emptyStateButtonVariant}
-          icon={<Book />}
-          title="Sua biblioteca está vazia"
-          description="Comece adicionando o que você está lendo, assistindo ou ouvindo"
-          buttonLabel={showEmptyStateButton ? 'Adicionar conteúdo' : undefined}
+          icon={renderEmptyIcon()}
+          title={emptyTitle}
+          description={emptyDescription}
+          buttonLabel={emptyShowButton ? 'Adicionar conteúdo' : undefined}
           buttonIcon={<Add />}
           onButtonClick={onAddContent}
         />
