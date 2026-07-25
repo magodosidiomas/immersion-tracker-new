@@ -27,8 +27,15 @@ import {
   Schedule,
   Movie,
   Theaters,
+  Bookmark,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ContentForm.css'
+
+const RELATED_KIND_META = {
+  serie: { label: 'série', labelCap: 'Série', article: 'uma', icon: <Theaters />, emptyTitle: 'Nenhuma série cadastrada ainda', emptyDescription: 'Séries que você adicionar vão aparecer aqui.' },
+  filme: { label: 'filme', labelCap: 'Filme', article: 'um', icon: <Movie />, emptyTitle: 'Nenhum filme cadastrado ainda', emptyDescription: 'Filmes que você adicionar vão aparecer aqui.' },
+  livro: { label: 'livro', labelCap: 'Livro', article: 'um', icon: <Bookmark />, emptyTitle: 'Nenhum livro cadastrado ainda', emptyDescription: 'Livros que você adicionar vão aparecer aqui.' },
+}
 
 // The "Novo/editar conteúdo" form — same fields whether creating or
 // editing (only the save target differs, same split as SessionForm/
@@ -40,19 +47,17 @@ import './ContentForm.css'
 //   - website: Link + Título, manual (no oEmbed provider)
 //   - serie: SearchCreateField + Temporada/Episódio, título is
 //     derived ("Nome · T1 E1") rather than typed
-//   - filme: SearchCreateField only
-//   - livro: Título + Autor
+//   - filme/livro: SearchCreateField only
 //   - outro: Título only
 //
-// Séries/filmes aren't static taxonomy like CONTENT_TYPES — they're
-// user data, so the list to search/create against comes in as
-// `seriesItems`/`movieItems` rather than being owned here (same
-// reasoning as SearchCreateField itself staying "dumb").
+// Séries/filmes/livros aren't static taxonomy like CONTENT_TYPES —
+// they're user data, so the list to search/create against comes in as
+// `seriesItems`/`movieItems`/`bookItems` rather than being owned here
+// (same reasoning as SearchCreateField itself staying "dumb").
 const ContentForm = forwardRef(function ContentForm({
   initialType = 'youtube',
   initialLink = '',
   initialTitle = '',
-  initialAuthor = '',
   initialThumbnail = '',
   initialSeason = '',
   initialEpisode = '',
@@ -64,6 +69,7 @@ const ContentForm = forwardRef(function ContentForm({
   onAddSession,
   seriesItems = [],
   movieItems = [],
+  bookItems = [],
   onCreateRelated,
   onManageRelated,
   existingContents = [],
@@ -84,7 +90,6 @@ const ContentForm = forwardRef(function ContentForm({
   const [attemptedSave, setAttemptedSave] = useState(false)
   const [link, setLink] = useState(initialLink)
   const [title, setTitle] = useState(initialTitle)
-  const [author, setAuthor] = useState(initialAuthor)
   const [thumbnail] = useState(initialThumbnail)
   const [season, setSeason] = useState(initialSeason)
   const [episode, setEpisode] = useState(initialEpisode)
@@ -106,9 +111,9 @@ const ContentForm = forwardRef(function ContentForm({
 
   useEffect(() => {
     onDirtyChange?.(
-      Boolean(link.trim() || title.trim() || author.trim() || season || episode || relatedQuery.trim()),
+      Boolean(link.trim() || title.trim() || season || episode || relatedQuery.trim()),
     )
-  }, [link, title, author, season, episode, relatedQuery, onDirtyChange])
+  }, [link, title, season, episode, relatedQuery, onDirtyChange])
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {
@@ -119,12 +124,11 @@ const ContentForm = forwardRef(function ContentForm({
 
   function handleTypeChange(key) {
     if (key === type) return
-    setFieldsByType((cache) => ({ ...cache, [type]: { link, title, author, season, episode, relatedQuery, relatedId } }))
+    setFieldsByType((cache) => ({ ...cache, [type]: { link, title, season, episode, relatedQuery, relatedId } }))
     const cached = fieldsByType[key]
     setType(key)
     setLink(cached?.link ?? '')
     setTitle(cached?.title ?? '')
-    setAuthor(cached?.author ?? '')
     setSeason(cached?.season ?? '')
     setEpisode(cached?.episode ?? '')
     setRelatedQuery(cached?.relatedQuery ?? '')
@@ -212,7 +216,7 @@ const ContentForm = forwardRef(function ContentForm({
   // above (which validate *format*), this catches empty required
   // fields per type so a blank/near-blank content item can't be saved.
   const requiredTitleError =
-    !title.trim() && (type === 'podcast' || type === 'website' || type === 'livro' || type === 'outro')
+    !title.trim() && (type === 'podcast' || type === 'website' || type === 'outro')
       ? 'Coloque um título.'
       : null
   const requiredLinkError =
@@ -224,14 +228,18 @@ const ContentForm = forwardRef(function ContentForm({
 
   const isSeries = type === 'serie'
   const isMovie = type === 'filme'
+  const isBook = type === 'livro'
+  const hasRelated = isSeries || isMovie || isBook
   const hasLinkField = type === 'youtube' || type === 'podcast' || type === 'website' || type === 'outro'
-  // série/filme: sessões only make sense once a título is actually
-  // selected (or there's nothing to select yet) — gated on relatedId
-  // instead of the link-based check the other types use.
-  const showSessions = isSeries || isMovie ? Boolean(relatedId) : !hasLinkField || link.trim().length > 0
-  const relatedKind = isSeries ? 'serie' : 'filme'
-  const relatedLabel = isSeries ? 'série' : 'filme'
-  const relatedItems = isSeries ? seriesItems : movieItems
+  // série/filme/livro: sessões only make sense once a título is
+  // actually selected (or there's nothing to select yet) — gated on
+  // relatedId instead of the link-based check the other types use.
+  const showSessions = hasRelated ? Boolean(relatedId) : !hasLinkField || link.trim().length > 0
+  const relatedMeta = RELATED_KIND_META[type]
+  const relatedKind = type
+  const relatedLabel = relatedMeta?.label
+  const relatedItemsByKind = { serie: seriesItems, filme: movieItems, livro: bookItems }
+  const relatedItems = relatedItemsByKind[type] ?? []
   const filteredRelatedItems = relatedQuery.trim()
     ? relatedItems.filter((item) => normalizeForCompare(item.label).includes(normalizeForCompare(relatedQuery)))
     : relatedItems
@@ -240,7 +248,7 @@ const ContentForm = forwardRef(function ContentForm({
       ? `${relatedQuery}${season ? ` · T${season}` : ''}${episode ? ` E${episode}` : ''}`
       : ''
   const requiredRelatedError =
-    (isSeries || isMovie) && !relatedId ? `Selecione ${isSeries ? 'uma série' : 'um filme'}.` : null
+    hasRelated && !relatedId ? `Selecione ${relatedMeta.article} ${relatedMeta.label}.` : null
   const requiredSeasonEpisodeError =
     isSeries && relatedId && (!season || !episode) ? 'Preencha temporada e episódio.' : null
 
@@ -295,7 +303,6 @@ const ContentForm = forwardRef(function ContentForm({
       type,
       link,
       title,
-      author,
       thumbnail: displayThumbnail,
       season,
       episode,
@@ -399,24 +406,22 @@ const ContentForm = forwardRef(function ContentForm({
           </>
         )}
 
-        {(isSeries || isMovie) && (
+        {hasRelated && (
           <>
             {relatedItems.length === 0 ? (
               <EmptyState
                 style="plain"
-                icon={isSeries ? <Theaters /> : <Movie />}
-                title={isSeries ? 'Nenhuma série cadastrada ainda' : 'Nenhum filme cadastrado ainda'}
-                description={
-                  isSeries ? 'Séries que você adicionar vão aparecer aqui.' : 'Filmes que você adicionar vão aparecer aqui.'
-                }
+                icon={relatedMeta.icon}
+                title={relatedMeta.emptyTitle}
+                description={relatedMeta.emptyDescription}
                 buttonLabel={`Adicionar ${relatedLabel}`}
                 buttonIcon={<Add />}
                 onButtonClick={() => setShowCreateRelated(true)}
               />
             ) : (
               <SearchCreateField
-                label={isSeries ? 'Série' : 'Filme'}
-                placeholder={`Busque ou adicione ${isSeries ? 'uma série' : 'um filme'}`}
+                label={relatedMeta.labelCap}
+                placeholder={`Busque ou adicione ${relatedMeta.article} ${relatedMeta.label}`}
                 value={relatedQuery}
                 onChange={setRelatedQuery}
                 items={filteredRelatedItems}
@@ -455,25 +460,6 @@ const ContentForm = forwardRef(function ContentForm({
                 {season && <InputField label="Título" value={derivedTitle} hint="Gerado automaticamente" disabled />}
               </>
             )}
-          </>
-        )}
-
-        {type === 'livro' && (
-          <>
-            <InputField
-              label="Título"
-              placeholder="Nome do livro"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              error={duplicateError || (attemptedSave && requiredTitleError)}
-            />
-            <InputField
-              label="Autor"
-              placeholder="Nome do autor"
-              value={author}
-              onChange={(event) => setAuthor(event.target.value)}
-            />
-            {thumbnail && <Thumbnail size="book" src={thumbnail} alt={title} />}
           </>
         )}
 
@@ -585,7 +571,7 @@ const ContentForm = forwardRef(function ContentForm({
         }
       >
         <InputField
-          label={isSeries ? 'Série' : 'Filme'}
+          label={relatedMeta?.labelCap}
           placeholder="Digite o título"
           value={createRelatedName}
           onChange={(event) => setCreateRelatedName(event.target.value)}

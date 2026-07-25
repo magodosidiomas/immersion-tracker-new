@@ -1,12 +1,13 @@
 import TopNav from '../components/TopNav'
 import SelectableListItem from '../components/SelectableListItem'
-import { ArrowBack, Public, Backup, VideoLabel, Movie, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Public, Backup, VideoLabel, Movie, Bookmark, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Settings.css'
 
 // "Idiomas" opens the language management screen, "Backup" opens the
-// export/import screen. "Séries"/"Filmes" open the content-catalog
-// management screens (rename/delete, and for séries also episodes).
-function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSeries, onOpenManageMovies }) {
+// export/import screen. "Séries"/"Filmes"/"Livros" open the
+// content-catalog management screens (rename/delete, and for séries
+// also episodes).
+function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSeries, onOpenManageMovies, onOpenManageBooks }) {
   return (
     <main className="settings">
       <TopNav
@@ -54,9 +55,15 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               label="Filmes"
               leadingIcon={<Movie />}
               trailingIcon={<ChevronRight />}
+              onClick={onOpenManageMovies}
+            />
+            <SelectableListItem
+              label="Livros"
+              leadingIcon={<Bookmark />}
+              trailingIcon={<ChevronRight />}
               position="last"
               divider
-              onClick={onOpenManageMovies}
+              onClick={onOpenManageBooks}
             />
           </div>
         </div>

@@ -369,6 +369,7 @@ function App() {
           onOpenBackup={() => navigate('backup')}
           onOpenManageSeries={() => navigate('manage-series')}
           onOpenManageMovies={() => navigate('manage-movies')}
+          onOpenManageBooks={() => navigate('manage-books')}
         />
       )
     }
@@ -453,9 +454,9 @@ function App() {
         />
       )
     }
-    if (screen === 'manage-series' || screen === 'manage-movies') {
+    if (screen === 'manage-series' || screen === 'manage-movies' || screen === 'manage-books') {
       if (isDesktop) return null
-      const kind = screen === 'manage-series' ? 'serie' : 'filme'
+      const kind = screen === 'manage-series' ? 'serie' : screen === 'manage-movies' ? 'filme' : 'livro'
       return (
         <ManageSeries
           kind={kind}
@@ -548,7 +549,7 @@ function App() {
           />
         </div>
       )}
-      {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies'].includes(screen) && (
+      {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies', 'manage-books'].includes(screen) && (
         <SettingsWindow
           screen={screen}
           onNavigate={navigateSettingsWindow}
@@ -617,7 +618,9 @@ function App() {
             kind={manageOverlay.kind}
             onBack={closeManageOverlay}
             onOpenSessions={
-              manageOverlay.kind === 'filme' ? (item) => openManageOverlaySessions(manageOverlay.kind, item) : undefined
+              manageOverlay.kind === 'filme' || manageOverlay.kind === 'livro'
+                ? (item) => openManageOverlaySessions(manageOverlay.kind, item)
+                : undefined
             }
             onSelect={
               manageOverlay.kind === 'serie'

@@ -9,17 +9,18 @@ import BottomSheet from '../components/BottomSheet'
 import InputField from '../components/InputField'
 import EmptyState from '../components/EmptyState'
 import { normalizeForCompare } from '../utils/text'
-import { ArrowBack, Add, Edit, Delete, Theaters, Movie } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Add, Edit, Delete, Theaters, Movie, Bookmark } from '@nine-thirty-five/material-symbols-react/outlined'
 import './ManageSeries.css'
 
-// Shared "manage catalog" screen for séries and filmes (kind picks the
-// copy and navigation). Séries rows open the episodes screen — pencil
-// renames, since there's still a name to edit at that layer. Filmes
-// skip the episódios layer entirely: both tap and pencil go straight
-// to the "Sessões" screen for that filme (there's nothing to rename
-// mid-flow, only via "+ Adicionar filme"'s own name entry). The same
-// rename BottomSheet is reused for "add new" (renameTarget.id is null
-// in that case) rather than building a second near-identical sheet.
+// Shared "manage catalog" screen for séries, filmes, and livros (kind
+// picks the copy and navigation). Séries rows open the episodes
+// screen — pencil renames, since there's still a name to edit at that
+// layer. Filmes/livros skip the episódios layer entirely: both tap
+// and pencil go straight to the "Sessões" screen for that item
+// (there's nothing to rename mid-flow, only via "+ Adicionar"'s own
+// name entry). The same rename BottomSheet is reused for "add new"
+// (renameTarget.id is null in that case) rather than building a
+// second near-identical sheet.
 //
 // onOpenEpisodes is optional: when this screen is opened from inside
 // "Adicionar conteúdo" (picking/creating the série being added), the
@@ -29,13 +30,19 @@ import './ManageSeries.css'
 // being edited, mirroring SearchCreateField's own onSelect). Only the
 // Configurações entry point wires onOpenEpisodes, where full drilldown
 // makes sense — and onSelect is omitted there, since there's no form to
-// select into. Filmes' onOpenSessions isn't restricted the same way,
-// since it's the only way to rename a filme in the first place (see the
-// row below).
+// select into. Filmes/livros' onOpenSessions isn't restricted the same
+// way, since it's the only way to rename one in the first place (see
+// the row below).
 //
 // Self-fetches its own languageId + catalog (same convention as
 // Home/Statistics/Library) — only navigation callbacks come from
 // whoever renders this screen.
+const KIND_META = {
+  serie: { label: 'série', labelCap: 'Série', article: 'uma', icon: <Theaters /> },
+  filme: { label: 'filme', labelCap: 'Filme', article: 'um', icon: <Movie /> },
+  livro: { label: 'livro', labelCap: 'Livro', article: 'um', icon: <Bookmark /> },
+}
+
 const ManageSeries = forwardRef(function ManageSeries(
   { kind = 'serie', onBack, onOpenEpisodes, onOpenSessions, onSelect, embedded, hideFooter },
   ref,
@@ -49,8 +56,9 @@ const ManageSeries = forwardRef(function ManageSeries(
   const [deleteTarget, setDeleteTarget] = useState(null)
 
   const isSerie = kind === 'serie'
-  const label = isSerie ? 'série' : 'filme'
-  const labelCap = isSerie ? 'Série' : 'Filme'
+  const meta = KIND_META[kind] ?? KIND_META.filme
+  const { label, labelCap, article } = meta
+  const itemPhrase = `${article} ${label}`
 
   useEffect(() => {
     getAppSettings().then((settings) => setLanguageId(settings.activeLanguageId))
@@ -84,7 +92,7 @@ const ManageSeries = forwardRef(function ManageSeries(
     const value = renameValue.trim()
     if (!value) return
     if (isDuplicateName(value, renameTarget.id)) {
-      setRenameError(`Já existe ${isSerie ? 'uma série' : 'um filme'} com esse nome.`)
+      setRenameError(`Já existe ${itemPhrase} com esse nome.`)
       return
     }
     if (renameTarget.id) await renameCatalogEntry(renameTarget.id, value)
@@ -120,14 +128,14 @@ const ManageSeries = forwardRef(function ManageSeries(
       ? 'Essa série e todos os episódios serão removidos da sua lista e todas as suas sessões serão desvinculadas.'
       : 'Essa série e todos os episódios serão removidos da sua lista.'
     : hasLinked
-      ? 'Esse filme será removido da sua lista e todas as suas sessões serão desvinculadas.'
-      : 'Esse filme será removido da sua lista.'
+      ? `Esse ${label} será removido da sua lista e todas as suas sessões serão desvinculadas.`
+      : `Esse ${label} será removido da sua lista.`
 
   return (
     <main className="manage-series" data-embedded={embedded || undefined}>
       {!embedded && (
         <TopNav
-          title={isSerie ? 'Gerenciar séries' : 'Gerenciar filmes'}
+          title={`Gerenciar ${label}s`}
           hasDivider
           leadingIcon={
             <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
@@ -140,8 +148,8 @@ const ManageSeries = forwardRef(function ManageSeries(
         <div className="manage-series-empty">
           <EmptyState
             style="plain"
-            icon={isSerie ? <Theaters /> : <Movie />}
-            title={isSerie ? 'Nenhuma série adicionada' : 'Nenhum filme adicionado'}
+            icon={meta.icon}
+            title={isSerie ? 'Nenhuma série adicionada' : `Nenhum ${label} adicionado`}
             description={`Toque no botão abaixo para adicionar sua primeira ${label}.`}
           />
         </div>
@@ -151,7 +159,7 @@ const ManageSeries = forwardRef(function ManageSeries(
             <SearchCreateField
               variant="filter"
               label={labelCap}
-              placeholder={`Busque ou adicione ${isSerie ? 'uma série' : 'um filme'}`}
+              placeholder={`Busque ou adicione ${itemPhrase}`}
               value={query}
               onChange={setQuery}
             />
@@ -228,7 +236,7 @@ const ManageSeries = forwardRef(function ManageSeries(
         }
       >
         <InputField
-          label={`Nome ${isSerie ? 'da série' : 'do filme'}`}
+          label={`Nome ${isSerie ? 'da série' : `do ${label}`}`}
           value={renameValue}
           onChange={(event) => {
             setRenameValue(event.target.value)

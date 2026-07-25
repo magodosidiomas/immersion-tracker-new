@@ -2,7 +2,7 @@
 // Keys match the category chips in Figma exactly (not just icon
 // fallback groups — the type also decides which fields the form
 // shows: link+autofill for youtube/podcast, search+create for
-// serie/filme, título+autor for livro, and so on).
+// serie/filme/livro, and so on).
 export const CONTENT_TYPES = [
   { key: 'youtube', label: 'YouTube', icon: 'Videocam' },
   { key: 'podcast', label: 'Podcast', icon: 'Mic' },

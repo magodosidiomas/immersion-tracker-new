@@ -57,6 +57,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   const [existingContents, setExistingContents] = useState([])
   const [seriesItems, setSeriesItems] = useState([])
   const [movieItems, setMovieItems] = useState([])
+  const [bookItems, setBookItems] = useState([])
   const [linkedSessions, setLinkedSessions] = useState([])
   const [pendingSessions, setPendingSessions] = useState([])
   const [saving, setSaving] = useState(false)
@@ -102,6 +103,9 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     getContentCatalog(languageId, 'filme').then((entries) =>
       setMovieItems(entries.map((entry) => ({ id: entry.id, label: entry.name }))),
     )
+    getContentCatalog(languageId, 'livro').then((entries) =>
+      setBookItems(entries.map((entry) => ({ id: entry.id, label: entry.name }))),
+    )
   }
 
   useEffect(refreshCatalogs, [languageId, catalogRefreshTick])
@@ -121,7 +125,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   async function handleSave(fields) {
     if (saving) return
     setSaving(true)
-    const { type, link, title, author, thumbnail, season, episode, relatedId } = fields
+    const { type, link, title, thumbnail, season, episode, relatedId } = fields
 
     let savedContentId = contentId
     if (type === 'serie') {
@@ -129,18 +133,18 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
         const saved = await saveSerieContent(relatedId, Number(season), Number(episode))
         savedContentId = saved?.id ?? savedContentId
       }
-    } else if (type === 'filme') {
+    } else if (type === 'filme' || type === 'livro') {
       if (relatedId) {
-        // The filme's content row already exists (created alongside
-        // its catalog entry) — nothing further to save here.
+        // The filme/livro's content row already exists (created
+        // alongside its catalog entry) — nothing further to save here.
         const saved = await getFilmeContent(relatedId)
         savedContentId = saved?.id ?? savedContentId
       }
     } else if (isNew) {
-      const saved = await createContent({ languageId, type, link, title, author, thumbnail })
+      const saved = await createContent({ languageId, type, link, title, thumbnail })
       savedContentId = saved.id
     } else {
-      await updateContent({ ...content, type, link, title, author, thumbnail })
+      await updateContent({ ...content, type, link, title, thumbnail })
     }
 
     if (isNew && savedContentId && pendingSessions.length > 0) {
@@ -160,20 +164,20 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
 
   async function handleCreateRelated(kind, name) {
     // Same name, different case/accents (e.g. "house of cards" vs
-    // "House of Cards") is treated as the same série/filme — reuse the
-    // existing entry instead of creating a duplicate row in the catalog.
-    const existingItems = kind === 'serie' ? seriesItems : movieItems
+    // "House of Cards") is treated as the same série/filme/livro —
+    // reuse the existing entry instead of creating a duplicate row in
+    // the catalog.
+    const itemsByKind = { serie: seriesItems, filme: movieItems, livro: bookItems }
+    const existingItems = itemsByKind[kind] ?? []
     const match = existingItems.find((item) => normalizeForCompare(item.label) === normalizeForCompare(name))
     if (match) return match
 
     const entry = await addCatalogEntry(languageId, kind, name)
-    if (kind === 'serie') {
-      const updated = await getContentCatalog(languageId, 'serie')
-      setSeriesItems(updated.map((item) => ({ id: item.id, label: item.name })))
-    } else {
-      const updated = await getContentCatalog(languageId, 'filme')
-      setMovieItems(updated.map((item) => ({ id: item.id, label: item.name })))
-    }
+    const updated = await getContentCatalog(languageId, kind)
+    const mapped = updated.map((item) => ({ id: item.id, label: item.name }))
+    if (kind === 'serie') setSeriesItems(mapped)
+    else if (kind === 'filme') setMovieItems(mapped)
+    else if (kind === 'livro') setBookItems(mapped)
     return { id: entry.id, label: entry.name }
   }
 
@@ -249,7 +253,6 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           initialType={content?.type}
           initialLink={content?.link}
           initialTitle={content?.title}
-          initialAuthor={content?.author}
           initialThumbnail={content?.thumbnail}
           initialSeason={content?.season}
           initialEpisode={content?.episode}
@@ -261,6 +264,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           onAddSession={handleAddSession}
           seriesItems={seriesItems}
           movieItems={movieItems}
+          bookItems={bookItems}
           onCreateRelated={handleCreateRelated}
           onManageRelated={handleOpenManage}
           existingContents={existingContents}
@@ -386,9 +390,10 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
       )
     }
     if (view === 'manage-series') {
+      const kindLabels = { serie: 'Gerenciar séries', filme: 'Gerenciar filmes', livro: 'Gerenciar livros' }
       return (
         <Modal
-          title={manageDrill?.kind === 'serie' ? 'Gerenciar séries' : 'Gerenciar filmes'}
+          title={kindLabels[manageDrill?.kind] ?? 'Gerenciar filmes'}
           leadingIcon={<ArrowBack />}
           onLeadingClick={closeDesktopManage}
           onClose={onBack}
@@ -399,10 +404,10 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
             embedded
             kind={manageDrill?.kind}
             onOpenSessions={
-              manageDrill?.kind === 'filme'
+              manageDrill?.kind === 'filme' || manageDrill?.kind === 'livro'
                 ? async (item) => {
-                    const filmeContent = await getFilmeContent(item.id)
-                    setManageDrill({ kind: 'filme', catalogItem: item, contentId: filmeContent?.id ?? null })
+                    const catalogContent = await getFilmeContent(item.id)
+                    setManageDrill({ kind: manageDrill.kind, catalogItem: item, contentId: catalogContent?.id ?? null })
                     setView('episode-detail')
                   }
                 : undefined

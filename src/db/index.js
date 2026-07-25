@@ -37,10 +37,11 @@ function openDB() {
         db.createObjectStore('timerDraft', { keyPath: 'id' })
       }
 
-      // Content catalog: the named, reusable "séries"/"filmes" entries
-      // managed from Settings > Conteúdo (Gerenciar séries/filmes) —
-      // independent of any specific content item, so a série can exist
-      // (and have episodes) before any content/session references it.
+      // Content catalog: the named, reusable "séries"/"filmes"/"livros"
+      // entries managed from Settings > Conteúdo (Gerenciar séries/
+      // filmes/livros) — independent of any specific content item, so
+      // a série can exist (and have episodes) before any content/
+      // session references it.
       if (!db.objectStoreNames.contains('contentCatalog')) {
         const catalog = db.createObjectStore('contentCatalog', { keyPath: 'id' })
         catalog.createIndex('languageId', 'languageId')
@@ -53,10 +54,10 @@ function openDB() {
         episodes.createIndex('catalogId', 'catalogId')
       }
 
-      // The actual Biblioteca items. youtube/podcast/website/outro/
-      // livro carry their own title/link/thumbnail/author directly;
-      // serie/filme instead carry a catalogId (+ episodeId for serie)
-      // and their título/thumbnail are derived by joining at read time.
+      // The actual Biblioteca items. youtube/podcast/website/outro
+      // carry their own title/link/thumbnail directly; serie/filme/
+      // livro instead carry a catalogId (+ episodeId for serie) and
+      // their título is derived by joining at read time.
       if (!db.objectStoreNames.contains('contents')) {
         const contents = db.createObjectStore('contents', { keyPath: 'id' })
         contents.createIndex('languageId', 'languageId')
@@ -257,21 +258,21 @@ export async function deleteSession(sessionId) {
   await remove('sessions', sessionId)
 }
 
-// ---------- Content catalog (séries/filmes) ----------
+// ---------- Content catalog (séries/filmes/livros) ----------
 
-// Adding a filme immediately creates its (single) linkable content
-// row too — a filme has nothing further to configure, so it can be
-// linked to sessions right away. A série instead only becomes
-// linkable episode by episode (see addEpisode), since the point of
-// the extra layer is picking which episode a session covers.
+// Adding a filme/livro immediately creates its (single) linkable
+// content row too — a filme/livro has nothing further to configure,
+// so it can be linked to sessions right away. A série instead only
+// becomes linkable episode by episode (see addEpisode), since the
+// point of the extra layer is picking which episode a session covers.
 export async function addCatalogEntry(languageId, kind, name) {
   const entry = { id: generateId(), languageId, kind, name }
   await put('contentCatalog', entry)
-  if (kind === 'filme') {
+  if (kind === 'filme' || kind === 'livro') {
     await put('contents', {
       id: generateId(),
       languageId,
-      type: 'filme',
+      type: kind,
       catalogId: entry.id,
       createdAt: new Date().toISOString(),
     })
@@ -309,9 +310,9 @@ export async function deleteCatalogEntry(id) {
   ])
 }
 
-// languageId + kind together, since séries and filmes are both stored
-// in the same store — used by ContentForm's SearchCreateField and
-// Settings > Gerenciar séries/filmes.
+// languageId + kind together, since séries/filmes/livros are all
+// stored in the same store — used by ContentForm's SearchCreateField
+// and Settings > Gerenciar séries/filmes/livros.
 export async function getContentCatalog(languageId, kind) {
   const [all, contents, episodes, sessionContents] = await Promise.all([
     getAllByIndex('contentCatalog', 'languageId', languageId),
@@ -402,17 +403,17 @@ async function resolveContentTitle(content) {
     if (!catalogEntry || !episode) return content.title ?? null
     return `${catalogEntry.name} · T${episode.season} E${episode.episode}`
   }
-  if (content.type === 'filme') {
+  if (content.type === 'filme' || content.type === 'livro') {
     const catalogEntry = await getOne('contentCatalog', content.catalogId)
     return catalogEntry?.name ?? null
   }
   return content.title ?? null
 }
 
-// Plain create for every type except serie/filme, which go through
-// addEpisode/addCatalogEntry instead (their content row is a side
-// effect of that, not a standalone create call) — ContentForm calls
-// this one only for youtube/podcast/website/livro/outro.
+// Plain create for every type except serie/filme/livro, which go
+// through addEpisode/addCatalogEntry instead (their content row is a
+// side effect of that, not a standalone create call) — ContentForm
+// calls this one only for youtube/podcast/website/outro.
 export async function createContent(data) {
   const content = { id: generateId(), createdAt: new Date().toISOString(), ...data }
   await put('contents', content)
@@ -491,11 +492,13 @@ export async function saveSerieContent(catalogId, season, episode) {
   return contents[0]
 }
 
-// A filme's single content row was already created alongside its
-// catalog entry (see addCatalogEntry) — this just looks it up.
+// A filme/livro's single content row was already created alongside
+// its catalog entry (see addCatalogEntry) — this just looks it up.
+// Shared by both kinds since a catalogId only ever belongs to one
+// catalog entry, so there's no ambiguity in which type comes back.
 export async function getFilmeContent(catalogId) {
   const contents = await getAllByIndex('contents', 'catalogId', catalogId)
-  return contents.find((content) => content.type === 'filme')
+  return contents.find((content) => content.type === 'filme' || content.type === 'livro')
 }
 
 // ---------- Session <-> Content links ----------

@@ -6,7 +6,7 @@ import ManageEpisodes from '../screens/ManageEpisodes'
 import EpisodeDetail from '../screens/EpisodeDetail'
 import Button from './Button'
 import { getFilmeContent } from '../db'
-import { Public, Backup as BackupIcon, VideoLabel, Movie, Close, ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Public, Backup as BackupIcon, VideoLabel, Movie, Bookmark, Close, ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SettingsWindow.css'
 
 // Desktop-only (>=1280px) windowed shell for Configurações — mirrors
@@ -33,6 +33,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
   const [drill, setDrill] = useState(null)
   const seriesRef = useRef(null)
   const moviesRef = useRef(null)
+  const booksRef = useRef(null)
 
   // Leaving Séries/Filmes (or switching section entirely) resets the drill —
   // adjusted during render (React's recommended pattern) rather than in an
@@ -47,7 +48,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
     setDrill({ view: 'episodes', catalogItem: item })
   }
 
-  async function openFilmeSessions(item) {
+  async function openCatalogSessions(item) {
     const content = await getFilmeContent(item.id)
     setDrill({ view: 'episode-detail', catalogItem: item, contentId: content?.id ?? null, episode: null })
   }
@@ -95,6 +96,17 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
     } else {
       panelTitle = drill.catalogItem?.label ?? ''
     }
+  } else if (section === 'manage-books') {
+    if (!drill) {
+      panelTitle = 'Livros'
+      panelAction = (
+        <Button size="sm" leadingIcon={<Add />} onClick={() => booksRef.current?.openCreate()}>
+          Adicionar livro
+        </Button>
+      )
+    } else {
+      panelTitle = drill.catalogItem?.label ?? ''
+    }
   }
 
   const navItems = [
@@ -110,6 +122,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
       items: [
         { key: 'manage-series', label: 'Séries', icon: <VideoLabel /> },
         { key: 'manage-movies', label: 'Filmes', icon: <Movie /> },
+        { key: 'manage-books', label: 'Livros', icon: <Bookmark /> },
       ],
     },
   ]
@@ -185,9 +198,22 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
               />
             )}
             {section === 'manage-movies' && !drill && (
-              <ManageSeries ref={moviesRef} embedded hideFooter kind="filme" onOpenSessions={openFilmeSessions} />
+              <ManageSeries ref={moviesRef} embedded hideFooter kind="filme" onOpenSessions={openCatalogSessions} />
             )}
             {section === 'manage-movies' && drill?.view === 'episode-detail' && (
+              <EpisodeDetail
+                embedded
+                contentId={drill.contentId}
+                seriesName={drill.catalogItem?.label}
+                episode={null}
+                onAddSession={() => {}}
+                onOpenSession={() => {}}
+              />
+            )}
+            {section === 'manage-books' && !drill && (
+              <ManageSeries ref={booksRef} embedded hideFooter kind="livro" onOpenSessions={openCatalogSessions} />
+            )}
+            {section === 'manage-books' && drill?.view === 'episode-detail' && (
               <EpisodeDetail
                 embedded
                 contentId={drill.contentId}
