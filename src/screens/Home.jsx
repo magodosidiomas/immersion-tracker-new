@@ -158,8 +158,8 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         <BottomNav
           items={[
             { label: 'Início', icon: <HomeIcon />, active: true },
-            { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
+            { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
           ]}
         />

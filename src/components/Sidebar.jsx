@@ -77,8 +77,8 @@ function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLan
 
   const navItems = [
     { key: 'home', label: 'Home', icon: <HomeIcon /> },
-    { key: 'stats', label: 'Estatísticas', icon: <BarChart /> },
     { key: 'library', label: 'Biblioteca', icon: <Book /> },
+    { key: 'stats', label: 'Estatísticas', icon: <BarChart /> },
     { key: 'historico', label: 'Histórico', icon: <History /> },
   ]
 
