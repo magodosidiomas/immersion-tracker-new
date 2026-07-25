@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
@@ -70,6 +70,7 @@ function ContentForm({
   saving = false,
   primaryLabel = 'Salvar',
   secondaryButton = null,
+  onDirtyChange,
 }) {
   const [type, setType] = useState(initialType)
   const [attemptedSave, setAttemptedSave] = useState(false)
@@ -88,6 +89,12 @@ function ContentForm({
   const [fieldsByType, setFieldsByType] = useState({})
   const seasonInputRef = useRef(null)
   const episodeInputRef = useRef(null)
+
+  useEffect(() => {
+    onDirtyChange?.(
+      Boolean(link.trim() || title.trim() || author.trim() || season || episode || relatedQuery.trim()),
+    )
+  }, [link, title, author, season, episode, relatedQuery, onDirtyChange])
 
   const autofillsFromLink = type === 'youtube' || type === 'podcast' || type === 'website'
   const autofill = useContentLinkAutofill(autofillsFromLink ? link : '', type, {

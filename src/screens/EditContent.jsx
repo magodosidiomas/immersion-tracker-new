@@ -25,7 +25,7 @@ import ContentForm from '../components/ContentForm'
 import LinkSession from './LinkSession'
 import ManageSeries from './ManageSeries'
 import EpisodeDetail from './EpisodeDetail'
-import { ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Close, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import './EditContent.css'
 
 function toRow(session) {
@@ -61,6 +61,18 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [sessionToRemove, setSessionToRemove] = useState(null)
+  const [isDirty, setIsDirty] = useState(false)
+  const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false)
+
+  // Only new content can be "discarded" — editing existing content
+  // just closes without a confirmation, same as before.
+  function handleRequestClose() {
+    if (isNew && isDirty) {
+      setConfirmDiscardOpen(true)
+      return
+    }
+    onBack()
+  }
 
   // Desktop only: which Modal "page" is showing, mirroring EditSession's
   // own view state. Mobile never touches this — it always uses
@@ -249,6 +261,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           excludeId={contentId}
           onSave={handleSave}
           saving={saving}
+          onDirtyChange={isNew ? setIsDirty : undefined}
           secondaryButton={
             !isNew && (
               <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setConfirmOpen(true)}>
@@ -258,6 +271,23 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           }
         />
       )}
+      <BottomSheet
+        open={confirmDiscardOpen}
+        onClose={() => setConfirmDiscardOpen(false)}
+        title="Descartar alterações?"
+        description="O conteúdo que você preencheu não será salvo."
+        contentCard={false}
+        primaryButton={
+          <Button variant="destructive" fullWidth onClick={onBack}>
+            Descartar
+          </Button>
+        }
+        secondaryButton={
+          <Button variant="ghost" fullWidth onClick={() => setConfirmDiscardOpen(false)}>
+            Cancelar
+          </Button>
+        }
+      />
       <BottomSheet
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
@@ -386,9 +416,26 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
         </Modal>
       )
     }
+    if (isNew) {
+      return (
+        <Modal
+          title="Novo conteúdo"
+          titleAlign="left"
+          trailingIcon={<Close />}
+          onTrailingClick={handleRequestClose}
+          onClose={handleRequestClose}
+          flushContent
+          className="finish-session-modal"
+          width={560}
+          height={640}
+        >
+          {body}
+        </Modal>
+      )
+    }
     return (
       <Modal
-        title={isNew ? 'Novo conteúdo' : 'Editar conteúdo'}
+        title="Editar conteúdo"
         leadingIcon={<ArrowBack />}
         onLeadingClick={onBack}
         onClose={onBack}
@@ -408,7 +455,7 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
         title={isNew ? 'Novo conteúdo' : 'Editar conteúdo'}
         hasDivider
         leadingIcon={
-          <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+          <button type="button" className="top-nav-icon-reset" onClick={handleRequestClose} aria-label="Voltar">
             <ArrowBack />
           </button>
         }

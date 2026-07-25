@@ -9,7 +9,7 @@ import './Modal.css'
 // Content: scrollable middle area, arbitrary children.
 // Footer: optional, fixed, buttons hug the right edge (flex-end) — pass
 // Button elements as children.
-function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingClick, footer, flushContent = false, width = 560, height = 600, onClose, className = '', children }) {
+function Modal({ title, titleAlign = 'center', leadingIcon, onLeadingClick, trailingIcon, onTrailingClick, footer, flushContent = false, width = 560, height = 600, onClose, className = '', children }) {
   return (
     <div
       className="modal-overlay"
@@ -23,10 +23,10 @@ function Modal({ title, leadingIcon, onLeadingClick, trailingIcon, onTrailingCli
             <button type="button" className="modal-header-icon" onClick={onLeadingClick} aria-label="Voltar">
               {leadingIcon}
             </button>
-          ) : (
+          ) : titleAlign === 'center' ? (
             <span className="modal-header-icon-spacer" />
-          )}
-          <h2 className="modal-title">{title}</h2>
+          ) : null}
+          <h2 className={`modal-title${titleAlign === 'left' ? ' modal-title--left' : ''}`}>{title}</h2>
           {trailingIcon ? (
             <button type="button" className="modal-header-icon" onClick={onTrailingClick} aria-label="Fechar">
               {trailingIcon}
