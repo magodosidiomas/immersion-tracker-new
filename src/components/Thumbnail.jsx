@@ -7,7 +7,7 @@ import './Thumbnail.css'
 // cropping a book cover looks wrong (decided during library screen work).
 function Thumbnail({ size = 'sm', src = null, alt = '', icon = null }) {
   return (
-    <span className="thumbnail" data-size={size}>
+    <span className="thumbnail" data-size={size} data-has-image={Boolean(src)}>
       {src ? (
         <img
           className="thumbnail-image"

@@ -21,6 +21,9 @@
 .thumbnail[data-size='book'] {
   width: 107px;
   height: 60px;
+}
+
+.thumbnail[data-size='book'][data-has-image='true'] {
   background: #000;
 }
 
