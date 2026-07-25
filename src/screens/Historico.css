@@ -5,6 +5,15 @@
   background: var(--bg-background);
 }
 
+/* Mobile TopNav must yield to TopNavDesktop at the desktop breakpoint;
+   unlike Library (whose mobile header is LanguageTopNav, which already
+   hides itself at 1280px), Historico renders TopNav unconditionally. */
+@media (min-width: 1280px) {
+  .historico > .top-nav {
+    display: none;
+  }
+}
+
 .historico-content {
   display: flex;
   flex-direction: column;
