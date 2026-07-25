@@ -7,14 +7,14 @@
   gap: var(--space-16);
   padding: var(--space-16);
   border-radius: var(--radius-medium);
-  background: var(--bg-surface-default);
+  background: var(--bg-surface-elevation-1);
 }
 
 /* --- color=light: for placing the calendar on a surface that's
    already elevated (e.g. inside a BottomSheet), so it doesn't paint
    the same default-surface background twice. --- */
 .calendar[data-color='light'] {
-  background: var(--bg-surface-card);
+  background: var(--bg-surface-elevation-1);
 }
 
 .calendar-nav {
