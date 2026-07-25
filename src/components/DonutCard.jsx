@@ -15,8 +15,8 @@ import './DonutCard.css'
 // Percentages are relative to the grand total across all groups —
 // same convention as DataCard, so a donut and a bar view of the same
 // data always agree.
-const SIZE = 180
-const STROKE = 16
+const SIZE = 160
+const STROKE = 14
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 

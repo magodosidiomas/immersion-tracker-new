@@ -56,9 +56,9 @@
 
 .donut-card-ring-wrap {
   position: relative;
-  width: 180px;
-  height: 180px;
-  padding: var(--space-24) 0;
+  width: 160px;
+  height: 160px;
+  padding: var(--space-16) 0;
   align-self: center;
   display: flex;
   align-items: center;
