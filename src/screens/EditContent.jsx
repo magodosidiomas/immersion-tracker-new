@@ -63,6 +63,8 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
   const [sessionToRemove, setSessionToRemove] = useState(null)
   const [isDirty, setIsDirty] = useState(false)
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false)
+  const [canSave, setCanSave] = useState(false)
+  const contentFormRef = useRef(null)
 
   // Only new content can be "discarded" — editing existing content
   // just closes without a confirmation, same as before.
@@ -239,7 +241,10 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
     <>
       {(isNew || content) && (
         <ContentForm
+          ref={contentFormRef}
           key={contentId ?? 'new'}
+          hideFooter={isDesktop && isNew}
+          onValidityChange={isDesktop && isNew ? setCanSave : undefined}
           initialType={content?.type}
           initialLink={content?.link}
           initialTitle={content?.title}
@@ -428,6 +433,25 @@ function EditContent({ contentId = null, onBack, onSaved, onOpenLinkSession, onO
           className="finish-session-modal"
           width={560}
           height={640}
+          footer={
+            <>
+              <Button variant="outline" onClick={handleRequestClose}>
+                Cancelar
+              </Button>
+              <div style={{ position: 'relative' }}>
+                <Button disabled={saving || !canSave} onClick={() => contentFormRef.current?.submit()}>
+                  Salvar
+                </Button>
+                {!saving && !canSave && (
+                  <div
+                    style={{ position: 'absolute', inset: 0 }}
+                    onClick={() => contentFormRef.current?.submit()}
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+            </>
+          }
         >
           {body}
         </Modal>

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import InputField from './InputField'
 import SelectionChip from './SelectionChip'
 import SearchCreateField from './SearchCreateField'
@@ -46,7 +46,7 @@ import './ContentForm.css'
 // user data, so the list to search/create against comes in as
 // `seriesItems`/`movieItems` rather than being owned here (same
 // reasoning as SearchCreateField itself staying "dumb").
-function ContentForm({
+const ContentForm = forwardRef(function ContentForm({
   initialType = 'youtube',
   initialLink = '',
   initialTitle = '',
@@ -71,7 +71,13 @@ function ContentForm({
   primaryLabel = 'Salvar',
   secondaryButton = null,
   onDirtyChange,
-}) {
+  // hideFooter: desktop "Novo conteúdo" Modal renders its own footer
+  // (Modal's footer prop, matching AddLanguagesWindow's action bar)
+  // instead of this component's internal stacked footer — submit is
+  // then triggered externally via the exposed `submit` ref method.
+  hideFooter = false,
+  onValidityChange,
+}, ref) {
   const [type, setType] = useState(initialType)
   const [attemptedSave, setAttemptedSave] = useState(false)
   const [link, setLink] = useState(initialLink)
@@ -252,6 +258,14 @@ function ContentForm({
     !requiredLinkError &&
     !requiredRelatedError &&
     !requiredSeasonEpisodeError
+
+  useEffect(() => {
+    onValidityChange?.(canSave)
+  }, [canSave, onValidityChange])
+
+  useImperativeHandle(ref, () => ({
+    submit: handleSave,
+  }))
 
   function handleSave() {
     if (!canSave) {
@@ -493,23 +507,25 @@ function ContentForm({
         )}
       </div>
 
-      <div className="content-form-footer">
-        <div style={{ position: 'relative', width: '100%' }}>
-          <Button fullWidth onClick={handleSave} disabled={saving || !canSave}>
-            {primaryLabel}
-          </Button>
-          {!saving && !canSave && (
-            <div
-              style={{ position: 'absolute', inset: 0 }}
-              onClick={() => setAttemptedSave(true)}
-              aria-hidden="true"
-            />
-          )}
+      {!hideFooter && (
+        <div className="content-form-footer">
+          <div style={{ position: 'relative', width: '100%' }}>
+            <Button fullWidth onClick={handleSave} disabled={saving || !canSave}>
+              {primaryLabel}
+            </Button>
+            {!saving && !canSave && (
+              <div
+                style={{ position: 'absolute', inset: 0 }}
+                onClick={() => setAttemptedSave(true)}
+                aria-hidden="true"
+              />
+            )}
+          </div>
+          {secondaryButton}
         </div>
-        {secondaryButton}
-      </div>
+      )}
     </>
   )
-}
+})
 
 export default ContentForm
