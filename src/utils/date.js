@@ -129,15 +129,15 @@ export function getCalendarWeeks(sessionDates, today, year, month) {
 
   const cells = []
   for (let i = leadingCount; i > 0; i--) {
-    cells.push({ day: new Date(year, month, 1 - i).getDate(), state: 'disabled', disabled: true })
+    cells.push({ day: new Date(year, month, 1 - i).getDate(), state: 'disabled', monthOffset: -1 })
   }
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = formatDateInput(new Date(year, month, day))
     const state = dateStr === todayStr ? 'today' : dates.has(dateStr) ? 'active' : undefined
-    cells.push({ day, state })
+    cells.push({ day, state, monthOffset: 0 })
   }
   for (let day = 1; day <= trailingCount; day++) {
-    cells.push({ day, state: 'disabled', disabled: true })
+    cells.push({ day, state: 'disabled', monthOffset: 1 })
   }
 
   const weeks = []

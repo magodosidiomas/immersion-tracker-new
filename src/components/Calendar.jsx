@@ -113,16 +113,21 @@ function Calendar({ sessionDates = [], initialDate, selectedDate = null, onSelec
           </div>
           {weeks.map((week, weekIndex) => (
             <div className="calendar-row" key={weekIndex}>
-              {week.map((cell, dayIndex) => (
-                <CalendarItem
-                  key={dayIndex}
-                  day={cell.day}
-                  state={cell.state || 'default'}
-                  disabled={cell.disabled}
-                  selected={!cell.disabled && formatDateInput(new Date(year, month, cell.day)) === selectedDate}
-                  onClick={() => onSelectDay?.(formatDateInput(new Date(year, month, cell.day)))}
-                />
-              ))}
+              {week.map((cell, dayIndex) => {
+                const cellDate = new Date(year, month + cell.monthOffset, cell.day)
+                return (
+                  <CalendarItem
+                    key={dayIndex}
+                    day={cell.day}
+                    state={cell.state || 'default'}
+                    selected={formatDateInput(cellDate) === selectedDate}
+                    onClick={() => {
+                      if (cell.monthOffset !== 0) stepMonth(cell.monthOffset)
+                      onSelectDay?.(formatDateInput(cellDate))
+                    }}
+                  />
+                )
+              })}
             </div>
           ))}
         </div>
