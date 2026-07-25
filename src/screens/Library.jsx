@@ -15,6 +15,7 @@ import {
   Home as HomeIcon,
   BarChart,
   Book,
+  History,
   Close,
   Delete,
 } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -44,6 +45,7 @@ function Library({
   onOpenManageLanguages,
   onOpenHome,
   onOpenStatistics,
+  onOpenHistorico,
   // Mirrors Home's onHasSessionsChange. Not wired from App yet — there's
   // no desktop sidebar action for Library to hide. Ready for when one
   // exists (same pattern as hideNewSessionButton on Sidebar).
@@ -190,6 +192,7 @@ function Library({
             { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
             { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, active: true },
+            { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
           ]}
         />
       </div>

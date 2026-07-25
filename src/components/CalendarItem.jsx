@@ -7,9 +7,9 @@ import './CalendarItem.css'
 // typo) is spelled "month" here. The two white-version-* values are a
 // light-on-dark treatment Figma documents for this component but that
 // isn't used by the calendar itself yet — kept for parity with the set.
-function CalendarItem({ day = 1, state = 'default', ...props }) {
+function CalendarItem({ day = 1, state = 'default', selected = false, ...props }) {
   return (
-    <button type="button" className="calendar-item" data-state={state} {...props}>
+    <button type="button" className="calendar-item" data-state={state} data-selected={selected} {...props}>
       {day}
     </button>
   )

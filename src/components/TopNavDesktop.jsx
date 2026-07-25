@@ -17,6 +17,7 @@ import { Search, ArrowBack, Close } from '@nine-thirty-five/material-symbols-rea
 function TopNavDesktop({
   type = 'main',
   title = null,
+  showSearch = true,
   searchValue = '',
   onSearchChange = () => {},
   searchPlaceholder = 'Buscar',
@@ -65,7 +66,7 @@ function TopNavDesktop({
       <div className="top-nav-desktop-inner">
         {title && <span className="top-nav-desktop-title">{title}</span>}
         <div className="top-nav-desktop-content">
-          {searchField}
+          {showSearch && searchField}
           {actionButton}
         </div>
       </div>

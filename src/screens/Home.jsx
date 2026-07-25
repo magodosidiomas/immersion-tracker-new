@@ -17,6 +17,7 @@ import {
   Home as HomeIcon,
   BarChart,
   Book,
+  History,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Home.css'
 
@@ -43,7 +44,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onFinishTimer }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onFinishTimer }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -159,6 +160,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
             { label: 'Início', icon: <HomeIcon />, active: true },
             { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
+            { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
           ]}
         />
       </div>

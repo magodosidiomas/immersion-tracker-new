@@ -1,0 +1,103 @@
+.historico {
+  display: flex;
+  flex-direction: column;
+  height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
+  background: var(--bg-background);
+}
+
+.historico-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  gap: var(--space-32);
+  padding: var(--space-16);
+  padding-bottom: 88px;
+}
+
+.historico-label {
+  margin: 0 0 var(--space-16);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-tertiary);
+}
+
+.historico-calendar-section .calendar {
+  width: 100%;
+}
+
+.historico-history-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+  overflow: hidden;
+}
+
+/* Same box model as TopNavDesktop/Library.css's content column, so
+   the title/action row above lines up with the two sections below. */
+@media (min-width: 1280px) {
+  .historico-content {
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 1120px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
+
+  /* History reads left, calendar right on desktop (Figma's web layout),
+     even though the calendar comes first in DOM order to match the
+     mobile column (calendar-then-history) without duplicating markup. */
+  .historico-history-section {
+    order: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .historico-calendar-section {
+    order: 1;
+    flex: 0 0 343px;
+  }
+}
+
+.historico-bottom-layer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.historico-fab-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-16);
+  margin-top: -88px;
+  background: transparent;
+  pointer-events: none;
+}
+
+.historico-fab-row .button {
+  pointer-events: auto;
+}
+
+@media (min-width: 1280px) {
+  .historico-fab-row {
+    display: none;
+  }
+}
+
+.historico-bottom-layer .bottom-nav {
+  padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
+}
+
+/* TEMP workaround (scroll-stuck bug): extra bottom space = 3x TimerWidget height, so scroll never gets clamped by the timer bar. Remove once root cause is fixed. Mirrors Home/Statistics/Library.css. */
+.historico-content {
+  padding-bottom: 264px;
+}

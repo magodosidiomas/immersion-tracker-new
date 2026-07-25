@@ -15,6 +15,7 @@ import EditSession from './screens/EditSession'
 import Statistics from './screens/Statistics'
 import DayHistory from './screens/DayHistory'
 import Library from './screens/Library'
+import Historico from './screens/Historico'
 import EditContent from './screens/EditContent'
 import ManageSeries from './screens/ManageSeries'
 import ManageEpisodes from './screens/ManageEpisodes'
@@ -404,6 +405,7 @@ function App() {
           onOpenManageLanguages={() => navigate('manage-languages')}
           onOpenAddLanguages={() => navigate('add-languages')}
           onOpenLibrary={() => navigate('library')}
+          onOpenHistorico={() => navigate('historico')}
           onOpenDay={(dateStr) => {
             setHistoryDate(dateStr)
             navigate('day-history')
@@ -425,6 +427,7 @@ function App() {
         <Library
           onOpenHome={() => navigate('home')}
           onOpenStatistics={() => navigate('stats')}
+          onOpenHistorico={() => navigate('historico')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
           onOpenAddLanguages={() => navigate('add-languages')}
@@ -436,6 +439,18 @@ function App() {
             setEditingContentId(item.id)
             navigate('edit-content')
           }}
+        />
+      )
+    }
+    if (screen === 'historico') {
+      return (
+        <Historico
+          onOpenHome={() => navigate('home')}
+          onOpenSettings={() => navigate('settings')}
+          onOpenNewSession={() => navigate('new-session')}
+          onOpenEditSession={(session) => navigate('edit-session', session)}
+          onOpenStatistics={() => navigate('stats')}
+          onOpenLibrary={() => navigate('library')}
         />
       )
     }
@@ -509,6 +524,7 @@ function App() {
         onOpenEditSession={(session) => navigate('edit-session', session)}
         onOpenStatistics={() => navigate('stats')}
         onOpenLibrary={() => navigate('library')}
+        onOpenHistorico={() => navigate('historico')}
         onFinishTimer={() => {
           setPendingFinishDraft(timer.end())
           navigate('new-session')
@@ -531,7 +547,7 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
       />
-      <div className={`app-content${screen === 'stats' || screen === 'library' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
+      <div className={`app-content${screen === 'stats' || screen === 'library' || screen === 'historico' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
       {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
         <div className="app-timer-corner">

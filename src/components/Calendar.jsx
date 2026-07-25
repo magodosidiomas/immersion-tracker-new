@@ -38,7 +38,7 @@ const WEEKDAYS = ['Mo', 'Tu', 'We', 'Thu', 'Fri', 'Sa', 'Su']
 // needs it for comparing against/storing as Session.date. Boundary
 // cells (previous/next month, state 'disabled') are real
 // disabled={true} buttons already, so they never reach this handler.
-function Calendar({ sessionDates = [], initialDate, onSelectDay, color = 'default', ...props }) {
+function Calendar({ sessionDates = [], initialDate, selectedDate = null, onSelectDay, color = 'default', ...props }) {
   const today = new Date()
   const [viewDate, setViewDate] = useState(initialDate ?? today)
   const [mode, setMode] = useState('month')
@@ -119,6 +119,7 @@ function Calendar({ sessionDates = [], initialDate, onSelectDay, color = 'defaul
                   day={cell.day}
                   state={cell.state || 'default'}
                   disabled={cell.disabled}
+                  selected={!cell.disabled && formatDateInput(new Date(year, month, cell.day)) === selectedDate}
                   onClick={() => onSelectDay?.(formatDateInput(new Date(year, month, cell.day)))}
                 />
               ))}

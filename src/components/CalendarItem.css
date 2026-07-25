@@ -62,3 +62,13 @@
   background: var(--bg-surface-inverse);
   color: var(--color-text-on-inverse-accent);
 }
+
+/* --- selected (currently viewed day, e.g. Histórico's day filter) ---
+   A standalone outline, not a `state` value: it can land on top of any
+   state (default, active, today) since "which day is being viewed" is
+   independent of "which days have sessions". Kept after every
+   data-state rule above so it always wins on border-radius too. */
+.calendar-item[data-selected='true'] {
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-small);
+}

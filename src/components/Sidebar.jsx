@@ -11,6 +11,7 @@ import {
   Home as HomeIcon,
   BarChart,
   Book,
+  History,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 
 // Desktop-only sidebar (hidden below the desktop breakpoint via CSS —
@@ -78,6 +79,7 @@ function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLan
     { key: 'home', label: 'Home', icon: <HomeIcon /> },
     { key: 'stats', label: 'Estatísticas', icon: <BarChart /> },
     { key: 'library', label: 'Biblioteca', icon: <Book /> },
+    { key: 'historico', label: 'Histórico', icon: <History /> },
   ]
 
   return (
