@@ -152,6 +152,13 @@ function App() {
   // exactly what that entry point is for.
   const [manageOverlay, setManageOverlay] = useState(null)
 
+  // "Ver sessão" tapped from a Sessões vinculadas list (EditContent or
+  // EpisodeDetail's linked-sessions section). Stays an overlay for the
+  // same reason manageOverlay does: a real navigate() to 'edit-session'
+  // would unmount EditContent/EpisodeDetail underneath and lose their
+  // in-progress draft. Holds the tapped session row, or null when closed.
+  const [sessionOverlay, setSessionOverlay] = useState(null)
+
   // Bumped whenever the Gerenciar Séries/Filmes overlay closes, so
   // EditContent (which stays mounted underneath and wouldn't otherwise
   // refetch) picks up any série/filme just created, renamed, or deleted
@@ -174,6 +181,15 @@ function App() {
 
   function closeManageOverlay() {
     setCatalogRefreshTick((tick) => tick + 1)
+    window.history.back()
+  }
+
+  function openSessionOverlay(session) {
+    setSessionOverlay(session)
+    window.history.pushState({ screen, pickerScreen, manageOverlay, sessionOverlay: session }, '')
+  }
+
+  function closeSessionOverlay() {
     window.history.back()
   }
 
@@ -253,6 +269,7 @@ function App() {
     setManualSessionOverlay(false)
     setManageOverlay(null)
     setManualContentOverlay(false)
+    setSessionOverlay(null)
     window.history.pushState({ screen: nextScreen }, '')
   }
 
@@ -270,6 +287,7 @@ function App() {
     setManualSessionOverlay(false)
     setManageOverlay(null)
     setManualContentOverlay(false)
+    setSessionOverlay(null)
     window.history.replaceState({ screen: nextScreen }, '')
   }
 
@@ -284,6 +302,7 @@ function App() {
       setManualSessionOverlay(Boolean(event.state?.manualSessionOverlay))
       setManageOverlay(event.state?.manageOverlay ?? null)
       setManualContentOverlay(Boolean(event.state?.manualContentOverlay))
+      setSessionOverlay(event.state?.sessionOverlay ?? null)
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
@@ -428,7 +447,7 @@ function App() {
           onBack={() => window.history.back()}
           onSaved={() => window.history.back()}
           onOpenLinkSession={openLinkSession}
-          onOpenSession={(session) => navigate('edit-session', session)}
+          onOpenSession={openSessionOverlay}
           onOpenManage={(kind, onSelectItem) => openManageOverlay(kind, onSelectItem)}
           catalogRefreshTick={catalogRefreshTick}
         />
@@ -474,7 +493,7 @@ function App() {
           seriesName={activeCatalog?.label}
           episode={activeEpisode?.season != null ? { season: activeEpisode.season, episode: activeEpisode.episode } : null}
           onAddSession={openLinkSession}
-          onOpenSession={(session) => navigate('edit-session', session)}
+          onOpenSession={openSessionOverlay}
           onBack={() => window.history.back()}
         />
       )
@@ -618,8 +637,19 @@ function App() {
             seriesName={manageOverlay.catalogItem?.label}
             episode={null}
             onAddSession={openLinkSession}
-            onOpenSession={(session) => navigate('edit-session', session)}
+            onOpenSession={openSessionOverlay}
             onBack={closeManageOverlay}
+          />
+        </div>
+      )}
+      {sessionOverlay && (
+        <div className="picker-overlay">
+          <EditSession
+            session={sessionOverlay}
+            isDesktop={isDesktop}
+            onBack={closeSessionOverlay}
+            onSaved={closeSessionOverlay}
+            onOpenLinkContent={openLinkContent}
           />
         </div>
       )}
