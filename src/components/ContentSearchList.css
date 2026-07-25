@@ -155,3 +155,11 @@
   overflow: hidden;
 }
 
+@media (min-width: 1280px) {
+  .content-search-list-card .thumbnail[data-size='sm'],
+  .content-search-list-card .thumbnail[data-size='book'] {
+    width: 128px;
+    height: 72px;
+  }
+}
+
