@@ -54,7 +54,7 @@
   .historico-content {
     flex-direction: row;
     align-items: flex-start;
-    max-width: 1120px;
+    max-width: 960px;
     width: 100%;
     margin: 0 auto;
     padding-left: var(--space-32);
