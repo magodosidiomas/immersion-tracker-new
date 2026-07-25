@@ -269,6 +269,28 @@
   .bottom-sheet-close {
     display: flex;
   }
+
+  /* modal variant only: Figma's web treatment packs the buttons
+     side by side, hugging their own content and flush right, instead
+     of the mobile full-width stack. Order is flipped so the DOM's
+     primaryButton-first order still reads secondary/cancel on the
+     left, primary/confirm on the right. */
+  .bottom-sheet[data-variant='modal'] .bottom-sheet-buttons {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .bottom-sheet[data-variant='modal'] .bottom-sheet-buttons > *:first-child {
+    order: 2;
+  }
+
+  .bottom-sheet[data-variant='modal'] .bottom-sheet-buttons > *:last-child {
+    order: 1;
+  }
+
+  .bottom-sheet[data-variant='modal'] .bottom-sheet-buttons .button[data-full-width='true'] {
+    width: auto;
+  }
 }
 
 @keyframes bottom-sheet-modal-in {
