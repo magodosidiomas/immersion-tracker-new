@@ -45,6 +45,7 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
             aria-label="Selecionar data"
             value={selectedDate}
             onChange={(event) => setSelectedDate(event.target.value)}
+            onClick={(event) => event.target.showPicker?.()}
           />
         </div>
       </div>
@@ -58,6 +59,7 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
             buttonLabel="Nova sessão"
             buttonIcon={<Add />}
             onButtonClick={onAddSession}
+            style="plain"
           />
         ) : (
           <div className="link-session-card">
