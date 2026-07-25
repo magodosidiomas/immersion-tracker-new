@@ -490,6 +490,8 @@ function SessionForm({
           </div>
         </div>
 
+        <div className="finish-session-divider" />
+
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Subcategoria</span>
           <div className="category-sheet-chips">

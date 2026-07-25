@@ -464,7 +464,7 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
         onClose={onBack}
         flushContent
         className="finish-session-modal"
-        width={433}
+        width={560}
         height={640}
       >
         {formAndSheets}
