@@ -450,6 +450,8 @@ function SessionForm({
           </button>
         </div>
 
+        <div className="finish-session-divider" />
+
         {/* Quando */}
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Quando</span>
@@ -489,8 +491,6 @@ function SessionForm({
             ))}
           </div>
         </div>
-
-        <div className="finish-session-divider" />
 
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Subcategoria</span>
