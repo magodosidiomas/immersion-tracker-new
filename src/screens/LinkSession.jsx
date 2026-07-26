@@ -7,7 +7,7 @@ import Dropdown from '../components/Dropdown'
 import ListItem from '../components/ListItem'
 import EmptyState from '../components/EmptyState'
 import Button from '../components/Button'
-import { ArrowBack, Schedule, Add, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Schedule, Add, ChevronRight, Movie } from '@nine-thirty-five/material-symbols-react/outlined'
 import './LinkSession.css'
 
 // Opened from ContentForm/EpisodeDetail's "Vincular sessão" button.
@@ -35,13 +35,24 @@ function LinkSession({ onSelect, onBack, onAddSession, refreshTick = 0, headless
   }, [activeId, selectedDate, refreshTick])
 
   // contentTitle (the conteúdo this picker was opened from, e.g. from
-  // ContentForm/EpisodeDetail's "Vincular sessão") renders as a plain
-  // subtitle under the header — it's context about the screen itself,
-  // not a row of content, so it deliberately sits outside the card
-  // below and carries no divider of its own.
+  // ContentForm/EpisodeDetail's "Vincular sessão") renders as a
+  // fill-width chip under the header — icon on the left, "Conteúdo"
+  // label + the actual title stacked to its right, both vertically
+  // centered against the icon. It's context about the screen itself,
+  // so it deliberately sits outside the card below with no divider.
   const body = (
     <div className="link-session-wrap">
-      {contentTitle && <p className="link-session-subtitle">{contentTitle}</p>}
+      {contentTitle && (
+        <div className="link-session-chip">
+          <div className="link-session-chip-icon">
+            <Movie />
+          </div>
+          <div className="link-session-chip-text">
+            <p className="link-session-chip-label">Conteúdo</p>
+            <p className="link-session-chip-title">{contentTitle}</p>
+          </div>
+        </div>
+      )}
       <div className="link-session-card">
         <div className="link-session-date-row">
           <div className="link-session-date-picker">

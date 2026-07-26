@@ -15,17 +15,55 @@
   gap: var(--space-8);
 }
 
-/* Context line — which conteúdo this picker was opened from. Sits
-   outside the card below, grouped with the header instead: it's
-   screen metadata, not a row of content. */
-.link-session-subtitle {
+/* Context chip — which conteúdo this picker was opened from. Fill
+   width, icon left + label/title stacked to its right, both centered
+   against the icon. Sits outside the card below: it's screen
+   metadata, not a row of content, so no divider of its own.
+   Background is elevation-1, one ramp-step lighter than the screen's
+   own --bg-background (purple-800 -> purple-600), per the divider
+   standard's "relative to container" rule. */
+.link-session-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-elevation-1);
+}
+
+.link-session-chip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-small);
+  background: var(--bg-surface-input);
+  color: var(--color-icon-accent);
+}
+
+.link-session-chip-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.link-session-chip-label {
   margin: 0;
-  padding: 0 var(--space-4);
   font-family: var(--font-family-main);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   font-size: var(--font-size-label-small);
-  line-height: var(--line-height-snug);
   color: var(--color-text-tertiary);
+}
+
+.link-session-chip-title {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-medium);
+  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
