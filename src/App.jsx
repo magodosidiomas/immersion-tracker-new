@@ -118,7 +118,7 @@ function App() {
   // Which day DayHistory is showing — set right before switching to
   // that screen, from the cell tapped in Statistics' Calendar. Kept
   // separate from editingSession (a date string, not a Session row).
-  const [historyDate, setHistoryDate] = useState(null)
+  const [historyDate] = useState(null)
 
   // Which content EditContent is open for — null means "new content",
   // same isNew-by-presence convention as editingSession.
@@ -386,10 +386,6 @@ function App() {
           onOpenAddLanguages={() => navigate('add-languages')}
           onOpenLibrary={() => navigate('library')}
           onOpenHistorico={() => navigate('historico')}
-          onOpenDay={(dateStr) => {
-            setHistoryDate(dateStr)
-            navigate('day-history')
-          }}
         />
       )
     }

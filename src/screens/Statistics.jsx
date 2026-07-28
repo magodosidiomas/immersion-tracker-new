@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { getSessionsByLanguage } from '../db'
+import { getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
 import LanguageTopNav from '../components/LanguageTopNav'
 import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
-import Calendar from '../components/Calendar'
 import DonutCard from '../components/DonutCard'
 import NumericCard from '../components/NumericCard'
+import StreakCard from '../components/StreakCard'
 import SkillCard from '../components/SkillCard'
 import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
@@ -15,10 +16,15 @@ import { categoryBreakdown, formatDurationClock } from '../utils/sessions'
 import { Home as HomeIcon, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
+// "1 dia" / "7 dias" — singular only at exactly 1, matching Home's copy.
+function formatStreakValue(days) {
+  return `${days} ${days === 1 ? 'dia' : 'dias'}`
+}
+
 // Second main tab, alongside Home and Biblioteca — reached only via
 // BottomNav. Same LanguageTopNav as Home (active language + switcher
 // + settings), no back arrow since switching tabs isn't a drill-down.
-function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenDay, onOpenLibrary, onOpenHistorico }) {
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
 
@@ -31,6 +37,15 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
     getSessionsByLanguage(activeId).then(setSessions)
   }, [activeId])
 
+  const now = new Date()
+  const weekRange = getWeekRange(now)
+  const sessionDates = sessions.map((session) => session.date)
+  const weekTotalSeconds = sessions
+    .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
+    .reduce((sum, session) => sum + session.durationSeconds, 0)
+  const streakDays = calculateStreak(sessionDates, now)
+  const streakWeekDays = getStreakWeekDays(sessionDates, now)
+
   return (
     <main className="statistics">
       <LanguageTopNav
@@ -42,17 +57,16 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
       <TopNavDesktop title="Estatísticas" showSearch={false} />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <NumericCard
-          size="large"
-          title="Tempo total"
-          number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
-        />
+        <div className="statistics-time-row">
+          <NumericCard
+            title="Tempo total"
+            number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
+          />
+          <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} />
+        </div>
         <div className="statistics-cards">
           <div className="statistics-row">
-            <Calendar
-              sessionDates={sessions.map((session) => session.date)}
-              onSelectDay={onOpenDay}
-            />
+            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
             <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
           </div>
           <div className="statistics-row">
