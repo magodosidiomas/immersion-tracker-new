@@ -118,14 +118,9 @@
   }
 
   .statistics-overview {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: flex-start;
-  }
-
-  .statistics-overview-left,
-  .statistics-overview > .donut-card {
-    flex: 1 1 0;
-    min-width: 0;
   }
 
   /* The triple row (Recepção x Produção / Produção / Estudo) always
