@@ -76,6 +76,14 @@
    desktop-only, mobile keeps the stacked/centered layout since there
    isn't room for both side by side at phone widths. */
 @media (min-width: 1280px) {
+  .donut-card {
+    gap: var(--space-24);
+  }
+
+  .donut-card-body {
+    gap: var(--space-24);
+  }
+
   .donut-card-horizontal .donut-card-body {
     flex-direction: row;
     align-items: center;
