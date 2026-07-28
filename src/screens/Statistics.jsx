@@ -57,18 +57,20 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
       <TopNavDesktop title="Estatísticas" showSearch={false} />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
-        <div className="statistics-time-row">
-          <NumericCard
-            title="Tempo total"
-            number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
-          />
-          <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} />
+        <div className="statistics-overview">
+          <div className="statistics-overview-left">
+            <div className="statistics-time-row">
+              <NumericCard
+                title="Tempo total"
+                number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
+              />
+              <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} />
+            </div>
+            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
+          </div>
+          <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
         </div>
         <div className="statistics-cards">
-          <div className="statistics-row">
-            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
-            <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
-          </div>
           <div className="statistics-row">
             <SkillCard groups={categoryBreakdown(sessions)} />
             <FormatCard groups={categoryBreakdown(sessions)} />

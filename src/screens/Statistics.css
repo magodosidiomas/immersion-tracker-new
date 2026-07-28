@@ -58,6 +58,22 @@
   flex: 1;
 }
 
+/* "Tempo total/essa semana" + streak stack in one column, the
+   "Por categoria" donut fills the other — matching the Figma web
+   layout where the donut spans the combined height of the two
+   stacked cards beside it. */
+.statistics-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+.statistics-overview-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
 /* DataCard (SkillCard/FormatCard/ReceptionCard/ProductionCard/StudyCard)
    ships at Figma's fixed export width (343px) same as Calendar/DonutCard
    above — override so it fills its row instead of leaving empty space
@@ -80,7 +96,7 @@
 
 /* "Por categoria" (the all-categories/"Todos" overview donut) gets more
    breathing room between its title and the ring than the other donuts. */
-.statistics-row:first-child .donut-card {
+.statistics-overview > .donut-card {
   gap: var(--space-16);
 }
 
@@ -95,9 +111,19 @@
     align-items: flex-start;
   }
 
-  .statistics-row > .streak-card,
   .statistics-row > .donut-card,
   .statistics-row > .data-card {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .statistics-overview {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .statistics-overview-left,
+  .statistics-overview > .donut-card {
     flex: 1 1 0;
     min-width: 0;
   }
