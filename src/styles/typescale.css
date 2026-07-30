@@ -27,4 +27,15 @@
 
   /* letter-spacing — from textStyles[].letterSpacing */
   --letter-spacing-wide: 0.005em; /* used by: label/regular/small */
+
+  /* big-number — Figma text style group "big-number/number-*", all 110%
+     line-height. Sizes map to existing font-size primitives; this group
+     just gives them semantic names for numeric-display contexts
+     (NumericCard, stats, etc). */
+  --font-size-big-number-2xlarge: var(--font-size-scale-size-display-64); /* 64/110 */
+  --font-size-big-number-xlarge: var(--font-size-scale-size-xhuge-48); /* 48/110 */
+  --font-size-big-number-large: var(--font-size-scale-size-huge-40); /* 40/110 */
+  --font-size-big-number-medium: var(--font-size-scale-size-xlarge-32); /* 32/110 */
+  --font-size-big-number-small: var(--font-size-scale-size-xmedium-24); /* 24/110 */
+  --line-height-big-number: var(--line-height-snug); /* 110% */
 }
