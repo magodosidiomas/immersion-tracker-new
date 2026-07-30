@@ -223,12 +223,17 @@ export async function reorderLanguages(orderedIds) {
 
 export async function getAppSettings() {
   const settings = await getOne('appSettings', SETTINGS_ID)
-  return settings ?? { id: SETTINGS_ID, activeLanguageId: null }
+  return settings ?? { id: SETTINGS_ID, activeLanguageId: null, dailyGoalMinutes: null }
 }
 
 export async function setActiveLanguageId(languageId) {
   const settings = await getAppSettings()
   await put('appSettings', { ...settings, activeLanguageId: languageId })
+}
+
+export async function setDailyGoalMinutes(minutes) {
+  const settings = await getAppSettings()
+  await put('appSettings', { ...settings, dailyGoalMinutes: minutes })
 }
 
 // ---------- Sessions ----------
@@ -636,5 +641,6 @@ export async function importData(data) {
   const activeLanguageId = languages.some((language) => language.id === importedActiveId)
     ? importedActiveId
     : (languages[0]?.id ?? null)
-  await put('appSettings', { id: SETTINGS_ID, activeLanguageId })
+  const dailyGoalMinutes = data?.appSettings?.dailyGoalMinutes ?? null
+  await put('appSettings', { id: SETTINGS_ID, activeLanguageId, dailyGoalMinutes })
 }
