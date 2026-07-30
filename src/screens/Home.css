@@ -23,6 +23,18 @@
   align-items: center;
 }
 
+/* Same box model as TopNavDesktop/Historico's content column, so the
+   title/action row above lines up with the cards below. */
+@media (min-width: 1280px) {
+  .home-history {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
+}
+
 .home-stats {
   display: flex;
   flex-direction: column;
