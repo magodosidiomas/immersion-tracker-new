@@ -51,11 +51,11 @@
 
 .statistics-time-row {
   display: flex;
+  flex-direction: column;
   gap: var(--space-16);
 }
 
 .statistics-time-row .numeric-card {
-  flex: 1;
   min-width: 0;
 }
 
