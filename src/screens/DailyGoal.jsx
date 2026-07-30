@@ -50,6 +50,12 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
     })
   }, [])
 
+  // Autofocus the hours field the moment the custom view mounts — brings
+  // up the keyboard on mobile, focuses the field on desktop.
+  useEffect(() => {
+    if (view === 'custom') durationRef.current?.focusFirst()
+  }, [view])
+
   if (!loaded) return null
 
   const customInitial = { hours: Math.floor((currentGoal ?? 60) / 60), minutes: (currentGoal ?? 60) % 60 }
@@ -65,7 +71,7 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
   }
 
   const presetsView = (
-    <>
+    <div className="daily-goal-view">
       <h1 className="daily-goal-heading">Escolha uma meta</h1>
       <div className="daily-goal-list-card">
         {PRESETS.map((preset, index) => (
@@ -83,16 +89,16 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
       <Button variant="outline" fullWidth onClick={() => setView('custom')}>
         Definir meta personalizada
       </Button>
-    </>
+    </div>
   )
 
   const customView = (
-    <>
+    <div className="daily-goal-view">
       <h1 className="daily-goal-heading">Quanto por dia?</h1>
       <div className="daily-goal-custom-input">
         <DurationInput ref={durationRef} initialValue={customInitial} />
       </div>
-    </>
+    </div>
   )
 
   if (isDesktop) {

@@ -30,6 +30,12 @@
   color: var(--color-text-primary);
 }
 
+.daily-goal-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
 .daily-goal-list-card {
   display: flex;
   flex-direction: column;
@@ -43,7 +49,4 @@
 .daily-goal-custom-input {
   display: flex;
   justify-content: center;
-  padding: var(--space-24) 0;
-  border-radius: var(--radius-large);
-  background: var(--bg-surface-elevation-1);
 }
