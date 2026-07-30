@@ -17,8 +17,9 @@ const PRESETS = [
   { label: 'Intensa', minutes: 120 },
 ]
 
-// "Meta diária" screen — reached from the home DailyGoalCard or Settings
-// > Preferências > Meta diária. Self-sufficient (fetches its own current
+// "Meta diária" screen — reached from the home DailyGoalCard, Settings
+// > Preferências > Meta diária, or (via `onboarding`) right after picking
+// a language for the first time. Self-sufficient (fetches its own current
 // goal via getAppSettings, same pattern as AddLanguages/Home) rather than
 // requiring App.jsx to thread the value down. Two sub-views:
 // - 'presets': list of fixed options + an outline button that opens 'custom'.
@@ -27,7 +28,13 @@ const PRESETS = [
 //   if it doesn't match a preset. Its own Salvar persists immediately and
 //   closes the whole screen (per design decision: no round-trip back to
 //   the presets list).
-function DailyGoal({ isDesktop = false, onBack, onSave }) {
+//
+// `onboarding` only changes the presets view's exit affordance: there's
+// nothing to navigate "back" to yet (this is the screen right after
+// language selection), so onBack reads as "Pular" (skip) instead of
+// "Voltar" — same handler either way, just different chrome/label. The
+// custom view keeps its normal back-to-presets arrow regardless.
+function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
   const [loaded, setLoaded] = useState(false)
   const [currentGoal, setCurrentGoal] = useState(null)
   const [view, setView] = useState('presets')
@@ -114,14 +121,22 @@ function DailyGoal({ isDesktop = false, onBack, onSave }) {
         title={view === 'custom' ? 'Meta personalizada' : 'Meta diária'}
         hasDivider
         leadingIcon={
-          <button
-            type="button"
-            className="top-nav-icon-reset"
-            onClick={view === 'custom' ? () => setView('presets') : onBack}
-            aria-label="Voltar"
-          >
-            <ArrowBack />
-          </button>
+          view === 'custom' ? (
+            <button type="button" className="top-nav-icon-reset" onClick={() => setView('presets')} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          ) : onboarding ? null : (
+            <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
+              <ArrowBack />
+            </button>
+          )
+        }
+        trailingRight={
+          onboarding && view === 'presets' ? (
+            <Button variant="ghost" size="sm" onClick={onBack}>
+              Pular
+            </Button>
+          ) : null
         }
       />
       <div className="daily-goal-content">{view === 'presets' ? presetsView : customView}</div>

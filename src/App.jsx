@@ -53,6 +53,11 @@ function App() {
   // about data: is there an active language yet? null means "still
   // checking IndexedDB" so we don't flash the wrong screen on load.
   const [hasLanguage, setHasLanguage] = useState(null)
+  // True for the one screen between picking a first language and
+  // landing on Home — offers to set a daily goal right away. Transient,
+  // session-only state (not persisted, no history entry): skipping or
+  // saving both just clear it and fall through to the normal app.
+  const [onboardingGoalStep, setOnboardingGoalStep] = useState(false)
 
   // Desktop (>=1280px) shows Configurações as a windowed modal
   // (SettingsWindow) instead of the plain full-screen flow — matches
@@ -302,7 +307,28 @@ function App() {
   // Also waits on timer.loaded — otherwise Home could flash the "Iniciar
   // timer" FAB for a frame before a recovered draft swaps in TimerWidget.
   if (hasLanguage === null || !timer.loaded) return null
-  if (!hasLanguage) return <SelectLanguage onSelect={() => setHasLanguage(true)} />
+  if (!hasLanguage) {
+    return (
+      <SelectLanguage
+        onSelect={() => {
+          setHasLanguage(true)
+          setOnboardingGoalStep(true)
+        }}
+      />
+    )
+  }
+  if (onboardingGoalStep) {
+    return (
+      <DailyGoal
+        isDesktop={isDesktop}
+        onboarding
+        onBack={() => setOnboardingGoalStep(false)}
+        onSave={(minutes) => {
+          setDailyGoalMinutes(minutes).then(() => setOnboardingGoalStep(false))
+        }}
+      />
+    )
+  }
 
   function renderScreen() {
     // AddLanguages sits one level below ManageLanguages — both closing
