@@ -79,6 +79,7 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
             key={preset.minutes}
             label={preset.label}
             description={`${formatDurationShort(preset.minutes * 60)} / dia`}
+            layout="row"
             selected={selectedMinutes === preset.minutes}
             divider={index > 0}
             position={index === 0 ? 'first' : index === PRESETS.length - 1 ? 'last' : 'middle'}

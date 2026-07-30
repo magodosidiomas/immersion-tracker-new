@@ -32,6 +32,11 @@ import './SelectableListItem.css'
 // the item's own smaller radius, so the pill never pokes past the
 // card's rounded edge on the first/last row. Leave it unset for the
 // existing inset usage (card keeps its own padding) — nothing changes.
+// `layout` ('column' | 'row') only affects label/description placement:
+// 'column' (default) stacks description below the label, unchanged.
+// 'row' puts them side by side (label left, description right) — e.g.
+// the "Leve · 15m / dia" preset rows in Meta diária, matching Duolingo's
+// goal picker.
 function SelectableListItem({
   label = 'Label',
   description = null,
@@ -43,6 +48,7 @@ function SelectableListItem({
   trailingIcon = null,
   position,
   density = 'default',
+  layout = 'column',
   danger = false,
   ...props
 }) {
@@ -54,6 +60,7 @@ function SelectableListItem({
       data-divider={divider}
       data-position={position}
       data-density={density}
+      data-layout={layout}
       data-danger={danger}
       disabled={disabled}
       {...props}

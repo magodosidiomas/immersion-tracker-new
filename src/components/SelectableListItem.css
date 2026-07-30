@@ -59,6 +59,14 @@
   overflow-wrap: break-word;
 }
 
+/* --- row layout (label left, description right) --- */
+.selectable-list-item[data-layout='row'] .selectable-list-item-text {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .selectable-list-item-icon {
   display: inline-flex;
   flex-shrink: 0;
