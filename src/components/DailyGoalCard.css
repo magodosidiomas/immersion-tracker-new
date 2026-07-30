@@ -75,14 +75,14 @@
 }
 
 .daily-goal-card-label {
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   line-height: var(--line-height-loose);
   color: var(--color-text-secondary);
 }
 
 .daily-goal-card-value {
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-title-small);
+  font-size: var(--font-size-body-xlarge);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
 }
