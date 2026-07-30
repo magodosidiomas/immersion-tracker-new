@@ -118,10 +118,21 @@
     min-width: 0;
   }
 
+  /* align-items: stretch (the grid default) makes .statistics-overview-left
+     as tall as the donut card beside it. .statistics-time-row (below)
+     is the piece that actually grows to fill that height — Metas
+     keeps its natural size. */
   .statistics-overview {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: flex-start;
+  }
+
+  .statistics-time-row {
+    flex: 1;
+  }
+
+  .statistics-time-row .numeric-card {
+    flex: 1;
   }
 
   /* The triple row (Recepção x Produção / Produção / Estudo) always
