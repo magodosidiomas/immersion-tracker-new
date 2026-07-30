@@ -16,6 +16,7 @@ import StreakItemGroup from '../../components/StreakItemGroup'
 import StreakCard from '../../components/StreakCard'
 import DataCard from '../../components/DataCard'
 import DonutCard from '../../components/DonutCard'
+import MetasCard from '../../components/MetasCard'
 import SkillCard from '../../components/SkillCard'
 import FormatCard from '../../components/FormatCard'
 import ReceptionCard from '../../components/ReceptionCard'
@@ -287,6 +288,22 @@ const registry = [
     description: 'Same groups shape as DataCard — a ring of stacked arcs + a flat legend, no expand/collapse.',
     render: () => <DonutCard title="Visão geral" description="Como seu tempo se divide entre as categorias." groups={DATA_CARD_SAMPLE} />,
     code: `<DonutCard title="Visão geral" description="Como seu tempo se divide entre as categorias." groups={groups} />`,
+  },
+  {
+    id: 'metas-card',
+    name: 'MetasCard',
+    description: 'Level header + hero value (time to next level) + segmented progress bar. Only renders the range it\'s given — level/milestone math lives outside the card.',
+    render: () => (
+      <MetasCard level={10} value="25h" caption="pro próximo nível" progress={66} rangeStart="50h" rangeEnd="100h" />
+    ),
+    code: `<MetasCard
+  level={10}
+  value="25h"
+  caption="pro próximo nível"
+  progress={66}
+  rangeStart="50h"
+  rangeEnd="100h"
+/>`,
   },
   {
     id: 'dropdown',
