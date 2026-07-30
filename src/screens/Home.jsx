@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getSessionsByLanguage, getAppSettings } from '../db'
-import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
+import { formatDateInput, formatElapsed, getStreakWeekDays, calculateStreak } from '../utils/date'
 import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
 import TopNavDesktop from '../components/TopNavDesktop'
@@ -10,7 +10,6 @@ import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
 import Alert from '../components/Alert'
 import TimerWidget from '../components/TimerWidget'
-import NumericCard from '../components/NumericCard'
 import DailyGoalCard from '../components/DailyGoalCard'
 import StreakCard from '../components/StreakCard'
 import {
@@ -80,13 +79,9 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
 
   const now = new Date()
   const todayStr = formatDateInput(now)
-  const weekRange = getWeekRange(now)
   const sessionDates = sessions.map((session) => session.date)
   const todayTotalSeconds = sessions
     .filter((session) => session.date === todayStr)
-    .reduce((sum, session) => sum + session.durationSeconds, 0)
-  const weekTotalSeconds = sessions
-    .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
 
   // Streak now tracks days the daily goal was met, not just any day with
@@ -130,7 +125,6 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
               <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
               <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
             </div>
-            <NumericCard layout="row" title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
           </div>
         )}
         {sessionError ? (

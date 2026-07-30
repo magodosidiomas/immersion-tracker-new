@@ -47,28 +47,33 @@
   gap: var(--space-16);
 }
 
-/* StreakCard/NumericCard ship with Figma's fixed export widths (343px /
-   164px) since they aren't placed in a real layout anywhere else yet.
-   Same override approach StreakCard.css itself uses internally for
-   streak-item-group: scope width: 100% from here instead of changing
-   the components' own standalone defaults. */
-.home-stats .streak-card,
-.home-stats .numeric-card {
+/* StreakCard ships with Figma's fixed export width (343px) since it
+   isn't placed in a real layout anywhere else yet. Same override
+   approach StreakCard.css itself uses internally for streak-item-group:
+   scope width: 100% from here instead of changing the component's own
+   standalone default. */
+.home-stats .streak-card {
   width: 100%;
 }
 
 /* Desktop: StreakCard and DailyGoalCard sit side by side instead of
    stacked — each takes half the row, gap between them instead of full
-   width. Mobile keeps the stacked column above. */
+   width. align-items: stretch (the flex default) makes both match the
+   taller card's height; each card centers its own content vertically
+   already (streak-card/daily-goal-card both use align-items: center
+   internally), so equal height doesn't unbalance either one. Mobile
+   keeps the stacked column above. */
 @media (min-width: 1280px) {
   .home-stats-row {
     flex-direction: row;
+    align-items: stretch;
   }
 
   .home-stats-row > * {
     flex: 1;
     min-width: 0;
     width: auto;
+    height: auto;
   }
 }
 
