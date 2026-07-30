@@ -3,6 +3,7 @@ import { getSessionsByLanguage, getAppSettings } from '../db'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
 import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
+import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
@@ -100,6 +101,13 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         onOpenManageLanguages={onOpenManageLanguages}
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
+      />
+      <TopNavDesktop
+        title="Homepage"
+        showSearch={false}
+        actionLabel="Nova sessão"
+        actionIcon={<Add />}
+        onActionClick={onOpenNewSession}
       />
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
         {groups.length > 0 && (
