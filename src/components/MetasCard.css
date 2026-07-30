@@ -60,6 +60,7 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
+  gap: var(--space-4);
 }
 
 .metas-card-hero-current {

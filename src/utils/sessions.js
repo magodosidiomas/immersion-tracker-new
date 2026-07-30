@@ -42,18 +42,8 @@ export function formatDuration(totalSeconds) {
 export function formatDurationShort(totalSeconds) {
   const h = Math.floor(totalSeconds / 3600)
   const m = Math.floor((totalSeconds % 3600) / 60)
-  if (h > 0) return `${h}h ${m}m`
+  if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`
   return `${m}m`
-}
-
-// "04:15:27" — zero-padded HH:MM:SS, for the Statistics "Tempo total"
-// numeric card (distinct from formatDuration's "4h 15m 27s" reading style).
-export function formatDurationClock(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600)
-  const m = Math.floor((totalSeconds % 3600) / 60)
-  const s = totalSeconds % 60
-  const pad = (n) => String(n).padStart(2, '0')
-  return `${pad(h)}:${pad(m)}:${pad(s)}`
 }
 
 // Newest day first, newest session within a day first. Groups by the

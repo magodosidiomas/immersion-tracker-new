@@ -40,7 +40,7 @@ function MetasCard({
       <div className="metas-card-body">
         <div className="metas-card-hero">
           <span className="metas-card-hero-current">{current}</span>
-          <span className="metas-card-hero-target"> / {target}</span>
+          <span className="metas-card-hero-target">/ {target}</span>
         </div>
 
         <div className="metas-card-progress">

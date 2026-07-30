@@ -12,7 +12,7 @@ import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
-import { categoryBreakdown, formatDurationClock, formatDurationShort } from '../utils/sessions'
+import { categoryBreakdown, formatDurationShort } from '../utils/sessions'
 import { getLevelProgress } from '../utils/levels'
 import { Home as HomeIcon, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
@@ -55,8 +55,8 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
         <div className="statistics-overview">
           <div className="statistics-overview-left">
             <div className="statistics-time-row">
-              <NumericCard title="Tempo total" number={formatDurationClock(totalSeconds)} size="large" />
-              <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} size="large" />
+              <NumericCard title="Tempo total" number={formatDurationShort(totalSeconds)} size="large" />
+              <NumericCard title="Tempo essa semana" number={formatDurationShort(weekTotalSeconds)} size="large" />
             </div>
             <MetasCard
               level={levelProgress.level}

@@ -25,11 +25,22 @@ export function getMilestoneHours(level) {
   return hours
 }
 
-// Highest level whose milestone has been reached by totalHours.
+// 0-based bracket index — how many milestones have been fully passed.
+// Kept separate from the *displayed* level (see getLevelProgress):
+// this index also doubles as the lower bound's position in the
+// milestone table, so shifting it to already start at 1 would throw
+// off the lower/upper bracket lookup for the first bracket.
+function getBracketIndex(totalHours) {
+  let index = 0
+  while (getMilestoneHours(index + 1) <= totalHours) index++
+  return index
+}
+
+// Highest level whose milestone has been reached — kept exported since
+// other code may want the raw bracket count, but MetasCard should use
+// getLevelProgress().level (always >= 1) for display.
 export function getCurrentLevel(totalHours) {
-  let level = 0
-  while (getMilestoneHours(level + 1) <= totalHours) level++
-  return level
+  return getBracketIndex(totalHours)
 }
 
 // Everything MetasCard needs, derived from accumulated immersion
@@ -37,15 +48,19 @@ export function getCurrentLevel(totalHours) {
 // the bracket between that level and the next — current/target are
 // relative to the bracket (time earned since the last level, and the
 // bracket's own size), not absolute milestone totals.
+//
+// Displayed level = bracketIndex + 1, so a brand-new account (0h)
+// reads as "Nível 1", never "Nível 0" — the bracket bounds themselves
+// (lower/upper milestone) are unaffected by this offset.
 export function getLevelProgress(totalSeconds) {
   const totalHours = totalSeconds / 3600
-  const level = getCurrentLevel(totalHours)
-  const lowerSeconds = getMilestoneHours(level) * 3600
-  const upperSeconds = getMilestoneHours(level + 1) * 3600
+  const bracketIndex = getBracketIndex(totalHours)
+  const lowerSeconds = getMilestoneHours(bracketIndex) * 3600
+  const upperSeconds = getMilestoneHours(bracketIndex + 1) * 3600
   const targetSeconds = upperSeconds - lowerSeconds
   const currentSeconds = Math.min(targetSeconds, Math.max(0, totalSeconds - lowerSeconds))
   const remainingSeconds = Math.max(0, targetSeconds - currentSeconds)
   const progress = targetSeconds > 0 ? (currentSeconds / targetSeconds) * 100 : 100
 
-  return { level, currentSeconds, targetSeconds, remainingSeconds, progress }
+  return { level: bracketIndex + 1, currentSeconds, targetSeconds, remainingSeconds, progress }
 }

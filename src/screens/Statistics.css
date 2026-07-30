@@ -56,6 +56,7 @@
 
 .statistics-time-row .numeric-card {
   flex: 1;
+  min-width: 0;
 }
 
 /* "Tempo total/essa semana" + streak stack in one column, the

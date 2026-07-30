@@ -1,5 +1,6 @@
 .numeric-card {
   width: 164px;
+  min-width: 0;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -27,6 +28,7 @@
   font-size: var(--font-size-title-medium);
   line-height: var(--line-height-snug);
   color: var(--color-text-primary);
+  overflow-wrap: break-word;
 }
 
 /* "large" variant — only enlarges the number to 48px (Figma
