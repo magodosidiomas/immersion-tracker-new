@@ -1,0 +1,49 @@
+.daily-goal {
+  display: flex;
+  flex-direction: column;
+  height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
+  background: var(--bg-background);
+}
+
+.daily-goal-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  gap: var(--space-16);
+  padding: var(--space-16);
+}
+
+.daily-goal-footer {
+  flex-shrink: 0;
+  padding: var(--space-16);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.daily-goal-heading {
+  margin: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title-medium);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.daily-goal-list-card {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+}
+
+.daily-goal-custom-input {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-24) 0;
+  border-radius: var(--radius-large);
+  background: var(--bg-surface-elevation-1);
+}

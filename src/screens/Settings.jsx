@@ -1,13 +1,13 @@
 import TopNav from '../components/TopNav'
 import SelectableListItem from '../components/SelectableListItem'
-import { ArrowBack, Public, Backup, VideoLabel, Movie, Bookmark, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Public, Backup, Flag, VideoLabel, Movie, Bookmark, ChevronRight } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Settings.css'
 
 // "Idiomas" opens the language management screen, "Backup" opens the
-// export/import screen. "Séries"/"Filmes"/"Livros" open the
-// content-catalog management screens (rename/delete, and for séries
-// also episodes).
-function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSeries, onOpenManageMovies, onOpenManageBooks }) {
+// export/import screen, "Meta diária" opens the daily goal screen.
+// "Séries"/"Filmes"/"Livros" open the content-catalog management
+// screens (rename/delete, and for séries also episodes).
+function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenDailyGoal, onOpenManageSeries, onOpenManageMovies, onOpenManageBooks }) {
   return (
     <main className="settings">
       <TopNav
@@ -37,6 +37,19 @@ function Settings({ onBack, onOpenManageLanguages, onOpenBackup, onOpenManageSer
               position="last"
               divider
               onClick={onOpenBackup}
+            />
+          </div>
+        </div>
+
+        <div className="settings-group">
+          <span className="settings-section-label">Preferências</span>
+          <div className="settings-card">
+            <SelectableListItem
+              label="Meta diária"
+              leadingIcon={<Flag />}
+              trailingIcon={<ChevronRight />}
+              position="only"
+              onClick={onOpenDailyGoal}
             />
           </div>
         </div>

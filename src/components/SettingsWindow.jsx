@@ -6,7 +6,7 @@ import ManageEpisodes from '../screens/ManageEpisodes'
 import EpisodeDetail from '../screens/EpisodeDetail'
 import Button from './Button'
 import { getFilmeContent } from '../db'
-import { Public, Backup as BackupIcon, VideoLabel, Movie, Bookmark, Close, ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Public, Backup as BackupIcon, VideoLabel, Movie, Bookmark, Flag, Close, ArrowBack, Add } from '@nine-thirty-five/material-symbols-react/outlined'
 import './SettingsWindow.css'
 
 // Desktop-only (>=1280px) windowed shell for Configurações — mirrors
@@ -22,7 +22,7 @@ import './SettingsWindow.css'
 // lands here already scoped to the right section. 'settings' itself
 // (no sub-item chosen yet) defaults to Idiomas, matching the Figma
 // default state.
-function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAllLanguagesRemoved }) {
+function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpenDailyGoal, onAllLanguagesRemoved }) {
   const section = screen === 'settings' ? 'manage-languages' : screen
 
   // Drill-down within Séries/Filmes stays inside the modal instead of
@@ -118,6 +118,12 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
       ],
     },
     {
+      label: 'Preferências',
+      items: [
+        { key: 'daily-goal', label: 'Meta diária', icon: <Flag />, onClick: onOpenDailyGoal },
+      ],
+    },
+    {
       label: 'Conteúdo',
       items: [
         { key: 'manage-series', label: 'Séries', icon: <VideoLabel /> },
@@ -145,7 +151,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onAll
                   type="button"
                   className="settings-window-nav-item"
                   data-active={section === item.key}
-                  onClick={() => onNavigate(item.key)}
+                  onClick={() => (item.onClick ? item.onClick() : onNavigate(item.key))}
                 >
                   <span className="settings-window-nav-item-icon">{item.icon}</span>
                   <span className="settings-window-nav-item-label">{item.label}</span>

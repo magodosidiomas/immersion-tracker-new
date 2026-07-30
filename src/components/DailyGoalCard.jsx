@@ -1,4 +1,5 @@
 import { Flag } from '@nine-thirty-five/material-symbols-react/outlined'
+import { formatDurationShort } from '../utils/sessions'
 import './DailyGoalCard.css'
 
 const RADIUS = 20
@@ -52,8 +53,8 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
         <div className="daily-goal-card-text">
           <span className="daily-goal-card-label">Hoje</span>
           <span className="daily-goal-card-value">
-            {formatShort(todaySeconds)}
-            <span className="daily-goal-card-goal"> / {formatShort(goalMinutes * 60)}</span>
+            {formatDurationShort(todaySeconds)}
+            <span className="daily-goal-card-goal"> / {formatDurationShort(goalMinutes * 60)}</span>
           </span>
         </div>
       ) : (
@@ -64,17 +65,6 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
       )}
     </button>
   )
-}
-
-// Local minimal formatter (Xh Ym / Xm) — kept here rather than importing
-// formatDurationShort so the "/ goal" half never grows a decimals branch.
-function formatShort(totalSeconds) {
-  const totalMinutes = Math.round(totalSeconds / 60)
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
-  if (hours === 0) return `${minutes}m`
-  if (minutes === 0) return `${hours}h`
-  return `${hours}h ${minutes}m`
 }
 
 export default DailyGoalCard

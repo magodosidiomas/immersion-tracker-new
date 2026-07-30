@@ -7,6 +7,7 @@ import EdgeScrollbar from './components/EdgeScrollbar'
 import SelectLanguage from './screens/SelectLanguage'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
+import DailyGoal from './screens/DailyGoal'
 import Backup from './screens/Backup'
 import ManageLanguages from './screens/ManageLanguages'
 import AddLanguages from './screens/AddLanguages'
@@ -23,7 +24,7 @@ import EpisodeDetail from './screens/EpisodeDetail'
 import LinkContent from './screens/LinkContent'
 import LinkSession from './screens/LinkSession'
 import TimerWidget from './components/TimerWidget'
-import { getAppSettings, getFilmeContent } from './db'
+import { getAppSettings, getFilmeContent, setDailyGoalMinutes } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
 import { getCategoryLabel } from './utils/sessions'
@@ -348,6 +349,7 @@ function App() {
           onBack={() => window.history.back()}
           onOpenManageLanguages={() => navigate('manage-languages')}
           onOpenBackup={() => navigate('backup')}
+          onOpenDailyGoal={() => navigate('daily-goal')}
           onOpenManageSeries={() => navigate('manage-series')}
           onOpenManageMovies={() => navigate('manage-movies')}
           onOpenManageBooks={() => navigate('manage-books')}
@@ -491,6 +493,17 @@ function App() {
         />
       )
     }
+    if (screen === 'daily-goal') {
+      return (
+        <DailyGoal
+          isDesktop={isDesktop}
+          onBack={() => window.history.back()}
+          onSave={(minutes) => {
+            setDailyGoalMinutes(minutes).then(() => window.history.back())
+          }}
+        />
+      )
+    }
     return (
       <Home
         timer={timer}
@@ -502,6 +515,7 @@ function App() {
         onOpenStatistics={() => navigate('stats')}
         onOpenLibrary={() => navigate('library')}
         onOpenHistorico={() => navigate('historico')}
+        onOpenDailyGoal={() => navigate('daily-goal')}
         onFinishTimer={() => {
           setPendingFinishDraft(timer.end())
           navigate('new-session')
@@ -548,6 +562,7 @@ function App() {
           onNavigate={navigateSettingsWindow}
           onClose={() => window.history.back()}
           onOpenAddLanguages={() => navigate('add-languages')}
+          onOpenDailyGoal={() => navigate('daily-goal')}
           onAllLanguagesRemoved={() => {
             setHasLanguage(false)
             setScreen('home')
