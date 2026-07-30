@@ -12,7 +12,8 @@ import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
-import { categoryBreakdown, formatDurationClock } from '../utils/sessions'
+import { categoryBreakdown, formatDurationClock, formatDurationShort } from '../utils/sessions'
+import { getLevelProgress } from '../utils/levels'
 import { Home as HomeIcon, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
@@ -34,9 +35,11 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
 
   const now = new Date()
   const weekRange = getWeekRange(now)
+  const totalSeconds = sessions.reduce((sum, session) => sum + session.durationSeconds, 0)
   const weekTotalSeconds = sessions
     .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
+  const levelProgress = getLevelProgress(totalSeconds)
 
   return (
     <main className="statistics">
@@ -52,23 +55,15 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
         <div className="statistics-overview">
           <div className="statistics-overview-left">
             <div className="statistics-time-row">
-              <NumericCard
-                title="Tempo total"
-                number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
-                size="large"
-              />
+              <NumericCard title="Tempo total" number={formatDurationClock(totalSeconds)} size="large" />
               <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} size="large" />
             </div>
-            {/* Placeholder level/goal values — level system isn't implemented yet
-                (see imerso-data-model notes on the level formula). Wired up here
-                just to preview the card in the real layout; swap for real data
-                once getMilestoneForLevel() exists. */}
             <MetasCard
-              level={10}
-              current="16h 30m"
-              target="20h"
-              progress={54}
-              remaining="3h 30m"
+              level={levelProgress.level}
+              current={formatDurationShort(levelProgress.currentSeconds)}
+              target={formatDurationShort(levelProgress.targetSeconds)}
+              progress={levelProgress.progress}
+              remaining={formatDurationShort(levelProgress.remainingSeconds)}
               remainingCaption="pra bater a meta atual"
             />
           </div>
