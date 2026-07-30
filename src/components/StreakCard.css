@@ -82,7 +82,7 @@
 
   .streak-card .streak-item-group {
     width: fit-content;
-    gap: var(--space-16);
+    gap: var(--space-8);
     justify-content: flex-start;
   }
 }

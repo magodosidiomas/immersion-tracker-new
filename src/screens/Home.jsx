@@ -126,8 +126,10 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
         {groups.length > 0 && (
           <div className="home-stats">
-            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
-            <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
+            <div className="home-stats-row">
+              <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
+              <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
+            </div>
             <NumericCard layout="row" title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
           </div>
         )}
