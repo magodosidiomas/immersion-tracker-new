@@ -16,7 +16,6 @@
   --font-weight-regular: 400; /* used by: label/regular/* */
   --font-weight-medium: 500; /* used by: label/medium/* */
   --font-weight-bold: 700; /* used by: label/bold/*, Button */
-  --font-weight-black: 900; /* used by: big-number/number-xlarge (NumericCard "large") */
 
   /* line-height — from textStyles[].lineHeight (always PERCENT in Figma,
      divide by 100 for the CSS unitless equivalent) */

@@ -29,25 +29,10 @@
   color: var(--color-text-primary);
 }
 
-/* "large" variant — Statistics "Tempo total" card (Figma numericCard,
-   big-number/number-xlarge style: 48px/900 vs. the default 20px/700). */
-.numeric-card[data-size='large'] {
-  width: 100%;
-  height: fit-content;
-  padding: var(--space-24) var(--space-16);
-  gap: var(--space-20);
-  justify-content: center;
-  border: 1px solid var(--color-border-subtle);
-}
-
-.numeric-card[data-size='large'] .numeric-card-title {
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-body-small);
-  line-height: var(--line-height-tight);
-}
-
+/* "large" variant — only enlarges the number to 48px (Figma
+   big-number/number-xlarge). Card padding/border/title stay default;
+   this is a number-size-only variant, not a distinct card style. */
 .numeric-card[data-size='large'] .numeric-card-number {
-  font-weight: var(--font-weight-black);
   font-size: var(--font-size-big-number-xlarge);
   line-height: var(--line-height-big-number);
   letter-spacing: -1.5px;

@@ -37,7 +37,7 @@
 /* StreakCard/DonutCard/NumericCard ship with Figma's fixed export
    widths since they aren't placed in a real layout anywhere else yet —
    same override approach Home.css uses. */
-.statistics-content .streak-card {
+.statistics-content .metas-card {
   width: 100%;
 }
 

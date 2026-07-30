@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { getSessionsByLanguage } from '../db'
-import { getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
+import { getWeekRange } from '../utils/date'
 import LanguageTopNav from '../components/LanguageTopNav'
 import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
 import DonutCard from '../components/DonutCard'
 import NumericCard from '../components/NumericCard'
-import StreakCard from '../components/StreakCard'
+import MetasCard from '../components/MetasCard'
 import SkillCard from '../components/SkillCard'
 import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
@@ -15,11 +15,6 @@ import StudyCard from '../components/StudyCard'
 import { categoryBreakdown, formatDurationClock } from '../utils/sessions'
 import { Home as HomeIcon, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
-
-// "1 dia" / "7 dias" — singular only at exactly 1, matching Home's copy.
-function formatStreakValue(days) {
-  return `${days} ${days === 1 ? 'dia' : 'dias'}`
-}
 
 // Second main tab, alongside Home and Biblioteca — reached only via
 // BottomNav. Same LanguageTopNav as Home (active language + switcher
@@ -39,12 +34,9 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
 
   const now = new Date()
   const weekRange = getWeekRange(now)
-  const sessionDates = sessions.map((session) => session.date)
   const weekTotalSeconds = sessions
     .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
-  const streakDays = calculateStreak(sessionDates, now)
-  const streakWeekDays = getStreakWeekDays(sessionDates, now)
 
   return (
     <main className="statistics">
@@ -63,10 +55,22 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
               <NumericCard
                 title="Tempo total"
                 number={formatDurationClock(sessions.reduce((sum, session) => sum + session.durationSeconds, 0))}
+                size="large"
               />
-              <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} />
+              <NumericCard title="Tempo essa semana" number={formatDurationClock(weekTotalSeconds)} size="large" />
             </div>
-            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
+            {/* Placeholder level/goal values — level system isn't implemented yet
+                (see imerso-data-model notes on the level formula). Wired up here
+                just to preview the card in the real layout; swap for real data
+                once getMilestoneForLevel() exists. */}
+            <MetasCard
+              level={10}
+              current="16h 30m"
+              target="20h"
+              progress={54}
+              remaining="3h 30m"
+              remainingCaption="pra bater a meta atual"
+            />
           </div>
           <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />
         </div>

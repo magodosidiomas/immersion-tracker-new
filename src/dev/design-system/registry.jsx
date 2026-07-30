@@ -419,7 +419,7 @@ const value = ref.current.getValue()`,
   {
     id: 'numeric-card',
     name: 'NumericCard',
-    description: '"large" is the Statistics "Tempo total" style — 48px/900 number, bordered.',
+    description: '"large" is the Statistics "Tempo total" style — just the number at 48px, card stays default.',
     render: () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
