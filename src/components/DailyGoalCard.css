@@ -54,7 +54,7 @@
 }
 
 .daily-goal-card-label {
-  font-size: var(--font-size-body-tiny);
+  font-size: var(--font-size-body-small);
   line-height: var(--line-height-loose);
   color: var(--color-text-secondary);
 }
@@ -68,12 +68,12 @@
 
 .daily-goal-card-goal {
   font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   color: var(--color-text-secondary);
 }
 
 .daily-goal-card-cta {
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   color: var(--color-text-accent);
 }

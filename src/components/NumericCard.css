@@ -55,6 +55,10 @@
   width: auto;
 }
 
+.numeric-card[data-layout='row'] .numeric-card-title {
+  font-size: var(--font-size-body-small);
+}
+
 .numeric-card[data-layout='row'] .numeric-card-number {
   font-size: var(--font-size-body-medium);
 }
