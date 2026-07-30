@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getSessionsByLanguage } from '../db'
+import { getSessionsByLanguage, getAppSettings } from '../db'
 import { formatDateInput, formatElapsed, getWeekRange, getStreakWeekDays, calculateStreak } from '../utils/date'
 import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
@@ -10,6 +10,7 @@ import EmptyState from '../components/EmptyState'
 import Alert from '../components/Alert'
 import TimerWidget from '../components/TimerWidget'
 import NumericCard from '../components/NumericCard'
+import DailyGoalCard from '../components/DailyGoalCard'
 import StreakCard from '../components/StreakCard'
 import {
   Add,
@@ -44,10 +45,15 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onFinishTimer }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onOpenDailyGoal, onFinishTimer }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
+  const [dailyGoalMinutes, setDailyGoalMinutes] = useState(null)
+
+  useEffect(() => {
+    getAppSettings().then((settings) => setDailyGoalMinutes(settings.dailyGoalMinutes ?? null))
+  }, [])
 
   useEffect(() => {
     if (!activeId) return
@@ -100,7 +106,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           <div className="home-stats">
             <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
             <div className="home-stats-row">
-              <NumericCard title="Hoje" number={formatDurationShort(todayTotalSeconds)} />
+              <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
               <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
             </div>
           </div>

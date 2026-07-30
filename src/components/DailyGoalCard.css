@@ -1,0 +1,80 @@
+.daily-goal-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-medium);
+  background: var(--bg-surface-elevation-1);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family-main);
+}
+
+.daily-goal-card-ring {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daily-goal-card-ring-track {
+  stroke: var(--color-border-subtle);
+}
+
+.daily-goal-card-ring-track-dashed {
+  stroke: var(--color-border-subtle);
+  stroke-dasharray: 4 4;
+}
+
+.daily-goal-card-ring-progress {
+  stroke: var(--color-brand-500);
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.daily-goal-card-ring-icon {
+  position: absolute;
+  display: flex;
+  color: var(--color-text-secondary);
+}
+
+.daily-goal-card-ring-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.daily-goal-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.daily-goal-card-label {
+  font-size: var(--font-size-body-tiny);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-secondary);
+}
+
+.daily-goal-card-value {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-title-small);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.daily-goal-card-goal {
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-secondary);
+}
+
+.daily-goal-card-cta {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body-small);
+  color: var(--color-brand-500);
+}
