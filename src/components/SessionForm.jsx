@@ -90,7 +90,6 @@ function SessionForm({
   // this component just renders whichever body matches the current value.
   subScreen = 'main', // 'main' | 'datetime'
   onOpenDateTime,
-  autoOpenDuration = false,
   linkedContents = [],
   onAddContent,
   onRemoveContent,
@@ -151,13 +150,6 @@ function SessionForm({
     if (editingDuration) durationInputRef.current?.focusFirst()
   }, [editingDuration])
 
-  // Registro manual (Clockify-style): land straight in the duration
-  // editor instead of showing a static 00:00:00 screen first.
-  useEffect(() => {
-    if (autoOpenDuration) openDurationEdit()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   useEffect(() => {
     if (editingStart) startInputRef.current?.focusFirst()
   }, [editingStart])
@@ -184,6 +176,11 @@ function SessionForm({
     setEndAt(new Date(startAt.getTime() + newDuration * 1000))
     setDurationError(null)
     setEditingDuration(false)
+    setTouched(true)
+  }
+
+  function handleDurationPreset(minutes) {
+    setEndAt(new Date(startAt.getTime() + minutes * 60 * 1000))
     setTouched(true)
   }
 
@@ -309,24 +306,6 @@ function SessionForm({
           }}
           errorMessage={durationError}
         />
-        <div className="category-sheet-chips duration-shortcut-chips">
-          {[15, 30, 45, 60].map((minutes) => (
-            <SelectionChip
-              key={minutes}
-              label={minutes < 60 ? `${minutes}m` : '1h'}
-              hasLeadingIcon={false}
-              hasTrailingIcon={false}
-              selected={false}
-              onClick={() =>
-                durationInputRef.current.setValue({
-                  hours: Math.floor(minutes / 60),
-                  minutes: minutes % 60,
-                  seconds: 0,
-                })
-              }
-            />
-          ))}
-        </div>
       </BottomSheet>
 
       {/* Início */}
@@ -448,6 +427,18 @@ function SessionForm({
             </span>
             <Edit className="finish-session-duration-icon" aria-hidden="true" />
           </button>
+          <div className="category-sheet-chips duration-shortcut-chips">
+            {[15, 30, 45, 60].map((minutes) => (
+              <SelectionChip
+                key={minutes}
+                label={minutes < 60 ? `${minutes}m` : '1h'}
+                hasLeadingIcon={false}
+                hasTrailingIcon={false}
+                selected={durationSeconds === minutes * 60}
+                onClick={() => handleDurationPreset(minutes)}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="finish-session-divider" />

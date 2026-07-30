@@ -151,7 +151,6 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
         category={timer.category}
         subcategory={timer.subcategory}
         languageId={timer.languageId ?? activeLanguageId}
-        autoOpenDuration={Boolean(finishDraft.manual)}
         hideContentSection={manualOnly}
         isDesktop={isDesktop}
         onOpenLinkContent={onOpenLinkContent}
@@ -373,7 +372,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, autoOpenDuration, hideContentSection = false, isDesktop = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, hideContentSection = false, isDesktop = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -420,7 +419,6 @@ function FinishSession({ draft, category, subcategory, languageId, autoOpenDurat
         initialDurationSeconds={draft.durationSeconds}
         initialCategory={category}
         initialSubcategory={subcategory}
-        autoOpenDuration={autoOpenDuration}
         linkedContents={pendingContents}
         onAddContent={handleAddContent}
         onRemoveContent={handleRemoveContent}
