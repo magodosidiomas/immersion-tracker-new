@@ -75,10 +75,9 @@ export function getWeekRange(date) {
 
 const STREAK_WEEKDAY_LETTERS = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'] // Seg..Dom
 
-// Mon–Sun row for StreakItemGroup: weekday letter, whether a session
-// landed on that day, and whether it's today. sessionDates is every
-// Session.date for the active language — duplicates are fine, only
-// presence per day matters.
+// Mon–Sun row for StreakItemGroup: weekday letter, whether that day
+// qualifies for the streak (see calculateStreak — goal met, or any
+// session if no goal is set), and whether it's today.
 export function getStreakWeekDays(sessionDates, today) {
   const dates = new Set(sessionDates)
   const todayStr = formatDateInput(today)
@@ -91,10 +90,13 @@ export function getStreakWeekDays(sessionDates, today) {
   })
 }
 
-// Consecutive days with a session, ending today and walking backwards.
-// If today has no session yet, today isn't "missed" — the day just
-// isn't over — so counting starts from yesterday instead of reading
-// as a broken streak mid-day.
+// Consecutive qualifying days, ending today and walking backwards. What
+// counts as "qualifying" is entirely up to the caller — Home passes days
+// that met the daily goal (or, with no goal set yet, falls back to any
+// day with a session, so the streak isn't just dead until someone visits
+// Settings). If today doesn't qualify yet, today isn't "missed" — the
+// day just isn't over — so counting starts from yesterday instead of
+// reading as a broken streak mid-day.
 export function calculateStreak(sessionDates, today) {
   const dates = new Set(sessionDates)
   const cursor = new Date(today)

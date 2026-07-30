@@ -88,8 +88,22 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
   const weekTotalSeconds = sessions
     .filter((session) => session.date >= weekRange.start && session.date <= weekRange.end)
     .reduce((sum, session) => sum + session.durationSeconds, 0)
-  const streakDays = calculateStreak(sessionDates, now)
-  const streakWeekDays = getStreakWeekDays(sessionDates, now)
+
+  // Streak now tracks days the daily goal was met, not just any day with
+  // a session — sum durations per day and keep the ones that clear the
+  // goal. With no goal set yet, fall back to the old "any session"
+  // behavior so the streak isn't just stuck at 0 until someone visits
+  // Settings > Meta diária.
+  const dailyTotals = new Map()
+  for (const session of sessions) {
+    dailyTotals.set(session.date, (dailyTotals.get(session.date) ?? 0) + session.durationSeconds)
+  }
+  const goalCompletedDates = dailyGoalMinutes
+    ? [...dailyTotals.entries()].filter(([, seconds]) => seconds >= dailyGoalMinutes * 60).map(([date]) => date)
+    : sessionDates
+
+  const streakDays = calculateStreak(goalCompletedDates, now)
+  const streakWeekDays = getStreakWeekDays(goalCompletedDates, now)
 
   // Category label lookup for the live timer, via shared getCategoryLabel.
   const { categoryLabel: timerCategoryLabel, subcategoryLabel: timerSubcategoryLabel } = getCategoryLabel(timer.category, timer.subcategory)

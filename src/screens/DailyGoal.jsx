@@ -39,6 +39,7 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
   const [currentGoal, setCurrentGoal] = useState(null)
   const [view, setView] = useState('presets')
   const [selectedMinutes, setSelectedMinutes] = useState(null)
+  const [customError, setCustomError] = useState(null)
   const durationRef = useRef(null)
 
   useEffect(() => {
@@ -67,7 +68,12 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
   function handleSaveCustom() {
     const { hours, minutes } = durationRef.current.getValue()
     const total = hours * 60 + minutes
-    if (total > 0) onSave(total)
+    if (total === 0) {
+      setCustomError('A meta precisa ser maior que 0 minutos.')
+      return
+    }
+    setCustomError(null)
+    onSave(total)
   }
 
   const presetsView = (
@@ -87,7 +93,7 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
           />
         ))}
       </div>
-      <Button variant="outline" fullWidth onClick={() => setView('custom')}>
+      <Button variant="outline" fullWidth onClick={() => { setCustomError(null); setView('custom') }}>
         Definir meta personalizada
       </Button>
     </div>
@@ -97,7 +103,7 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
     <div className="daily-goal-view">
       <h1 className="daily-goal-heading">Quanto por dia?</h1>
       <div className="daily-goal-custom-input">
-        <DurationInput ref={durationRef} initialValue={customInitial} />
+        <DurationInput ref={durationRef} initialValue={customInitial} errorMessage={customError} />
       </div>
     </div>
   )
