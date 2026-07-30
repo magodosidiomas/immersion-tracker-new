@@ -87,6 +87,7 @@
 }
 
 .metas-card-track {
+  position: relative;
   width: 100%;
   height: 12px;
   border-radius: var(--radius-full);
@@ -99,6 +100,21 @@
   border-radius: var(--radius-full);
   background: var(--color-brand-300);
   transition: width 0.3s ease;
+}
+
+.metas-card-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.metas-card-tick {
+  flex: 1;
+  border-right: 2px solid var(--bg-surface-card);
+}
+
+.metas-card-tick:last-child {
+  border-right: none;
 }
 
 .metas-card-caption {
