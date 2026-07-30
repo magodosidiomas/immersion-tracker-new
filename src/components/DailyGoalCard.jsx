@@ -19,18 +19,9 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
   return (
     <button type="button" className="daily-goal-card" onClick={onClick}>
       <div className="daily-goal-card-ring">
-        <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
-          <circle
-            className={hasGoal ? 'daily-goal-card-ring-track' : 'daily-goal-card-ring-track-dashed'}
-            cx="24"
-            cy="24"
-            r={RADIUS}
-            fill="none"
-            strokeWidth="5"
-            strokeLinecap="round"
-            strokeDasharray={hasGoal ? undefined : '6 6'}
-          />
-          {hasGoal && (
+        {hasGoal ? (
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <circle className="daily-goal-card-ring-track" cx="24" cy="24" r={RADIUS} fill="none" strokeWidth="5" />
             <circle
               className="daily-goal-card-ring-progress"
               cx="24"
@@ -43,11 +34,12 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
               strokeDashoffset={dashoffset}
               transform="rotate(-90 24 24)"
             />
-          )}
-        </svg>
-        {!hasGoal && (
-          <div className="daily-goal-card-ring-icon">
-            <Flag />
+          </svg>
+        ) : (
+          <div className="daily-goal-card-ring-dashed" aria-hidden="true">
+            <div className="daily-goal-card-ring-icon">
+              <Flag />
+            </div>
           </div>
         )}
       </div>
