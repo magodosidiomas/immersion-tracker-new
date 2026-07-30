@@ -27,6 +27,8 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
             r={RADIUS}
             fill="none"
             strokeWidth="5"
+            strokeLinecap="round"
+            strokeDasharray={hasGoal ? undefined : '6 6'}
           />
           {hasGoal && (
             <circle

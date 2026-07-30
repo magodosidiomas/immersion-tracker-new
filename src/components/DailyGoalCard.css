@@ -28,7 +28,6 @@
 
 .daily-goal-card-ring-track-dashed {
   stroke: var(--color-border-subtle);
-  stroke-dasharray: 4 4;
 }
 
 .daily-goal-card-ring-progress {
@@ -76,5 +75,5 @@
 .daily-goal-card-cta {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-body-small);
-  color: var(--color-brand-500);
+  color: var(--color-text-accent);
 }
