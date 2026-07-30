@@ -1,23 +1,21 @@
 import { Flag } from '@nine-thirty-five/material-symbols-react/outlined'
 import './MetasCard.css'
 
-// Mirrors the Figma "Metas" card — level header, hero value (time left
-// to the next level) and a segmented progress bar between the current
-// and next level's milestones.
+// Mirrors the updated Figma "Metas" card — level header, a "current /
+// target" big-number ratio, a single-fill progress bar (no ticks), and
+// a caption highlighting how much is left to the current goal.
 //
-// Deliberately generic: the card only knows level/value/progress/range,
-// not how milestones are calculated. Level 16+ milestones come from a
-// formula (see imerso-data-model notes), not a fixed table, but that
-// logic lives with whoever computes `progress`/`rangeStart`/`rangeEnd`
-// — the card just renders whatever range it's given.
+// Deliberately generic: the card only knows level/current/target/
+// progress, not how milestones are calculated — that logic lives with
+// whoever computes those values (see imerso-data-model notes on the
+// level formula).
 function MetasCard({
   level,
-  value,
-  caption,
+  current,
+  target,
   progress = 0,
-  segments = 4,
-  rangeStart,
-  rangeEnd,
+  remaining,
+  remainingCaption,
   ...props
 }) {
   return (
@@ -31,23 +29,23 @@ function MetasCard({
         <span className="metas-card-level">Nível {level}</span>
       </div>
 
-      <div className="metas-card-hero">
-        <span className="metas-card-hero-value">{value}</span>
-        <span className="metas-card-hero-caption">{caption}</span>
-      </div>
-
-      <div className="metas-card-range">
-        <div className="metas-card-track">
-          <div className="metas-card-fill" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} />
-          <div className="metas-card-ticks">
-            {Array.from({ length: segments }).map((_, index) => (
-              <div className="metas-card-tick" key={index} />
-            ))}
-          </div>
+      <div className="metas-card-body">
+        <div className="metas-card-hero">
+          <span className="metas-card-hero-current">{current}</span>
+          <span className="metas-card-hero-target"> / {target}</span>
         </div>
-        <div className="metas-card-range-labels">
-          <span>{rangeStart}</span>
-          <span>{rangeEnd}</span>
+
+        <div className="metas-card-progress">
+          <div className="metas-card-track">
+            <div
+              className="metas-card-fill"
+              style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+            />
+          </div>
+          <p className="metas-card-caption">
+            <span className="metas-card-caption-accent">{remaining}</span>
+            {remainingCaption && ` ${remainingCaption}`}
+          </p>
         </div>
       </div>
     </div>

@@ -1,22 +1,24 @@
 .metas-card {
-  width: 320px;
+  width: 343px;
   height: fit-content;
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
-  padding: var(--space-20);
+  gap: var(--space-24);
+  padding: var(--space-24) var(--space-16);
   border-radius: var(--radius-medium);
   background: var(--bg-surface-card);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .metas-card-top {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-8);
 }
 
 .metas-card-flag {
   display: inline-flex;
+  flex-shrink: 0;
   width: 16px;
   height: 16px;
   color: var(--color-text-primary);
@@ -30,89 +32,85 @@
 .metas-card-title {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
 }
 
 .metas-card-dot {
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   color: var(--color-text-secondary);
 }
 
 .metas-card-level {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-body-small);
+  font-size: var(--font-size-body-medium);
   line-height: var(--line-height-tight);
   color: var(--color-text-secondary);
+}
+
+.metas-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
 }
 
 .metas-card-hero {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  align-items: baseline;
+  flex-wrap: wrap;
 }
 
-.metas-card-hero-value {
+.metas-card-hero-current {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-heading-4);
-  line-height: var(--line-height-snug);
-  letter-spacing: -0.02em;
+  font-size: var(--font-size-big-number-medium);
+  line-height: var(--line-height-big-number);
+  letter-spacing: -1.5px;
   color: var(--color-text-primary);
 }
 
-.metas-card-hero-caption {
+.metas-card-hero-target {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-body-small);
-  line-height: var(--line-height-tight);
+  font-size: var(--font-size-big-number-medium);
+  line-height: var(--line-height-big-number);
+  letter-spacing: -1.5px;
   color: var(--color-text-secondary);
 }
 
-.metas-card-range {
+.metas-card-progress {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-8);
 }
 
 .metas-card-track {
-  position: relative;
-  height: 14px;
+  width: 100%;
+  height: 12px;
   border-radius: var(--radius-full);
-  background: var(--bg-surface-input);
+  background: var(--bg-surface-selected);
   overflow: hidden;
 }
 
 .metas-card-fill {
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--color-brand-500);
+  background: var(--color-brand-300);
   transition: width 0.3s ease;
 }
 
-.metas-card-ticks {
-  position: absolute;
-  inset: 0;
-  display: flex;
-}
-
-.metas-card-tick {
-  flex: 1;
-  border-right: 2px solid var(--bg-surface-card);
-}
-
-.metas-card-tick:last-child {
-  border-right: none;
-}
-
-.metas-card-range-labels {
-  display: flex;
-  justify-content: space-between;
+.metas-card-caption {
+  margin: 0;
   font-family: var(--font-family-main);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-body-tiny);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body-small);
   line-height: var(--line-height-tight);
   color: var(--color-text-secondary);
+}
+
+.metas-card-caption-accent {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted-accent);
 }

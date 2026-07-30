@@ -292,17 +292,24 @@ const registry = [
   {
     id: 'metas-card',
     name: 'MetasCard',
-    description: 'Level header + hero value (time to next level) + segmented progress bar. Only renders the range it\'s given — level/milestone math lives outside the card.',
+    description: 'Level header + "current / target" ratio + progress bar + remaining-time caption. Only renders the values it\'s given — level/milestone math lives outside the card.',
     render: () => (
-      <MetasCard level={10} value="25h" caption="pro próximo nível" progress={66} rangeStart="50h" rangeEnd="100h" />
+      <MetasCard
+        level={10}
+        current="16h 30m"
+        target="20h"
+        progress={54}
+        remaining="3h 30m"
+        remainingCaption="pra bater a meta atual"
+      />
     ),
     code: `<MetasCard
   level={10}
-  value="25h"
-  caption="pro próximo nível"
-  progress={66}
-  rangeStart="50h"
-  rangeEnd="100h"
+  current="16h 30m"
+  target="20h"
+  progress={54}
+  remaining="3h 30m"
+  remainingCaption="pra bater a meta atual"
 />`,
   },
   {
@@ -412,13 +419,19 @@ const value = ref.current.getValue()`,
   {
     id: 'numeric-card',
     name: 'NumericCard',
+    description: '"large" is the Statistics "Tempo total" style — 48px/900 number, bordered.',
     render: () => (
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        <NumericCard title="Sequência" number="12" />
-        <NumericCard title="Total de horas" number="148" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <NumericCard title="Sequência" number="12" />
+          <NumericCard title="Total de horas" number="148" />
+        </div>
+        <div style={{ width: 343 }}>
+          <NumericCard title="Tempo total" number="4h 15m" size="large" />
+        </div>
       </div>
     ),
-    code: `<NumericCard title="Sequência" number="12" />`,
+    code: `<NumericCard title="Sequência" number="12" />\n\n<NumericCard title="Tempo total" number="4h 15m" size="large" />`,
   },
   {
     id: 'production-card',
