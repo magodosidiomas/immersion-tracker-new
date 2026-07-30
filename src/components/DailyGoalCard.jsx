@@ -5,7 +5,7 @@ import './DailyGoalCard.css'
 const RADIUS = 20
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-// "Hoje" card on the home screen. Two states, chosen by whether a daily
+// "Meta diária" card on the home screen. Two states, chosen by whether a daily
 // goal is set (goalMinutes is null/undefined until the person defines one
 // in Settings > Meta diária):
 // - No goal: dashed ring + call-to-action, tapping opens the goal screen.
@@ -51,7 +51,7 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
       </div>
       {hasGoal ? (
         <div className="daily-goal-card-text">
-          <span className="daily-goal-card-label">Hoje</span>
+          <span className="daily-goal-card-label">Meta diária</span>
           <span className="daily-goal-card-value">
             {formatDurationShort(todaySeconds)}
             <span className="daily-goal-card-goal"> / {formatDurationShort(goalMinutes * 60)}</span>
@@ -59,7 +59,7 @@ function DailyGoalCard({ goalMinutes, todaySeconds = 0, onClick }) {
         </div>
       ) : (
         <div className="daily-goal-card-text">
-          <span className="daily-goal-card-label">Hoje</span>
+          <span className="daily-goal-card-label">Meta diária</span>
           <span className="daily-goal-card-cta">Definir meta diária</span>
         </div>
       )}

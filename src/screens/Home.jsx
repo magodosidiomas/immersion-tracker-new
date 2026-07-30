@@ -113,10 +113,8 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         {groups.length > 0 && (
           <div className="home-stats">
             <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
-            <div className="home-stats-row">
-              <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
-              <NumericCard title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
-            </div>
+            <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
+            <NumericCard layout="row" title="Essa semana" number={formatDurationShort(weekTotalSeconds)} />
           </div>
         )}
         {sessionError ? (

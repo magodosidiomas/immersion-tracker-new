@@ -39,3 +39,22 @@
   line-height: var(--line-height-big-number);
   letter-spacing: -1.5px;
 }
+
+/* "row" variant — label left, bold value right, single line (used by
+   "Essa semana" on Home). "column" (default) keeps the original stacked
+   title-above-number layout unchanged. */
+.numeric-card[data-layout='row'] {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.numeric-card[data-layout='row'] .numeric-card-title,
+.numeric-card[data-layout='row'] .numeric-card-number {
+  width: auto;
+}
+
+.numeric-card[data-layout='row'] .numeric-card-number {
+  font-size: var(--font-size-body-medium);
+}
