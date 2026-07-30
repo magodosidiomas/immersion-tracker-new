@@ -75,6 +75,16 @@
     width: auto;
     height: auto;
   }
+
+  /* Visual order only — DOM order stays StreakCard-then-DailyGoalCard so
+     mobile's stacked column (unaffected by this breakpoint) is untouched. */
+  .home-stats-row > .streak-card {
+    order: 2;
+  }
+
+  .home-stats-row > .daily-goal-card {
+    order: 1;
+  }
 }
 
 .home-history-group {
