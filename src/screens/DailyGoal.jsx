@@ -43,7 +43,7 @@ const PRESETS = [
 // Picking a preset saves immediately when embedded (there's no separate
 // panel-level Salvar anymore); on mobile it stays a pending selection
 // confirmed via the screen's own footer Salvar, as before.
-function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
+function DailyGoal({ isDesktop = false, embedded = false, onBack, onClose, onSave }) {
   const [loaded, setLoaded] = useState(false)
   const [currentGoal, setCurrentGoal] = useState(null)
   const [customGoalMinutes, setCustomGoalMinutes] = useState(null)
@@ -53,6 +53,21 @@ function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
   const [customModalOpen, setCustomModalOpen] = useState(false)
   const [customError, setCustomError] = useState(null)
   const durationRef = useRef(null)
+  // Two clicks/taps on the same preset (or the "Personalizada" row) within
+  // this window count as select-and-save, same end result as picking the
+  // row then tapping the footer Salvar — a shortcut, not a new state.
+  // Only applies outside `embedded` mode, where a single tap already saves.
+  const lastActivateRef = useRef({ key: null, time: 0 })
+  const DOUBLE_ACTIVATE_MS = 400
+
+  function isDoubleActivate(key) {
+    // eslint-disable-next-line react-hooks/purity -- only ever invoked from click handlers, never during render
+    const now = Date.now()
+    const prev = lastActivateRef.current
+    const isDouble = prev.key === key && now - prev.time < DOUBLE_ACTIVATE_MS
+    lastActivateRef.current = isDouble ? { key: null, time: 0 } : { key, time: now }
+    return isDouble
+  }
 
   useEffect(() => {
     getAppSettings().then((settings) => {
@@ -102,6 +117,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
       onSave(minutes, false)
     } else {
       setSelectedMinutes(minutes)
+      if (isDoubleActivate(minutes)) onSave(minutes, false)
     }
   }
 
@@ -113,6 +129,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
       onSave(customGoalMinutes, true)
     } else {
       setSelectedMinutes(null)
+      if (isDoubleActivate('custom')) onSave(customGoalMinutes, true)
     }
   }
 
@@ -225,8 +242,8 @@ function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
         leadingIcon={view === 'custom' ? <ArrowBack /> : undefined}
         onLeadingClick={view === 'custom' ? () => setView('presets') : undefined}
         trailingIcon={view === 'presets' ? <Close /> : undefined}
-        onTrailingClick={view === 'presets' ? onBack : undefined}
-        onClose={onBack}
+        onTrailingClick={view === 'presets' ? (onClose || onBack) : undefined}
+        onClose={onClose || onBack}
         footer={
           <Button
             onClick={view === 'presets' ? handleSavePresets : handleSaveCustom}

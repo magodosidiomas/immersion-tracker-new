@@ -350,6 +350,7 @@ function App() {
           setOnboardingGoalStep(false)
           setHasLanguage(false)
         }}
+        onClose={() => setOnboardingGoalStep(false)}
         onSave={(minutes, isCustom) => {
           ;(isCustom ? setCustomGoalMinutes(minutes) : setDailyGoalMinutes(minutes)).then(() => setOnboardingGoalStep(false))
         }}
