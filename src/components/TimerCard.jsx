@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
 import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
+import Button from './Button'
 import SelectionChip from './SelectionChip'
 import { CATEGORIES } from '../data/categories'
 import { getCategoryLabel } from '../utils/sessions'
@@ -134,30 +135,28 @@ function TimerCard({
         <span className="timer-card-time" data-idle={status === 'idle'}>{elapsedLabel}</span>
         <div className="timer-card-actions">
           {status === 'idle' && (
-            <button type="button" className="timer-card-btn" data-style="solid" aria-label="Iniciar" onClick={onStart}>
-              <PlayArrow />
-            </button>
+            <Button size="sm" leadingIcon={<PlayArrow />} onClick={onStart}>
+              Iniciar
+            </Button>
           )}
           {status === 'running' && (
             <>
-              <button type="button" className="timer-card-btn timer-card-btn--labeled" data-style="destructive" onClick={onStop}>
-                <Stop />
+              <Button size="sm" variant="destructive" leadingIcon={<Stop />} onClick={onStop}>
                 Encerrar
-              </button>
-              <button type="button" className="timer-card-btn" data-style="outline" aria-label="Pausar" onClick={onPause}>
-                <Pause />
-              </button>
+              </Button>
+              <Button size="sm" variant="outline" leadingIcon={<Pause />} onClick={onPause}>
+                Pausar
+              </Button>
             </>
           )}
           {status === 'paused' && (
             <>
-              <button type="button" className="timer-card-btn timer-card-btn--labeled" data-style="destructive" onClick={onStop}>
-                <Stop />
+              <Button size="sm" variant="destructive" leadingIcon={<Stop />} onClick={onStop}>
                 Encerrar
-              </button>
-              <button type="button" className="timer-card-btn" data-style="solid" aria-label="Retomar" onClick={onResume}>
-                <PlayArrow />
-              </button>
+              </Button>
+              <Button size="sm" leadingIcon={<PlayArrow />} onClick={onResume}>
+                Continuar
+              </Button>
             </>
           )}
         </div>
