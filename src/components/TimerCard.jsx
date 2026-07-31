@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
 import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
+import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
 import SelectionChip from './SelectionChip'
 import { CATEGORIES } from '../data/categories'
 import { getCategoryLabel } from '../utils/sessions'
@@ -9,15 +9,16 @@ import './TimerCard.css'
 // Desktop-only replacement for the old floating "app-timer-corner"
 // widget. One component, two contexts:
 // - variant="home": always mounted in Home's content flow, shows the
-//   idle state (category picker + manual-entry pencil + play) when
-//   there's no draft.
-// - variant="banner": mounted above every other screen's content,
+//   idle state (category picker + play) when there's no draft.
+//   Registro manual lives back in Home's own TopNavDesktop, not here.
+// - variant="banner": mounted below every other screen's own header,
 //   only rendered by the caller while a draft exists (running or
 //   paused) — this component itself never renders an idle banner.
 // Category/subcategory selection is a single chip-based dropdown
 // (approved over two separate menus and over a two-column/tab
 // layout) — one trigger, one panel, "Categoria" and "Subcategoria"
-// as two chip rows with their own small group label.
+// as two chip rows with their own small group label, plus a "Limpar
+// seleção" action to go back to no category at all.
 function TimerCard({
   variant = 'home',
   status = 'idle', // idle | running | paused
@@ -26,7 +27,6 @@ function TimerCard({
   elapsedLabel = '00:00',
   onSelectCategory,
   onStart,
-  onManualEntry,
   onPause,
   onResume,
   onStop,
@@ -60,6 +60,11 @@ function TimerCard({
     setPickerOpen(false)
   }
 
+  function handleClearSelection() {
+    onSelectCategory?.(null, null)
+    setPickerOpen(false)
+  }
+
   return (
     <div className="timer-card" data-status={status} data-variant={variant}>
       <div className="timer-card-left" ref={pickerRef}>
@@ -72,9 +77,13 @@ function TimerCard({
         >
           {hasSelection ? (
             <>
-              {categoryLabel}
-              {subcategoryLabel && <span className="timer-card-sep">•</span>}
-              {subcategoryLabel}
+              <span className="timer-card-category">{categoryLabel}</span>
+              {subcategoryLabel && (
+                <>
+                  <span className="timer-card-sep">•</span>
+                  <span className="timer-card-subcategory">{subcategoryLabel}</span>
+                </>
+              )}
             </>
           ) : (
             'Selecionar categoria'
@@ -83,7 +92,15 @@ function TimerCard({
 
         {pickerOpen && (
           <div className="timer-card-picker">
-            <p className="timer-card-picker-label">Categoria</p>
+            <div className="timer-card-picker-header">
+              <p className="timer-card-picker-label">Categoria</p>
+              {hasSelection && (
+                <button type="button" className="timer-card-clear" onClick={handleClearSelection}>
+                  <Close />
+                  Limpar seleção
+                </button>
+              )}
+            </div>
             <div className="timer-card-chip-row">
               {CATEGORIES.map((cat) => (
                 <SelectionChip
@@ -117,19 +134,15 @@ function TimerCard({
         <span className="timer-card-time" data-idle={status === 'idle'}>{elapsedLabel}</span>
         <div className="timer-card-actions">
           {status === 'idle' && (
-            <>
-              <button type="button" className="timer-card-btn" data-style="outline" aria-label="Registro manual" onClick={onManualEntry}>
-                <Edit />
-              </button>
-              <button type="button" className="timer-card-btn" data-style="solid" aria-label="Iniciar" onClick={onStart}>
-                <PlayArrow />
-              </button>
-            </>
+            <button type="button" className="timer-card-btn" data-style="solid" aria-label="Iniciar" onClick={onStart}>
+              <PlayArrow />
+            </button>
           )}
           {status === 'running' && (
             <>
-              <button type="button" className="timer-card-btn" data-style="destructive" aria-label="Parar e salvar" onClick={onStop}>
+              <button type="button" className="timer-card-btn timer-card-btn--labeled" data-style="destructive" onClick={onStop}>
                 <Stop />
+                Encerrar
               </button>
               <button type="button" className="timer-card-btn" data-style="outline" aria-label="Pausar" onClick={onPause}>
                 <Pause />
@@ -138,8 +151,9 @@ function TimerCard({
           )}
           {status === 'paused' && (
             <>
-              <button type="button" className="timer-card-btn" data-style="destructive" aria-label="Parar e salvar" onClick={onStop}>
+              <button type="button" className="timer-card-btn timer-card-btn--labeled" data-style="destructive" onClick={onStop}>
                 <Stop />
+                Encerrar
               </button>
               <button type="button" className="timer-card-btn" data-style="solid" aria-label="Retomar" onClick={onResume}>
                 <PlayArrow />

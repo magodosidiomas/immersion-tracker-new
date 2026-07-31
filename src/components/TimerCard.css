@@ -49,15 +49,6 @@
   background: var(--color-icon-accent);
 }
 
-@keyframes timer-card-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.75); }
-}
-
-.timer-card-dot[data-status="running"] {
-  animation: timer-card-pulse 1.2s ease-in-out infinite;
-}
-
 .timer-card-trigger {
   display: flex;
   align-items: center;
@@ -70,7 +61,7 @@
   cursor: pointer;
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-body-large);
+  font-size: var(--font-size-label-medium);
   color: var(--color-text-muted-accent);
   white-space: nowrap;
 }
@@ -80,9 +71,15 @@
 }
 
 .timer-card-trigger[data-idle="true"] {
-  font-size: var(--font-size-label-small);
-  letter-spacing: var(--letter-spacing-wide);
   color: var(--color-text-secondary);
+}
+
+.timer-card-category {
+  font-weight: var(--font-weight-bold);
+}
+
+.timer-card-subcategory {
+  font-weight: var(--font-weight-regular);
 }
 
 .timer-card-sep {
@@ -101,6 +98,41 @@
   box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.45);
   padding: var(--space-16);
   z-index: 20;
+}
+
+.timer-card-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin: 0 0 var(--space-8);
+}
+
+.timer-card-picker-header .timer-card-picker-label {
+  margin: 0;
+}
+
+.timer-card-clear {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-label-xsmall);
+  color: var(--color-text-secondary);
+}
+
+.timer-card-clear:hover {
+  color: var(--color-text-primary);
+}
+
+.timer-card-clear svg {
+  width: 14px;
+  height: 14px;
 }
 
 .timer-card-picker-label {
@@ -162,6 +194,15 @@
   cursor: pointer;
   color: var(--color-icon-accent);
   flex-shrink: 0;
+}
+
+.timer-card-btn--labeled {
+  width: auto;
+  gap: var(--space-4);
+  padding: 0 var(--space-12);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label-small);
 }
 
 .timer-card-btn svg {

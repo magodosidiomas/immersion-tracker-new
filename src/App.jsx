@@ -260,6 +260,19 @@ function App() {
   const timer = useTimerDraft()
   const [pendingFinishDraft, setPendingFinishDraft] = useState(null)
 
+  // Mirrors the running/paused timer in the browser tab title (e.g.
+  // Toggl's "09:25 min · Toggl Track"), so it's visible even when this
+  // tab isn't focused.
+  useEffect(() => {
+    document.title = timer.status === 'idle' ? 'Imerso' : `${formatElapsed(Math.floor(timer.liveMs / 1000))} · Imerso`
+  }, [timer.status, timer.liveMs])
+
+  // Resets to the plain app title on unmount only (not on every tick,
+  // unlike the effect above) — a real cleanup, not a per-second toggle.
+  useEffect(() => () => {
+    document.title = 'Imerso'
+  }, [])
+
   // Every forward navigation pushes a history entry carrying the target
   // screen. Going "back" — whether via the device/browser back button or
   // an in-app back/close button calling window.history.back() — fires

@@ -112,7 +112,12 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
-      <TopNavDesktop title="Homepage" showSearch={false} />
+      <TopNavDesktop
+        title="Homepage"
+        showSearch={false}
+        secondaryActionLabel="Registro manual"
+        onSecondaryActionClick={onOpenManualSession}
+      />
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
         <TimerCard
           variant="home"
@@ -122,7 +127,6 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
           elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
           onSelectCategory={timer.setCategorySelection}
           onStart={() => timer.start(activeId)}
-          onManualEntry={onOpenManualSession}
           onPause={timer.pause}
           onResume={timer.resume}
           onStop={onFinishTimer}
