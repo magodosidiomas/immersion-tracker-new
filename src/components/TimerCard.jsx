@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
+import { KeyboardArrowDown } from '@nine-thirty-five/material-symbols-react/outlined'
 import Button from './Button'
 import SelectionChip from './SelectionChip'
 import { CATEGORIES } from '../data/categories'
@@ -72,6 +73,7 @@ function TimerCard({
           type="button"
           className="timer-card-trigger"
           data-idle={!hasSelection}
+          data-open={pickerOpen}
           onClick={() => setPickerOpen((value) => !value)}
         >
           {hasSelection ? (
@@ -85,8 +87,9 @@ function TimerCard({
               )}
             </>
           ) : (
-            'Selecionar categoria'
+            <span>Selecionar categoria</span>
           )}
+          <KeyboardArrowDown className="timer-card-trigger-chevron" />
         </button>
 
         {pickerOpen && (

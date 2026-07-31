@@ -56,6 +56,17 @@
   color: var(--color-text-secondary);
 }
 
+.timer-card-trigger-chevron {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.timer-card-trigger[data-open="true"] .timer-card-trigger-chevron {
+  transform: rotate(180deg);
+}
+
 .timer-card-category {
   font-weight: var(--font-weight-bold);
 }
