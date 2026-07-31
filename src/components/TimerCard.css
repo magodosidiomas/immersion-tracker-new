@@ -35,13 +35,27 @@
   width: 12px;
   height: 12px;
   border-radius: var(--radius-full);
-  background: var(--color-icon-accent);
   flex-shrink: 0;
-  opacity: 0;
+  box-sizing: border-box;
 }
 
-.timer-card-dot[data-active="true"] {
-  opacity: 1;
+.timer-card-dot[data-status="idle"] {
+  background: transparent;
+  border: 1.5px solid var(--color-border-subtle);
+}
+
+.timer-card-dot[data-status="running"],
+.timer-card-dot[data-status="paused"] {
+  background: var(--color-icon-accent);
+}
+
+@keyframes timer-card-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+.timer-card-dot[data-status="running"] {
+  animation: timer-card-pulse 1.2s ease-in-out infinite;
 }
 
 .timer-card-trigger {
@@ -158,6 +172,11 @@
 .timer-card-btn[data-style="outline"] {
   background: transparent;
   border: 1px solid var(--color-border-accent);
+  color: var(--color-icon-on-primary);
+}
+
+.timer-card-btn[data-style="outline"]:hover {
+  background: var(--bg-surface-primary-8);
 }
 
 .timer-card-btn[data-style="solid"] {
@@ -165,7 +184,15 @@
   color: var(--color-icon-on-primary);
 }
 
+.timer-card-btn[data-style="solid"]:hover {
+  background: var(--bg-surface-primary-hover);
+}
+
 .timer-card-btn[data-style="destructive"] {
   background: var(--color-red-800);
   color: var(--color-icon-on-destructive-accent);
+}
+
+.timer-card-btn[data-style="destructive"]:hover {
+  filter: brightness(1.15);
 }

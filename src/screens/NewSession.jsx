@@ -155,7 +155,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
         isDesktop={isDesktop}
         onOpenLinkContent={onOpenLinkContent}
         onOpenContent={onOpenContent}
-        onBack={manualOnly ? onClose : () => setPhase('timer')}
+        onBack={manualOnly || isDesktop ? onClose : () => setPhase('timer')}
         onDiscard={() => {
           if (!manualOnly) timer.clearDraft()
           onClose()

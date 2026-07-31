@@ -38,6 +38,7 @@ function formatSessionsLabel(dateStr) {
 // with activeLanguageId resolved the same way DayHistory does
 // (getAppSettings) rather than via a switcher.
 function Historico({
+  isDesktop = false,
   onOpenHome,
   onOpenSettings,
   onOpenNewSession,
@@ -96,7 +97,7 @@ function Historico({
               icon={<Schedule />}
               title="Nenhuma sessão nesse dia"
               description="Escolha outro dia ou comece uma nova sessão."
-              buttonLabel="Adicionar sessão nesse dia"
+              buttonLabel={isDesktop ? undefined : 'Adicionar sessão nesse dia'}
               buttonIcon={<Add />}
               onButtonClick={onOpenNewSession}
             />

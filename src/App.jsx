@@ -470,6 +470,7 @@ function App() {
     if (screen === 'historico') {
       return (
         <Historico
+          isDesktop={isDesktop}
           onOpenHome={() => navigate('home')}
           onOpenSettings={() => navigate('settings')}
           onOpenNewSession={() => navigate('new-session')}
@@ -553,6 +554,7 @@ function App() {
     return (
       <Home
         timer={timer}
+        isDesktop={isDesktop}
         onOpenSettings={() => navigate('settings')}
         onOpenManageLanguages={() => navigate('manage-languages')}
         onOpenAddLanguages={() => navigate('add-languages')}
@@ -585,26 +587,28 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
       />
-      <div className={`app-content${screen === 'home' || screen === 'stats' || screen === 'library' || screen === 'historico' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
+      <div className={`app-content${screen === 'home' || screen === 'stats' || screen === 'library' || screen === 'historico' ? ' app-content--full' : ''}`} ref={appContentRef}>
+        {isDesktop && timer.status !== 'idle' && !['new-session', 'home'].includes(screen) && (
+          <div className="app-timer-banner">
+            <TimerCard
+              variant="banner"
+              status={timer.status}
+              category={timer.category}
+              subcategory={timer.subcategory}
+              elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+              onSelectCategory={timer.setCategorySelection}
+              onPause={timer.pause}
+              onResume={timer.resume}
+              onStop={() => {
+                setPendingFinishDraft(timer.end())
+                navigate('new-session')
+              }}
+            />
+          </div>
+        )}
+        {renderScreen()}
+      </div>
       <EdgeScrollbar containerRef={appContentRef} />
-      {isDesktop && timer.status !== 'idle' && !['new-session', 'edit-session', 'home'].includes(screen) && (
-        <div className="app-timer-banner">
-          <TimerCard
-            variant="banner"
-            status={timer.status}
-            category={timer.category}
-            subcategory={timer.subcategory}
-            elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-            onSelectCategory={timer.setCategorySelection}
-            onPause={timer.pause}
-            onResume={timer.resume}
-            onStop={() => {
-              setPendingFinishDraft(timer.end())
-              navigate('new-session')
-            }}
-          />
-        </div>
-      )}
       {isDesktop && ['settings', 'manage-languages', 'backup', 'manage-series', 'manage-movies', 'manage-books'].includes(screen) && (
         <SettingsWindow
           screen={screen}

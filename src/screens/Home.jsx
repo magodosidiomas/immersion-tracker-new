@@ -8,6 +8,7 @@ import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
 import Alert from '../components/Alert'
+import TopNavDesktop from '../components/TopNavDesktop'
 import TimerWidget from '../components/TimerWidget'
 import TimerCard from '../components/TimerCard'
 import DailyGoalCard from '../components/DailyGoalCard'
@@ -45,7 +46,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenManualSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onOpenDailyGoal, onFinishTimer }) {
+function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenManualSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onOpenDailyGoal, onFinishTimer }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -111,6 +112,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
+      <TopNavDesktop title="Homepage" showSearch={false} />
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
         <TimerCard
           variant="home"
@@ -142,7 +144,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
             description="Toque no botão abaixo pra registrar sua primeira sessão"
-            buttonLabel="Nova sessão"
+            buttonLabel={isDesktop ? undefined : 'Nova sessão'}
             buttonIcon={<Add />}
             onButtonClick={onOpenNewSession}
           />

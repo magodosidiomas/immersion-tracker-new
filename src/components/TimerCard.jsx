@@ -49,7 +49,6 @@ function TimerCard({
   const activeCategory = CATEGORIES.find((item) => item.key === category) ?? CATEGORIES[0]
   const { categoryLabel, subcategoryLabel } = getCategoryLabel(category, subcategory)
   const hasSelection = Boolean(category)
-  const running = status === 'running'
 
   function handlePickCategory(cat) {
     onSelectCategory?.(cat.key, cat.subcategories[0].key)
@@ -63,7 +62,7 @@ function TimerCard({
   return (
     <div className="timer-card" data-status={status} data-variant={variant}>
       <div className="timer-card-left" ref={pickerRef}>
-        <span className="timer-card-dot" data-active={running} />
+        <span className="timer-card-dot" data-status={status} />
         <button
           type="button"
           className="timer-card-trigger"
@@ -128,21 +127,21 @@ function TimerCard({
           )}
           {status === 'running' && (
             <>
-              <button type="button" className="timer-card-btn" data-style="outline" aria-label="Pausar" onClick={onPause}>
-                <Pause />
-              </button>
               <button type="button" className="timer-card-btn" data-style="destructive" aria-label="Parar e salvar" onClick={onStop}>
                 <Stop />
+              </button>
+              <button type="button" className="timer-card-btn" data-style="outline" aria-label="Pausar" onClick={onPause}>
+                <Pause />
               </button>
             </>
           )}
           {status === 'paused' && (
             <>
-              <button type="button" className="timer-card-btn" data-style="solid" aria-label="Retomar" onClick={onResume}>
-                <PlayArrow />
-              </button>
               <button type="button" className="timer-card-btn" data-style="destructive" aria-label="Parar e salvar" onClick={onStop}>
                 <Stop />
+              </button>
+              <button type="button" className="timer-card-btn" data-style="solid" aria-label="Retomar" onClick={onResume}>
+                <PlayArrow />
               </button>
             </>
           )}
