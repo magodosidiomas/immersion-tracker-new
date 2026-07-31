@@ -58,9 +58,10 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
     getAppSettings().then((settings) => {
       const minutes = settings.dailyGoalMinutes ?? null
       const custom = settings.customGoalMinutes ?? null
+      const isCustomFlag = Boolean(settings.dailyGoalIsCustom) && custom != null
       setCurrentGoal(minutes)
       setCustomGoalMinutes(custom)
-      if (custom != null && minutes === custom) {
+      if (isCustomFlag) {
         setSelectedMinutes(null)
         setPendingCustom(true)
       } else {
@@ -86,7 +87,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
     hours: Math.floor((customGoalMinutes ?? currentGoal ?? 60) / 60),
     minutes: (customGoalMinutes ?? currentGoal ?? 60) % 60,
   }
-  const isCustomActive = embedded ? customGoalMinutes != null && currentGoal === customGoalMinutes : pendingCustom
+  const isCustomActive = pendingCustom
 
   function openCustomEditor() {
     setCustomError(null)
@@ -95,23 +96,23 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
   }
 
   function handlePickPreset(minutes) {
+    setPendingCustom(false)
     if (embedded) {
       setCurrentGoal(minutes)
       onSave(minutes, false)
     } else {
       setSelectedMinutes(minutes)
-      setPendingCustom(false)
     }
   }
 
   function handlePickCustom() {
     if (customGoalMinutes == null) return
+    setPendingCustom(true)
     if (embedded) {
       setCurrentGoal(customGoalMinutes)
       onSave(customGoalMinutes, true)
     } else {
       setSelectedMinutes(null)
-      setPendingCustom(true)
     }
   }
 
@@ -131,6 +132,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
     onSave(total, true)
     setCurrentGoal(total)
     setCustomGoalMinutes(total)
+    setPendingCustom(true)
     if (embedded) setCustomModalOpen(false)
   }
 
@@ -147,7 +149,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
               <SelectableListItem
                 key="custom"
                 label="Personalizada"
-                description={formatDurationShort(customGoalMinutes * 60)}
+                description={`${formatDurationShort(customGoalMinutes * 60)} / dia`}
                 layout="row"
                 trailingIcon={<Edit />}
                 onTrailingIconClick={openCustomEditor}
@@ -164,7 +166,7 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
               label={row.label}
               description={`${formatDurationShort(row.minutes * 60)} / dia`}
               layout="row"
-              selected={embedded ? currentGoal === row.minutes : selectedMinutes === row.minutes}
+              selected={!pendingCustom && (embedded ? currentGoal === row.minutes : selectedMinutes === row.minutes)}
               divider={index > 0}
               position={position}
               onClick={() => handlePickPreset(row.minutes)}

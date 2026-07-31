@@ -223,7 +223,7 @@ export async function reorderLanguages(orderedIds) {
 
 export async function getAppSettings() {
   const settings = await getOne('appSettings', SETTINGS_ID)
-  return settings ?? { id: SETTINGS_ID, activeLanguageId: null, dailyGoalMinutes: null, customGoalMinutes: null }
+  return settings ?? { id: SETTINGS_ID, activeLanguageId: null, dailyGoalMinutes: null, customGoalMinutes: null, dailyGoalIsCustom: false }
 }
 
 export async function setActiveLanguageId(languageId) {
@@ -233,7 +233,7 @@ export async function setActiveLanguageId(languageId) {
 
 export async function setDailyGoalMinutes(minutes) {
   const settings = await getAppSettings()
-  await put('appSettings', { ...settings, dailyGoalMinutes: minutes })
+  await put('appSettings', { ...settings, dailyGoalMinutes: minutes, dailyGoalIsCustom: false })
 }
 
 // Saving a custom goal both remembers it (customGoalMinutes) and makes
@@ -242,7 +242,7 @@ export async function setDailyGoalMinutes(minutes) {
 // remembered custom value survives switching back and forth.
 export async function setCustomGoalMinutes(minutes) {
   const settings = await getAppSettings()
-  await put('appSettings', { ...settings, dailyGoalMinutes: minutes, customGoalMinutes: minutes })
+  await put('appSettings', { ...settings, dailyGoalMinutes: minutes, customGoalMinutes: minutes, dailyGoalIsCustom: true })
 }
 
 // ---------- Sessions ----------
@@ -652,5 +652,6 @@ export async function importData(data) {
     : (languages[0]?.id ?? null)
   const dailyGoalMinutes = data?.appSettings?.dailyGoalMinutes ?? null
   const customGoalMinutes = data?.appSettings?.customGoalMinutes ?? null
-  await put('appSettings', { id: SETTINGS_ID, activeLanguageId, dailyGoalMinutes, customGoalMinutes })
+  const dailyGoalIsCustom = Boolean(data?.appSettings?.dailyGoalIsCustom)
+  await put('appSettings', { id: SETTINGS_ID, activeLanguageId, dailyGoalMinutes, customGoalMinutes, dailyGoalIsCustom })
 }
