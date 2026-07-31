@@ -145,6 +145,9 @@
 }
 
 .timer-card-time {
+  display: inline-flex;
+  align-items: center;
+  height: 35px;
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-bold);
   font-size: 32px;
@@ -152,7 +155,7 @@
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
   min-width: 80px;
-  text-align: right;
+  justify-content: flex-end;
 }
 
 .timer-card-time[data-idle="true"] {
@@ -161,7 +164,11 @@
 
 .timer-card-actions {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: var(--space-12);
+}
+
+.timer-card-actions .button {
+  height: 35px;
 }
 
