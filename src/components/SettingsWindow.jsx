@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import ManageLanguages from '../screens/ManageLanguages'
 import Backup from '../screens/Backup'
+import DailyGoal from '../screens/DailyGoal'
 import ManageSeries from '../screens/ManageSeries'
 import ManageEpisodes from '../screens/ManageEpisodes'
 import EpisodeDetail from '../screens/EpisodeDetail'
@@ -22,8 +23,18 @@ import './SettingsWindow.css'
 // lands here already scoped to the right section. 'settings' itself
 // (no sub-item chosen yet) defaults to Idiomas, matching the Figma
 // default state.
-function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpenDailyGoal, onAllLanguagesRemoved }) {
+function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onSaveDailyGoal, onAllLanguagesRemoved }) {
   const section = screen === 'settings' ? 'manage-languages' : screen
+
+  // Meta diária swaps into the panel in place, same as every other
+  // section — it doesn't ride the App.jsx `screen`/`navigate` stack like
+  // it does everywhere else, since that would either close this window
+  // (screen not in the desktop-render list) or hijack it for the
+  // separate Home shortcut into the standalone Modal. Local state keeps
+  // it fully scoped to this window, same idea as `drill` below.
+  const [dailyGoalOpen, setDailyGoalOpen] = useState(false)
+  const [dailyGoalState, setDailyGoalState] = useState({ view: 'presets', canSave: false })
+  const dailyGoalRef = useRef(null)
 
   // Drill-down within Séries/Filmes stays inside the modal instead of
   // navigating away (which used to unmount SettingsWindow entirely).
@@ -42,6 +53,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
   if (section !== drillSection) {
     setDrillSection(section)
     setDrill(null)
+    setDailyGoalOpen(false)
   }
 
   async function openEpisodes(item) {
@@ -67,7 +79,14 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
 
   let panelTitle = ''
   let panelAction = null
-  if (section === 'manage-languages') {
+  if (dailyGoalOpen) {
+    panelTitle = dailyGoalState.view === 'custom' ? 'Meta personalizada' : 'Meta diária'
+    panelAction = (
+      <Button size="sm" onClick={() => dailyGoalRef.current?.save()} disabled={dailyGoalState.view === 'presets' && !dailyGoalState.canSave}>
+        Salvar
+      </Button>
+    )
+  } else if (section === 'manage-languages') {
     panelTitle = 'Idiomas'
   } else if (section === 'backup') {
     panelTitle = 'Backup'
@@ -120,7 +139,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
     {
       label: 'Preferências',
       items: [
-        { key: 'daily-goal', label: 'Meta diária', icon: <Flag />, onClick: onOpenDailyGoal },
+        { key: 'daily-goal', label: 'Meta diária', icon: <Flag />, onClick: () => setDailyGoalOpen(true) },
       ],
     },
     {
@@ -150,7 +169,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
                   key={item.key}
                   type="button"
                   className="settings-window-nav-item"
-                  data-active={section === item.key}
+                  data-active={item.key === 'daily-goal' ? dailyGoalOpen : !dailyGoalOpen && section === item.key}
                   onClick={() => (item.onClick ? item.onClick() : onNavigate(item.key))}
                 >
                   <span className="settings-window-nav-item-icon">{item.icon}</span>
@@ -162,8 +181,13 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
         </nav>
         <div className="settings-window-panel">
           <div className="settings-window-panel-topbar">
-            {drill && (
-              <button type="button" className="settings-window-back" onClick={drillBack} aria-label="Voltar">
+            {(drill || (dailyGoalOpen && dailyGoalState.view === 'custom')) && (
+              <button
+                type="button"
+                className="settings-window-back"
+                onClick={dailyGoalOpen ? () => dailyGoalRef.current?.goBack() : drillBack}
+                aria-label="Voltar"
+              >
                 <ArrowBack />
               </button>
             )}
@@ -174,60 +198,67 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onOpe
             </button>
           </div>
           <div className="settings-window-panel-content">
-            {section === 'manage-languages' && (
-              <ManageLanguages
-                embedded
-                onOpenAddLanguages={onOpenAddLanguages}
-                onAllLanguagesRemoved={onAllLanguagesRemoved}
-              />
+            {dailyGoalOpen && (
+              <DailyGoal ref={dailyGoalRef} embedded onSave={onSaveDailyGoal} onStateChange={setDailyGoalState} />
             )}
-            {section === 'backup' && <Backup embedded />}
-            {section === 'manage-series' && !drill && (
-              <ManageSeries ref={seriesRef} embedded hideFooter kind="serie" onOpenEpisodes={openEpisodes} />
-            )}
-            {section === 'manage-series' && drill?.view === 'episodes' && (
-              <ManageEpisodes
-                embedded
-                catalogId={drill.catalogItem?.id}
-                seriesName={drill.catalogItem?.label}
-                onOpenEpisode={openEpisodeDetail}
-              />
-            )}
-            {section === 'manage-series' && drill?.view === 'episode-detail' && (
-              <EpisodeDetail
-                embedded
-                contentId={drill.contentId}
-                seriesName={drill.catalogItem?.label}
-                episode={drill.episode}
-                onAddSession={() => {}}
-                onOpenSession={() => {}}
-              />
-            )}
-            {section === 'manage-movies' && !drill && (
-              <ManageSeries ref={moviesRef} embedded hideFooter kind="filme" onOpenSessions={openCatalogSessions} />
-            )}
-            {section === 'manage-movies' && drill?.view === 'episode-detail' && (
-              <EpisodeDetail
-                embedded
-                contentId={drill.contentId}
-                seriesName={drill.catalogItem?.label}
-                episode={null}
-                onAddSession={() => {}}
-                onOpenSession={() => {}}
-              />
-            )}
-            {section === 'manage-books' && !drill && (
-              <ManageSeries ref={booksRef} embedded hideFooter kind="livro" onOpenSessions={openCatalogSessions} />
-            )}
-            {section === 'manage-books' && drill?.view === 'episode-detail' && (
-              <EpisodeDetail
-                embedded
-                contentId={drill.contentId}
-                seriesName={drill.catalogItem?.label}
-                episode={null}
-                onAddSession={() => {}}
-                onOpenSession={() => {}}
-              />
+            {!dailyGoalOpen && (
+              <>
+                {section === 'manage-languages' && (
+                  <ManageLanguages
+                    embedded
+                    onOpenAddLanguages={onOpenAddLanguages}
+                    onAllLanguagesRemoved={onAllLanguagesRemoved}
+                  />
+                )}
+                {section === 'backup' && <Backup embedded />}
+                {section === 'manage-series' && !drill && (
+                  <ManageSeries ref={seriesRef} embedded hideFooter kind="serie" onOpenEpisodes={openEpisodes} />
+                )}
+                {section === 'manage-series' && drill?.view === 'episodes' && (
+                  <ManageEpisodes
+                    embedded
+                    catalogId={drill.catalogItem?.id}
+                    seriesName={drill.catalogItem?.label}
+                    onOpenEpisode={openEpisodeDetail}
+                  />
+                )}
+                {section === 'manage-series' && drill?.view === 'episode-detail' && (
+                  <EpisodeDetail
+                    embedded
+                    contentId={drill.contentId}
+                    seriesName={drill.catalogItem?.label}
+                    episode={drill.episode}
+                    onAddSession={() => {}}
+                    onOpenSession={() => {}}
+                  />
+                )}
+                {section === 'manage-movies' && !drill && (
+                  <ManageSeries ref={moviesRef} embedded hideFooter kind="filme" onOpenSessions={openCatalogSessions} />
+                )}
+                {section === 'manage-movies' && drill?.view === 'episode-detail' && (
+                  <EpisodeDetail
+                    embedded
+                    contentId={drill.contentId}
+                    seriesName={drill.catalogItem?.label}
+                    episode={null}
+                    onAddSession={() => {}}
+                    onOpenSession={() => {}}
+                  />
+                )}
+                {section === 'manage-books' && !drill && (
+                  <ManageSeries ref={booksRef} embedded hideFooter kind="livro" onOpenSessions={openCatalogSessions} />
+                )}
+                {section === 'manage-books' && drill?.view === 'episode-detail' && (
+                  <EpisodeDetail
+                    embedded
+                    contentId={drill.contentId}
+                    seriesName={drill.catalogItem?.label}
+                    episode={null}
+                    onAddSession={() => {}}
+                    onOpenSession={() => {}}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>

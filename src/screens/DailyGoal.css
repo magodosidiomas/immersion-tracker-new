@@ -15,6 +15,11 @@
   padding: var(--space-16);
 }
 
+.daily-goal-content[data-embedded='true'] {
+  padding: 0;
+  overflow: visible;
+}
+
 .daily-goal-footer {
   flex-shrink: 0;
   padding: var(--space-16);

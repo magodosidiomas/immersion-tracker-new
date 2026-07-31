@@ -603,7 +603,7 @@ function App() {
           onNavigate={navigateSettingsWindow}
           onClose={() => window.history.back()}
           onOpenAddLanguages={() => navigate('add-languages')}
-          onOpenDailyGoal={() => navigate('daily-goal')}
+          onSaveDailyGoal={(minutes) => setDailyGoalMinutes(minutes)}
           onAllLanguagesRemoved={() => {
             setHasLanguage(false)
             setScreen('home')

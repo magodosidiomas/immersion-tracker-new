@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Modal from '../components/Modal'
 import SelectableListItem from '../components/SelectableListItem'
@@ -34,7 +34,15 @@ const PRESETS = [
 // language selection), so onBack reads as "Pular" (skip) instead of
 // "Voltar" — same handler either way, just different chrome/label. The
 // custom view keeps its normal back-to-presets arrow regardless.
-function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
+//
+// `embedded` (desktop SettingsWindow only): strips its own chrome
+// (TopNav/Modal, footer) since the panel topbar/title/Salvar action
+// live in SettingsWindow instead — same split as ManageSeries. The
+// parent needs to react to internal view changes (title, back arrow,
+// Salvar disabled state), so this reports them via `onStateChange`
+// and exposes `save`/`goBack` through the ref (forwardRef +
+// useImperativeHandle, same pattern as ManageSeries' openCreate).
+const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, onBack, onSave, onStateChange }, ref) {
   const [loaded, setLoaded] = useState(false)
   const [currentGoal, setCurrentGoal] = useState(null)
   const [view, setView] = useState('presets')
@@ -57,12 +65,27 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
     if (view === 'custom') durationRef.current?.focusFirst()
   }, [view])
 
+  useEffect(() => {
+    if (embedded) onStateChange?.({ view, canSave: view === 'presets' ? Boolean(selectedMinutes) : true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [embedded, view, selectedMinutes])
+
+  useImperativeHandle(ref, () => ({
+    save: () => (view === 'presets' ? handleSavePresets() : handleSaveCustom()),
+    goBack: () => setView('presets'),
+  }))
+
   if (!loaded) return null
 
   const customInitial = { hours: Math.floor((currentGoal ?? 60) / 60), minutes: (currentGoal ?? 60) % 60 }
 
   function handleSavePresets() {
-    if (selectedMinutes) onSave(selectedMinutes)
+    if (!selectedMinutes) return
+    onSave(selectedMinutes)
+    // Embedded stays on the daily-goal panel instead of navigating away
+    // (there's nowhere to "close" to inside SettingsWindow), so reflect
+    // the save locally rather than relying on a parent unmount/refetch.
+    if (embedded) setCurrentGoal(selectedMinutes)
   }
 
   function handleSaveCustom() {
@@ -74,6 +97,11 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
     }
     setCustomError(null)
     onSave(total)
+    if (embedded) {
+      setCurrentGoal(total)
+      setSelectedMinutes(PRESETS.some((p) => p.minutes === total) ? total : null)
+      setView('presets')
+    }
   }
 
   const presetsView = (
@@ -107,6 +135,14 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
       </div>
     </div>
   )
+
+  if (embedded) {
+    return (
+      <div className="daily-goal-content" data-embedded="true">
+        {view === 'presets' ? presetsView : customView}
+      </div>
+    )
+  }
 
   if (isDesktop) {
     return (
@@ -164,6 +200,6 @@ function DailyGoal({ isDesktop = false, onboarding = false, onBack, onSave }) {
       </div>
     </main>
   )
-}
+})
 
 export default DailyGoal
