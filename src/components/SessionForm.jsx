@@ -471,6 +471,9 @@ function SessionForm({
               />
             ))}
           </div>
+          {touched && !isValid && (
+            <Alert type="error" description="A sessão precisa ter no mínimo 1 minuto." />
+          )}
         </div>
 
         <div className="finish-session-divider" />
