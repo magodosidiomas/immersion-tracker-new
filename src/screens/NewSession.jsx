@@ -273,7 +273,12 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
           </>
         )}
         {canDelete && (
-          <Button variant="destructive-ghost" leadingIcon={<Delete />} fullWidth onClick={() => setDeleteConfirmOpen(true)}>
+          <Button
+            variant="destructive-ghost"
+            leadingIcon={<Delete />}
+            fullWidth
+            onClick={() => (totalSeconds < 60 ? handleDeleteSession() : setDeleteConfirmOpen(true))}
+          >
             Deletar sessão
           </Button>
         )}
@@ -429,7 +434,7 @@ function FinishSession({ draft, category, subcategory, languageId, hideContentSe
         saving={saving || !languageId}
         subScreen={view === 'datetime' ? 'datetime' : 'main'}
         onOpenDateTime={() => setView('datetime')}
-        onDelete={isDesktop ? () => setConfirmOpen(true) : undefined}
+        onDelete={isDesktop ? () => (draft.durationSeconds < 60 ? onDiscard() : setConfirmOpen(true)) : undefined}
         deleteLabel="Descartar"
         onCancel={isDesktop ? onBack : undefined}
       />
@@ -492,7 +497,7 @@ function FinishSession({ draft, category, subcategory, languageId, hideContentSe
             <button
               type="button"
               className="top-nav-icon-reset top-nav-icon-destructive"
-              onClick={() => setConfirmOpen(true)}
+              onClick={() => (draft.durationSeconds < 60 ? onDiscard() : setConfirmOpen(true))}
               aria-label="Descartar sessão"
             >
               <Delete />
