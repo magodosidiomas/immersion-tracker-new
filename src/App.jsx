@@ -23,11 +23,10 @@ import ManageEpisodes from './screens/ManageEpisodes'
 import EpisodeDetail from './screens/EpisodeDetail'
 import LinkContent from './screens/LinkContent'
 import LinkSession from './screens/LinkSession'
-import TimerWidget from './components/TimerWidget'
+import TimerCard from './components/TimerCard'
 import { getAppSettings, getFilmeContent, setDailyGoalMinutes } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
-import { getCategoryLabel } from './utils/sessions'
 import { formatElapsed } from './utils/date'
 
 // Design system viewer lives at the #design-system hash instead of a
@@ -395,6 +394,13 @@ function App() {
       )
     }
     if (screen === 'new-session') {
+      // Desktop starts/controls the timer entirely through TimerCard now
+      // (Home's in-flow card + the cross-page banner) — this screen's
+      // "timer" phase (category picker + play button, full page) is
+      // mobile-only from here on. Desktop only ever lands here via
+      // TimerCard's Parar button, which already set pendingFinishDraft,
+      // so phase is always 'finish' in that case.
+      if (isDesktop && !pendingFinishDraft) return null
       return (
         <NewSession
           timer={timer}
@@ -581,19 +587,21 @@ function App() {
       />
       <div className={`app-content${screen === 'home' || screen === 'stats' || screen === 'library' || screen === 'historico' ? ' app-content--full' : ''}`} ref={appContentRef}>{renderScreen()}</div>
       <EdgeScrollbar containerRef={appContentRef} />
-      {isDesktop && timer.status !== 'idle' && screen !== 'new-session' && (
-        <div className="app-timer-corner">
-          <TimerWidget
+      {isDesktop && timer.status !== 'idle' && !['new-session', 'edit-session', 'home'].includes(screen) && (
+        <div className="app-timer-banner">
+          <TimerCard
+            variant="banner"
+            status={timer.status}
+            category={timer.category}
+            subcategory={timer.subcategory}
             elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-            category={getCategoryLabel(timer.category, timer.subcategory).categoryLabel}
-            subcategory={getCategoryLabel(timer.category, timer.subcategory).subcategoryLabel}
-            running={timer.status === 'running'}
-            onToggle={timer.status === 'running' ? timer.pause : timer.resume}
-            onFinish={() => {
+            onSelectCategory={timer.setCategorySelection}
+            onPause={timer.pause}
+            onResume={timer.resume}
+            onStop={() => {
               setPendingFinishDraft(timer.end())
               navigate('new-session')
             }}
-            onDelete={timer.clearDraft}
           />
         </div>
       )}

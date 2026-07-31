@@ -3,13 +3,13 @@ import { getSessionsByLanguage, getAppSettings } from '../db'
 import { formatDateInput, formatElapsed, getStreakWeekDays, calculateStreak } from '../utils/date'
 import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
-import TopNavDesktop from '../components/TopNavDesktop'
 import BottomNav from '../components/BottomNav'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
 import Alert from '../components/Alert'
 import TimerWidget from '../components/TimerWidget'
+import TimerCard from '../components/TimerCard'
 import DailyGoalCard from '../components/DailyGoalCard'
 import StreakCard from '../components/StreakCard'
 import {
@@ -111,16 +111,20 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
-      <TopNavDesktop
-        title="Homepage"
-        showSearch={false}
-        secondaryActionLabel="Registro manual"
-        onSecondaryActionClick={onOpenManualSession}
-        actionLabel="Nova sessão"
-        actionIcon={<Add />}
-        onActionClick={onOpenNewSession}
-      />
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
+        <TimerCard
+          variant="home"
+          status={timer.status}
+          category={timer.category}
+          subcategory={timer.subcategory}
+          elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
+          onSelectCategory={timer.setCategorySelection}
+          onStart={() => timer.start(activeId)}
+          onManualEntry={onOpenManualSession}
+          onPause={timer.pause}
+          onResume={timer.resume}
+          onStop={onFinishTimer}
+        />
         {groups.length > 0 && (
           <div className="home-stats">
             <div className="home-stats-row">

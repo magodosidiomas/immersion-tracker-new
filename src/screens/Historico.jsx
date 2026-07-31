@@ -83,13 +83,7 @@ function Historico({
         }
         hasDivider
       />
-      <TopNavDesktop
-        title="Histórico"
-        showSearch={false}
-        actionLabel="Nova sessão"
-        actionIcon={<Add />}
-        onActionClick={onOpenNewSession}
-      />
+      <TopNavDesktop title="Histórico" showSearch={false} />
       <div className="historico-content">
         <section className="historico-calendar-section">
           <p className="historico-label">Dias com sessão</p>
