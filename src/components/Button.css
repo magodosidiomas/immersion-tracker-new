@@ -67,11 +67,15 @@
   background: var(--bg-semantic-warning-stronger);
 }
 
-/* --- destructive --- */
+/* --- destructive ---
+   Text/icon use the same "on filled surface" tokens as primary
+   (near-white), not a red-tinted token — --color-text-on-destructive-muted
+   resolves to a light red, which on the --bg-semantic-destructive red
+   background was red-on-red and failed basic contrast. */
 .button[data-variant='destructive'] {
   background: var(--bg-semantic-destructive);
-  color: var(--color-text-on-destructive-muted);
-  --icon-color: var(--color-icon-on-destructive);
+  color: var(--color-text-on-filled);
+  --icon-color: var(--color-icon-on-primary);
 }
 .button[data-variant='destructive']:hover:not(:disabled) {
   background: var(--bg-semantic-destructive-hover-ghost);

@@ -69,7 +69,6 @@ function TimerCard({
   return (
     <div className="timer-card" data-status={status} data-variant={variant}>
       <div className="timer-card-left" ref={pickerRef}>
-        <span className="timer-card-dot" data-status={status} />
         <button
           type="button"
           className="timer-card-trigger"

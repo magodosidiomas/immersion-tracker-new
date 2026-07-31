@@ -31,24 +31,6 @@
   min-width: 0;
 }
 
-.timer-card-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: var(--radius-full);
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
-.timer-card-dot[data-status="idle"] {
-  background: transparent;
-  border: 1.5px solid var(--color-border-subtle);
-}
-
-.timer-card-dot[data-status="running"],
-.timer-card-dot[data-status="paused"] {
-  background: var(--color-icon-accent);
-}
-
 .timer-card-trigger {
   display: flex;
   align-items: center;
