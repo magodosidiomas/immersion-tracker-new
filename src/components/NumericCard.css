@@ -16,7 +16,7 @@
   width: 100%;
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-body-tiny);
+  font-size: var(--font-size-body-medium);
   line-height: var(--line-height-loose);
   color: var(--color-text-secondary);
 }
