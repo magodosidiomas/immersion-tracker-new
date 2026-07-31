@@ -24,6 +24,9 @@ function TopNavDesktop({
   actionLabel,
   actionIcon,
   onActionClick,
+  secondaryActionLabel,
+  secondaryActionIcon,
+  onSecondaryActionClick,
   onLeadingClick = null,
   onClose = null,
 }) {
@@ -43,6 +46,17 @@ function TopNavDesktop({
   const actionButton = actionLabel && (
     <Button size={type === 'modal' ? 'sm' : 'lg'} leadingIcon={actionIcon} onClick={onActionClick}>
       {actionLabel}
+    </Button>
+  )
+
+  const secondaryActionButton = secondaryActionLabel && (
+    <Button
+      variant="outline"
+      size={type === 'modal' ? 'sm' : 'lg'}
+      leadingIcon={secondaryActionIcon}
+      onClick={onSecondaryActionClick}
+    >
+      {secondaryActionLabel}
     </Button>
   )
 
@@ -67,6 +81,7 @@ function TopNavDesktop({
         {title && <span className="top-nav-desktop-title">{title}</span>}
         <div className="top-nav-desktop-content">
           {showSearch && searchField}
+          {secondaryActionButton}
           {actionButton}
         </div>
       </div>

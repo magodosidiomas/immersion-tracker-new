@@ -537,6 +537,7 @@ function App() {
         onOpenManageLanguages={() => navigate('manage-languages')}
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenNewSession={() => navigate('new-session')}
+        onOpenManualSession={openManualSession}
         onOpenEditSession={(session) => navigate('edit-session', session)}
         onOpenStatistics={() => navigate('stats')}
         onOpenLibrary={() => navigate('library')}
