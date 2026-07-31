@@ -196,6 +196,18 @@ function App() {
     closeOverlay()
   }
 
+  // "Ver" tapped from a Conteúdos list (SessionForm's linked-contents
+  // menu, via NewSession/EditSession) — same overlay pattern as
+  // openSessionOverlay above, just the other direction.
+  function openContentOverlay(content) {
+    pushOverlay({ type: 'content', contentId: content.id })
+  }
+
+  function closeContentOverlay() {
+    setCatalogRefreshTick((tick) => tick + 1)
+    closeOverlay()
+  }
+
   function openLinkContent(callback) {
     pendingPickCallback.current = callback
     pushOverlay({ type: 'link-content' })
@@ -390,6 +402,7 @@ function App() {
           initialFinishDraft={pendingFinishDraft}
           onClose={() => { setPendingFinishDraft(null); window.history.back() }}
           onOpenLinkContent={openLinkContent}
+          onOpenContent={openContentOverlay}
           onSaved={() => { setPendingFinishDraft(null); window.history.back() }}
         />
       )
@@ -402,6 +415,7 @@ function App() {
           onBack={() => window.history.back()}
           onSaved={() => window.history.back()}
           onOpenLinkContent={openLinkContent}
+          onOpenContent={openContentOverlay}
         />
       )
     }
@@ -627,7 +641,7 @@ function App() {
       )}
       {overlayStack.find((l) => l.type === 'manual-session') && (
         <div className={`picker-overlay${isDesktop ? ' picker-overlay--backdrop' : ''}`}>
-          <NewSession timer={timer} manualOnly isDesktop={isDesktop} onClose={closeManualSession} onSaved={closeManualSession} />
+          <NewSession timer={timer} manualOnly isDesktop={isDesktop} onClose={closeManualSession} onSaved={closeManualSession} onOpenContent={openContentOverlay} />
         </div>
       )}
       {overlayStack.find((l) => l.type === 'manual-content') && (
@@ -698,6 +712,26 @@ function App() {
               onBack={closeSessionOverlay}
               onSaved={closeSessionOverlay}
               onOpenLinkContent={openLinkContent}
+              onOpenContent={openContentOverlay}
+            />
+          </div>
+        )
+      })()}
+      {(() => {
+        const contentLayer = overlayStack.find((l) => l.type === 'content')
+        if (!contentLayer) return null
+        return (
+          <div className="picker-overlay">
+            <EditContent
+              contentId={contentLayer.contentId}
+              isDesktop={isDesktop}
+              timer={timer}
+              onBack={closeContentOverlay}
+              onSaved={closeContentOverlay}
+              onOpenLinkSession={openLinkSession}
+              onOpenSession={openSessionOverlay}
+              onOpenManage={(kind, onSelectItem) => openManageOverlay(kind, onSelectItem)}
+              catalogRefreshTick={catalogRefreshTick}
             />
           </div>
         )

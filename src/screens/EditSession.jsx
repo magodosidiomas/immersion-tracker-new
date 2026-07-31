@@ -19,7 +19,7 @@ import './EditSession.css'
 // Unlike NewSession (no sessionId until Salvar), this session already
 // exists — so linking/unlinking content writes to sessionContents
 // immediately instead of staging a pending list.
-function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkContent }) {
+function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkContent, onOpenContent }) {
   const [saving, setSaving] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [linkedContents, setLinkedContents] = useState([])
@@ -80,6 +80,7 @@ function EditSession({ session, isDesktop = false, onBack, onSaved, onOpenLinkCo
         linkedContents={linkedContents}
         onAddContent={handleAddContent}
         onRemoveContent={handleRemoveContent}
+        onOpenContent={onOpenContent}
         onSave={handleSave}
         saving={saving}
         subScreen={view === 'datetime' ? 'datetime' : 'main'}

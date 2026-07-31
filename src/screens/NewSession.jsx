@@ -41,7 +41,7 @@ import './NewSession.css'
 // pickers aren't supported by the single pickerScreen stack in
 // App.jsx. onSaved receives the created session so the caller can
 // select it automatically.
-function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onSaved, isDesktop = false, initialFinishDraft = null }) {
+function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOnly = false, onSaved, isDesktop = false, initialFinishDraft = null }) {
   const [phase, setPhase] = useState(manualOnly || initialFinishDraft ? 'finish' : 'timer') // timer | finish
   const [activeLanguageId, setActiveLanguageId] = useState(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
@@ -154,6 +154,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
         hideContentSection={manualOnly}
         isDesktop={isDesktop}
         onOpenLinkContent={onOpenLinkContent}
+        onOpenContent={onOpenContent}
         onBack={manualOnly ? onClose : () => setPhase('timer')}
         onDiscard={() => {
           if (!manualOnly) timer.clearDraft()
@@ -372,7 +373,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, manualOnly = false, onS
 // "Data" is independent of those three — it's which calendar day the
 // session counts toward (for future dashboards/streaks), not part of
 // the duration math, so it defaults to today and is edited on its own.
-function FinishSession({ draft, category, subcategory, languageId, hideContentSection = false, isDesktop = false, onOpenLinkContent, onBack, onDiscard, onSaved }) {
+function FinishSession({ draft, category, subcategory, languageId, hideContentSection = false, isDesktop = false, onOpenLinkContent, onOpenContent, onBack, onDiscard, onSaved }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -422,6 +423,7 @@ function FinishSession({ draft, category, subcategory, languageId, hideContentSe
         linkedContents={pendingContents}
         onAddContent={handleAddContent}
         onRemoveContent={handleRemoveContent}
+        onOpenContent={onOpenContent}
         hideContentSection={hideContentSection}
         onSave={handleSave}
         saving={saving || !languageId}

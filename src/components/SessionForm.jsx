@@ -9,7 +9,7 @@ import MediaListItem from './MediaListItem'
 import ListItem from './ListItem'
 import Thumbnail from './Thumbnail'
 import LinkSessionRow from './LinkSessionRow'
-import { Edit, Add, DoNotDisturbOn, DateRange, ChevronRight, Schedule, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Edit, Add, DateRange, ChevronRight, Schedule, Delete, Visibility, LinkOff } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
 import './SessionForm.css'
@@ -94,6 +94,7 @@ function SessionForm({
   linkedContents = [],
   onAddContent,
   onRemoveContent,
+  onOpenContent,
   hideContentSection = false,
 }) {
   const [startAt, setStartAt] = useState(initialStartAt)
@@ -516,13 +517,18 @@ function SessionForm({
                     divider={index < linkedContents.length - 1}
                     thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
                     menu={[
+                      onOpenContent && {
+                        label: 'Ver',
+                        icon: <Visibility />,
+                        onClick: () => onOpenContent(content),
+                      },
                       {
-                        label: 'Remover conteúdo',
-                        icon: <DoNotDisturbOn />,
+                        label: 'Desvincular conteúdo',
+                        icon: <LinkOff />,
                         danger: true,
                         onClick: () => onRemoveContent?.(content.id),
                       },
-                    ]}
+                    ].filter(Boolean)}
                   />
                 ))}
               </div>
