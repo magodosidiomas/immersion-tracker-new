@@ -78,7 +78,10 @@ function TimerCard({
           className="timer-card-trigger"
           data-idle={!hasSelection}
           data-open={pickerOpen}
-          onClick={() => setPickerOpen((value) => !value)}
+          onClick={() => {
+            setPickerOpen((value) => !value)
+            if (coachmarkStep === 1) onCoachmarkNext?.()
+          }}
         >
           {hasSelection ? (
             <>

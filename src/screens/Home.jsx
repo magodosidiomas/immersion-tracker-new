@@ -61,20 +61,40 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState(null)
   const [newSessionSheetOpen, setNewSessionSheetOpen] = useState(false)
 
-  // Desktop-only timer coachmark (TimerCard's idle state): shown once,
-  // tracked via a plain localStorage flag since it's disposable UI state,
-  // not app data worth persisting in IndexedDB.
-  const [coachmarkStep, setCoachmarkStep] = useState(() =>
-    timer.status === 'idle' && !localStorage.getItem('imerso-timer-coachmark-seen') ? 1 : 0
-  )
+  // Desktop-only timer coachmark (TimerCard's idle state): shown once per
+  // language, not once ever — a freshly added language starts with no
+  // categories picked yet, so the tip is worth repeating. Tracked as a
+  // list of already-seen language ids in localStorage (disposable UI
+  // state, not app data worth persisting in IndexedDB).
+  const [seenLanguageIds, setSeenLanguageIds] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('imerso-timer-coachmark-seen-languages')) ?? []
+    } catch {
+      return []
+    }
+  })
+  const [coachmarkStep, setCoachmarkStep] = useState(0)
+  const [coachmarkLanguageId, setCoachmarkLanguageId] = useState(null)
 
   useEffect(() => {
     getAppSettings().then((settings) => setDailyGoalMinutes(settings.dailyGoalMinutes ?? null))
   }, [])
 
+  // Adjusting state in response to a prop change (activeId switching) —
+  // done during render rather than in an effect, per React's guidance for
+  // this exact case (https://react.dev/learn/you-might-not-need-an-effect).
+  if (activeId && activeId !== coachmarkLanguageId) {
+    setCoachmarkLanguageId(activeId)
+    setCoachmarkStep(timer.status === 'idle' && !seenLanguageIds.includes(activeId) ? 1 : 0)
+  }
+
   function dismissCoachmark() {
     setCoachmarkStep(0)
-    localStorage.setItem('imerso-timer-coachmark-seen', '1')
+    if (activeId && !seenLanguageIds.includes(activeId)) {
+      const updated = [...seenLanguageIds, activeId]
+      setSeenLanguageIds(updated)
+      localStorage.setItem('imerso-timer-coachmark-seen-languages', JSON.stringify(updated))
+    }
   }
 
   function advanceCoachmark() {
