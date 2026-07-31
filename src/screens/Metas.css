@@ -5,6 +5,14 @@
   background: var(--bg-background);
 }
 
+/* Mobile TopNav must yield to TopNavDesktop at the desktop breakpoint,
+   same pattern as Historico.css. */
+@media (min-width: 1280px) {
+  .metas-screen > .top-nav {
+    display: none;
+  }
+}
+
 .metas-screen-content {
   display: flex;
   flex-direction: column;
@@ -16,14 +24,29 @@
   padding: var(--space-16);
 }
 
+/* Same box model as TopNavDesktop/Library.css's content column, so
+   the header above lines up with the card/list below instead of
+   stretching edge-to-edge on ultra-wide screens. */
+@media (min-width: 1280px) {
+  .metas-screen-content {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
+}
+
 .metas-screen-content .metas-card {
   width: 100%;
+  flex-shrink: 0;
 }
 
 .metas-screen-list-card {
   display: flex;
   flex-direction: column;
   width: 100%;
+  flex-shrink: 0;
   border-radius: var(--radius-large);
   overflow: hidden;
   background: var(--bg-surface-elevation-1);
@@ -31,6 +54,13 @@
 
 .metas-screen-list-card .list-item {
   background: var(--bg-surface-elevation-1);
+}
+
+@media (min-width: 1280px) {
+  .metas-screen-content .metas-card,
+  .metas-screen-list-card {
+    max-width: 480px;
+  }
 }
 
 .metas-level-badge {

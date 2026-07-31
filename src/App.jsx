@@ -593,7 +593,7 @@ function App() {
   return (
     <>
       <Sidebar
-        activeScreen={screen}
+        activeScreen={screen === 'metas' ? 'stats' : screen}
         timer={timer}
         onNavigate={navigate}
         onOpenNewSession={() => navigate('new-session')}
@@ -605,7 +605,7 @@ function App() {
         onOpenAddLanguages={() => navigate('add-languages')}
         onOpenSettings={() => navigate('settings')}
       />
-      <div className={`app-content${screen === 'home' || screen === 'stats' || screen === 'library' || screen === 'historico' ? ' app-content--full' : ''}`} ref={appContentRef}>
+      <div className={`app-content${screen === 'home' || screen === 'stats' || screen === 'library' || screen === 'historico' || screen === 'metas' ? ' app-content--full' : ''}`} ref={appContentRef}>
         {renderScreen()}
       </div>
       <EdgeScrollbar containerRef={appContentRef} />

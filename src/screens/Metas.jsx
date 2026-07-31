@@ -3,16 +3,18 @@ import { getSessionsByLanguage, getAppSettings } from '../db'
 import MetasCard from '../components/MetasCard'
 import ListItem from '../components/ListItem'
 import TopNav from '../components/TopNav'
+import TopNavDesktop from '../components/TopNavDesktop'
 import { formatDurationShort } from '../utils/sessions'
 import { getLevelProgress, getMilestoneHours, LISTED_LEVELS_COUNT } from '../utils/levels'
 import { ArrowBack, Check, Lock } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Metas.css'
 
-// Reached by tapping the MetasCard in Statistics. Drill-down, not a
-// main tab — same shell as DayHistory (plain TopNav with back arrow,
-// no BottomNav, no app-content--full opt-in) so on desktop it stays
-// inside the phone-width column beside the sidebar instead of
-// stretching edge to edge.
+// Reached by tapping the MetasCard in Statistics. A drill-down, but on
+// desktop it uses the same TopNavDesktop + app-content--full treatment
+// as the main tabs (Statistics/Library/Historico) rather than a narrow
+// phone-column — the sidebar's "Estatísticas" item stays highlighted
+// and doubles as the way back (see App.jsx's Sidebar activeScreen
+// mapping), same as clicking any other sidebar item.
 //
 // Self-fetches sessions for the active language, same convention as
 // Statistics, so the level/progress numbers here always match the
@@ -53,6 +55,7 @@ function Metas({ onBack }) {
           </button>
         }
       />
+      <TopNavDesktop title="Metas" showSearch={false} />
       <div className="metas-screen-content">
         <MetasCard
           level={levelProgress.level}
