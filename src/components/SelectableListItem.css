@@ -81,6 +81,8 @@
 }
 
 .selectable-list-item-icon-action {
+  width: 16px;
+  height: 16px;
   border-radius: var(--radius-medium);
   cursor: pointer;
 }
