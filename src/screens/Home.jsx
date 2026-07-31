@@ -28,6 +28,11 @@ import './Home.css'
 
 const MONTH_LABELS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
 
+// Single source of truth for the FAB label — the empty-state copy below
+// quotes this same string, so the two never drift apart if the button
+// label changes.
+const NEW_SESSION_LABEL = 'Nova sessão'
+
 // Header above each date's card: "Hoje" for today, otherwise "D mon"
 // (e.g. "14 nov"), matching the Figma copy. dateStr is the session's
 // stored 'YYYY-MM-DD' — parsed back into day/month directly instead of
@@ -152,7 +157,12 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
             style="responsive"
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
-            description="Escolha uma categoria e toque em play para começar"
+            description={
+              <>
+                <span className="home-empty-description-mobile">Toque em {NEW_SESSION_LABEL} para começar</span>
+                <span className="home-empty-description-desktop">Escolha uma categoria e toque em play para começar</span>
+              </>
+            }
           />
         ) : (
           groups.map((group) => (
@@ -174,10 +184,10 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
         )}
       </div>
       <div className="home-bottom-layer">
-        <div className={`home-fab-row${groups.length === 0 && !sessionError && timer.status === 'idle' ? ' home-fab-row-hidden' : ''}`}>
+        <div className="home-fab-row">
           {timer.status === 'idle' ? (
             <Button leadingIcon={<Add />} onClick={() => setNewSessionSheetOpen(true)}>
-              Nova sessão
+              {NEW_SESSION_LABEL}
             </Button>
           ) : (
             <TimerWidget

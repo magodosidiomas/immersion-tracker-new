@@ -152,13 +152,20 @@
   }
 }
 
-/* Mobile only: when the empty state is shown, its own "Nova sessão"
-   button already covers the CTA, so the floating FAB is redundant.
-   Scoped to below the desktop breakpoint since .home-fab-row is
-   already hidden there for the sidebar reason above. */
-@media (max-width: 1279px) {
-  .home-fab-row-hidden {
+/* EmptyState copy differs by breakpoint: mobile points at the floating
+   FAB ("Nova sessão"), desktop points at the TimerCard's play button
+   instead, since the FAB is hidden there (Sidebar covers that CTA). */
+.home-empty-description-desktop {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .home-empty-description-mobile {
     display: none;
+  }
+
+  .home-empty-description-desktop {
+    display: inline;
   }
 }
 
