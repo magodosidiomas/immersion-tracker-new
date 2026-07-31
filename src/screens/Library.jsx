@@ -152,9 +152,7 @@ function Library({
       )}
       <TopNavDesktop
         title="Biblioteca"
-        searchValue={query}
-        onSearchChange={setQuery}
-        searchPlaceholder="Buscar conteúdo"
+        showSearch={false}
         actionLabel="Adicionar conteúdo"
         actionIcon={<Add />}
         onActionClick={onOpenNewContent}
@@ -175,6 +173,7 @@ function Library({
           onEditItem={onOpenContent}
           onDeleteItem={setDeleteTarget}
           showAddButton={false}
+          showSearchOnDesktop
           emptyStateButtonVariant="primary"
           emptyStateStyle="plain"
           showEmptyStateButton={false}
