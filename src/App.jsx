@@ -627,7 +627,7 @@ function App() {
       )}
       {overlayStack.find((l) => l.type === 'manual-session') && (
         <div className="picker-overlay">
-          <NewSession timer={timer} manualOnly onClose={closeManualSession} onSaved={closeManualSession} />
+          <NewSession timer={timer} manualOnly isDesktop={isDesktop} onClose={closeManualSession} onSaved={closeManualSession} />
         </div>
       )}
       {overlayStack.find((l) => l.type === 'manual-content') && (
