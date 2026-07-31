@@ -472,7 +472,9 @@ function SessionForm({
             ))}
           </div>
           {!isValid && (
-            <Alert type="error" description="A sessão precisa ter no mínimo 1 minuto." />
+            <div className="finish-session-duration-alert">
+              <Alert type="error" description="A sessão precisa ter no mínimo 1 minuto." />
+            </div>
           )}
         </div>
 

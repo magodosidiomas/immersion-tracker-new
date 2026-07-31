@@ -69,7 +69,7 @@
   width: 100%;
   font-family: Figtree, sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: var(--font-size-body-medium, 16px);
   line-height: 1;
   letter-spacing: 0.01em;
   margin: 0;

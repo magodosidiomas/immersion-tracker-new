@@ -165,6 +165,10 @@
   margin-top: var(--space-16);
 }
 
+.finish-session-duration-alert {
+  margin-top: var(--space-16);
+}
+
 /* Quando — single clickable row summarizing start/end date+time,
    opens the Horário/Data sub-page on tap. */
 .finish-session-when-card {
