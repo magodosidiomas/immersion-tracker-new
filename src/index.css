@@ -107,3 +107,11 @@ body {
   z-index: 35;
   background: var(--bg-background);
 }
+
+/* Desktop variant: the wrapped screen renders as a centered card of
+   its own (see e.g. NewSession's .new-session-desktop-wrap), so the
+   overlay only needs to dim what's behind it, not hide it — same
+   backdrop color as Modal.css's .modal-overlay for consistency. */
+.picker-overlay--backdrop {
+  background: rgba(15, 13, 24, 0.6);
+}

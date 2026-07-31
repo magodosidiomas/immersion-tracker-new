@@ -626,7 +626,7 @@ function App() {
         </div>
       )}
       {overlayStack.find((l) => l.type === 'manual-session') && (
-        <div className="picker-overlay">
+        <div className={`picker-overlay${isDesktop ? ' picker-overlay--backdrop' : ''}`}>
           <NewSession timer={timer} manualOnly isDesktop={isDesktop} onClose={closeManualSession} onSaved={closeManualSession} />
         </div>
       )}
