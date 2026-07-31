@@ -28,7 +28,7 @@
   gap: var(--space-8);
   width: 100%;
   box-sizing: border-box;
-  padding: var(--space-8) var(--space-12);
+  padding: var(--space-16) var(--space-12);
   border-radius: var(--radius-medium);
   background: var(--bg-surface-elevation-1);
 }
@@ -59,7 +59,7 @@
 }
 
 .link-session-chip-title {
-  margin: var(--space-8) 0 0;
+  margin: var(--space-4) 0 0;
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-label-medium);
