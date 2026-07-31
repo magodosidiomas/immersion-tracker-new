@@ -46,7 +46,7 @@ function formatStreakValue(days) {
 // switcher + settings entry point, via LanguageTopNav), a history list
 // (or EmptyState when the active language has no sessions yet), and a
 // FAB that opens the timer (NewSession).
-function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenManualSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onOpenDailyGoal, onFinishTimer }) {
+function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenNewSession, onOpenManualSession, onOpenEditSession, onOpenStatistics, onOpenLibrary, onOpenHistorico, onOpenDailyGoal, onFinishTimer }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
@@ -146,13 +146,9 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
         ) : groups.length === 0 ? (
           <EmptyState
             style="responsive"
-            buttonVariant="primary"
             icon={<Schedule />}
             title="Nenhuma sessão ainda"
-            description="Toque no botão abaixo pra registrar sua primeira sessão"
-            buttonLabel={isDesktop ? undefined : 'Nova sessão'}
-            buttonIcon={<Add />}
-            onButtonClick={onOpenNewSession}
+            description="Escolha uma categoria e toque em play para começar"
           />
         ) : (
           groups.map((group) => (

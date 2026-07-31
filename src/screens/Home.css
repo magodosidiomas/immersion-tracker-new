@@ -19,8 +19,8 @@
 }
 
 .home-history-empty {
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 /* Same box model as TopNavDesktop/Historico's content column, so the
