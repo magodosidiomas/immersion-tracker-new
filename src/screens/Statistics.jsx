@@ -49,7 +49,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
         onOpenAddLanguages={onOpenAddLanguages}
         onActiveLanguageChange={setActiveId}
       />
-      <TopNavDesktop title="Estatísticas" showSearch={false} />
+      <TopNavDesktop title="Estatísticas" titleIcon={<BarChart />} showSearch={false} />
       <div className="statistics-content">
         <h1 className="statistics-title">Estatísticas</h1>
         <div className="statistics-overview">

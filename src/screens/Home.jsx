@@ -114,6 +114,7 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
       />
       <TopNavDesktop
         title="Timer"
+        titleIcon={<Schedule />}
         showSearch={false}
         secondaryActionLabel="Registro manual"
         secondaryActionIcon={<Edit />}

@@ -83,7 +83,7 @@ function Historico({
         }
         hasDivider
       />
-      <TopNavDesktop title="Histórico" showSearch={false} />
+      <TopNavDesktop title="Histórico" titleIcon={<History />} showSearch={false} />
       <div className="historico-content">
         <section className="historico-calendar-section">
           <p className="historico-label">Dias com sessão</p>

@@ -152,6 +152,7 @@ function Library({
       )}
       <TopNavDesktop
         title="Biblioteca"
+        titleIcon={<Book />}
         showSearch={false}
         actionLabel="Adicionar conteúdo"
         actionIcon={<Add />}

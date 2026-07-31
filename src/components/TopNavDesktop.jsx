@@ -17,6 +17,7 @@ import { Search, ArrowBack, Close } from '@nine-thirty-five/material-symbols-rea
 function TopNavDesktop({
   type = 'main',
   title = null,
+  titleIcon = null,
   showSearch = true,
   searchValue = '',
   onSearchChange = () => {},
@@ -78,7 +79,12 @@ function TopNavDesktop({
   return (
     <header className="top-nav-desktop" data-type="main">
       <div className="top-nav-desktop-inner">
-        {title && <span className="top-nav-desktop-title">{title}</span>}
+        {title && (
+          <span className="top-nav-desktop-title-group">
+            {titleIcon && <span className="top-nav-desktop-title-icon">{titleIcon}</span>}
+            <span className="top-nav-desktop-title">{title}</span>
+          </span>
+        )}
         <div className="top-nav-desktop-content">
           {showSearch && searchField}
           {secondaryActionButton}
