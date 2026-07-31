@@ -134,18 +134,14 @@ function TimerCard({
         <span className="timer-card-time" data-idle={status === 'idle'}>{elapsedLabel}</span>
         <div className="timer-card-actions">
           {status === 'idle' && (
-            <Button size="sm" leadingIcon={<PlayArrow />} onClick={onStart}>
-              Iniciar
-            </Button>
+            <Button size="sm" leadingIcon={<PlayArrow />} aria-label="Iniciar" onClick={onStart} />
           )}
           {status === 'running' && (
             <>
               <Button size="sm" variant="destructive" leadingIcon={<Stop />} onClick={onStop}>
                 Encerrar
               </Button>
-              <Button size="sm" variant="outline" leadingIcon={<Pause />} onClick={onPause}>
-                Pausar
-              </Button>
+              <Button size="sm" variant="outline" leadingIcon={<Pause />} aria-label="Pausar" onClick={onPause} />
             </>
           )}
           {status === 'paused' && (
@@ -153,9 +149,7 @@ function TimerCard({
               <Button size="sm" variant="destructive" leadingIcon={<Stop />} onClick={onStop}>
                 Encerrar
               </Button>
-              <Button size="sm" leadingIcon={<PlayArrow />} onClick={onResume}>
-                Continuar
-              </Button>
+              <Button size="sm" leadingIcon={<PlayArrow />} aria-label="Continuar" onClick={onResume} />
             </>
           )}
         </div>
