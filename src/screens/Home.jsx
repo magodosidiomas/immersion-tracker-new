@@ -16,7 +16,6 @@ import StreakCard from '../components/StreakCard'
 import {
   Add,
   Schedule,
-  Home as HomeIcon,
   BarChart,
   Book,
   History,
@@ -113,7 +112,7 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
         onActiveLanguageChange={setActiveId}
       />
       <TopNavDesktop
-        title="Homepage"
+        title="Timer"
         showSearch={false}
         secondaryActionLabel="Registro manual"
         onSecondaryActionClick={onOpenManualSession}
@@ -191,7 +190,7 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
         </div>
         <BottomNav
           items={[
-            { label: 'Início', icon: <HomeIcon />, active: true },
+            { label: 'Timer', icon: <Schedule />, active: true },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
             { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },

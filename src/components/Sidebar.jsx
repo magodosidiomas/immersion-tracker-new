@@ -4,11 +4,12 @@ import { getLanguages, getAppSettings, setActiveLanguageId } from '../db'
 import Dropdown from './Dropdown'
 import SelectableListItem from './SelectableListItem'
 import Flag from './Flag'
+import { formatElapsed } from '../utils/date'
 import {
   Add,
   Settings,
   Check,
-  Home as HomeIcon,
+  Schedule,
   BarChart,
   Book,
   History,
@@ -21,7 +22,7 @@ import {
 // logic as LanguageTopNav (fetch languages/active id, switch on pick)
 // since it's a different trigger shape (Dropdown, not TopNav) — not
 // worth abstracting for one extra caller.
-function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings }) {
+function Sidebar({ activeScreen, timer, onNavigate, onOpenManageLanguages, onOpenAddLanguages, onOpenSettings }) {
   const [languages, setLanguages] = useState([])
   const [activeId, setActiveId] = useState(null)
   const [switcherOpen, setSwitcherOpen] = useState(false)
@@ -75,8 +76,14 @@ function Sidebar({ activeScreen, onNavigate, onOpenManageLanguages, onOpenAddLan
     setSwitcherOpen((value) => !value)
   }
 
+  // Home doubles as the Timer page — while a session is running or
+  // paused, the nav item's label swaps to the live elapsed time
+  // instead of "Timer" (icon and everything else stays the same).
+  const timerLabel =
+    timer && timer.status !== 'idle' ? formatElapsed(Math.floor(timer.liveMs / 1000)) : 'Timer'
+
   const navItems = [
-    { key: 'home', label: 'Home', icon: <HomeIcon /> },
+    { key: 'home', label: timerLabel, icon: <Schedule /> },
     { key: 'library', label: 'Biblioteca', icon: <Book /> },
     { key: 'stats', label: 'Estatísticas', icon: <BarChart /> },
     { key: 'historico', label: 'Histórico', icon: <History /> },

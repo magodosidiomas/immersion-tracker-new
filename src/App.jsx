@@ -23,7 +23,6 @@ import ManageEpisodes from './screens/ManageEpisodes'
 import EpisodeDetail from './screens/EpisodeDetail'
 import LinkContent from './screens/LinkContent'
 import LinkSession from './screens/LinkSession'
-import TimerCard from './components/TimerCard'
 import { getAppSettings, getFilmeContent, setDailyGoalMinutes, setCustomGoalMinutes } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
@@ -354,32 +353,6 @@ function App() {
     )
   }
 
-  // Same TimerCard, rendered as a banner (no idle state) right below
-  // each main tab's own header — never above it. Passed down as a prop
-  // instead of mounted once above renderScreen(), because each screen
-  // owns its own header (LanguageTopNav/TopNav + TopNavDesktop); a
-  // single global mount above renderScreen() would sit above that
-  // header instead of below it, which is the bug this replaced. Home
-  // isn't included here — it mounts its own TimerCard directly (with
-  // the idle state, since starting a session happens there).
-  const timerBanner =
-    isDesktop && timer.status !== 'idle' ? (
-      <TimerCard
-        variant="banner"
-        status={timer.status}
-        category={timer.category}
-        subcategory={timer.subcategory}
-        elapsedLabel={formatElapsed(Math.floor(timer.liveMs / 1000))}
-        onSelectCategory={timer.setCategorySelection}
-        onPause={timer.pause}
-        onResume={timer.resume}
-        onStop={() => {
-          setPendingFinishDraft(timer.end())
-          navigate('new-session')
-        }}
-      />
-    ) : null
-
   function renderScreen() {
     // AddLanguages sits one level below ManageLanguages — both closing
     // (X) and finishing (Adicionar) return there, since either way the
@@ -467,7 +440,6 @@ function App() {
     if (screen === 'stats') {
       return (
         <Statistics
-          timerBanner={timerBanner}
           onOpenHome={() => navigate('home')}
           onOpenSettings={() => navigate('settings')}
           onOpenManageLanguages={() => navigate('manage-languages')}
@@ -490,7 +462,6 @@ function App() {
     if (screen === 'library') {
       return (
         <Library
-          timerBanner={timerBanner}
           onOpenHome={() => navigate('home')}
           onOpenStatistics={() => navigate('stats')}
           onOpenHistorico={() => navigate('historico')}
@@ -511,7 +482,6 @@ function App() {
     if (screen === 'historico') {
       return (
         <Historico
-          timerBanner={timerBanner}
           isDesktop={isDesktop}
           onOpenHome={() => navigate('home')}
           onOpenSettings={() => navigate('settings')}
@@ -619,6 +589,7 @@ function App() {
     <>
       <Sidebar
         activeScreen={screen}
+        timer={timer}
         onNavigate={navigate}
         onOpenNewSession={() => navigate('new-session')}
         onOpenNewContent={() => {

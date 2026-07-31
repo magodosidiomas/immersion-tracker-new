@@ -15,7 +15,6 @@ import {
   Add,
   Schedule,
   History,
-  Home as HomeIcon,
   BarChart,
   Book,
 } from '@nine-thirty-five/material-symbols-react/outlined'
@@ -38,7 +37,6 @@ function formatSessionsLabel(dateStr) {
 // with activeLanguageId resolved the same way DayHistory does
 // (getAppSettings) rather than via a switcher.
 function Historico({
-  timerBanner = null,
   isDesktop = false,
   onOpenHome,
   onOpenSettings,
@@ -87,7 +85,6 @@ function Historico({
       />
       <TopNavDesktop title="Histórico" showSearch={false} />
       <div className="historico-content">
-        {timerBanner}
         <section className="historico-calendar-section">
           <p className="historico-label">Dias com sessão</p>
           <Calendar sessionDates={sessionDates} selectedDate={selectedDate} onSelectDay={setSelectedDate} />
@@ -126,7 +123,7 @@ function Historico({
         </div>
         <BottomNav
           items={[
-            { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
+            { label: 'Timer', icon: <Schedule />, onClick: onOpenHome },
             { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
             { label: 'Histórico', icon: <History />, active: true },

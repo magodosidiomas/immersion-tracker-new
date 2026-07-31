@@ -14,13 +14,13 @@ import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
 import { categoryBreakdown, formatDurationShort } from '../utils/sessions'
 import { getLevelProgress } from '../utils/levels'
-import { Home as HomeIcon, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Schedule, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
 
 // Second main tab, alongside Home and Biblioteca — reached only via
 // BottomNav. Same LanguageTopNav as Home (active language + switcher
 // + settings), no back arrow since switching tabs isn't a drill-down.
-function Statistics({ timerBanner = null, onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
 
@@ -51,7 +51,6 @@ function Statistics({ timerBanner = null, onOpenHome, onOpenSettings, onOpenMana
       />
       <TopNavDesktop title="Estatísticas" showSearch={false} />
       <div className="statistics-content">
-        {timerBanner}
         <h1 className="statistics-title">Estatísticas</h1>
         <div className="statistics-overview">
           <div className="statistics-overview-left">
@@ -85,7 +84,7 @@ function Statistics({ timerBanner = null, onOpenHome, onOpenSettings, onOpenMana
       <div className="statistics-bottom-layer">
         <BottomNav
           items={[
-            { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
+            { label: 'Timer', icon: <Schedule />, onClick: onOpenHome },
             { label: 'Estatísticas', icon: <BarChart />, active: true },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },

@@ -12,7 +12,7 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import { useContentFilter } from '../hooks/useContentFilter'
 import {
   Add,
-  Home as HomeIcon,
+  Schedule,
   BarChart,
   Book,
   History,
@@ -39,7 +39,6 @@ function formatSessionCount(count) {
 // minus duplicate — each content should only ever exist once, so
 // selection here only offers delete (right).
 function Library({
-  timerBanner = null,
   onOpenNewContent,
   onOpenContent,
   onOpenSettings,
@@ -159,7 +158,6 @@ function Library({
         onActionClick={onOpenNewContent}
       />
       <div className="library-content">
-        {timerBanner}
         <ContentSearchList
           query={query}
           onQueryChange={setQuery}
@@ -190,7 +188,7 @@ function Library({
         </div>
         <BottomNav
           items={[
-            { label: 'Início', icon: <HomeIcon />, onClick: onOpenHome },
+            { label: 'Timer', icon: <Schedule />, onClick: onOpenHome },
             { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, active: true },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
