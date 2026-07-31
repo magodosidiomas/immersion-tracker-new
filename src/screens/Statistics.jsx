@@ -86,8 +86,8 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
         <BottomNav
           items={[
             { label: 'Timer', icon: <Schedule />, onClick: onOpenHome },
-            { label: 'Estatísticas', icon: <BarChart />, active: true },
             { label: 'Biblioteca', icon: <Book />, onClick: onOpenLibrary },
+            { label: 'Estatísticas', icon: <BarChart />, active: true },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
           ]}
         />

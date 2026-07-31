@@ -189,8 +189,8 @@ function Library({
         <BottomNav
           items={[
             { label: 'Timer', icon: <Schedule />, onClick: onOpenHome },
-            { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Biblioteca', icon: <Book />, active: true },
+            { label: 'Estatísticas', icon: <BarChart />, onClick: onOpenStatistics },
             { label: 'Histórico', icon: <History />, onClick: onOpenHistorico },
           ]}
         />
