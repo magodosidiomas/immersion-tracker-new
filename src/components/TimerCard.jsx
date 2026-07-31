@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { PlayArrow, Pause, Stop, Edit } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Edit } from '@nine-thirty-five/material-symbols-react/outlined'
+import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
 import SelectionChip from './SelectionChip'
 import { CATEGORIES } from '../data/categories'
 import { getCategoryLabel } from '../utils/sessions'
