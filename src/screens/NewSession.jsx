@@ -6,7 +6,8 @@ import BottomSheet from '../components/BottomSheet'
 import Modal from '../components/Modal'
 import SelectionChip from '../components/SelectionChip'
 import SessionForm from '../components/SessionForm'
-import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Close, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
+import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
 import Alert from '../components/Alert'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession, linkSessionContent } from '../db'
@@ -163,7 +164,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
   }
 
   const cardTitle = timer.status === 'running' ? 'Sessão em andamento' : 'Nova sessão'
-  const canDelete = timer.status === 'paused'
+  const canDelete = timer.status === 'running' || timer.status === 'paused'
 
   const body = (
     <>

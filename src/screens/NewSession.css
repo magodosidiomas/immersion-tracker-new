@@ -32,6 +32,10 @@
   padding: var(--space-16);
 }
 
+.new-session-footer .button[data-size='lg'] {
+  height: 48px;
+}
+
 /* Desktop: card centered in the viewport, but living in normal page
    flow — not a fixed-position overlay/modal (no dimming backdrop). */
 .new-session-desktop-wrap {

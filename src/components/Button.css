@@ -34,8 +34,10 @@
   background: var(--bg-surface-primary);
   color: var(--color-text-primary);
 }
-.button[data-variant='primary']:hover:not(:disabled) {
-  background: var(--bg-surface-primary-hover);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='primary']:hover:not(:disabled) {
+    background: var(--bg-surface-primary-hover);
+  }
 }
 
 /* --- outline --- */
@@ -44,8 +46,10 @@
   border: 1px solid var(--color-border-default);
   color: var(--color-text-primary);
 }
-.button[data-variant='outline']:hover:not(:disabled) {
-  background: var(--bg-surface-primary-15);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='outline']:hover:not(:disabled) {
+    background: var(--bg-surface-primary-15);
+  }
 }
 
 /* --- ghost --- */
@@ -53,8 +57,10 @@
   background: transparent;
   color: var(--color-text-primary);
 }
-.button[data-variant='ghost']:hover:not(:disabled) {
-  background: var(--bg-surface-primary-15);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='ghost']:hover:not(:disabled) {
+    background: var(--bg-surface-primary-15);
+  }
 }
 
 /* --- warning --- */
@@ -63,8 +69,10 @@
   color: var(--color-text-on-alert);
   --icon-color: var(--color-icon-on-warning);
 }
-.button[data-variant='warning']:hover:not(:disabled) {
-  background: var(--bg-semantic-warning-stronger);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='warning']:hover:not(:disabled) {
+    background: var(--bg-semantic-warning-stronger);
+  }
 }
 
 /* --- destructive ---
@@ -77,8 +85,10 @@
   color: var(--color-text-on-filled);
   --icon-color: var(--color-icon-on-primary);
 }
-.button[data-variant='destructive']:hover:not(:disabled) {
-  background: var(--bg-semantic-destructive-hover-ghost);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='destructive']:hover:not(:disabled) {
+    background: var(--bg-semantic-destructive-hover-ghost);
+  }
 }
 
 /* --- destructive-outline --- */
@@ -88,8 +98,10 @@
   color: var(--color-text-on-destructive-muted);
   --icon-color: var(--color-icon-on-destructive);
 }
-.button[data-variant='destructive-outline']:hover:not(:disabled) {
-  background: var(--bg-semantic-destructive-hover-ghost);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='destructive-outline']:hover:not(:disabled) {
+    background: var(--bg-semantic-destructive-hover-ghost);
+  }
 }
 
 /* --- destructive-ghost --- */
@@ -98,8 +110,10 @@
   color: var(--color-text-on-destructive);
   --icon-color: var(--color-icon-on-destructive-accent);
 }
-.button[data-variant='destructive-ghost']:hover:not(:disabled) {
-  background: var(--bg-semantic-destructive-hover-ghost);
+@media (hover: hover) and (pointer: fine) {
+  .button[data-variant='destructive-ghost']:hover:not(:disabled) {
+    background: var(--bg-semantic-destructive-hover-ghost);
+  }
 }
 
 /* --- disabled, grouped by shape rather than by variant: the chrome
