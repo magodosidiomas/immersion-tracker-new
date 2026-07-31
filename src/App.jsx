@@ -346,7 +346,10 @@ function App() {
       <DailyGoal
         isDesktop={isDesktop}
         onboarding
-        onBack={() => setOnboardingGoalStep(false)}
+        onBack={() => {
+          setOnboardingGoalStep(false)
+          setHasLanguage(false)
+        }}
         onSave={(minutes, isCustom) => {
           ;(isCustom ? setCustomGoalMinutes(minutes) : setDailyGoalMinutes(minutes)).then(() => setOnboardingGoalStep(false))
         }}

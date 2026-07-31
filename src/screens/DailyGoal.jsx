@@ -43,7 +43,7 @@ const PRESETS = [
 // Picking a preset saves immediately when embedded (there's no separate
 // panel-level Salvar anymore); on mobile it stays a pending selection
 // confirmed via the screen's own footer Salvar, as before.
-function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, onBack, onSave }) {
+function DailyGoal({ isDesktop = false, embedded = false, onBack, onSave }) {
   const [loaded, setLoaded] = useState(false)
   const [currentGoal, setCurrentGoal] = useState(null)
   const [customGoalMinutes, setCustomGoalMinutes] = useState(null)
@@ -251,18 +251,11 @@ function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, on
             <button type="button" className="top-nav-icon-reset" onClick={() => setView('presets')} aria-label="Voltar">
               <ArrowBack />
             </button>
-          ) : onboarding ? null : (
+          ) : (
             <button type="button" className="top-nav-icon-reset" onClick={onBack} aria-label="Voltar">
               <ArrowBack />
             </button>
           )
-        }
-        trailingRight={
-          onboarding && view === 'presets' ? (
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              Pular
-            </Button>
-          ) : null
         }
       />
       <div className="daily-goal-content">{view === 'presets' ? presetsView : customView}</div>
