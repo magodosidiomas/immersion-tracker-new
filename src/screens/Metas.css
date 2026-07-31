@@ -56,13 +56,6 @@
   background: var(--bg-surface-elevation-1);
 }
 
-@media (min-width: 1280px) {
-  .metas-screen-content .metas-card,
-  .metas-screen-list-card {
-    max-width: 480px;
-  }
-}
-
 .metas-level-badge {
   display: inline-flex;
   align-items: center;
