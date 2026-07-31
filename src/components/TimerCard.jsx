@@ -97,7 +97,7 @@ function TimerCard({
                 <SelectionChip
                   key={cat.key}
                   label={cat.label}
-                  selected={cat.key === activeCategory.key}
+                  selected={hasSelection && cat.key === activeCategory.key}
                   hasLeadingIcon={false}
                   hasTrailingIcon={false}
                   onClick={() => handlePickCategory(cat)}
