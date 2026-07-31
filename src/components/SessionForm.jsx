@@ -8,6 +8,7 @@ import Alert from './Alert'
 import MediaListItem from './MediaListItem'
 import ListItem from './ListItem'
 import Thumbnail from './Thumbnail'
+import LinkSessionRow from './LinkSessionRow'
 import { Edit, Add, DoNotDisturbOn, DateRange, ChevronRight, Schedule, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import { CATEGORIES } from '../data/categories'
 import { pad2 } from '../utils/date'
@@ -503,30 +504,38 @@ function SessionForm({
         <>
         <div className="finish-session-divider" />
         <div className="finish-session-field-group">
-          <span className="category-sheet-label">Conteúdos</span>
           {linkedContents.length > 0 ? (
-            <div className="finish-session-contents-card">
-              {linkedContents.map((content, index) => (
-                <MediaListItem
-                  key={content.id}
-                  title={content.title}
-                  subtitle={content.subtitle}
-                  divider={index < linkedContents.length - 1}
-                  thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
-                  trailingAction={{
-                    icon: <DoNotDisturbOn />,
-                    onClick: () => onRemoveContent?.(content.id),
-                    label: 'Remover conteúdo',
-                  }}
-                />
-              ))}
-            </div>
+            <>
+              <span className="category-sheet-label">Conteúdos</span>
+              <div className="finish-session-contents-card">
+                {linkedContents.map((content, index) => (
+                  <MediaListItem
+                    key={content.id}
+                    title={content.title}
+                    subtitle={content.subtitle}
+                    divider={index < linkedContents.length - 1}
+                    thumbnail={<Thumbnail size="sm" src={content.thumbnail} alt={content.title} />}
+                    menu={[
+                      {
+                        label: 'Remover conteúdo',
+                        icon: <DoNotDisturbOn />,
+                        danger: true,
+                        onClick: () => onRemoveContent?.(content.id),
+                      },
+                    ]}
+                  />
+                ))}
+              </div>
+              <Button variant="outline" leadingIcon={<Add />} onClick={onAddContent}>
+                Vincular conteúdo
+              </Button>
+            </>
           ) : (
-            <p className="finish-session-contents-empty">Sem conteúdos vinculados</p>
+            <>
+              <span className="category-sheet-label">Conteúdos vinculados</span>
+              <LinkSessionRow label="Vincular conteúdo" onClick={onAddContent} />
+            </>
           )}
-          <Button variant="outline" fullWidth leadingIcon={<Add />} onClick={onAddContent}>
-            Vincular conteúdo
-          </Button>
         </div>
         </>
         )}
