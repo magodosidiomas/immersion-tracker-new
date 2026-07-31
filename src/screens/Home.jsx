@@ -183,7 +183,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
               running={timer.status === 'running'}
               onToggle={timer.status === 'running' ? timer.pause : timer.resume}
               onFinish={onFinishTimer}
-              onDelete={timer.clearDraft}
+              onEdit={onOpenNewSession}
             />
           )}
         </div>
