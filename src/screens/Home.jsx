@@ -19,6 +19,7 @@ import {
   BarChart,
   Book,
   History,
+  Edit,
 } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Home.css'
 
@@ -115,6 +116,7 @@ function Home({ timer, isDesktop = false, onOpenSettings, onOpenManageLanguages,
         title="Timer"
         showSearch={false}
         secondaryActionLabel="Registro manual"
+        secondaryActionIcon={<Edit />}
         onSecondaryActionClick={onOpenManualSession}
       />
       <div className={`home-history${isEmpty ? ' home-history-empty' : ''}`}>
