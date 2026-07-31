@@ -183,6 +183,24 @@
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+  overflow: hidden;
+}
+
+/* When wrapping a standalone ListItem (e.g. the Duração summary row),
+   the row's own square hover fill would otherwise spill past this
+   card's rounded corners — clip it and let the wrapper's own padding/
+   background/hover apply instead of the row's. */
+.finish-session-when-card > .list-item {
+  width: auto;
+  padding: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: inherit;
+  touch-action: inherit;
+}
+
+.finish-session-when-card > .list-item:hover {
+  background: transparent;
 }
 
 .finish-session-when-card:hover {
