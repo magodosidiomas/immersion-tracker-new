@@ -583,7 +583,7 @@ const value = ref.current.getValue()`,
   {
     id: 'timer-widget',
     name: 'TimerWidget',
-    description: 'Home\u2019s collapsed floating mobile card. Stop ends the draft (onFinish); tapping the label/time opens the full edit screen (onEdit); Pausar/Continuar toggles in place (onToggle). Deletar lives inside the edit screen, not on this card.',
+    description: 'Home\u2019s collapsed floating mobile card. Stop ends the draft (onFinish); tapping the rest of the card opens the full-screen timer (onEdit), where Pausar/Retomar, Encerrar sessão and Deletar all live.',
     render: () => (
       <div style={{ width: 343, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <TimerWidget elapsedLabel="00:01" running />
@@ -591,7 +591,7 @@ const value = ref.current.getValue()`,
         <TimerWidget elapsedLabel="00:01" running={false} />
       </div>
     ),
-    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onToggle={...} onFinish={...} onEdit={...} />`,
+    code: `<TimerWidget elapsedLabel="00:01" category="Imersão" subcategory="Simultâneo" running onFinish={...} onEdit={...} />`,
   },
   {
     id: 'top-nav',

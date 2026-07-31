@@ -4,6 +4,8 @@ import { formatDateInput, formatElapsed, getStreakWeekDays, calculateStreak } fr
 import { sessionLabel, formatDurationShort, groupSessionsByDate, getCategoryLabel } from '../utils/sessions'
 import LanguageTopNav from '../components/LanguageTopNav'
 import BottomNav from '../components/BottomNav'
+import BottomSheet from '../components/BottomSheet'
+import SelectableListItem from '../components/SelectableListItem'
 import ListItem from '../components/ListItem'
 import Button from '../components/Button'
 import EmptyState from '../components/EmptyState'
@@ -15,6 +17,7 @@ import DailyGoalCard from '../components/DailyGoalCard'
 import StreakCard from '../components/StreakCard'
 import {
   Add,
+  PlayArrow,
   Schedule,
   BarChart,
   Book,
@@ -51,6 +54,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
   const [sessions, setSessions] = useState([])
   const [sessionError, setSessionError] = useState(false)
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState(null)
+  const [newSessionSheetOpen, setNewSessionSheetOpen] = useState(false)
 
   useEffect(() => {
     getAppSettings().then((settings) => setDailyGoalMinutes(settings.dailyGoalMinutes ?? null))
@@ -172,7 +176,7 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
       <div className="home-bottom-layer">
         <div className={`home-fab-row${groups.length === 0 && !sessionError && timer.status === 'idle' ? ' home-fab-row-hidden' : ''}`}>
           {timer.status === 'idle' ? (
-            <Button leadingIcon={<Add />} onClick={onOpenNewSession}>
+            <Button leadingIcon={<Add />} onClick={() => setNewSessionSheetOpen(true)}>
               Nova sessão
             </Button>
           ) : (
@@ -181,7 +185,6 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
               category={timerCategoryLabel}
               subcategory={timerSubcategoryLabel}
               running={timer.status === 'running'}
-              onToggle={timer.status === 'running' ? timer.pause : timer.resume}
               onFinish={onFinishTimer}
               onEdit={onOpenNewSession}
             />
@@ -196,6 +199,28 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           ]}
         />
       </div>
+      <BottomSheet open={newSessionSheetOpen} onClose={() => setNewSessionSheetOpen(false)} title="Nova sessão">
+        <SelectableListItem
+          label="Iniciar timer"
+          leadingIcon={<PlayArrow />}
+          position="first"
+          onClick={() => {
+            setNewSessionSheetOpen(false)
+            timer.start(activeId)
+            onOpenNewSession()
+          }}
+        />
+        <SelectableListItem
+          label="Registro manual"
+          leadingIcon={<Edit />}
+          position="last"
+          divider
+          onClick={() => {
+            setNewSessionSheetOpen(false)
+            onOpenManualSession()
+          }}
+        />
+      </BottomSheet>
     </main>
   )
 }

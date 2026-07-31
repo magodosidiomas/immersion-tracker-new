@@ -51,9 +51,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.timer-widget-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
+.timer-widget .button {
   flex-shrink: 0;
 }

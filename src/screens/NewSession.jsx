@@ -6,7 +6,7 @@ import BottomSheet from '../components/BottomSheet'
 import Modal from '../components/Modal'
 import SelectionChip from '../components/SelectionChip'
 import SessionForm from '../components/SessionForm'
-import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete, Add } from '@nine-thirty-five/material-symbols-react/outlined'
+import { Close, PlayArrow, Pause, Stop, ArrowBack, Delete } from '@nine-thirty-five/material-symbols-react/outlined'
 import Alert from '../components/Alert'
 import { CATEGORIES } from '../data/categories'
 import { getAppSettings, createSession, linkSessionContent } from '../db'
@@ -100,16 +100,6 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
     setPhase('finish')
   }
 
-  // Registro manual: skips the timer entirely and opens the same
-  // session-details form, seeded with "now" for both ends (duration
-  // 0 — shown neutral, not as an error, until the user edits it; see
-  // SessionForm's `touched` gate).
-  function handleManualEntry() {
-    const now = new Date()
-    setFinishDraft({ startAt: now, durationSeconds: 0, manual: true })
-    setPhase('finish')
-  }
-
   function openCategorySheet() {
     setPendingCategory(timer.category ?? CATEGORIES[0].key)
     setPendingSubcategory(timer.subcategory ?? CATEGORIES[0].subcategories[0].key)
@@ -155,7 +145,7 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
         isDesktop={isDesktop}
         onOpenLinkContent={onOpenLinkContent}
         onOpenContent={onOpenContent}
-        onBack={manualOnly || isDesktop ? onClose : () => setPhase('timer')}
+        onBack={manualOnly || isDesktop || initialFinishDraft ? onClose : () => setPhase('timer')}
         onDiscard={() => {
           if (!manualOnly) timer.clearDraft()
           onClose()
@@ -192,6 +182,18 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
             <button type="button" className="top-nav-icon-reset" onClick={onClose} aria-label="Fechar">
               <Close />
             </button>
+          }
+          trailingRight={
+            canDelete ? (
+              <button
+                type="button"
+                className="top-nav-icon-reset top-nav-icon-destructive"
+                onClick={() => (totalSeconds < 60 ? handleDeleteSession() : setDeleteConfirmOpen(true))}
+                aria-label="Deletar sessão"
+              >
+                <Delete />
+              </button>
+            ) : null
           }
         />
       )}
@@ -243,44 +245,25 @@ function NewSession({ timer, onClose, onOpenLinkContent, onOpenContent, manualOn
       </div>
       <div className="new-session-footer">
         {timer.status === 'idle' && (
-          <>
-            <Button leadingIcon={<PlayArrow />} fullWidth disabled={!activeLanguageId} onClick={() => timer.start(activeLanguageId)}>
-              Iniciar
-            </Button>
-            <Button variant="outline" leadingIcon={<Add />} fullWidth onClick={handleManualEntry}>
-              Registro manual
-            </Button>
-          </>
-        )}
-        {timer.status === 'running' && (
-          <>
-            <Button variant="warning" leadingIcon={<Pause />} fullWidth onClick={timer.pause}>
-              Pausar
-            </Button>
-            <Button variant="outline" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>
-              Encerrar
-            </Button>
-          </>
-        )}
-        {timer.status === 'paused' && (
-          <>
-            <Button leadingIcon={<PlayArrow />} fullWidth onClick={timer.resume}>
-              Retomar
-            </Button>
-            <Button variant="outline" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>
-              Encerrar
-            </Button>
-          </>
-        )}
-        {canDelete && (
-          <Button
-            variant="destructive-ghost"
-            leadingIcon={<Delete />}
-            fullWidth
-            onClick={() => (totalSeconds < 60 ? handleDeleteSession() : setDeleteConfirmOpen(true))}
-          >
-            Deletar sessão
+          <Button leadingIcon={<PlayArrow />} fullWidth disabled={!activeLanguageId} onClick={() => timer.start(activeLanguageId)}>
+            Iniciar
           </Button>
+        )}
+        {(timer.status === 'running' || timer.status === 'paused') && (
+          <>
+            <Button variant="destructive" leadingIcon={<Stop />} fullWidth onClick={handleEnd}>
+              Encerrar sessão
+            </Button>
+            {timer.status === 'running' ? (
+              <Button variant="outline" leadingIcon={<Pause />} fullWidth onClick={timer.pause}>
+                Pausar
+              </Button>
+            ) : (
+              <Button variant="outline" leadingIcon={<PlayArrow />} fullWidth onClick={timer.resume}>
+                Retomar
+              </Button>
+            )}
+          </>
         )}
       </div>
       <BottomSheet
