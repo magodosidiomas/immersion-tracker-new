@@ -165,20 +165,46 @@
   margin-top: var(--space-16);
 }
 
-/* Quando (Horário/Data) and the datetime sub-page's Duração summary —
-   same rounded-card-of-ListItems pattern as Home's history list
-   (.home-history-card). */
+/* Quando — single clickable row summarizing start/end date+time,
+   opens the Horário/Data sub-page on tap. */
 .finish-session-when-card {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
   width: 100%;
+  padding: 14px 16px;
+  border: none;
   border-radius: var(--radius-large);
   background: var(--bg-surface-elevation-1);
-  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  --icon-color: var(--color-icon-muted-gray);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
-.finish-session-when-card .list-item {
-  width: 100%;
+.finish-session-when-card:hover {
+  background: var(--bg-hover-on-elevation-1);
+}
+
+.finish-session-when-text {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-medium);
+  line-height: var(--line-height-tight);
+  overflow-wrap: break-word;
+}
+
+.finish-session-when-primary {
+  color: var(--color-text-primary);
+}
+
+.finish-session-when-secondary {
+  color: var(--color-text-secondary);
 }
 
 /* Desktop modalActionPanel footer: Excluir/Descartar hugs the left edge,

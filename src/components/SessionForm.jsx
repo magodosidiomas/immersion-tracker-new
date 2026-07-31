@@ -33,9 +33,39 @@ function toDateString(date) {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
 }
 
-// DD/MM/YYYY — the "Data" summary row's display value.
-function formatDateBR(date) {
-  return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}/${date.getFullYear()}`
+// DD/MM — short date, used in the "Quando" summary row.
+function formatDateShort(date) {
+  return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}`
+}
+
+function isSameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+}
+
+// "Quando" summary row text — three formats depending on start/end:
+// - same day, today: "Hoje, 12:30 - 13:30"
+// - same day, other date: "13/04, 12:30 - 13:30"
+// - different days: "13/04 23:50 → 14/04 00:15"
+// Date/prefix pieces render in secondary color, times in primary — no bold.
+function formatWhenText(start, end) {
+  if (isSameDay(start, end)) {
+    const prefix = isSameDay(start, new Date()) ? 'Hoje' : formatDateShort(start)
+    return (
+      <>
+        <span className="finish-session-when-secondary">{prefix}, </span>
+        <span className="finish-session-when-primary">{formatHM(start)} - {formatHM(end)}</span>
+      </>
+    )
+  }
+  return (
+    <>
+      <span className="finish-session-when-secondary">{formatDateShort(start)} </span>
+      <span className="finish-session-when-primary">{formatHM(start)}</span>
+      <span className="finish-session-when-secondary"> → </span>
+      <span className="finish-session-when-secondary">{formatDateShort(end)} </span>
+      <span className="finish-session-when-primary">{formatHM(end)}</span>
+    </>
+  )
 }
 
 // Returns a new Date with the date portion replaced by dateStr ("YYYY-MM-DD"),
@@ -448,23 +478,11 @@ function SessionForm({
         {/* Quando */}
         <div className="finish-session-field-group">
           <span className="category-sheet-label">Quando</span>
-          <div className="finish-session-when-card">
-            <ListItem
-              label="Horário"
-              leadingIcon={<DateRange />}
-              trailingIcon={<ChevronRight />}
-              extraText={`${formatHM(startAt)} - ${formatHM(endAt)}`}
-              divider
-              onClick={onOpenDateTime}
-            />
-            <ListItem
-              label="Data"
-              leadingIcon={<DateRange />}
-              trailingIcon={<ChevronRight />}
-              extraText={formatDateBR(startAt)}
-              onClick={onOpenDateTime}
-            />
-          </div>
+          <button type="button" className="finish-session-when-card" onClick={onOpenDateTime}>
+            <span className="list-item-icon"><DateRange /></span>
+            <span className="finish-session-when-text">{formatWhenText(startAt, endAt)}</span>
+            <span className="list-item-icon"><ChevronRight /></span>
+          </button>
         </div>
 
         <div className="finish-session-divider" />
