@@ -80,6 +80,16 @@
   height: 100%;
 }
 
+.selectable-list-item-icon-action {
+  border-radius: var(--radius-medium);
+  cursor: pointer;
+}
+
+.selectable-list-item-icon-action:hover,
+.selectable-list-item-icon-action:focus-visible {
+  --icon-color: var(--color-text-primary);
+}
+
 .selectable-list-item-flag {
   display: inline-flex;
   align-items: center;

@@ -24,7 +24,7 @@ import EpisodeDetail from './screens/EpisodeDetail'
 import LinkContent from './screens/LinkContent'
 import LinkSession from './screens/LinkSession'
 import TimerCard from './components/TimerCard'
-import { getAppSettings, getFilmeContent, setDailyGoalMinutes } from './db'
+import { getAppSettings, getFilmeContent, setDailyGoalMinutes, setCustomGoalMinutes } from './db'
 import { useTimerDraft } from './hooks/useTimerDraft'
 import { useViewportHeight } from './hooks/useViewportHeight'
 import { formatElapsed } from './utils/date'
@@ -347,8 +347,8 @@ function App() {
         isDesktop={isDesktop}
         onboarding
         onBack={() => setOnboardingGoalStep(false)}
-        onSave={(minutes) => {
-          setDailyGoalMinutes(minutes).then(() => setOnboardingGoalStep(false))
+        onSave={(minutes, isCustom) => {
+          ;(isCustom ? setCustomGoalMinutes(minutes) : setDailyGoalMinutes(minutes)).then(() => setOnboardingGoalStep(false))
         }}
       />
     )
@@ -587,8 +587,8 @@ function App() {
         <DailyGoal
           isDesktop={isDesktop}
           onBack={() => window.history.back()}
-          onSave={(minutes) => {
-            setDailyGoalMinutes(minutes).then(() => window.history.back())
+          onSave={(minutes, isCustom) => {
+            ;(isCustom ? setCustomGoalMinutes(minutes) : setDailyGoalMinutes(minutes)).then(() => window.history.back())
           }}
         />
       )
@@ -639,7 +639,7 @@ function App() {
           onNavigate={navigateSettingsWindow}
           onClose={() => window.history.back()}
           onOpenAddLanguages={() => navigate('add-languages')}
-          onSaveDailyGoal={(minutes) => setDailyGoalMinutes(minutes)}
+          onSaveDailyGoal={(minutes, isCustom) => (isCustom ? setCustomGoalMinutes(minutes) : setDailyGoalMinutes(minutes))}
           onAllLanguagesRemoved={() => {
             setHasLanguage(false)
             setScreen('home')

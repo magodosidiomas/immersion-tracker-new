@@ -223,7 +223,7 @@ export async function reorderLanguages(orderedIds) {
 
 export async function getAppSettings() {
   const settings = await getOne('appSettings', SETTINGS_ID)
-  return settings ?? { id: SETTINGS_ID, activeLanguageId: null, dailyGoalMinutes: null }
+  return settings ?? { id: SETTINGS_ID, activeLanguageId: null, dailyGoalMinutes: null, customGoalMinutes: null }
 }
 
 export async function setActiveLanguageId(languageId) {
@@ -234,6 +234,15 @@ export async function setActiveLanguageId(languageId) {
 export async function setDailyGoalMinutes(minutes) {
   const settings = await getAppSettings()
   await put('appSettings', { ...settings, dailyGoalMinutes: minutes })
+}
+
+// Saving a custom goal both remembers it (customGoalMinutes) and makes
+// it the active goal (dailyGoalMinutes). Picking a preset afterwards
+// only touches dailyGoalMinutes via setDailyGoalMinutes above, so the
+// remembered custom value survives switching back and forth.
+export async function setCustomGoalMinutes(minutes) {
+  const settings = await getAppSettings()
+  await put('appSettings', { ...settings, dailyGoalMinutes: minutes, customGoalMinutes: minutes })
 }
 
 // ---------- Sessions ----------
@@ -642,5 +651,6 @@ export async function importData(data) {
     ? importedActiveId
     : (languages[0]?.id ?? null)
   const dailyGoalMinutes = data?.appSettings?.dailyGoalMinutes ?? null
-  await put('appSettings', { id: SETTINGS_ID, activeLanguageId, dailyGoalMinutes })
+  const customGoalMinutes = data?.appSettings?.customGoalMinutes ?? null
+  await put('appSettings', { id: SETTINGS_ID, activeLanguageId, dailyGoalMinutes, customGoalMinutes })
 }

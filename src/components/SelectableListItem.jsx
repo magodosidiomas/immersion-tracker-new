@@ -46,6 +46,7 @@ function SelectableListItem({
   flag = null,
   leadingIcon = null,
   trailingIcon = null,
+  onTrailingIconClick = null,
   position,
   density = 'default',
   layout = 'column',
@@ -75,7 +76,27 @@ function SelectableListItem({
             {description && <span className="selectable-list-item-description">{description}</span>}
           </span>
         )}
-        {trailingIcon && <span className="selectable-list-item-icon">{trailingIcon}</span>}
+        {trailingIcon && onTrailingIconClick && (
+          <span
+            className="selectable-list-item-icon selectable-list-item-icon-action"
+            role="button"
+            tabIndex={0}
+            aria-label="Editar"
+            onClick={(event) => {
+              event.stopPropagation()
+              onTrailingIconClick(event)
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return
+              event.preventDefault()
+              event.stopPropagation()
+              onTrailingIconClick(event)
+            }}
+          >
+            {trailingIcon}
+          </span>
+        )}
+        {trailingIcon && !onTrailingIconClick && <span className="selectable-list-item-icon">{trailingIcon}</span>}
       </span>
     </button>
   )

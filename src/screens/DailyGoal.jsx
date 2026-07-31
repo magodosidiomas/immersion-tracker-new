@@ -1,12 +1,13 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TopNav from '../components/TopNav'
 import Modal from '../components/Modal'
+import BottomSheet from '../components/BottomSheet'
 import SelectableListItem from '../components/SelectableListItem'
 import Button from '../components/Button'
 import DurationInput from '../components/DurationInput'
 import { formatDurationShort } from '../utils/sessions'
 import { getAppSettings } from '../db'
-import { ArrowBack, Close } from '@nine-thirty-five/material-symbols-react/outlined'
+import { ArrowBack, Close, Edit } from '@nine-thirty-five/material-symbols-react/outlined'
 import './DailyGoal.css'
 
 const PRESETS = [
@@ -20,72 +21,103 @@ const PRESETS = [
 // "Meta diária" screen — reached from the home DailyGoalCard, Settings
 // > Preferências > Meta diária, or (via `onboarding`) right after picking
 // a language for the first time. Self-sufficient (fetches its own current
-// goal via getAppSettings, same pattern as AddLanguages/Home) rather than
-// requiring App.jsx to thread the value down. Two sub-views:
-// - 'presets': list of fixed options + an outline button that opens 'custom'.
-//   Picking a preset only selects it (highlighted row) — Salvar confirms.
-// - 'custom': DurationInput (hours/minutes) seeded from the current goal
-//   if it doesn't match a preset. Its own Salvar persists immediately and
-//   closes the whole screen (per design decision: no round-trip back to
-//   the presets list).
+// goal via getAppSettings, same pattern as AddLanguages/Home).
 //
-// `onboarding` only changes the presets view's exit affordance: there's
-// nothing to navigate "back" to yet (this is the screen right after
-// language selection), so onBack reads as "Pular" (skip) instead of
-// "Voltar" — same handler either way, just different chrome/label. The
-// custom view keeps its normal back-to-presets arrow regardless.
+// A custom goal is remembered independently of which goal is currently
+// active (see setCustomGoalMinutes in db/index.js): picking a preset
+// after having set a custom value only changes what's active, it never
+// clears the remembered custom minutes. So once a custom goal exists it
+// always shows as its own "Personalizada" row (same row chrome as the
+// presets, layout="row", selected only when it's the active goal) with
+// a trailing pencil to edit it — tapping the row itself just reselects
+// it as active, same as tapping any preset.
 //
-// `embedded` (desktop SettingsWindow only): strips its own chrome
-// (TopNav/Modal, footer) since the panel topbar/title/Salvar action
-// live in SettingsWindow instead — same split as ManageSeries. The
-// parent needs to react to internal view changes (title, back arrow,
-// Salvar disabled state), so this reports them via `onStateChange`
-// and exposes `save`/`goBack` through the ref (forwardRef +
-// useImperativeHandle, same pattern as ManageSeries' openCreate).
-const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, onBack, onSave, onStateChange }, ref) {
+// Editing/creating the custom goal opens a duration entry:
+// - `embedded` (desktop SettingsWindow): a small nested BottomSheet
+//   (variant="modal", same chrome as the "Adicionar filme" dialog) with
+//   its own Cancelar/Confirmar — confirming saves immediately and
+//   closes back to the presets list, which is the only view this screen
+//   ever shows when embedded.
+// - otherwise (mobile, including onboarding): the existing full-screen
+//   sub-view with its own TopNav + footer Salvar.
+// Picking a preset saves immediately when embedded (there's no separate
+// panel-level Salvar anymore); on mobile it stays a pending selection
+// confirmed via the screen's own footer Salvar, as before.
+function DailyGoal({ isDesktop = false, embedded = false, onboarding = false, onBack, onSave }) {
   const [loaded, setLoaded] = useState(false)
   const [currentGoal, setCurrentGoal] = useState(null)
-  const [view, setView] = useState('presets')
+  const [customGoalMinutes, setCustomGoalMinutes] = useState(null)
   const [selectedMinutes, setSelectedMinutes] = useState(null)
+  const [pendingCustom, setPendingCustom] = useState(false)
+  const [view, setView] = useState('presets')
+  const [customModalOpen, setCustomModalOpen] = useState(false)
   const [customError, setCustomError] = useState(null)
   const durationRef = useRef(null)
 
   useEffect(() => {
     getAppSettings().then((settings) => {
       const minutes = settings.dailyGoalMinutes ?? null
+      const custom = settings.customGoalMinutes ?? null
       setCurrentGoal(minutes)
-      setSelectedMinutes(PRESETS.some((p) => p.minutes === minutes) ? minutes : null)
+      setCustomGoalMinutes(custom)
+      if (custom != null && minutes === custom) {
+        setSelectedMinutes(null)
+        setPendingCustom(true)
+      } else {
+        setSelectedMinutes(PRESETS.some((p) => p.minutes === minutes) ? minutes : null)
+        setPendingCustom(false)
+      }
       setLoaded(true)
     })
   }, [])
 
-  // Autofocus the hours field the moment the custom view mounts — brings
-  // up the keyboard on mobile, focuses the field on desktop.
+  // Autofocus the hours field the moment the custom editor mounts —
+  // brings up the keyboard on mobile, focuses the field on desktop.
   useEffect(() => {
-    if (view === 'custom') durationRef.current?.focusFirst()
-  }, [view])
-
-  useEffect(() => {
-    if (embedded) onStateChange?.({ view, canSave: view === 'presets' ? Boolean(selectedMinutes) : true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [embedded, view, selectedMinutes])
-
-  useImperativeHandle(ref, () => ({
-    save: () => (view === 'presets' ? handleSavePresets() : handleSaveCustom()),
-    goBack: () => setView('presets'),
-  }))
+    if (view === 'custom' || customModalOpen) {
+      const id = requestAnimationFrame(() => durationRef.current?.focusFirst())
+      return () => cancelAnimationFrame(id)
+    }
+  }, [view, customModalOpen])
 
   if (!loaded) return null
 
-  const customInitial = { hours: Math.floor((currentGoal ?? 60) / 60), minutes: (currentGoal ?? 60) % 60 }
+  const customInitial = {
+    hours: Math.floor((customGoalMinutes ?? currentGoal ?? 60) / 60),
+    minutes: (customGoalMinutes ?? currentGoal ?? 60) % 60,
+  }
+  const isCustomActive = embedded ? customGoalMinutes != null && currentGoal === customGoalMinutes : pendingCustom
+
+  function openCustomEditor() {
+    setCustomError(null)
+    if (embedded) setCustomModalOpen(true)
+    else setView('custom')
+  }
+
+  function handlePickPreset(minutes) {
+    if (embedded) {
+      setCurrentGoal(minutes)
+      onSave(minutes, false)
+    } else {
+      setSelectedMinutes(minutes)
+      setPendingCustom(false)
+    }
+  }
+
+  function handlePickCustom() {
+    if (customGoalMinutes == null) return
+    if (embedded) {
+      setCurrentGoal(customGoalMinutes)
+      onSave(customGoalMinutes, true)
+    } else {
+      setSelectedMinutes(null)
+      setPendingCustom(true)
+    }
+  }
 
   function handleSavePresets() {
-    if (!selectedMinutes) return
-    onSave(selectedMinutes)
-    // Embedded stays on the daily-goal panel instead of navigating away
-    // (there's nowhere to "close" to inside SettingsWindow), so reflect
-    // the save locally rather than relying on a parent unmount/refetch.
-    if (embedded) setCurrentGoal(selectedMinutes)
+    if (pendingCustom) onSave(customGoalMinutes, true)
+    else if (selectedMinutes) onSave(selectedMinutes, false)
   }
 
   function handleSaveCustom() {
@@ -96,40 +128,61 @@ const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = 
       return
     }
     setCustomError(null)
-    onSave(total)
-    if (embedded) {
-      setCurrentGoal(total)
-      setSelectedMinutes(PRESETS.some((p) => p.minutes === total) ? total : null)
-      setView('presets')
-    }
+    onSave(total, true)
+    setCurrentGoal(total)
+    setCustomGoalMinutes(total)
+    if (embedded) setCustomModalOpen(false)
   }
+
+  const rows = customGoalMinutes != null ? [...PRESETS, { custom: true }] : PRESETS
 
   const presetsView = (
     <div className="daily-goal-view">
       <h1 className="daily-goal-heading">Escolha uma meta</h1>
       <div className="daily-goal-list-card">
-        {PRESETS.map((preset, index) => (
-          <SelectableListItem
-            key={preset.minutes}
-            label={preset.label}
-            description={`${formatDurationShort(preset.minutes * 60)} / dia`}
-            layout="row"
-            selected={selectedMinutes === preset.minutes}
-            divider={index > 0}
-            position={index === 0 ? 'first' : index === PRESETS.length - 1 ? 'last' : 'middle'}
-            onClick={() => setSelectedMinutes(preset.minutes)}
-          />
-        ))}
+        {rows.map((row, index) => {
+          const position = index === 0 ? 'first' : index === rows.length - 1 ? 'last' : 'middle'
+          if (row.custom) {
+            return (
+              <SelectableListItem
+                key="custom"
+                label="Personalizada"
+                description={formatDurationShort(customGoalMinutes * 60)}
+                layout="row"
+                trailingIcon={<Edit />}
+                onTrailingIconClick={openCustomEditor}
+                selected={isCustomActive}
+                divider
+                position={position}
+                onClick={handlePickCustom}
+              />
+            )
+          }
+          return (
+            <SelectableListItem
+              key={row.minutes}
+              label={row.label}
+              description={`${formatDurationShort(row.minutes * 60)} / dia`}
+              layout="row"
+              selected={embedded ? currentGoal === row.minutes : selectedMinutes === row.minutes}
+              divider={index > 0}
+              position={position}
+              onClick={() => handlePickPreset(row.minutes)}
+            />
+          )
+        })}
       </div>
-      <Button variant="outline" fullWidth onClick={() => { setCustomError(null); setView('custom') }}>
-        Definir meta personalizada
-      </Button>
+      {customGoalMinutes == null && (
+        <Button variant="outline" fullWidth onClick={openCustomEditor}>
+          Definir meta personalizada
+        </Button>
+      )}
     </div>
   )
 
   const customView = (
     <div className="daily-goal-view">
-      <h1 className="daily-goal-heading">Quanto por dia?</h1>
+      {!embedded && <h1 className="daily-goal-heading">Quanto por dia?</h1>}
       <div className="daily-goal-custom-input">
         <DurationInput ref={durationRef} initialValue={customInitial} errorMessage={customError} />
       </div>
@@ -139,7 +192,26 @@ const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = 
   if (embedded) {
     return (
       <div className="daily-goal-content" data-embedded="true">
-        {view === 'presets' ? presetsView : customView}
+        {presetsView}
+        <BottomSheet
+          open={customModalOpen}
+          onClose={() => setCustomModalOpen(false)}
+          title="Meta personalizada"
+          contentCard={false}
+          variant="modal"
+          primaryButton={
+            <Button fullWidth onClick={handleSaveCustom}>
+              Confirmar
+            </Button>
+          }
+          secondaryButton={
+            <Button variant="outline" fullWidth onClick={() => setCustomModalOpen(false)}>
+              Cancelar
+            </Button>
+          }
+        >
+          {customView}
+        </BottomSheet>
       </div>
     )
   }
@@ -147,14 +219,17 @@ const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = 
   if (isDesktop) {
     return (
       <Modal
-        title="Meta diária"
+        title={view === 'custom' ? 'Meta personalizada' : 'Meta diária'}
         leadingIcon={view === 'custom' ? <ArrowBack /> : undefined}
         onLeadingClick={view === 'custom' ? () => setView('presets') : undefined}
         trailingIcon={view === 'presets' ? <Close /> : undefined}
         onTrailingClick={view === 'presets' ? onBack : undefined}
         onClose={onBack}
         footer={
-          <Button onClick={view === 'presets' ? handleSavePresets : handleSaveCustom} disabled={view === 'presets' && !selectedMinutes}>
+          <Button
+            onClick={view === 'presets' ? handleSavePresets : handleSaveCustom}
+            disabled={view === 'presets' && !selectedMinutes && !pendingCustom}
+          >
             Salvar
           </Button>
         }
@@ -193,13 +268,13 @@ const DailyGoal = forwardRef(function DailyGoal({ isDesktop = false, embedded = 
         <Button
           fullWidth
           onClick={view === 'presets' ? handleSavePresets : handleSaveCustom}
-          disabled={view === 'presets' && !selectedMinutes}
+          disabled={view === 'presets' && !selectedMinutes && !pendingCustom}
         >
           Salvar
         </Button>
       </div>
     </main>
   )
-})
+}
 
 export default DailyGoal

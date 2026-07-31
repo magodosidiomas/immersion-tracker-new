@@ -33,8 +33,6 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onSav
   // separate Home shortcut into the standalone Modal. Local state keeps
   // it fully scoped to this window, same idea as `drill` below.
   const [dailyGoalOpen, setDailyGoalOpen] = useState(false)
-  const [dailyGoalState, setDailyGoalState] = useState({ view: 'presets', canSave: false })
-  const dailyGoalRef = useRef(null)
 
   // Drill-down within Séries/Filmes stays inside the modal instead of
   // navigating away (which used to unmount SettingsWindow entirely).
@@ -80,12 +78,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onSav
   let panelTitle = ''
   let panelAction = null
   if (dailyGoalOpen) {
-    panelTitle = dailyGoalState.view === 'custom' ? 'Meta personalizada' : 'Meta diária'
-    panelAction = (
-      <Button size="sm" onClick={() => dailyGoalRef.current?.save()} disabled={dailyGoalState.view === 'presets' && !dailyGoalState.canSave}>
-        Salvar
-      </Button>
-    )
+    panelTitle = 'Meta diária'
   } else if (section === 'manage-languages') {
     panelTitle = 'Idiomas'
   } else if (section === 'backup') {
@@ -181,13 +174,8 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onSav
         </nav>
         <div className="settings-window-panel">
           <div className="settings-window-panel-topbar">
-            {(drill || (dailyGoalOpen && dailyGoalState.view === 'custom')) && (
-              <button
-                type="button"
-                className="settings-window-back"
-                onClick={dailyGoalOpen ? () => dailyGoalRef.current?.goBack() : drillBack}
-                aria-label="Voltar"
-              >
+            {drill && (
+              <button type="button" className="settings-window-back" onClick={drillBack} aria-label="Voltar">
                 <ArrowBack />
               </button>
             )}
@@ -198,9 +186,7 @@ function SettingsWindow({ screen, onNavigate, onClose, onOpenAddLanguages, onSav
             </button>
           </div>
           <div className="settings-window-panel-content">
-            {dailyGoalOpen && (
-              <DailyGoal ref={dailyGoalRef} embedded onSave={onSaveDailyGoal} onStateChange={setDailyGoalState} />
-            )}
+            {dailyGoalOpen && <DailyGoal embedded onSave={onSaveDailyGoal} />}
             {!dailyGoalOpen && (
               <>
                 {section === 'manage-languages' && (
