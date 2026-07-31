@@ -14,6 +14,7 @@ import AddLanguages from './screens/AddLanguages'
 import NewSession from './screens/NewSession'
 import EditSession from './screens/EditSession'
 import Statistics from './screens/Statistics'
+import Metas from './screens/Metas'
 import DayHistory from './screens/DayHistory'
 import Library from './screens/Library'
 import Historico from './screens/Historico'
@@ -446,8 +447,12 @@ function App() {
           onOpenAddLanguages={() => navigate('add-languages')}
           onOpenLibrary={() => navigate('library')}
           onOpenHistorico={() => navigate('historico')}
+          onOpenMetas={() => navigate('metas')}
         />
       )
+    }
+    if (screen === 'metas') {
+      return <Metas onBack={() => window.history.back()} />
     }
     if (screen === 'day-history') {
       return (

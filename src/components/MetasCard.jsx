@@ -24,10 +24,28 @@ function MetasCard({
   progress = 0,
   remaining,
   remainingCaption,
+  onClick,
   ...props
 }) {
   return (
-    <div className="metas-card" {...props}>
+    <div
+      className="metas-card"
+      data-clickable={Boolean(onClick)}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                onClick(event)
+              }
+            }
+          : undefined
+      }
+      {...props}
+    >
       <div className="metas-card-top">
         <span className="metas-card-flag">
           <Flag />

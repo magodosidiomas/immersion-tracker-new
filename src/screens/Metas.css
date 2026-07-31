@@ -1,0 +1,60 @@
+.metas-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(var(--app-height, 100dvh) - var(--timer-bar-reserve, 0px));
+  background: var(--bg-background);
+}
+
+.metas-screen-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  align-items: center;
+  gap: var(--space-16);
+  padding: var(--space-16);
+}
+
+.metas-screen-content .metas-card {
+  width: 100%;
+}
+
+.metas-screen-list-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  background: var(--bg-surface-elevation-1);
+}
+
+.metas-screen-list-card .list-item {
+  background: var(--bg-surface-elevation-1);
+}
+
+.metas-level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+}
+
+.metas-level-badge--done {
+  background: var(--bg-semantic-success-bg);
+  color: var(--color-icon-on-success);
+}
+
+.metas-level-badge--done svg {
+  width: 16px;
+  height: 16px;
+}
+
+.metas-level-badge--current {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-brand-300);
+}

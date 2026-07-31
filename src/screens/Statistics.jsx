@@ -20,7 +20,7 @@ import './Statistics.css'
 // Second main tab, alongside Home and Biblioteca — reached only via
 // BottomNav. Same LanguageTopNav as Home (active language + switcher
 // + settings), no back arrow since switching tabs isn't a drill-down.
-function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
+function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico, onOpenMetas }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
 
@@ -65,6 +65,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
               progress={levelProgress.progress}
               remaining={formatDurationShort(levelProgress.remainingSeconds)}
               remainingCaption="pra bater a meta atual"
+              onClick={onOpenMetas}
             />
           </div>
           <DonutCard title="Por categoria" groups={categoryBreakdown(sessions)} />

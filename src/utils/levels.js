@@ -4,6 +4,11 @@
 // level 1. See imerso-data-model notes for the full table.
 const LEVEL_MILESTONES_HOURS = [1, 3, 5, 10, 20, 35, 50, 75, 100, 150, 200, 300, 500, 750, 1000]
 
+// How many levels the Metas screen lists explicitly — the hardcoded
+// table above. Levels past this point exist (see nextMilestone) but
+// aren't rendered as rows; the list would grow forever otherwise.
+export const LISTED_LEVELS_COUNT = LEVEL_MILESTONES_HOURS.length
+
 // Level 16+ has no fixed ceiling — hardcoding more rows would mean
 // either a level cap (kills the mechanic for anyone who passes it) or
 // an ever-growing table. Instead each milestone past 1000h is 1.3x the

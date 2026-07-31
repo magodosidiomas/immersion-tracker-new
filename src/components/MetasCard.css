@@ -10,6 +10,17 @@
   border: 1px solid var(--color-border-subtle);
 }
 
+.metas-card[data-clickable='true'] {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.metas-card[data-clickable='true']:hover {
+  background: var(--bg-hover-on-elevation-1);
+}
+
 .metas-card-top {
   display: flex;
   align-items: center;
