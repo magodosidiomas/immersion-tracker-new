@@ -24,7 +24,15 @@
    list's edge chains up to the document — the browser drags the whole
    page (BottomNav included) and reveals empty canvas beyond it. This
    doesn't block normal scrolling anywhere, only the chained bounce. */
+/* height: 100% + overflow: hidden (not just overscroll-behavior) is
+   required here — without it, any screen whose rendered height drifts
+   even 1px past the viewport (common with 100dvh rounding on Android
+   Chrome) lets the whole page scroll, toggling the browser chrome
+   on/off. Each screen already manages its own height + internal
+   overflow-y: auto, so the document itself should never scroll. */
 html, body {
+  height: 100%;
+  overflow: hidden;
   overscroll-behavior-y: none;
 }
 
@@ -39,7 +47,7 @@ body {
    instead of letting every screen's flex layout stretch edge to edge. */
 #root {
   max-width: 480px;
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100dvh);
   margin: 0 auto;
   overflow-x: hidden;
   position: relative;
