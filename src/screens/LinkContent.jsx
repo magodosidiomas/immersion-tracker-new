@@ -54,6 +54,7 @@ function LinkContent({ onSelect, onAddContent, onBack, headless = false }) {
           onAddContent={onAddContent}
           onItemClick={onSelect}
           hasContent={items.length > 0}
+          showSearchOnDesktop
         />
       </div>
       <div className="link-content-footer">

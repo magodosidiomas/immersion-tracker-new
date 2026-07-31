@@ -8,7 +8,7 @@
 }
 
 @media (min-width: 1280px) {
-  .content-search-list-row {
+  .content-search-list-row:not([data-force-visible='true']) {
     display: none;
   }
 }

@@ -60,6 +60,10 @@ function ContentSearchList({
   hasContent = true,
   onEditItem = null,
   onDeleteItem = null,
+  // LinkContent has no TopNavDesktop of its own to carry a search
+  // field at the ≥1280px breakpoint (unlike Library, the only other
+  // caller), so it needs this inline row kept visible there too.
+  showSearchOnDesktop = false,
 }) {
   const hasQuery = query.trim().length > 0
   const activeType = selectedTypes.length === 1 ? selectedTypes[0] : null
@@ -95,7 +99,7 @@ function ContentSearchList({
     <>
       {hasContent && (
         <>
-          <div className="content-search-list-row">
+          <div className="content-search-list-row" data-force-visible={showSearchOnDesktop}>
             <div className="content-search-list-field">
               <Search className="content-search-list-icon" aria-hidden="true" />
               <input
