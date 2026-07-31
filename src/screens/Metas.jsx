@@ -4,7 +4,7 @@ import MetasCard from '../components/MetasCard'
 import ListItem from '../components/ListItem'
 import TopNav from '../components/TopNav'
 import TopNavDesktop from '../components/TopNavDesktop'
-import { formatDurationShort } from '../utils/sessions'
+import { formatDurationShort, getFaltaVerb } from '../utils/sessions'
 import { getLevelProgress, getMilestoneHours, LISTED_LEVELS_COUNT } from '../utils/levels'
 import { ArrowBack, Check, Lock } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Metas.css'
@@ -63,6 +63,7 @@ function Metas({ onBack }) {
           target={formatDurationShort(levelProgress.targetSeconds)}
           progress={levelProgress.progress}
           remaining={formatDurationShort(levelProgress.remainingSeconds)}
+          remainingPrefix={getFaltaVerb(levelProgress.remainingSeconds)}
           remainingCaption="pra bater a meta atual"
         />
 

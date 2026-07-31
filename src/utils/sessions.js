@@ -46,6 +46,17 @@ export function formatDurationShort(totalSeconds) {
   return `${m}m`
 }
 
+// "Falta" (singular) only when the formatted remaining duration is a
+// single unit of exactly 1 (e.g. "1h" or "1m"). Everything else — two
+// units combined ("1h 30m"), or any value != 1 — reads as plural
+// ("Faltam 2h", "Faltam 1h 30m", "Faltam 45m").
+export function getFaltaVerb(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const isSingleUnitOfOne = (h === 1 && m === 0) || (h === 0 && m === 1)
+  return isSingleUnitOfOne ? 'Falta' : 'Faltam'
+}
+
 // Newest day first, newest session within a day first. Groups by the
 // stored `date` string — 'YYYY-MM-DD' lexicographic order is also
 // chronological, so no Date parsing is needed just to sort.

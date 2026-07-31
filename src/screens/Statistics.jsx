@@ -12,7 +12,7 @@ import FormatCard from '../components/FormatCard'
 import ReceptionCard from '../components/ReceptionCard'
 import ProductionCard from '../components/ProductionCard'
 import StudyCard from '../components/StudyCard'
-import { categoryBreakdown, formatDurationShort } from '../utils/sessions'
+import { categoryBreakdown, formatDurationShort, getFaltaVerb } from '../utils/sessions'
 import { getLevelProgress } from '../utils/levels'
 import { Schedule, BarChart, Book, History } from '@nine-thirty-five/material-symbols-react/outlined'
 import './Statistics.css'
@@ -64,6 +64,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
               target={formatDurationShort(levelProgress.targetSeconds)}
               progress={levelProgress.progress}
               remaining={formatDurationShort(levelProgress.remainingSeconds)}
+              remainingPrefix={getFaltaVerb(levelProgress.remainingSeconds)}
               remainingCaption="pra bater a meta atual"
               onClick={onOpenMetas}
             />

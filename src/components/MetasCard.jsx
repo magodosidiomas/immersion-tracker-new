@@ -23,6 +23,7 @@ function MetasCard({
   target,
   progress = 0,
   remaining,
+  remainingPrefix,
   remainingCaption,
   onClick,
   ...props
@@ -74,6 +75,7 @@ function MetasCard({
             </div>
           </div>
           <p className="metas-card-caption">
+            {remainingPrefix && `${remainingPrefix} `}
             <span className="metas-card-caption-accent">{remaining}</span>
             {remainingCaption && ` ${remainingCaption}`}
           </p>
