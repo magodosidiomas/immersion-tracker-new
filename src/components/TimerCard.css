@@ -82,41 +82,6 @@
   z-index: 20;
 }
 
-.timer-card-picker-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-8);
-  margin: 0 0 var(--space-8);
-}
-
-.timer-card-picker-header .timer-card-picker-label {
-  margin: 0;
-}
-
-.timer-card-clear {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  font-family: var(--font-family-main);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-label-xsmall);
-  color: var(--color-text-secondary);
-}
-
-.timer-card-clear:hover {
-  color: var(--color-text-primary);
-}
-
-.timer-card-clear svg {
-  width: 14px;
-  height: 14px;
-}
-
 .timer-card-picker-label {
   font-family: var(--font-family-main);
   font-weight: var(--font-weight-medium);

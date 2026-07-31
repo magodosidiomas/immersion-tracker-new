@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react/outlined/filled'
-import { Close } from '@nine-thirty-five/material-symbols-react/outlined'
 import Button from './Button'
 import SelectionChip from './SelectionChip'
 import { CATEGORIES } from '../data/categories'
@@ -18,8 +17,9 @@ import './TimerCard.css'
 // Category/subcategory selection is a single chip-based dropdown
 // (approved over two separate menus and over a two-column/tab
 // layout) — one trigger, one panel, "Categoria" and "Subcategoria"
-// as two chip rows with their own small group label, plus a "Limpar
-// seleção" action to go back to no category at all.
+// as two chip rows with their own small group label. There's no
+// separate "clear" action: clicking the already-selected category
+// chip again toggles it off (and its subcategory with it).
 function TimerCard({
   variant = 'home',
   status = 'idle', // idle | running | paused
@@ -53,16 +53,15 @@ function TimerCard({
   const hasSelection = Boolean(category)
 
   function handlePickCategory(cat) {
+    if (hasSelection && cat.key === activeCategory.key) {
+      onSelectCategory?.(null, null)
+      return
+    }
     onSelectCategory?.(cat.key, cat.subcategories[0].key)
   }
 
   function handlePickSubcategory(sub) {
     onSelectCategory?.(activeCategory.key, sub.key)
-    setPickerOpen(false)
-  }
-
-  function handleClearSelection() {
-    onSelectCategory?.(null, null)
     setPickerOpen(false)
   }
 
@@ -92,15 +91,7 @@ function TimerCard({
 
         {pickerOpen && (
           <div className="timer-card-picker">
-            <div className="timer-card-picker-header">
-              <p className="timer-card-picker-label">Categoria</p>
-              {hasSelection && (
-                <button type="button" className="timer-card-clear" onClick={handleClearSelection}>
-                  <Close />
-                  Limpar seleção
-                </button>
-              )}
-            </div>
+            <p className="timer-card-picker-label">Categoria</p>
             <div className="timer-card-chip-row">
               {CATEGORIES.map((cat) => (
                 <SelectionChip
