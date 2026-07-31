@@ -142,14 +142,12 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           onResume={timer.resume}
           onStop={onFinishTimer}
         />
-        {groups.length > 0 && (
-          <div className="home-stats">
-            <div className="home-stats-row">
-              <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
-              <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
-            </div>
+        <div className="home-stats">
+          <div className="home-stats-row">
+            <StreakCard value={formatStreakValue(streakDays)} days={streakWeekDays} />
+            <DailyGoalCard goalMinutes={dailyGoalMinutes} todaySeconds={todayTotalSeconds} onClick={onOpenDailyGoal} />
           </div>
-        )}
+        </div>
         {sessionError ? (
           <Alert description="Erro ao carregar sessões. Tente fechar e reabrir o app." />
         ) : groups.length === 0 ? (
