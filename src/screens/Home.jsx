@@ -61,9 +61,26 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState(null)
   const [newSessionSheetOpen, setNewSessionSheetOpen] = useState(false)
 
+  // Desktop-only timer coachmark (TimerCard's idle state): shown once,
+  // tracked via a plain localStorage flag since it's disposable UI state,
+  // not app data worth persisting in IndexedDB.
+  const [coachmarkStep, setCoachmarkStep] = useState(() =>
+    timer.status === 'idle' && !localStorage.getItem('imerso-timer-coachmark-seen') ? 1 : 0
+  )
+
   useEffect(() => {
     getAppSettings().then((settings) => setDailyGoalMinutes(settings.dailyGoalMinutes ?? null))
   }, [])
+
+  function dismissCoachmark() {
+    setCoachmarkStep(0)
+    localStorage.setItem('imerso-timer-coachmark-seen', '1')
+  }
+
+  function advanceCoachmark() {
+    if (coachmarkStep === 1) setCoachmarkStep(2)
+    else dismissCoachmark()
+  }
 
   useEffect(() => {
     if (!activeId) return
@@ -141,6 +158,9 @@ function Home({ timer, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages
           onPause={timer.pause}
           onResume={timer.resume}
           onStop={onFinishTimer}
+          coachmarkStep={coachmarkStep}
+          onCoachmarkNext={advanceCoachmark}
+          onCoachmarkSkip={dismissCoachmark}
         />
         <div className="home-stats">
           <div className="home-stats-row">

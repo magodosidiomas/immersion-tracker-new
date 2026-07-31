@@ -3,6 +3,7 @@ import { PlayArrow, Pause, Stop } from '@nine-thirty-five/material-symbols-react
 import { KeyboardArrowDown } from '@nine-thirty-five/material-symbols-react/outlined'
 import Button from './Button'
 import SelectionChip from './SelectionChip'
+import Coachmark from './Coachmark'
 import { CATEGORIES } from '../data/categories'
 import { getCategoryLabel } from '../utils/sessions'
 import './TimerCard.css'
@@ -32,6 +33,9 @@ function TimerCard({
   onPause,
   onResume,
   onStop,
+  coachmarkStep = 0, // 0 = hidden, 1 = category, 2 = play
+  onCoachmarkNext,
+  onCoachmarkSkip,
 }) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const pickerRef = useRef(null)
@@ -92,6 +96,18 @@ function TimerCard({
           <KeyboardArrowDown className="timer-card-trigger-chevron" />
         </button>
 
+        {coachmarkStep === 1 && (
+          <Coachmark
+            title="Escolha a categoria"
+            body="Selecione o que você vai fazer"
+            step={1}
+            totalSteps={2}
+            align="left"
+            onNext={onCoachmarkNext}
+            onSkip={onCoachmarkSkip}
+          />
+        )}
+
         {pickerOpen && (
           <div className="timer-card-picker">
             <p className="timer-card-picker-label">Categoria</p>
@@ -128,7 +144,21 @@ function TimerCard({
         <span className="timer-card-time" data-idle={status === 'idle'}>{elapsedLabel}</span>
         <div className="timer-card-actions">
           {status === 'idle' && (
-            <Button size="sm" leadingIcon={<PlayArrow />} aria-label="Iniciar" onClick={onStart} />
+            <span className="timer-card-play-anchor">
+              <Button size="sm" leadingIcon={<PlayArrow />} aria-label="Iniciar" onClick={onStart} />
+              {coachmarkStep === 2 && (
+                <Coachmark
+                  title="Aperte o play pra começar"
+                  body="Começa a marcar o tempo da sessão."
+                  step={2}
+                  totalSteps={2}
+                  align="right"
+                  nextLabel="Entendi"
+                  onNext={onCoachmarkNext}
+                  onSkip={onCoachmarkSkip}
+                />
+              )}
+            </span>
           )}
           {status === 'running' && (
             <>

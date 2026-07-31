@@ -144,6 +144,11 @@
   gap: var(--space-12);
 }
 
+.timer-card-play-anchor {
+  position: relative;
+  display: flex;
+}
+
 .timer-card-actions .button {
   height: 35px;
 }

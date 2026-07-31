@@ -1,0 +1,83 @@
+.coachmark {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: -8px;
+  width: 280px;
+  background: var(--bg-background);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-medium);
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.45);
+  padding: var(--space-16);
+  z-index: 30;
+}
+
+.coachmark[data-align="right"] {
+  left: auto;
+  right: -8px;
+}
+
+.coachmark-arrow {
+  position: absolute;
+  top: -6px;
+  left: 24px;
+  width: 12px;
+  height: 12px;
+  background: var(--bg-background);
+  border-left: 1px solid var(--color-border-subtle);
+  border-top: 1px solid var(--color-border-subtle);
+  transform: rotate(45deg);
+}
+
+.coachmark[data-align="right"] .coachmark-arrow {
+  left: auto;
+  right: 24px;
+}
+
+.coachmark-title {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label-medium);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4);
+}
+
+.coachmark-body {
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-label-xsmall);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--space-16);
+}
+
+.coachmark-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coachmark-dots {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.coachmark-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-strong);
+}
+
+.coachmark-dot[data-active="true"] {
+  background: var(--color-border-accent);
+}
+
+.coachmark-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.coachmark-actions .button {
+  height: 32px;
+}
