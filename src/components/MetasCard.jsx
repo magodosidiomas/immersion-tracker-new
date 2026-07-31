@@ -46,7 +46,7 @@ function MetasCard({
         <div className="metas-card-progress">
           <div className="metas-card-track">
             <div
-              className="metas-card-fill"
+              className={`metas-card-fill${progress >= 100 ? ' metas-card-fill-complete' : ''}`}
               style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
             />
             <div className="metas-card-ticks">
