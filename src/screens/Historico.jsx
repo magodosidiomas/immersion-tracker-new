@@ -38,6 +38,7 @@ function formatSessionsLabel(dateStr) {
 // with activeLanguageId resolved the same way DayHistory does
 // (getAppSettings) rather than via a switcher.
 function Historico({
+  timerBanner = null,
   isDesktop = false,
   onOpenHome,
   onOpenSettings,
@@ -86,6 +87,7 @@ function Historico({
       />
       <TopNavDesktop title="Histórico" showSearch={false} />
       <div className="historico-content">
+        {timerBanner}
         <section className="historico-calendar-section">
           <p className="historico-label">Dias com sessão</p>
           <Calendar sessionDates={sessionDates} selectedDate={selectedDate} onSelectDay={setSelectedDate} />

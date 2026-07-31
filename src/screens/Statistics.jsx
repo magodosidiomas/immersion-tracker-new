@@ -20,7 +20,7 @@ import './Statistics.css'
 // Second main tab, alongside Home and Biblioteca — reached only via
 // BottomNav. Same LanguageTopNav as Home (active language + switcher
 // + settings), no back arrow since switching tabs isn't a drill-down.
-function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
+function Statistics({ timerBanner = null, onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenAddLanguages, onOpenLibrary, onOpenHistorico }) {
   const [activeId, setActiveId] = useState(null)
   const [sessions, setSessions] = useState([])
 
@@ -51,6 +51,7 @@ function Statistics({ onOpenHome, onOpenSettings, onOpenManageLanguages, onOpenA
       />
       <TopNavDesktop title="Estatísticas" showSearch={false} />
       <div className="statistics-content">
+        {timerBanner}
         <h1 className="statistics-title">Estatísticas</h1>
         <div className="statistics-overview">
           <div className="statistics-overview-left">

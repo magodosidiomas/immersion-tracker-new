@@ -39,6 +39,7 @@ function formatSessionCount(count) {
 // minus duplicate — each content should only ever exist once, so
 // selection here only offers delete (right).
 function Library({
+  timerBanner = null,
   onOpenNewContent,
   onOpenContent,
   onOpenSettings,
@@ -158,6 +159,7 @@ function Library({
         onActionClick={onOpenNewContent}
       />
       <div className="library-content">
+        {timerBanner}
         <ContentSearchList
           query={query}
           onQueryChange={setQuery}

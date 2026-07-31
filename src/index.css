@@ -76,20 +76,6 @@ body {
   }
 }
 
-@media (min-width: 1280px) {
-  /* In-flow banner shown above the page content on every screen except
-     Home (which mounts its own TimerCard, idle included, inline in its
-     history column) and the session screens themselves. Matches
-     TopNavDesktop/.library-content's box model (960px cap, 32px side
-     padding) so it lines up with whatever's rendered below it. */
-  .app-timer-banner {
-    max-width: 960px;
-    width: 100%;
-    margin: 0 auto;
-    padding: var(--space-24) var(--space-32) 0;
-  }
-}
-
 /* LinkContent/LinkSession render as an overlay on top of whatever
    screen opened them (NewSession's finish phase, EditSession) instead
    of replacing it, so that screen's own state survives the round
